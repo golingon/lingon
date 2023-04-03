@@ -44,7 +44,7 @@ jobs:
       - name: Generate subject
         id: hash
         env:
-          ARTIFACTS: "${{ steps.run-goreleaser.outputs.artifacts }}"
+          ARTIFACTS: ${{ steps.run-goreleaser.outputs.artifacts }}
         run: |
           set -euo pipefail
           checksum_file=$(echo "$ARTIFACTS" | jq -r '.[] | select (.type=="Checksum") | .path')
@@ -58,8 +58,9 @@ jobs:
       contents: write # To add assets to a release.
     uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@7f4fdb871876c23e455853d694197440c5a91506 #v1.5.0
     with:
-      base64-subjects: "${{ needs.goreleaser.outputs.hashes }}"
+      base64-subjects: ${{ needs.goreleaser.outputs.hashes }}
       upload-assets: true # upload to a new release
+
   verification:
     needs: [ goreleaser, provenance ]
     runs-on: ubuntu-latest
@@ -71,7 +72,7 @@ jobs:
       - name: Download assets
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PROVENANCE: "${{ needs.provenance.outputs.provenance-name }}"
+          PROVENANCE: ${{ needs.provenance.outputs.provenance-name }}
         run: |
           set -euo pipefail
           gh -R "$GITHUB_REPOSITORY" release download "$GITHUB_REF_NAME" -p "*.tar.gz"
