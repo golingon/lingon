@@ -18,19 +18,22 @@ gomod:
 
 builds:
 
-  - id: explode
+  - &buildstep
+    id: explode
     binary: explode
-    env:
-      - CGO_ENABLED=0
-      - GO111MODULE=on
-      - GOPROXY=https://proxy.golang.org,direct
-    goos:
-      - linux
-      - darwin
-    goarch:
-      - amd64
-      - arm64
     main: ./cmd/explode/cli.go
+    # ensures mod timestamp to be the commit timestamp
+    mod_timestamp: '{{ .CommitTimestamp }}'
+    env:
+      - CGO_ENABLED=0
+      - GO111MODULE=on
+      - GOPROXY=https://proxy.golang.org,direct
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm64
     flags:
       - -trimpath
     ldflags:
@@ -42,74 +45,40 @@ builds:
         -X main.date={{ .Date }}
         -X main.builtBy=goreleaser
 
-  - id: kygo
+  - <<: *buildstep
+    id: kygo
     binary: kygo
-    env:
-      - CGO_ENABLED=0
-      - GO111MODULE=on
-      - GOPROXY=https://proxy.golang.org,direct
-    goos:
-      - linux
-      - darwin
-    goarch:
-      - amd64
-      - arm64
-    main: ./cmd/kygo/cli.go
-    flags:
-      - -trimpath
-    ldflags:
-      - >
-        -s -w
-        -extldflags "-static"
-        -X main.version={{ .Version }}
-        -X main.commit={{ .Commit }}
-        -X main.date={{ .Date }}
-        -X main.builtBy=goreleaser
+    # ensures mod timestamp to be the commit timestamp
+    mod_timestamp: '{{ .CommitTimestamp }}'
 
-  - id: terragen
+  - <<: *buildstep
+    id: terragen
     binary: terragen
-    env:
-      - CGO_ENABLED=0
-      - GO111MODULE=on
-      - GOPROXY=https://proxy.golang.org,direct
-    goos:
-      - linux
-      - darwin
-    goarch:
-      - amd64
-      - arm64
-    main: ./cmd/terragen/cli.go
-    flags:
-      - -trimpath
-    ldflags:
-      - >
-        -s -w
-        -extldflags "-static"
-        -X main.version={{ .Version }}
-        -X main.commit={{ .Commit }}
-        -X main.date={{ .Date }}
-        -X main.builtBy=goreleaser
+    # ensures mod timestamp to be the commit timestamp
+    mod_timestamp: '{{ .CommitTimestamp }}'
 
 archives:
   - id: explode
     format: tar.gz
-    name_template: "{{ .Binary }}_{{ .Os }}_{{ .Arch }}_{{ .ShortCommit }}"
+    name_template: &artags "{{ .Binary }}_{{ .Os }}_{{ .Arch }}_{{ .ShortCommit }}"
     builds:
       - explode
   - id: kygo
     format: tar.gz
-    name_template: "{{ .Binary }}_{{ .Os }}_{{ .Arch }}_{{ .ShortCommit }}"
+    name_template: *artags
     builds:
       - kygo
   - id: terragen
     format: tar.gz
-    name_template: "{{ .Binary }}_{{ .Os }}_{{ .Arch }}_{{ .ShortCommit }}"
+    name_template: *artags
     builds:
       - terragen
 checksum:
   name_template: 'checksums.txt'
 sboms:
   - artifacts: archive
+  - id: source # Two different sbom configurations need two different IDs
+    artifacts: source
 snapshot:
   name_template: "{{ incpatch .Version }}-next"
 changelog:
