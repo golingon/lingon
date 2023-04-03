@@ -1,5 +1,7 @@
 # Development
 
+FIRST: run `go generate ./...` to generate the code.
+
 ## Documentation
 
 To view the godoc, run :
