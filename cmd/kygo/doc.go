@@ -1,3 +1,6 @@
+// Copyright (c) 2023 Volvo Car Corporation
+// SPDX-License-Identifier: Apache-2.0
+
 /*
 Kygo is a command line tool to convert kubernetes YAML manifests to Go structs.
 

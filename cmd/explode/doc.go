@@ -1,3 +1,6 @@
+// Copyright (c) 2023 Volvo Car Corporation
+// SPDX-License-Identifier: Apache-2.0
+
 /*
 Explode is a command line tool to organize kubernetes manifests according to their kind.
 
