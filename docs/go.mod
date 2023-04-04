@@ -22,9 +22,9 @@ require (
 	github.com/invopop/yaml v0.2.0
 	github.com/rogpeppe/go-internal v1.10.0
 	github.com/stretchr/testify v1.8.2
-	github.com/volvo-cars/lingon v0.0.0-20230403132235-03234a287cf6
+	github.com/volvo-cars/lingon v0.0.0-20230404205834-8a6409af032c
 	golang.org/x/exp v0.0.0-20230321023759-10a507213a29
-	istio.io/api v0.0.0-20230327210753-eb5bfad7b73b
+	istio.io/api v0.0.0-20230403155333-b994cdf2dfb5
 	istio.io/client-go v1.17.1
 	k8s.io/api v0.26.3
 	k8s.io/apiextensions-apiserver v0.26.3
@@ -36,7 +36,7 @@ require (
 require (
 	github.com/agext/levenshtein v1.2.3 // indirect
 	github.com/apparentlymart/go-textseg/v13 v13.0.0 // indirect
-	github.com/aws/aws-sdk-go v1.44.234 // indirect
+	github.com/aws/aws-sdk-go v1.44.236 // indirect
 	github.com/dave/jennifer v1.6.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/docker/cli v23.0.2+incompatible // indirect
@@ -74,20 +74,20 @@ require (
 	github.com/zegl/kube-score v1.16.1 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	golang.org/x/crypto v0.7.0 // indirect
-	golang.org/x/mod v0.9.0 // indirect
+	golang.org/x/mod v0.10.0 // indirect
 	golang.org/x/net v0.8.0 // indirect
 	golang.org/x/sync v0.1.0 // indirect
-	golang.org/x/sys v0.6.0 // indirect
+	golang.org/x/sys v0.7.0 // indirect
 	golang.org/x/text v0.8.0 // indirect
 	golang.org/x/tools v0.7.0 // indirect
-	google.golang.org/genproto v0.0.0-20230331144136-dcfb400f0633 // indirect
+	google.golang.org/genproto v0.0.0-20230403163135-c38d8f061ccd // indirect
 	google.golang.org/protobuf v1.30.0 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	k8s.io/klog/v2 v2.90.1 // indirect
 	k8s.io/utils v0.0.0-20230313181309-38a27ef9d749 // indirect
-	knative.dev/pkg v0.0.0-20230329200100-696cac83c169 // indirect
+	knative.dev/pkg v0.0.0-20230404101938-ee73c9355c9d // indirect
 	mvdan.cc/gofumpt v0.4.0 // indirect
 	sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.2.3 // indirect
