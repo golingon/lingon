@@ -41,7 +41,6 @@ func (j *jamel) convertValue(v reflect.Value) *jen.Statement {
 	switch v.Type().Kind() {
 	case reflect.String:
 		s := v.String()
-		rawString(s)
 		if strings.Contains(s, "\n") {
 			return returnTypeAlias(
 				v, reflect.String.String(), rawString(s),
@@ -52,15 +51,21 @@ func (j *jamel) convertValue(v reflect.Value) *jen.Statement {
 		)
 	case reflect.Bool:
 		return returnTypeAlias(
-			v, reflect.Bool.String(), jen.Lit(v.Bool()),
+			v,
+			reflect.Bool.String(),
+			jen.Lit(v.Bool()),
 		)
 	case reflect.Int:
 		return returnTypeAlias(
-			v, reflect.Int.String(), jen.Lit(int(v.Int())),
+			v,
+			reflect.Int.String(),
+			jen.Lit(int(v.Int())),
 		)
 	case reflect.Int64:
 		return returnTypeAlias(
-			v, reflect.Int64.String(), jen.Lit(v.Int()),
+			v,
+			reflect.Int64.String(),
+			jen.Lit(v.Int()),
 		)
 	case reflect.Int32:
 		return returnTypeAlias(
@@ -76,15 +81,21 @@ func (j *jamel) convertValue(v reflect.Value) *jen.Statement {
 		)
 	case reflect.Int8:
 		return returnTypeAlias(
-			v, reflect.Int8.String(), jen.Lit(int8(v.Int())),
+			v,
+			reflect.Int8.String(),
+			jen.Lit(int8(v.Int())),
 		)
 	case reflect.Uint:
 		return returnTypeAlias(
-			v, reflect.Uint.String(), jen.Lit(v.Uint()),
+			v,
+			reflect.Uint.String(),
+			jen.Lit(v.Uint()),
 		)
 	case reflect.Uint64:
 		return returnTypeAlias(
-			v, reflect.Uint64.String(), jen.Lit(v.Uint()),
+			v,
+			reflect.Uint64.String(),
+			jen.Lit(v.Uint()),
 		)
 	case reflect.Uint32:
 		return returnTypeAlias(
@@ -131,7 +142,7 @@ func (j *jamel) convertValue(v reflect.Value) *jen.Statement {
 	//
 	case reflect.Array, reflect.Slice:
 		pk := prefixKind(v)
-		if v.Len() == 0 {
+		if isEmptyValue(v) {
 			return pk.Block()
 		}
 
@@ -195,125 +206,47 @@ func (j *jamel) convertValue(v reflect.Value) *jen.Statement {
 		// ✅: func P[T any](t T) *T { return &t }
 		//
 		switch v.Elem().Kind() {
-		case reflect.Int:
-			return jen.Id("P").Call(
-				returnTypeAlias(
-					v.Elem(),
-					reflect.Int.String(), jen.Lit(v.Elem().Interface().(int)),
-				),
-			)
-		case reflect.Int64:
-			return jen.Id("P").Call(
-				returnTypeAlias(
-					v.Elem(),
-					reflect.Int64.String(), jen.Lit(v.Elem().Int()),
-				),
-			)
-		case reflect.Int32:
-			return jen.Id("P").Call(
-				returnTypeAlias(
-					v.Elem(),
-					reflect.Int32.String(),
-					jen.Lit(v.Elem().Interface().(int32)),
-				),
-			)
-		case reflect.Int16:
-			return jen.Id("P").Call(
-				returnTypeAlias(
-					v.Elem(),
-					reflect.Int16.String(),
-					jen.Lit(v.Elem().Interface().(int16)),
-				),
-			)
-		case reflect.Int8:
-			return jen.Id("P").Call(
-				returnTypeAlias(
-					v.Elem(),
-					reflect.Int8.String(), jen.Lit(v.Elem().Interface().(int8)),
-				),
-			)
-		case reflect.Uint:
-			return jen.Id("P").Call(
-				returnTypeAlias(
-					v.Elem(),
-					reflect.Uint.String(), jen.Lit(v.Elem().Interface().(uint)),
-				),
-			)
-		case reflect.Uint64:
-			return jen.Id("P").Call(
-				returnTypeAlias(
-					v.Elem(),
-					reflect.Uint64.String(),
-					jen.Lit(v.Elem().Interface().(uint64)),
-				),
-			)
-		case reflect.Uint32:
-			return jen.Id("P").Call(
-				returnTypeAlias(
-					v.Elem(),
-					reflect.Uint32.String(),
-					jen.Lit(v.Elem().Interface().(uint32)),
-				),
-			)
-		case reflect.Uint16:
-			return jen.Id("P").Call(
-				returnTypeAlias(
-					v.Elem(),
-					reflect.Uint16.String(),
-					jen.Lit(v.Elem().Interface().(uint16)),
-				),
-			)
-		case reflect.Uint8:
-			return jen.Id("P").Call(
-				returnTypeAlias(
-					v.Elem(),
-					reflect.Uint8.String(),
-					jen.Lit(v.Elem().Interface().(uint8)),
-				),
-			)
-		case reflect.Float32:
-			return jen.Id("P").Call(
-				returnTypeAlias(
-					v.Elem(),
-					reflect.Float32.String(),
-					jen.Lit(v.Elem().Interface().(float32)),
-				),
-			)
-		case reflect.Float64:
-			return jen.Id("P").Call(
-				returnTypeAlias(
-					v.Elem(),
-					reflect.Float64.String(),
-					jen.Lit(v.Elem().Interface().(float64)),
-				),
-			)
-		case reflect.Bool:
-			return jen.Id("P").Call(
-				returnTypeAlias(
-					v.Elem(),
-					reflect.Bool.String(), jen.Lit(v.Elem().Bool()),
-				),
-			)
-		case reflect.String:
-			return jen.Id("P").Call(
-				returnTypeAlias(
-					v.Elem(),
-					reflect.String.String(),
-					jen.Lit(v.Elem().String()),
-				),
-			)
+		case reflect.Int, reflect.Int64, reflect.Int32, reflect.Int16,
+			reflect.Int8, reflect.Uint, reflect.Uint64, reflect.Uint32,
+			reflect.Uint16, reflect.Uint8, reflect.Float32, reflect.Float64,
+			reflect.Bool, reflect.String:
+			return jen.Id("P").Call(j.convertValue(v.Elem()))
 		default:
 			return jen.Op("&").Add(j.convertValue(v.Elem()))
 		}
 
+	case reflect.Interface:
+		if isEmptyValue(v) {
+			return jen.Nil()
+		}
+		return j.convertValue(v.Elem())
+
 	default:
-		slog.Info(
+		slog.Error(
 			"unsupported",
 			slog.String("type", v.String()),
 			slog.String("kind", v.Kind().String()),
 		)
 		return jen.Nil()
 	}
+}
+
+func isEmptyValue(v reflect.Value) bool {
+	switch v.Kind() {
+	case reflect.Array, reflect.Map, reflect.Slice, reflect.String:
+		return v.Len() == 0
+	case reflect.Bool:
+		return !v.Bool()
+	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+		return v.Int() == 0
+	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Uintptr:
+		return v.Uint() == 0
+	case reflect.Float32, reflect.Float64:
+		return v.Float() == 0
+	case reflect.Interface, reflect.Pointer:
+		return v.IsNil()
+	}
+	return false
 }
 
 func (j *jamel) configMapComment(
@@ -349,6 +282,7 @@ outer:
 					// we have the comments, break out
 					break outer
 				}
+				// the data value is right after the "data" key
 				if c2.Kind == yaml.ScalarNode && c2.Value == "data" {
 					found = true
 				}
