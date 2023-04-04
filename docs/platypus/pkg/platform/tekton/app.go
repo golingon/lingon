@@ -223,7 +223,7 @@ func New() *Tekton {
 					Name:     "system:authenticated",
 				},
 			},
-			TypeMeta: kubeutil.TypeRoleV1,
+			TypeMeta: kubeutil.TypeRoleBindingV1,
 		},
 		PipelinesInfoRole:              PipelinesInfoRole,
 		PipelinesRemoteResolversDeploy: PipelinesRemoteResolversDeploy,
