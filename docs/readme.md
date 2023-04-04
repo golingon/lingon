@@ -1,10 +1,19 @@
 # Documentation
 
-- [Rationale](./rationale.md)
-- [FAQ](./faq.md)
-- [Go](./go.md)
+## Getting started
+
 - [Kubernetes](./kubernetes/)
 - [Terraform](./terraform/)
-- [Licenses](./licenses.md)
+
+## About the project
+
 - [Development](./dev.md)
+- [Rationale](./rationale.md)
+- [Comparison of various Infra-as-Code tools](./comparison.md)
+- [Why Go](./go.md)
+- [FAQ](./faq.md)
+
+## Legal & Security
+
+- [Licenses](./licenses.md)
 - [Security](./security.md)

@@ -21,6 +21,15 @@ godoc -http=:6060
 # and open http://localhost:6060/pkg/github.com/volvo-cars/lingon/
 ```
 
+Or if you prefer to have the same experience as <https://pkg.go.dev>
+
+```shell
+go install golang.org/x/pkgsite/cmd/pkgsite@latest && pkgsite
+
+# open http://localhost:8080/github.com/volvo-cars/lingon.
+```
+
+
 To run tests for the documentation and examples, run:
 
 ```shell
