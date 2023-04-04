@@ -19,6 +19,10 @@ import (
 	kubescheme "k8s.io/client-go/kubernetes/scheme"
 )
 
+const crdMsg = `
+IF there is an issue with CRDs. Please visit https://github.com/volvo-cars/lingon/tree/main/docs/kubernetes
+`
+
 func main() {
 	var in, out, appName, pkgName string
 	var v bool
@@ -91,7 +95,11 @@ func main() {
 		groupByKind,
 		removeAppName,
 	); err != nil {
-		slog.Error("run", slog.Any("error", err))
+		slog.Error(
+			"run",
+			slog.Any("error", err),
+			slog.String("CRD", crdMsg),
+		)
 		os.Exit(1)
 	}
 
