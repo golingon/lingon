@@ -254,6 +254,24 @@ file does not exist: does-not-exists.yaml`
 	}
 }
 
+func TestImport_ErrorEmptyManifest(t *testing.T) {
+	pathg := "testdata/golden/empty.golden"
+	pathy := "testdata/golden/empty.yaml"
+	golden, err := os.ReadFile(pathg)
+	tu.AssertNoError(t, err, "read golden file")
+	var buf bytes.Buffer
+	err = kube.Import(
+		kube.WithImportAppName("foo-app"),
+		kube.WithImportPackageName("foopackage"),
+		kube.WithImportManifestFiles([]string{pathy}),
+		kube.WithImportWriter(&buf),
+	)
+	tu.AssertNoError(t, err, "failed to import")
+	if diff := tu.Diff(buf.String(), string(golden)); diff != "" {
+		t.Error(tu.Callers(), diff)
+	}
+}
+
 func TestJamel_SaveFromReader(t *testing.T) {
 	filename := "testdata/grafana.yaml"
 	file, err := os.Open(filename)
@@ -383,7 +401,7 @@ func TestJamel_ConfigMapComments(t *testing.T) {
 	)
 	tu.AssertNoError(t, err, "failed to import")
 
-	got, err := kube.ListGoFiles(out)
+	got, err := kubeutil.ListGoFiles(out)
 	tu.AssertNoError(t, err, "failed to list go files")
 	sort.Strings(got)
 

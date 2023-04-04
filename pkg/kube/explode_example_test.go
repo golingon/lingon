@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/volvo-cars/lingon/pkg/kube"
+	"github.com/volvo-cars/lingon/pkg/kubeutil"
 )
 
 func ExampleExplode() {
@@ -31,7 +32,7 @@ func ExampleExplode() {
 		panic(fmt.Errorf("explode manifest files: %w", err))
 	}
 
-	got, err := kube.ListYAMLFiles("./out/explode")
+	got, err := kubeutil.ListYAMLFiles("./out/explode")
 	if err != nil {
 		panic(fmt.Errorf("list yaml files: %w", err))
 	}
@@ -72,7 +73,7 @@ func ExampleExplode_reader() {
 	defer func() {
 		_ = os.RemoveAll(out)
 	}()
-	manifest, err := kube.ReadManifest("./testdata/golden/reader.yaml")
+	manifest, err := kubeutil.ReadManifest("./testdata/golden/reader.yaml")
 	if err != nil {
 		panic(fmt.Errorf("read manifest files: %w", err))
 	}
@@ -92,7 +93,7 @@ metadata:
 	_ = kube.Explode(r, out)
 
 	// but we can still list the files already processed
-	got, err := kube.ListYAMLFiles(out)
+	got, err := kubeutil.ListYAMLFiles(out)
 	if err != nil {
 		panic(fmt.Errorf("list yaml files: %w", err))
 	}

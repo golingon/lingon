@@ -19,7 +19,7 @@ import (
 // in which they are applied. For example, a namespace should be applied before
 // any other object in the namespace.
 func Explode(r io.Reader, dir string) error {
-	content, err := splitManifest(r)
+	content, err := kubeutil.ManifestSplit(r)
 	if err != nil {
 		return fmt.Errorf("explode: %w", err)
 	}
@@ -49,7 +49,7 @@ func Explode(r io.Reader, dir string) error {
 			basicName(m.Meta.Name, m.Kind),
 		)
 		outName := filepath.Join(out, fn)
-		if err := write(obj, outName); err != nil {
+		if err := os.WriteFile(outName, []byte(obj), os.ModePerm); err != nil {
 			return fmt.Errorf("explode: write %s: %w", outName, err)
 		}
 	}

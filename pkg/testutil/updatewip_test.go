@@ -15,6 +15,7 @@ import (
 	"github.com/google/go-cmp/cmp/cmpopts"
 	"github.com/rogpeppe/go-internal/txtar"
 	"github.com/volvo-cars/lingon/pkg/kube"
+	"github.com/volvo-cars/lingon/pkg/kubeutil"
 	"k8s.io/apimachinery/pkg/runtime"
 	"mvdan.cc/gofumpt/format"
 )
@@ -74,7 +75,7 @@ func diffLatest(
 	}
 
 	// IMPORT BACK TO GO
-	currManifests, err := kube.ListYAMLFiles(tmpdir)
+	currManifests, err := kubeutil.ListYAMLFiles(tmpdir)
 	if err != nil {
 		return "", fmt.Errorf("list yaml files: %w", err)
 	}

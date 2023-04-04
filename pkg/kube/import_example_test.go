@@ -33,7 +33,7 @@ func ExampleImport() {
 	if err != nil {
 		panic(fmt.Errorf("import: %w", err))
 	}
-	got, err := kube.ListGoFiles(out)
+	got, err := kubeutil.ListGoFiles(out)
 	if err != nil {
 		panic(fmt.Errorf("list go files: %w", err))
 	}

@@ -11,6 +11,7 @@ import (
 	"strings"
 
 	"github.com/volvo-cars/lingon/pkg/kube"
+	"github.com/volvo-cars/lingon/pkg/kubeutil"
 	"golang.org/x/exp/slog"
 	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	apiextensionsbeta "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
@@ -144,7 +145,7 @@ func run(
 	}
 
 	// directory
-	files, err := kube.ListYAMLFiles(in)
+	files, err := kubeutil.ListYAMLFiles(in)
 	if err != nil {
 		slog.Error("list yaml files", err)
 	}

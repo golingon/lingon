@@ -94,7 +94,7 @@ func (j *jamel) gatekeeperImportOptions() error {
 
 func (j *jamel) generateGo() error {
 	if j.useReader {
-		splitYaml, err := splitManifest(j.o.ManifestReader)
+		splitYaml, err := kubeutil.ManifestSplit(j.o.ManifestReader)
 		if err != nil {
 			return err
 		}
@@ -109,7 +109,7 @@ func (j *jamel) generateGo() error {
 	}
 
 	for _, filePath := range j.o.ManifestFiles {
-		splitYaml, err := ReadManifest(filePath)
+		splitYaml, err := kubeutil.ReadManifest(filePath)
 		if err != nil {
 			return err
 		}
@@ -126,11 +126,18 @@ func (j *jamel) generateGo() error {
 func (j *jamel) convertToGo(splitYaml []string) error {
 	vcpt := 1 // variable name counter to avoid name collisions
 	scpt := 1 // struct field name counter to avoid name collisions
-	for _, y := range splitYaml {
+	for manifestNumber, y := range splitYaml {
 		data := []byte(y)
+		if len(data) == 0 {
+			continue
+		}
 		m, err := kubeutil.ExtractMetadata(data)
 		if err != nil {
-			return fmt.Errorf("extract metadata: %w", err)
+			return fmt.Errorf(
+				"extract metadata of manifest %d: %w",
+				manifestNumber,
+				err,
+			)
 		}
 
 		//
@@ -238,7 +245,7 @@ func (j *jamel) checkManifests(filePath string) error {
 		return fmt.Errorf("not yaml file: %s", filePath)
 	}
 
-	if !fileExists(filePath) {
+	if !kubeutil.FileExists(filePath) {
 		return fmt.Errorf("file does not exist: %s", filePath)
 	}
 	return nil

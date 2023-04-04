@@ -48,20 +48,13 @@ func TestKube2GoJen(t *testing.T) {
 			tt.name, func(t *testing.T) {
 				obj := objectFromManifest(t, tt.manifest)
 				got := convert(t, obj, tt.redact)
-				want := readGolden(t, tt.golden)
+				want := tu.ReadGolden(t, tt.golden)
 				if diff := tu.Diff(got, want); diff != "" {
 					t.Error(tu.Callers(), diff)
 				}
 			},
 		)
 	}
-}
-
-func readGolden(t *testing.T, path string) string {
-	t.Helper()
-	golden, err := os.ReadFile(path)
-	tu.AssertNoError(t, err, "read golden file")
-	return string(golden)
 }
 
 func convert(t *testing.T, obj runtime.Object, redact bool) string {

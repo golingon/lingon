@@ -12,6 +12,7 @@ import (
 	"sort"
 
 	"github.com/rogpeppe/go-internal/txtar"
+	"github.com/volvo-cars/lingon/pkg/kubeutil"
 )
 
 type goky struct {
@@ -88,7 +89,7 @@ resources:`
 
 	if g.useWriter {
 		if g.o.SingleFile != "" {
-			if _, err = g.o.ManifestWriter.Write(Txtar2YAML(g.ar)); err != nil {
+			if _, err = g.o.ManifestWriter.Write(kubeutil.Txtar2YAML(g.ar)); err != nil {
 				return fmt.Errorf("write: %w", err)
 			}
 		} else {
@@ -105,7 +106,7 @@ resources:`
 
 	if g.o.SingleFile != "" {
 		f := filepath.Join(g.o.OutputDir, g.o.SingleFile)
-		if err = os.WriteFile(f, Txtar2YAML(g.ar), 0o600); err != nil {
+		if err = os.WriteFile(f, kubeutil.Txtar2YAML(g.ar), 0o600); err != nil {
 			return fmt.Errorf("write file%s: %w", f, err)
 		}
 		return nil

@@ -161,4 +161,5 @@ var CRDsAPIVersionToPkgPath = map[string]string{
 	"secrets-store.csi.x-k8s.io/v1": "sigs.k8s.io/secrets-store-csi-driver/apis/v1",
 	"ricoberger.de/v1alpha1":        "github.com/ricoberger/vault-secrets-operator/api/v1alpha1",
 	"networking.istio.io/v1beta1":   "istio.io/client-go/pkg/apis/networking/v1beta1",
+	"tekton.dev/v1":                 "github.com/tektoncd/pipeline/pkg/apis",
 }

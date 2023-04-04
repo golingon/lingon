@@ -1,17 +1,14 @@
 // Copyright 2023 Volvo Car Corporation
 // SPDX-License-Identifier: Apache-2.0
 
-package kube
+package kubeutil
 
 import (
-	"bufio"
 	"bytes"
 	"errors"
 	"fmt"
-	"io"
 	"os"
 	"path/filepath"
-	"strings"
 )
 
 // ListGoFiles returns a list of all go files in the root directory
@@ -75,64 +72,14 @@ func ReadManifest(filePath string) ([]string, error) {
 	if err != nil {
 		return nil, fmt.Errorf("read manifest %s: %w", filePath, err)
 	}
-	splitYaml, err := splitManifest(bytes.NewReader(yf))
+	splitYaml, err := ManifestSplit(bytes.NewReader(yf))
 	if err != nil {
 		return nil, fmt.Errorf("splitting manifest: %s: %w", filePath, err)
 	}
 	return splitYaml, nil
 }
 
-// splitManifest splits a YAML contained in [io.Reader] into a list of string containing YAML documents
-func splitManifest(r io.Reader) ([]string, error) {
-	scanner := bufio.NewScanner(r)
-	var content []string
-	var buf bytes.Buffer
-
-	for scanner.Scan() {
-		txt := scanner.Text()
-		switch {
-		// Skip comments
-		case strings.HasPrefix(txt, "#"):
-			continue
-		// Split by '---'
-		case strings.Contains(txt, "---"):
-			if buf.Len() > 0 {
-				content = append(content, buf.String())
-				buf.Reset()
-			}
-		default:
-			buf.WriteString(txt + "\n")
-		}
-	}
-
-	s := buf.String()
-	if len(s) > 0 { // if a manifest ends with '---', don't add it
-		content = append(content, s)
-	}
-	if err := scanner.Err(); err != nil {
-		return nil, fmt.Errorf("spliting manifests: %w", err)
-	}
-	return content, nil
-}
-
-func write(s, filename string) error {
-	fp, err := os.Create(filename)
-	if err != nil {
-		var pe *os.PathError
-		if errors.As(err, &pe) {
-			return fmt.Errorf("path %q: %w", pe.Path, pe)
-		}
-		return err
-	}
-	defer func() {
-		err = errors.Join(fp.Close(), err)
-	}()
-
-	_, err = fp.WriteString(s)
-	return err
-}
-
-func fileExists(filename string) bool {
+func FileExists(filename string) bool {
 	info, err := os.Stat(filename)
 	if os.IsNotExist(err) {
 		return false

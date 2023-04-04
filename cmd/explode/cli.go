@@ -11,6 +11,7 @@ import (
 	"runtime/debug"
 
 	"github.com/volvo-cars/lingon/pkg/kube"
+	"github.com/volvo-cars/lingon/pkg/kubeutil"
 )
 
 func main() {
@@ -81,7 +82,7 @@ func run(in, out string) error {
 	}
 
 	// directory
-	files, err := kube.ListYAMLFiles(in)
+	files, err := kubeutil.ListYAMLFiles(in)
 	if err != nil {
 		return fmt.Errorf("list yaml files: %w", err)
 	}
