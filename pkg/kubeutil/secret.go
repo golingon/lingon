@@ -8,6 +8,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+// Secret creates a Secret with the given name, namespace, labels, annotations and data.
 func Secret(name, namespace string, data map[string][]byte) *v1.Secret {
 	return &v1.Secret{
 		TypeMeta: TypeSecretV1,

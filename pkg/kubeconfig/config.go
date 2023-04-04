@@ -13,6 +13,7 @@ const (
 	kind    = "Config"
 )
 
+// New creates a new kubeconfig.
 func New() *Config {
 	return &Config{
 		APIVersion: version,
@@ -23,6 +24,7 @@ func New() *Config {
 	}
 }
 
+// Config is a kubeconfig.
 type Config struct {
 	Kind           string           `json:"kind"`
 	APIVersion     string           `json:"apiVersion"`
@@ -33,21 +35,25 @@ type Config struct {
 	Users          []*UserConfig    `json:"users"`
 }
 
+// UserConfig is a user in a kubeconfig.
 type UserConfig struct {
 	Name string   `json:"name"`
 	User AuthInfo `json:"user"`
 }
 
+// ContextConfig is a context in a kubeconfig.
 type ContextConfig struct {
 	Name    string  `json:"name"`
 	Context Context `json:"context"`
 }
 
+// ClusterConfig is a cluster in a kubeconfig.
 type ClusterConfig struct {
 	Name    string  `json:"name"`
 	Cluster Cluster `json:"cluster"`
 }
 
+// AddCluster adds a cluster to the kubeconfig.
 func (c *Config) AddCluster(cluster *ClusterConfig) error {
 	if cluster == nil {
 		return fmt.Errorf("add cluster: %w", errIsNil)
@@ -60,6 +66,7 @@ func (c *Config) AddCluster(cluster *ClusterConfig) error {
 	return nil
 }
 
+// AddUser adds a user to the kubeconfig.
 func (c *Config) AddUser(user *UserConfig) error {
 	if user == nil {
 		return fmt.Errorf("add user: %w", errIsNil)
@@ -71,6 +78,7 @@ func (c *Config) AddUser(user *UserConfig) error {
 	return nil
 }
 
+// AddContext adds a context to the kubeconfig.
 func (c *Config) AddContext(context *ContextConfig) error {
 	if context == nil {
 		return fmt.Errorf("add context: %w", errIsNil)

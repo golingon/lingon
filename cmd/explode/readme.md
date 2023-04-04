@@ -5,9 +5,9 @@ organize kubernetes manifests according to their kind
 ## Usage
 
 ```shell
-explode -in=<dir> -out=<dir>
-expllode -in=manifest.yaml  # default -out=out/
-explode -out=<dir> < manifest.yaml  # default -in=- # read from stdin
+explode -in=manifest/ -out=out/
+explode -in=manifest.yaml  # default -out=out/
+explode -out=out/ < manifest.yaml  # default -in=- # read from stdin
 ```
 
 ## Example
@@ -15,7 +15,9 @@ explode -out=<dir> < manifest.yaml  # default -in=- # read from stdin
 At the root of the repo, run:
 
 ```shell
-go build -o bin/explode ./cmd/explode && ./bin/explode -in=./pkg/kube/testdata
+go build -o bin/explode ./cmd/explode 
+
+./bin/explode -in=./pkg/kube/testdata/tekton.yaml
 ```
 
 output:

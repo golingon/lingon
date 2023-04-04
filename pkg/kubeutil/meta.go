@@ -38,6 +38,7 @@ type Metadata struct {
 	Meta       Meta   `json:"metadata"`
 }
 
+// Meta is a struct that holds the metadata of a kubernetes object.
 type Meta struct {
 	Name        string            `json:"name"`
 	Namespace   string            `json:"namespace,omitempty"`

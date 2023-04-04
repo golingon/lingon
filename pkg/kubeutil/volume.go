@@ -8,6 +8,7 @@ import (
 	corev1 "k8s.io/api/core/v1"
 )
 
+// VolumeAndMount is a helper struct to create a Volume and a VolumeSource
 type VolumeAndMount struct {
 	corev1.VolumeMount
 	// corev1.Volume has just Name and VolumeSource.
@@ -16,6 +17,7 @@ type VolumeAndMount struct {
 	VolumeSource corev1.VolumeSource
 }
 
+// Volume creates a Volume from the VolumeAndMount
 func (vam VolumeAndMount) Volume() corev1.Volume {
 	return corev1.Volume{
 		Name:         vam.Name,
@@ -23,8 +25,10 @@ func (vam VolumeAndMount) Volume() corev1.Volume {
 	}
 }
 
+// VolumesAndMounts is a helper struct to create a list of Volumes and a list of VolumeSource
 type VolumesAndMounts []VolumeAndMount
 
+// Volumes creates a list of Volumes from the VolumesAndMounts
 func (vams VolumesAndMounts) Volumes() []corev1.Volume {
 	volumes := make([]corev1.Volume, 0, len(vams))
 	for _, vam := range vams {
@@ -33,6 +37,7 @@ func (vams VolumesAndMounts) Volumes() []corev1.Volume {
 	return volumes
 }
 
+// VolumeMounts creates a list of VolumesMount from the VolumesAndMounts
 func (vams VolumesAndMounts) VolumeMounts() []corev1.VolumeMount {
 	mounts := make([]corev1.VolumeMount, 0, len(vams))
 	for _, vam := range vams {

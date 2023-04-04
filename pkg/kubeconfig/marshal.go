@@ -10,6 +10,7 @@ import (
 	"sigs.k8s.io/yaml"
 )
 
+// Unmarshal unmarshals a kubeconfig file from a byte slice.
 func (c *Config) Unmarshal(b []byte) error {
 	b, err := yaml.YAMLToJSON(b)
 	if err != nil {
@@ -22,6 +23,7 @@ func (c *Config) Unmarshal(b []byte) error {
 	return nil
 }
 
+// Marshal marshals a kubeconfig file to a byte slice.
 func (c *Config) Marshal() ([]byte, error) {
 	j, err := json.Marshal(c)
 	if err != nil {

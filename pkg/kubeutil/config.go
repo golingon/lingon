@@ -15,6 +15,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+// DataConfigMap creates a ConfigMap with the given data.
 func DataConfigMap(
 	name, namespace string,
 	labels, annotations, data map[string]string,
@@ -38,6 +39,7 @@ type ConfigAndMount struct {
 	Data               map[string]string
 }
 
+// ConfigMap creates a ConfigMap from the ConfigAndMount
 func (m ConfigAndMount) ConfigMap() corev1.ConfigMap {
 	return corev1.ConfigMap{
 		TypeMeta:   TypeConfigMapV1,
@@ -46,6 +48,7 @@ func (m ConfigAndMount) ConfigMap() corev1.ConfigMap {
 	}
 }
 
+// VolumeAndMount creates a VolumeAndMount from the ConfigAndMount
 func (m ConfigAndMount) VolumeAndMount() VolumeAndMount {
 	return VolumeAndMount{
 		VolumeSource: corev1.VolumeSource{
@@ -57,6 +60,7 @@ func (m ConfigAndMount) VolumeAndMount() VolumeAndMount {
 	}
 }
 
+// HashEnv creates an environment variable with the hash of the ConfigMap data.
 func (m ConfigAndMount) HashEnv(name string) corev1.EnvVar {
 	h := sha256.New()
 	if err := json.NewEncoder(h).Encode(m.Data); err != nil {

@@ -75,7 +75,7 @@ func TestLoadKubeConfig(t *testing.T) {
 		},
 	}
 	assert := func(t *testing.T, tt TT) {
-		got, err := k.LoadKubeConfig(tt.path, tt.vf...)
+		got, err := k.Load(tt.path, tt.vf...)
 		if tt.err != "" {
 			if err != nil && err.Error() == tt.err {
 				// t.Logf("got error: %v", err)

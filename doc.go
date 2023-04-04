@@ -13,6 +13,8 @@
 //   - Terraform CLI
 //   - kubectl
 //
+// The packages currently available are:
+//
 // # Kube
 //
 //   - [kube.App] struct that is embedded to mark kubernetes applications
@@ -24,16 +26,24 @@
 //
 // Manipulate kubeconfig files **without** any dependencies on `go-client`.
 //
-// # KubeUtil
+// # Kubeutil
 //
 // Reusable functions used to create kubernetes objects in Go.
+//
+// # Terra
+//
+// Core functionality for working with Terraform.
+//
+// # Terragen
+//
+// Generate Go code for Terraform providers.
 //
 // # Testutils
 //
 // Reusable test functions.
 //
-// [kube.Export]: https://pkg.go.dev/github.com/lingon-lang/lingon/pkg/kube#Export
-// [kube.Explode]: https://pkg.go.dev/github.com/lingon-lang/lingon/pkg/kube#Explode
-// [kube.Import]: https://pkg.go.dev/github.com/lingon-lang/lingon/pkg/kube#Import
-// [kube.App]: https://pkg.go.dev/github.com/lingon-lang/lingon/pkg/kube#App
+// [kube.Export]: https://pkg.go.dev/github.com/volvo-cars/lingon/pkg/kube#Export
+// [kube.Explode]: https://pkg.go.dev/github.com/volvo-cars/lingon/pkg/kube#Explode
+// [kube.Import]: https://pkg.go.dev/github.com/volvo-cars/lingon/pkg/kube#Import
+// [kube.App]: https://pkg.go.dev/github.com/volvo-cars/lingon/pkg/kube#App
 package main

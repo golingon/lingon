@@ -4,7 +4,7 @@ Convert kubernetes YAML manifests to Go structs.
 
 Why? Because we found it easier to manipulate manifests and automate with Go code than YAML.
 
-Why Go? Smarter people have a better to explain it: <https://github.com/bwplotka/mimic/blob/main/README.md#but-why-go>
+Why Go? Smarter people have a better way to explain it than us: <https://github.com/bwplotka/mimic/blob/main/README.md#but-why-go>
 
 ## Usage
 
@@ -73,13 +73,13 @@ import (
 
 func main() {   
 	app := myapp.New()
-    manifestOut := filepath.Join("manifests", "myapp")
+	manifestOut := filepath.Join("manifests", "myapp")
 	
 	// it will create the output directory if it does not exist
 	// and generate the YAML manifests in the directory manifests/myapp/
 	if err := kube.Export(app, manifestOut); err != nil {
-  panic(err)
- }
+        panic(err)
+    }
     
     // OR 
 	// apply the manifests to kubernetes directly to the cluster

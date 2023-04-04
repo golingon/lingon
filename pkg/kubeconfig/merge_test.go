@@ -17,7 +17,7 @@ const (
 
 func loadTestdata(t *testing.T, name string) *k.Config {
 	t.Helper()
-	config, err := k.LoadKubeConfig(filepath.Join(testdataDir, name))
+	config, err := k.Load(filepath.Join(testdataDir, name))
 	if err != nil {
 		t.Fatal(err)
 		return nil

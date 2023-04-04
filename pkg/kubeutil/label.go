@@ -54,6 +54,7 @@ var NotInWindows = corev1.NodeSelectorTerm{
 	},
 }
 
+// MergeLabels merges multiple label maps into one.
 func MergeLabels(labels ...map[string]string) map[string]string {
 	result := map[string]string{}
 	for _, l := range labels {

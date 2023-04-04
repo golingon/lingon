@@ -13,8 +13,10 @@ var (
 	errIsEmpty = errors.New("is empty")
 )
 
+// ValidationFunc is used to validate a kubeconfig.
 type ValidationFunc func(*Config) error
 
+// WithValidContexts checks that each context has a valid cluster and user.
 func WithValidContexts(c *Config) error {
 	clusterSet := make(map[string]struct{})
 	userSet := make(map[string]struct{})

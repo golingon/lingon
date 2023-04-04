@@ -9,6 +9,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+// SimpleSA creates a simple ServiceAccount with the given name and namespace.
 func SimpleSA(name, namespace string) *corev1.ServiceAccount {
 	return &corev1.ServiceAccount{
 		TypeMeta:   TypeServiceAccountV1,
@@ -16,16 +17,18 @@ func SimpleSA(name, namespace string) *corev1.ServiceAccount {
 	}
 }
 
+// ServiceAccount creates a ServiceAccount with the given name, namespace, labels and annotations.
 func ServiceAccount(
 	name, namespace string,
 	labels, annotations map[string]string,
 ) *corev1.ServiceAccount {
 	return &corev1.ServiceAccount{
 		TypeMeta:   TypeServiceAccountV1,
-		ObjectMeta: ObjectMeta(name, namespace, labels, nil),
+		ObjectMeta: ObjectMeta(name, namespace, labels, annotations),
 	}
 }
 
+// Role creates a Role with the given name, namespace, labels and rules.
 func Role(
 	name, namespace string,
 	labels map[string]string,
@@ -42,6 +45,7 @@ func Role(
 	}
 }
 
+// ClusterRole creates a ClusterRole with the given name, labels and rules.
 func ClusterRole(
 	name string,
 	labels map[string]string,

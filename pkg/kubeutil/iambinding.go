@@ -62,6 +62,7 @@ func BindRole(
 	}
 }
 
+// ClusterRoleRef creates a RoleRef to a ClusterRole
 func ClusterRoleRef(name string) rbacv1.RoleRef {
 	return rbacv1.RoleRef{
 		APIGroup: TypeClusterRoleV1.GroupVersionKind().Group,
@@ -70,6 +71,7 @@ func ClusterRoleRef(name string) rbacv1.RoleRef {
 	}
 }
 
+// RoleRef creates a RoleRef to a Role
 func RoleRef(name string) rbacv1.RoleRef {
 	return rbacv1.RoleRef{
 		APIGroup: TypeRoleV1.GroupVersionKind().Group,
@@ -78,6 +80,7 @@ func RoleRef(name string) rbacv1.RoleRef {
 	}
 }
 
+// RoleSubject creates a Subject for a RoleBinding
 func RoleSubject(name, namespace string) []rbacv1.Subject {
 	return []rbacv1.Subject{
 		{

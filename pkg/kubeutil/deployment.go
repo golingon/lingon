@@ -10,6 +10,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+// SimpleDeployment creates a simple deployment with a single container.
 func SimpleDeployment(
 	name, namespace string,
 	labels map[string]string,
@@ -38,11 +39,13 @@ func SimpleDeployment(
 	}
 }
 
+// SetDeploySA sets the ServiceAccountName in the deployment.
 func SetDeploySA(deploy *appsv1.Deployment, saName string) *appsv1.Deployment {
 	deploy.Spec.Template.Spec.ServiceAccountName = saName
 	return deploy
 }
 
+// Resources creates a ResourceRequirements struct.
 func Resources(cpuWant, memWant, cpuMax, memMax string) corev1.ResourceRequirements {
 	return corev1.ResourceRequirements{
 		Requests: corev1.ResourceList{

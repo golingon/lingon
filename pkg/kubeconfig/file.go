@@ -13,7 +13,8 @@ import (
 	"github.com/google/go-cmp/cmp/cmpopts"
 )
 
-func LoadKubeConfig(path string, validate ...ValidationFunc) (*Config, error) {
+// Load loads a kubeconfig file from the given path.
+func Load(path string, validate ...ValidationFunc) (*Config, error) {
 	if !fileExists(path) {
 		return nil, fmt.Errorf("load kubeconfig: file %q does not exist", path)
 	}
