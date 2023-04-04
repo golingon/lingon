@@ -7,7 +7,7 @@ import (
 	"fmt"
 
 	"github.com/dave/jennifer/jen"
-	"github.com/volvo-cars/lingon/pkg/internal/str"
+	"github.com/veggiemonk/strcase"
 )
 
 func SubPkgFile(s *Schema) (*jen.File, bool) {
@@ -40,7 +40,7 @@ func subPkgArgStruct(n *node) *jen.Statement {
 			continue
 		}
 		stmt := jen.Comment(attr.comment()).Line()
-		stmt.Add(jen.Id(str.PascalCase(attr.name)))
+		stmt.Add(jen.Id(strcase.Pascal(attr.name)))
 		stmt.Add(ctyTypeReturnType(attr.ctyType))
 		// Add tags
 		tags := map[string]string{
@@ -55,7 +55,7 @@ func subPkgArgStruct(n *node) *jen.Statement {
 
 	for _, child := range n.children {
 		stmt := jen.Comment(child.comment()).Line()
-		stmt.Add(jen.Id(str.PascalCase(child.name)))
+		stmt.Add(jen.Id(strcase.Pascal(child.name)))
 		tags := map[string]string{
 			tagHCL: child.name + ",block",
 		}
@@ -81,7 +81,7 @@ func subPkgArgStruct(n *node) *jen.Statement {
 			}
 			tags[tagValidate] = nodeBlockListValidateTags(child)
 		}
-		stmt.Id(str.PascalCase(child.uniqueName))
+		stmt.Id(strcase.Pascal(child.uniqueName))
 		stmt.Tag(tags)
 		fields = append(fields, stmt)
 	}
@@ -194,7 +194,7 @@ func subPkgAttributeStruct(n *node) *jen.Statement {
 				// Receiver
 				Params(jen.Id(n.receiver).Id(structName)).
 				// Name
-				Id(str.PascalCase(attr.name)).Call().
+				Id(strcase.Pascal(attr.name)).Call().
 				//	Return type
 				Add(ctyTypeReturnType(attr.ctyType)).
 				// Body
@@ -221,7 +221,7 @@ func subPkgAttributeStruct(n *node) *jen.Statement {
 				// Receiver
 				Params(jen.Id(n.receiver).Id(structName)).
 				// Name
-				Id(str.PascalCase(child.name)).Call().
+				Id(strcase.Pascal(child.name)).Call().
 				// Return type
 				Add(
 					returnTypeFromNestingPath(
@@ -246,7 +246,7 @@ func subPkgStateStruct(n *node) *jen.Statement {
 	fields := make([]jen.Code, 0)
 
 	for _, attr := range n.attributes {
-		pan := str.PascalCase(attr.name)
+		pan := strcase.Pascal(attr.name)
 		stmt := jen.Id(pan)
 		stmt.Add(ctyTypeToGoType(attr.ctyType, pan))
 		// Add tags
@@ -259,7 +259,7 @@ func subPkgStateStruct(n *node) *jen.Statement {
 	}
 
 	for _, child := range n.children {
-		stmt := jen.Id(str.PascalCase(child.name))
+		stmt := jen.Id(strcase.Pascal(child.name))
 		if child.isSingularState() {
 			stmt.Op("*")
 		} else {

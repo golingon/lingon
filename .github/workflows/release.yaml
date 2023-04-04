@@ -14,9 +14,6 @@ jobs:
       contents: write  # for goreleaser/goreleaser-action to create a GitHub release
       packages: write  # for goreleaser/goreleaser-action to push a container image
 
-    outputs:
-      hashes: ${{ steps.hash.outputs.hashes }}
-
     runs-on: ubuntu-latest
 
     steps:

@@ -7,7 +7,7 @@ import (
 	"fmt"
 
 	"github.com/dave/jennifer/jen"
-	"github.com/volvo-cars/lingon/pkg/internal/str"
+	"github.com/veggiemonk/strcase"
 )
 
 // argsStruct takes a schema and generates the Args struct that is used by the user to specify the arguments
@@ -19,7 +19,7 @@ func argsStruct(s *Schema) *jen.Statement {
 			continue
 		}
 		stmt := jen.Comment(attr.comment()).Line()
-		stmt.Add(jen.Id(str.PascalCase(attr.name)))
+		stmt.Add(jen.Id(strcase.Pascal(attr.name)))
 		stmt.Add(ctyTypeReturnType(attr.ctyType))
 
 		// Add tags
@@ -38,7 +38,7 @@ func argsStruct(s *Schema) *jen.Statement {
 			tagHCL: child.uniqueName + ",block",
 		}
 		stmt := jen.Comment(child.comment()).Line()
-		stmt.Add(jen.Id(str.PascalCase(child.uniqueName)))
+		stmt.Add(jen.Id(strcase.Pascal(child.uniqueName)))
 		if len(child.nestingPath) == 0 || child.maxItems == 1 {
 			stmt.Op("*")
 			if child.isRequired {
@@ -50,7 +50,7 @@ func argsStruct(s *Schema) *jen.Statement {
 			}
 			tags[tagValidate] = nodeBlockListValidateTags(child)
 		}
-		stmt.Qual(s.SubPkgQualPath(), str.PascalCase(child.uniqueName))
+		stmt.Qual(s.SubPkgQualPath(), strcase.Pascal(child.uniqueName))
 		stmt.Tag(tags)
 		fields = append(fields, stmt)
 	}
@@ -95,7 +95,7 @@ func attributesStruct(s *Schema) *jen.Statement {
 			jen.Comment(
 				fmt.Sprintf(
 					"%s returns a reference to field %s of %s.",
-					str.PascalCase(attr.name),
+					strcase.Pascal(attr.name),
 					attr.name,
 					s.Type,
 				),
@@ -105,7 +105,7 @@ func attributesStruct(s *Schema) *jen.Statement {
 				// Receiver
 				Params(jen.Id(s.Receiver).Id(s.AttributesStructName)).
 				// Name
-				Id(str.PascalCase(attr.name)).Call().
+				Id(strcase.Pascal(attr.name)).Call().
 				// Return type
 				Add(ctyTypeReturnType(ct)).
 				Block(
@@ -124,14 +124,14 @@ func attributesStruct(s *Schema) *jen.Statement {
 	}
 
 	for _, child := range s.graph.children {
-		structName := str.PascalCase(child.uniqueName) + suffixAttributes
+		structName := strcase.Pascal(child.uniqueName) + suffixAttributes
 		qualStruct := jen.Qual(s.SubPkgQualPath(), structName).Clone
 		stmt.Add(
 			jen.Func().
 				// Receiver
 				Params(jen.Id(s.Receiver).Id(s.AttributesStructName)).
 				// Name
-				Id(str.PascalCase(child.uniqueName)).Call().
+				Id(strcase.Pascal(child.uniqueName)).Call().
 				// Return type
 				Add(
 					returnTypeFromNestingPath(

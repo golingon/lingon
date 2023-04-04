@@ -6,7 +6,7 @@ package terrajen
 import (
 	"fmt"
 
-	"github.com/volvo-cars/lingon/pkg/internal/str"
+	"github.com/veggiemonk/strcase"
 
 	"github.com/dave/jennifer/jen"
 	"github.com/zclconf/go-cty/cty"
@@ -61,10 +61,10 @@ func ctyTypeToGoType(
 		return jen.StructFunc(
 			func(g *jen.Group) {
 				for k, v := range t.AttributeTypes() {
-					g.Id(str.PascalCase(k)).Add(
+					g.Id(strcase.Pascal(k)).Add(
 						ctyTypeToGoType(
 							v,
-							str.PascalCase(attrName+k),
+							strcase.Pascal(attrName+k),
 						),
 					).Tag(
 						map[string]string{

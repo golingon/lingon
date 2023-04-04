@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"sort"
 
-	"github.com/volvo-cars/lingon/pkg/internal/str"
+	"github.com/veggiemonk/strcase"
 
 	"github.com/dave/jennifer/jen"
 	tfjson "github.com/hashicorp/terraform-json"
@@ -110,15 +110,15 @@ type node struct {
 }
 
 func (n *node) argsStructName() string {
-	return str.PascalCase(n.uniqueName)
+	return strcase.Pascal(n.uniqueName)
 }
 
 func (n *node) attributesStructName() string {
-	return str.PascalCase(n.uniqueName) + suffixAttributes
+	return strcase.Pascal(n.uniqueName) + suffixAttributes
 }
 
 func (n *node) stateStructName() string {
-	return str.PascalCase(n.uniqueName) + suffixState
+	return strcase.Pascal(n.uniqueName) + suffixState
 }
 
 func (n *node) isSingularArg() bool {
@@ -135,10 +135,10 @@ func (n *node) comment() string {
 		if n.isRequired {
 			required = "required"
 		}
-		return fmt.Sprintf("%s: %s", str.PascalCase(n.uniqueName), required)
+		return fmt.Sprintf("%s: %s", strcase.Pascal(n.uniqueName), required)
 	}
 	return fmt.Sprintf(
-		"%s: %s", str.PascalCase(n.uniqueName), nodeBlockListValidateTags(n),
+		"%s: %s", strcase.Pascal(n.uniqueName), nodeBlockListValidateTags(n),
 	)
 }
 
@@ -169,7 +169,7 @@ func (a *attribute) comment() string {
 
 	return fmt.Sprintf(
 		"%s: %s, %s",
-		str.PascalCase(a.name),
+		strcase.Pascal(a.name),
 		a.ctyType.FriendlyName(),
 		required,
 	)

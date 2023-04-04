@@ -7,7 +7,7 @@ import (
 	"fmt"
 
 	"github.com/dave/jennifer/jen"
-	"github.com/volvo-cars/lingon/pkg/internal/str"
+	"github.com/veggiemonk/strcase"
 )
 
 // ResourceFile generates a Go file for a Terraform resource configuration based on the given Schema
@@ -132,7 +132,7 @@ func resourceStruct(s *Schema) *jen.Statement {
 func resourceStateStruct(s *Schema) *jen.Statement {
 	fields := make([]jen.Code, 0)
 	for _, attr := range s.graph.attributes {
-		pan := str.PascalCase(attr.name)
+		pan := strcase.Pascal(attr.name)
 		stmt := jen.Id(pan)
 		stmt.Add(ctyTypeToGoType(attr.ctyType, pan))
 		stmt.Tag(
@@ -144,7 +144,7 @@ func resourceStateStruct(s *Schema) *jen.Statement {
 	}
 
 	for _, child := range s.graph.children {
-		pbn := str.PascalCase(child.name)
+		pbn := strcase.Pascal(child.name)
 		stmt := jen.Id(pbn)
 		if len(child.nestingPath) == 0 {
 			stmt.Op("*")
@@ -152,7 +152,7 @@ func resourceStateStruct(s *Schema) *jen.Statement {
 			stmt.Index()
 		}
 
-		stmt.Qual(s.SubPkgQualPath(), str.PascalCase(child.name)+suffixState)
+		stmt.Qual(s.SubPkgQualPath(), strcase.Pascal(child.name)+suffixState)
 		stmt.Tag(
 			map[string]string{
 				tagJSON: child.name,

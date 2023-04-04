@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/volvo-cars/lingon/pkg/internal/str"
+	"github.com/veggiemonk/strcase"
 
 	tfjson "github.com/hashicorp/terraform-json"
 )
@@ -97,13 +97,13 @@ func (a *ProviderGenerator) SchemaResource(
 		PackageName:              a.ProviderName,             // aws
 		Type:                     name,                       // aws
 
-		StructName:           str.PascalCase(shortName),                   // iam_role => IamRole
-		ArgumentStructName:   str.PascalCase(shortName) + suffixArgs,      // iam_role => IamRoleArgs
-		AttributesStructName: str.CamelCase(shortName) + suffixAttributes, // iam_role => iamRoleAttributes
-		StateStructName:      str.CamelCase(shortName) + suffixState,      // iam_role => IamRoleOut
+		StructName:           strcase.Pascal(shortName),                   // iam_role => IamRole
+		ArgumentStructName:   strcase.Pascal(shortName) + suffixArgs,      // iam_role => IamRoleArgs
+		AttributesStructName: strcase.Camel(shortName) + suffixAttributes, // iam_role => iamRoleAttributes
+		StateStructName:      strcase.Camel(shortName) + suffixState,      // iam_role => IamRoleOut
 		Receiver:             structReceiverFromName(shortName),           // iam_role => ir
 
-		NewFuncName:    "New" + str.PascalCase(shortName),
+		NewFuncName:    "New" + strcase.Pascal(shortName),
 		SubPackageName: spn, // iam_role => iamrole
 		FilePath:       fp,
 		graph:          newGraph(sb),
@@ -121,7 +121,7 @@ func (a *ProviderGenerator) SchemaData(
 	spn := strings.ReplaceAll(shortName, "_", "")
 	dataName := "data_" + shortName
 	fp := filepath.Join(a.GeneratedPackageLocation, dataName+fileExtension)
-	pn := str.PascalCase(shortName)
+	pn := strcase.Pascal(shortName)
 
 	ds := &Schema{
 		SchemaType:               SchemaTypeData,
