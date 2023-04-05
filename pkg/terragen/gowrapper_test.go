@@ -14,6 +14,7 @@ func TestParseProvider(t *testing.T) {
 		providerStr string
 		provider    Provider
 		expectErr   bool
+		errmsg      string
 	}
 
 	tests := []test{
@@ -29,14 +30,17 @@ func TestParseProvider(t *testing.T) {
 		{
 			providerStr: "awshashicorp/aws:4.60.0",
 			expectErr:   true,
+			errmsg:      "provider format incorrect: missing `=`",
 		},
 		{
 			providerStr: "aws=hashicorp/aws",
 			expectErr:   true,
+			errmsg:      "provider format incorrect: missing `:` in `source:version`",
 		},
 		{
 			providerStr: "aws=hashicorp/aws",
 			expectErr:   true,
+			errmsg:      "provider format incorrect: missing `:` in `source:version`",
 		},
 	}
 
@@ -45,7 +49,7 @@ func TestParseProvider(t *testing.T) {
 			tt.providerStr, func(t *testing.T) {
 				ap, err := ParseProvider(tt.providerStr)
 				if tt.expectErr {
-					tu.AssertError(t, err, "parsing provider")
+					tu.AssertError(t, err, tt.errmsg)
 				} else {
 					tu.AssertNoError(t, err, "parsing provider")
 					tu.AssertEqual(t, tt.provider, ap)

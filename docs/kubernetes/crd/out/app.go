@@ -9,9 +9,8 @@ import (
 	"os/exec"
 
 	kube "github.com/volvo-cars/lingon/pkg/kube"
-	v1beta1 "istio.io/client-go/pkg/apis/networking/v1beta1"
-
-	v1 "sigs.k8s.io/secrets-store-csi-driver/apis/v1"
+	networkingv1beta1 "istio.io/client-go/pkg/apis/networking/v1beta1"
+	secretsstorecsidriverapisv1 "sigs.k8s.io/secrets-store-csi-driver/apis/v1"
 )
 
 // validate the struct implements the interface
@@ -21,8 +20,8 @@ var _ kube.Exporter = (*Team)(nil)
 type Team struct {
 	kube.App
 
-	TeamGraphMicrosoftServiceEntry        *v1beta1.ServiceEntry
-	TeamOnboardingAuthSecretProviderClass *v1.SecretProviderClass
+	TeamGraphMicrosoftServiceEntry        *networkingv1beta1.ServiceEntry
+	TeamOnboardingAuthSecretProviderClass *secretsstorecsidriverapisv1.SecretProviderClass
 }
 
 // New creates a new Team
@@ -59,7 +58,10 @@ func Apply(ctx context.Context, km kube.Exporter) error {
 		defer func() {
 			err = errors.Join(err, stdin.Close())
 		}()
-		if errEW := kube.Export(km, kube.WithExportWriter(stdin)); errEW != nil {
+		if errEW := kube.Export(
+			km,
+			kube.WithExportWriter(stdin),
+		); errEW != nil {
 			err = errors.Join(err, errEW)
 		}
 	}()

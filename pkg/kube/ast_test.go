@@ -5,6 +5,7 @@ package kube
 
 import (
 	"os"
+	"reflect"
 	"strings"
 	"testing"
 
@@ -60,7 +61,7 @@ func TestKube2GoJen(t *testing.T) {
 func convert(t *testing.T, obj runtime.Object, redact bool) string {
 	t.Helper()
 	j := jamel{o: importOption{RedactSecrets: redact}}
-	code := j.kube2GoJen(obj)
+	code := j.convertValue(reflect.ValueOf(obj))
 	var b strings.Builder
 	err := code.Render(&b)
 	tu.AssertNoError(t, err, "render code")

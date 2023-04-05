@@ -8,6 +8,8 @@ import (
 	"os"
 
 	"github.com/volvo-cars/lingon/pkg/kubeutil"
+	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
+	apiextensionsbeta "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/kubernetes/scheme"
 )
@@ -45,6 +47,8 @@ type importOption struct {
 	// ex: os.Stdout
 	GoCodeWriter io.Writer
 
+	CRDPkgImport map[string]string
+
 	// Serializer is used to decode the kubernetes objects
 	// ex: scheme.Codecs.UniversalDeserializer()
 	Serializer runtime.Decoder
@@ -78,7 +82,7 @@ var importDefaultOpts = importOption{
 	ManifestReader: os.Stdin,
 	GoCodeWriter:   os.Stdout,
 	OutputDir:      "out",
-	Serializer:     scheme.Codecs.UniversalDeserializer(), // no CRDs by default
+	Serializer:     defaultSerializer(),
 	NameFieldFunc:  NameFieldFunc,
 	NameVarFunc:    NameVarFunc,
 	NameFileFunc:   NameFileFunc,
@@ -86,6 +90,14 @@ var importDefaultOpts = importOption{
 	GroupByKind:    false, // FIXME: should default to true ?
 	AddMethods:     true,
 	RedactSecrets:  false,
+}
+
+func defaultSerializer() runtime.Decoder {
+	// NEEDED FOR CRDS
+	//
+	_ = apiextensions.AddToScheme(scheme.Scheme)
+	_ = apiextensionsbeta.AddToScheme(scheme.Scheme)
+	return scheme.Codecs.UniversalDeserializer()
 }
 
 // WithImportSerializer sets the serializer [runtime.Decoder] to decode the kubernetes objects

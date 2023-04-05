@@ -127,7 +127,7 @@ func (j *jamel) convertValue(v reflect.Value) *jen.Statement {
 	// Map types
 	//
 	case reflect.Map:
-		pk := prefixKind(v)
+		pk := j.prefixKind(v)
 		vf := jen.DictFunc(
 			func(d jen.Dict) {
 				for _, key := range v.MapKeys() {
@@ -141,7 +141,7 @@ func (j *jamel) convertValue(v reflect.Value) *jen.Statement {
 	// Array and Slice types
 	//
 	case reflect.Array, reflect.Slice:
-		pk := prefixKind(v)
+		pk := j.prefixKind(v)
 		if isEmptyValue(v) {
 			return pk.Block()
 		}
@@ -168,7 +168,7 @@ func (j *jamel) convertValue(v reflect.Value) *jen.Statement {
 				Comment(commentSecret)
 		}
 
-		pk := prefixKind(v)
+		pk := j.prefixKind(v)
 		vf := jen.DictFunc(
 			func(d jen.Dict) {
 				// code from [json.Encode](https://go.dev/src/encoding/json/encode.go)
@@ -305,7 +305,7 @@ func (j *jamel) convertConfigMap(
 		v = v.Elem()
 	}
 
-	pk := prefixKind(v)
+	pk := j.prefixKind(v)
 	vf := jen.DictFunc(
 		func(d jen.Dict) {
 			for i := 0; i < v.NumField(); i++ {
@@ -395,7 +395,7 @@ func (j *jamel) convertSecret(v reflect.Value) *jen.Statement {
 	if v.IsZero() {
 		return jen.Nil()
 	}
-	pk := prefixKind(v)
+	pk := j.prefixKind(v)
 	vf := jen.DictFunc(
 		func(d jen.Dict) {
 			for i := 0; i < v.NumField(); i++ {
@@ -460,11 +460,41 @@ func convertQuantity(field reflect.Value) *jen.Statement {
 	).Call(jen.Lit(qty))
 }
 
+var repl = strings.NewReplacer("-", "", ".", "")
+
+// storePkgPath stores the first non-native kubernetes package it finds,
+// hoping it will be the CRD Go package instead of the APIVersion URL.
+func (j *jamel) storePkgPath(t reflect.Type) (string, string) {
+	pkgPath := t.PkgPath()
+	if pkgPath == "" {
+		return "", t.Name()
+	}
+	name := t.Name()
+	split := strings.Split(pkgPath, "/")
+	if split[0] == "k8s.io" {
+		return pkgPath, name
+	}
+	if len(split) >= 2 && j.crdCurrent == "" {
+		j.crdCurrent = pkgPath
+		// package alias
+		switch split[0] {
+		case "sigs.k8s.io":
+			j.crdPkgAlias[pkgPath] = repl.Replace(strings.Join(split[1:], ""))
+		case "github.com":
+			j.crdPkgAlias[pkgPath] = repl.Replace(strings.Join(split[1:], ""))
+		default:
+			j.crdPkgAlias[pkgPath] = strings.Join(split[len(split)-2:], "")
+		}
+
+	}
+	return pkgPath, name
+}
+
 // prefixKind returns the jen statement for the type of the value.
 // It is used to set the proper import package for the type.
 // For instance, `v1.ServiceAccount`, renamed [corev1.ServiceAccount]
 // with `import corev1 "k8s.io/api/core/v1"`
-func prefixKind(v reflect.Value) *jen.Statement {
+func (j *jamel) prefixKind(v reflect.Value) *jen.Statement {
 	if v.IsZero() {
 		return nil
 	}
@@ -503,21 +533,15 @@ func prefixKind(v reflect.Value) *jen.Statement {
 			return jen.Nil()
 		}
 
-		return jen.Op("&").Add(prefixKind(v.Elem()))
+		return jen.Op("&").Add(j.prefixKind(v.Elem()))
 
 	case reflect.Array, reflect.Slice:
 		switch v.Type().Elem().Kind() {
 		case reflect.Ptr:
-			te := v.Type().Elem()
-			return jen.Index().Op("*").Add(
-				jen.Qual(
-					te.Elem().PkgPath(),
-					te.Elem().Name(),
-				),
-			)
+			pkgPath, name := j.storePkgPath(v.Type().Elem().Elem())
+			return jen.Index().Op("*").Add(jen.Qual(pkgPath, name))
 		default:
-			pkgPath := v.Type().Elem().PkgPath()
-			name := v.Type().Elem().Name()
+			pkgPath, name := j.storePkgPath(v.Type().Elem())
 			if pkgPath == "" {
 				// built-in type
 				return jen.Index().Id(name)
@@ -527,23 +551,21 @@ func prefixKind(v reflect.Value) *jen.Statement {
 
 	case reflect.Map:
 		// Resolve Key type first
-		kname := v.Type().Key().Name()
-		keyPkgPath := v.Type().Key().PkgPath()
-		keyName := jen.Qual(keyPkgPath, kname)
-		if keyPkgPath == "" {
+		kPkgPath, kname := j.storePkgPath(v.Type().Key())
+		keyName := jen.Qual(kPkgPath, kname)
+		if kPkgPath == "" {
 			// built-in type
 			keyName = jen.Id(kname)
 		}
 
 		// Resolve Value type
-		vname := v.Type().Elem().Name()
+		valuePkgPath, vname := j.storePkgPath(v.Type().Elem())
 		if vname == "" {
 			// If the value type is not a named type, use string as the default type.
 			// In some configMap in YAML, `data: {}` is used to represent an empty map
 			// which yields `map[string]{}` and cause the rendering to fail.
 			vname = "string"
 		}
-		valuePkgPath := v.Type().Elem().PkgPath()
 		valueName := jen.Qual(valuePkgPath, vname)
 		if valuePkgPath == "" {
 			// built-in type
@@ -553,8 +575,7 @@ func prefixKind(v reflect.Value) *jen.Statement {
 		return jen.Map(keyName).Add(valueName)
 
 	case reflect.Struct:
-		pkgPath := v.Type().PkgPath()
-		name := v.Type().Name()
+		pkgPath, name := j.storePkgPath(v.Type())
 		return jen.Qual(pkgPath, name)
 
 	default:

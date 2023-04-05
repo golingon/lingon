@@ -38,6 +38,10 @@ type Metadata struct {
 	Meta       Meta   `json:"metadata"`
 }
 
+func (m *Metadata) GVK() string {
+	return m.APIVersion + ", Kind=" + m.Kind
+}
+
 // Meta is a struct that holds the metadata of a kubernetes object.
 type Meta struct {
 	Name        string            `json:"name"`

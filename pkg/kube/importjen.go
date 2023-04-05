@@ -29,6 +29,9 @@ func (j *jamel) appFile() *jen.File {
 	appFile := jen.NewFile(j.o.OutputPkgName)
 	appFile.HeaderComment(headerComment)
 	api.ImportKubernetesPkgAlias(appFile)
+	for pkg, alias := range j.crdPkgAlias {
+		appFile.ImportAlias(pkg, alias)
+	}
 	appFile.Line()
 
 	// var _ kube.Exporter = (*NAME)(nil)
@@ -83,8 +86,7 @@ func stmtStruct(
 			g.Qual(kubeAppPkgPath, embeddedStructName).Line()
 
 			// add all the objects to the struct
-			keys := orderedKeys(kubeAppStructCode)
-			for _, k := range keys {
+			for _, k := range orderedKeys(kubeAppStructCode) {
 				v := kubeAppStructCode[k]
 				g.Id(k).Add(jen.Op("*").Add(v))
 			}
@@ -101,8 +103,7 @@ func stmtNewApp(
 	return jen.Func().Id("New").Params().Op("*").Id(nameStruct).Block(
 		jen.Return().Op("&").Id(nameStruct).ValuesFunc(
 			func(g *jen.Group) {
-				keys := orderedKeys(nameFieldVar)
-				for _, nameField := range keys {
+				for _, nameField := range orderedKeys(nameFieldVar) {
 					nameVar := nameFieldVar[nameField]
 					// field: kube obj var
 					g.Line().Id(nameField).Op(":").Id(nameVar)

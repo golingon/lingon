@@ -30,6 +30,7 @@ const defaultImportOutputDir = "out/jamel"
 func defaultSerializer() runtime.Decoder {
 	// NEEDED FOR CRDS
 	//
+
 	_ = apiextensions.AddToScheme(scheme.Scheme)
 	_ = apiextensionsbeta.AddToScheme(scheme.Scheme)
 	return scheme.Codecs.UniversalDeserializer()
@@ -325,6 +326,38 @@ func TestJamel_SaveFromReader(t *testing.T) {
 	if !cmp.Equal(want, got) {
 		t.Error(tu.Diff(want, got))
 	}
+}
+
+func TestJamel_MissingCRDs(t *testing.T) {
+	filename := "testdata/istio.yaml"
+	file, err := os.Open(filename)
+	tu.AssertNoError(t, err, fmt.Sprintf("failed to open file: %s", filename))
+
+	var buf bytes.Buffer
+
+	err = kube.Import(
+		kube.WithImportAppName("istio"),
+		kube.WithImportPackageName("istio"),
+		kube.WithImportOutputDirectory("manifests/"),
+		kube.WithImportReader(file),
+		kube.WithImportWriter(&buf),
+		kube.WithImportNameFileFunc(
+			func(m kubeutil.Metadata) string {
+				return fmt.Sprintf(
+					"%s-%s.go",
+					strings.ToLower(m.Kind),
+					m.Meta.Name,
+				)
+			},
+		),
+	)
+	errmsg := "generate go: stdin: decoding manifest for " +
+		"&{APIVersion:networking.istio.io/v1alpha3 Kind:EnvoyFilter " +
+		"Meta:{Name:stats-filter-1.13 Namespace:istio-system " +
+		"Labels:map[istio.io/rev:default] Annotations:map[]}}: " +
+		"no kind \"EnvoyFilter\" is registered for version " +
+		"\"networking.istio.io/v1alpha3\" in scheme \"pkg/runtime/scheme.go:100\""
+	tu.AssertError(t, err, errmsg)
 }
 
 func TestJamel_ReaderWriter(t *testing.T) {

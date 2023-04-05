@@ -26,6 +26,9 @@ func AssertError(t *testing.T, err error, msg string) {
 	if err == nil {
 		t.Error(Callers(), msg, errors.New("error was expected but is nil"))
 	}
+	if diff := Diff(err.Error(), msg); diff != "" {
+		t.Error(Callers(), diff)
+	}
 }
 
 func equal[C comparable](a, b C) bool {
