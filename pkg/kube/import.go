@@ -27,14 +27,21 @@ type jamel struct {
 	objectsCode       map[string]*jen.Statement    // obj name => obj as Go struct
 	kubeAppStructCode map[string]*jen.Statement    // fieldName => fieldType
 	objectsMeta       map[string]kubeutil.Metadata // obj name => obj meta
-	crdCurrent        string                       // current package containing CRD types
-	crdPkgAlias       map[string]string            // have some nice alias for those packages
-	// nameFieldVar maps object name to object variable name
+	// nameFieldVar maps object name to object variable name for the kube.App struct
 	nameFieldVar map[string]string
-	o            importOption // options
-	buf          bytes.Buffer // buffer to write the generated code to
-	useReader    bool         // if true, read from io.Reader
-	useWriter    bool         // if true, write to io.Writer
+	// crdPkgAlias keeps alias for those CRD packages discovered during the conversion to Go
+	crdPkgAlias map[string]string
+	// crdCurrent holds the current package containing CRD types,
+	// only useful for top level var declaration of CRD types.
+	crdCurrent string
+	// o is all the importOption
+	o importOption // options
+	// buf is the buffer, also [io.Writer] all the Go generated code is written to
+	buf bytes.Buffer
+	// useReader specifies to read the manifests from io.Reader or from files
+	useReader bool
+	// useWriter specifies to write the generated code to o.ManifestReader or to files
+	useWriter bool
 }
 
 func Import(opts ...ImportOption) error {
@@ -53,8 +60,6 @@ func Import(opts ...ImportOption) error {
 
 func newImporter(opts ...ImportOption) (*jamel, error) {
 	j := &jamel{
-		useReader:         false,
-		useWriter:         false,
 		buf:               bytes.Buffer{},
 		objectsCode:       make(map[string]*jen.Statement),
 		kubeAppStructCode: make(map[string]*jen.Statement),
@@ -63,6 +68,8 @@ func newImporter(opts ...ImportOption) (*jamel, error) {
 		crdPkgAlias:       make(map[string]string),
 		nameFieldVar:      make(map[string]string),
 		o:                 importDefaultOpts,
+		useReader:         false,
+		useWriter:         false,
 	}
 
 	for _, opt := range opts {
@@ -76,6 +83,7 @@ func newImporter(opts ...ImportOption) (*jamel, error) {
 	return j, nil
 }
 
+// gatekeeperImportOptions returns an error if any options are incompatible
 func (j *jamel) gatekeeperImportOptions() error {
 	if len(j.o.AppName) == 0 {
 		j.o.AppName = "app"
@@ -175,7 +183,7 @@ func (j *jamel) convertToGo(splitYaml []string) error {
 			scpt++
 		}
 
-		// resolve package path for imports
+		// resolve package path for imports of top-level var declaration
 		pkgPath, err := api.PkgPathFromAPIVersion(m.APIVersion)
 		if err != nil {
 			// try CRD

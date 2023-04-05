@@ -27,9 +27,8 @@ wget https://storage.googleapis.com/tekton-releases/pipeline/previous/v0.45.0/re
       ```sh
       go run cmd/kygo/ -in=./install.yaml -out=output -app=myapp -group`
       ```
-   - for specific CRDs, create a `main.go` file with the following content:
-
-{{ "Example_import" | example }}
+   - for specific CRDs, look at the [CRD example](./crd)
+   - for more options, see [Import Options](./options-import.md)
 
 3. Modify the structs to your liking
    - see [best practices](docs/best-practices.md) for more information
@@ -79,7 +78,7 @@ Converts kubernetes manifests to Go structs.
 
 A CLI was written to make it easier to use in the terminal instead of just a library.
 It does support CustomResourceDefinitions but not the custom resources themselves, although it is easy to add them manually.
-An example of how to do it can be found in the [example](../example/kube/).
+An example of how to convert custom resource from YAML to Go can be found in the [CRD example](../crd/).
 
 ## [Packages](../../pkg/)
 

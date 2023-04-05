@@ -8,6 +8,7 @@ package crd
 //go:generate rm -rf out/
 //go:generate echo ">>>> importing YAML to Go"
 //go:generate go test -v example_import_test.go
+//go:generate go test -v import_options_test.go
 //go:generate echo ">>>> exporting Go to YAML"
 //go:generate go test -v example_export_test.go
 

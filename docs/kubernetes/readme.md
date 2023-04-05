@@ -27,53 +27,8 @@ wget https://storage.googleapis.com/tekton-releases/pipeline/previous/v0.45.0/re
       ```sh
       go run cmd/kygo/ -in=./install.yaml -out=output -app=myapp -group`
       ```
-   - for specific CRDs, create a `main.go` file with the following content:
-
-```go
-package crd_test
-
-import (
-	"fmt"
-	"os"
-
-	"github.com/volvo-cars/lingon/pkg/kube"
-	istionetworkingv1beta1 "istio.io/client-go/pkg/apis/networking/v1beta1"
-	"k8s.io/apiextensions-apiserver/pkg/apis/apiextensions"
-	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
-	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/client-go/kubernetes/scheme"
-	secretsstorev1 "sigs.k8s.io/secrets-store-csi-driver/apis/v1"
-)
-
-func defaultSerializer() runtime.Decoder {
-	// Add CRDs to scheme
-	// This is needed to be able to import CRDs from kubernetes manifests files.
-	_ = apiextensions.AddToScheme(scheme.Scheme)
-	_ = apiextensionsv1.AddToScheme(scheme.Scheme)
-	_ = secretsstorev1.AddToScheme(scheme.Scheme)
-	_ = istionetworkingv1beta1.AddToScheme(scheme.Scheme)
-	return scheme.Codecs.UniversalDeserializer()
-}
-
-// Example_import to shows how to import CRDs from kubernetes manifests files.
-func Example_import() {
-	// Remove previously generated output directory
-	_ = os.RemoveAll("./out")
-
-	if err := kube.Import(
-		kube.WithImportAppName("team"),
-		kube.WithImportManifestFiles([]string{"./manifest.yaml"}),
-		kube.WithImportOutputDirectory("./out"),
-		kube.WithImportSerializer(defaultSerializer()),
-	); err != nil {
-		fmt.Printf("%s\n", err)
-	}
-	fmt.Println("successfully imported CRDs from manifest.yaml")
-
-	// Output:
-	// successfully imported CRDs from manifest.yaml
-}
-```
+   - for specific CRDs, look at the [CRD example](./crd)
+   - for more options, see [Import Options](./options-import.md)
 
 3. Modify the structs to your liking
    - see [best practices](docs/best-practices.md) for more information
@@ -153,7 +108,7 @@ Converts kubernetes manifests to Go structs.
 
 A CLI was written to make it easier to use in the terminal instead of just a library.
 It does support CustomResourceDefinitions but not the custom resources themselves, although it is easy to add them manually.
-An example of how to do it can be found in the [example](../example/kube/).
+An example of how to convert custom resource from YAML to Go can be found in the [CRD example](../crd/).
 
 ## [Packages](../../pkg/)
 

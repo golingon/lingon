@@ -47,8 +47,6 @@ type importOption struct {
 	// ex: os.Stdout
 	GoCodeWriter io.Writer
 
-	CRDPkgImport map[string]string
-
 	// Serializer is used to decode the kubernetes objects
 	// ex: scheme.Codecs.UniversalDeserializer()
 	Serializer runtime.Decoder

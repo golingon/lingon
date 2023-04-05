@@ -2,10 +2,7 @@ module github.com/volvo-cars/lingon/docs
 
 go 1.20
 
-replace (
-	github.com/volvo-cars/lingon => ../
-	github.com/volvo-cars/lingon/docs => ./
-)
+replace github.com/volvo-cars/lingon => ../
 
 require (
 	github.com/Masterminds/semver/v3 v3.2.0

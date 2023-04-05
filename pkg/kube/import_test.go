@@ -231,8 +231,8 @@ func TestImport(t *testing.T) {
 				}
 				sort.Strings(got)
 				want := tc.OutFiles
-				if !cmp.Equal(want, got) {
-					t.Error(tu.Diff(want, got))
+				if diff := tu.Diff(got, want); diff != "" {
+					t.Error(tu.Callers(), diff)
 				}
 			},
 		)
@@ -246,12 +246,12 @@ func TestImport_Error(t *testing.T) {
 		kube.WithImportManifestFiles([]string{"does-not-exists.yaml"}),
 	)
 	if err == nil {
-		t.Error("expected error")
+		t.Error("expected error, got nil")
 	}
 	output := `import options: package name cannot contain a dash
 file does not exist: does-not-exists.yaml`
-	if err.Error() != output {
-		t.Error(tu.Diff(output, err.Error()))
+	if diff := tu.Diff(output, err.Error()); diff != "" {
+		t.Error(tu.Callers(), diff)
 	}
 }
 
@@ -323,8 +323,8 @@ func TestJamel_SaveFromReader(t *testing.T) {
 		"out/jamel/reader/serviceaccount-grafana.go",
 	}
 
-	if !cmp.Equal(want, got) {
-		t.Error(tu.Diff(want, got))
+	if diff := tu.Diff(got, want); diff != "" {
+		t.Error(tu.Callers(), diff)
 	}
 }
 
@@ -408,8 +408,8 @@ func TestJamel_ReaderWriter(t *testing.T) {
 		got[i] = f.Name
 	}
 	sort.Strings(got)
-	if !cmp.Equal(want, got) {
-		t.Error(tu.Diff(want, got))
+	if diff := tu.Diff(got, want); diff != "" {
+		t.Error(tu.Callers(), diff)
 	}
 }
 

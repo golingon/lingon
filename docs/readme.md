@@ -2,7 +2,7 @@
 
 ## Getting started
 
-- [Kubernetes](./kubernetes/)
+- [Kubernetes](./kubernetes/) (examples, options, CRDs)
 - [Terraform](./terraform/)
 
 ## About the project

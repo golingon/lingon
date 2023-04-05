@@ -1,7 +1,4 @@
-// Copyright 2023 Volvo Car Corporation
-// SPDX-License-Identifier: Apache-2.0
-
-package kube_test
+package crd
 
 import (
 	"bytes"
@@ -14,10 +11,16 @@ import (
 	"github.com/rogpeppe/go-internal/txtar"
 	"github.com/volvo-cars/lingon/pkg/kube"
 	"github.com/volvo-cars/lingon/pkg/kubeutil"
+	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
+	apiextensionsbeta "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
+	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/client-go/kubernetes/scheme"
 )
 
-func ExampleImport() {
-	out := filepath.Join("out", "tekton")
+var testdata = "../../../pkg/kube/testdata/"
+
+func ExampleImport_withManifest() {
+	out := filepath.Join("gocode", "tekton")
 	_ = os.RemoveAll(out)
 	defer os.RemoveAll(out)
 	err := kube.Import(
@@ -28,9 +31,17 @@ func ExampleImport() {
 		// the directory to write the generated code to
 		kube.WithImportOutputDirectory(out),
 		// the list of manifest files to read and convert
-		kube.WithImportManifestFiles([]string{"testdata/tekton.yaml"}),
+		kube.WithImportManifestFiles(
+			[]string{filepath.Join(testdata, "tekton.yaml")},
+		),
 		// define the types for the CRDs
-		kube.WithImportSerializer(defaultSerializer()),
+		kube.WithImportSerializer(
+			func() runtime.Decoder {
+				_ = apiextensions.AddToScheme(scheme.Scheme)
+				_ = apiextensionsbeta.AddToScheme(scheme.Scheme)
+				return scheme.Codecs.UniversalDeserializer()
+			}(),
+		),
 		// will try to remove "tekton" from the name of the variable in the Go code, make them shorter
 		kube.WithImportRemoveAppName(true),
 		// group all the resources from the same kind into one file each
@@ -55,25 +66,25 @@ func ExampleImport() {
 
 	// Output:
 	//
-	// out/tekton/app.go
-	// out/tekton/cluster-role-binding.go
-	// out/tekton/cluster-role.go
-	// out/tekton/config-map.go
-	// out/tekton/custom-resource-definition.go
-	// out/tekton/deployment.go
-	// out/tekton/horizontal-pod-autoscaler.go
-	// out/tekton/mutating-webhook-configuration.go
-	// out/tekton/namespace.go
-	// out/tekton/role-binding.go
-	// out/tekton/role.go
-	// out/tekton/secret.go
-	// out/tekton/service-account.go
-	// out/tekton/service.go
-	// out/tekton/validating-webhook-configuration.go
+	// gocode/tekton/app.go
+	// gocode/tekton/cluster-role-binding.go
+	// gocode/tekton/cluster-role.go
+	// gocode/tekton/config-map.go
+	// gocode/tekton/custom-resource-definition.go
+	// gocode/tekton/deployment.go
+	// gocode/tekton/horizontal-pod-autoscaler.go
+	// gocode/tekton/mutating-webhook-configuration.go
+	// gocode/tekton/namespace.go
+	// gocode/tekton/role-binding.go
+	// gocode/tekton/role.go
+	// gocode/tekton/secret.go
+	// gocode/tekton/service-account.go
+	// gocode/tekton/service.go
+	// gocode/tekton/validating-webhook-configuration.go
 }
 
 func ExampleImport_withWriter() {
-	filename := "testdata/grafana.yaml"
+	filename := filepath.Join(testdata, "grafana.yaml")
 	file, _ := os.Open(filename)
 
 	var buf bytes.Buffer
