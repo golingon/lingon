@@ -5,11 +5,10 @@ package team
 import (
 	"context"
 	"errors"
-	"os"
-	"os/exec"
-
 	kube "github.com/volvo-cars/lingon/pkg/kube"
 	networkingv1beta1 "istio.io/client-go/pkg/apis/networking/v1beta1"
+	"os"
+	"os/exec"
 	secretsstorecsidriverapisv1 "sigs.k8s.io/secrets-store-csi-driver/apis/v1"
 )
 
@@ -28,8 +27,7 @@ type Team struct {
 func New() *Team {
 	return &Team{
 		TeamGraphMicrosoftServiceEntry:        TeamGraphMicrosoftServiceEntry,
-		TeamOnboardingAuthSecretProviderClass: TeamOnboardingAuthSecretProviderClass,
-	}
+		TeamOnboardingAuthSecretProviderClass: TeamOnboardingAuthSecretProviderClass}
 }
 
 // Apply applies the kubernetes objects to the cluster
@@ -58,10 +56,7 @@ func Apply(ctx context.Context, km kube.Exporter) error {
 		defer func() {
 			err = errors.Join(err, stdin.Close())
 		}()
-		if errEW := kube.Export(
-			km,
-			kube.WithExportWriter(stdin),
-		); errEW != nil {
+		if errEW := kube.Export(km, kube.WithExportWriter(stdin)); errEW != nil {
 			err = errors.Join(err, errEW)
 		}
 	}()
