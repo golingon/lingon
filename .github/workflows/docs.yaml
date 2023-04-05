@@ -45,7 +45,9 @@ jobs:
 
       - name: git diff
         working-directory: ./docs
-        run: git --no-pager diff HEAD --exit-code
+        run: |
+          go run mvdan.cc/gofumpt@latest -w -extra .
+          git --no-pager diff HEAD --exit-code
 
       - name: golangci-lint
         uses: golangci/golangci-lint-action@08e2f20817b15149a52b5b3ebe7de50aff2ba8c5 # v3.4.0
