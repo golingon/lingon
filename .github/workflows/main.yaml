@@ -9,8 +9,6 @@ on:
       - '**.go'
       - 'go.mod'
       - '.github/workflows/main.yaml'
-    paths-ignore:
-      - 'docs/**'
 
 concurrency:
   group: ${{ github.head_ref || github.run_id }}
