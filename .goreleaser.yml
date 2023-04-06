@@ -17,22 +17,25 @@ gomod:
     - GOPROXY=https://proxy.golang.org,direct
 
 builds:
+
+  #
+  #  EXPLODE
+  #
   - &buildstep
-    id: explode
+    id: explode-linux
     binary: explode
     main: ./cmd/explode/cli.go
+    goos:
+      - linux
+    goarch:
+      - amd64
+      - arm64
     # ensures mod timestamp to be the commit timestamp
     mod_timestamp: '{{ .CommitTimestamp }}'
     env:
       - CGO_ENABLED=0
       - GO111MODULE=on
       - GOPROXY=https://proxy.golang.org,direct
-    goos:
-      - linux
-      - darwin
-    goarch:
-      - amd64
-      - arm64
     flags:
       - -trimpath
     ldflags:
@@ -45,29 +48,82 @@ builds:
         -X main.builtBy=goreleaser
 
   - <<: *buildstep
-    id: kygo
-    binary: kygo
+    id: explode-macos
+    binary: explode
+    goos:
+      - darwin
+    goarch:
+      - amd64
+      - arm64
 
+  #
+  #  KYGO
+  #
   - <<: *buildstep
-    id: terragen
+    id: kygo-linux
+    binary: kygo
+    goos:
+      - linux
+    goarch:
+      - amd64
+      - arm64
+  - <<: *buildstep
+    id: kygo-macos
+    binary: kygo
+    goos:
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+
+  #
+  #  TERRAGEN
+  #
+  - <<: *buildstep
+    id: terragen-linux
     binary: terragen
+    goos:
+      - linux
+    goarch:
+      - amd64
+      - arm64
+  - <<: *buildstep
+    id: terragen-macos
+    binary: terragen
+    goos:
+      - darwin
+    goarch:
+      - amd64
+      - arm64
 
 archives:
   - id: explode
     format: tar.gz
     name_template: &artags "{{ .Binary }}_{{ .Os }}_{{ .Arch }}_{{ .ShortCommit }}"
     builds:
-      - explode
+      - explode-linux
+      - explode-macos
   - id: kygo
     format: tar.gz
     name_template: *artags
     builds:
-      - kygo
+      - kygo-linux
+      - kygo-macos
   - id: terragen
     format: tar.gz
     name_template: *artags
     builds:
-      - terragen
+      - terragen-linux
+      - terragen-macos
+
+  - id: needed-for-homebrew
+    builds:
+      - explode-linux
+      - explode-macos
+      - kygo-linux
+      - kygo-macos
+      - terragen-linux
+      - terragen-macos
 
 checksum:
   name_template: 'checksums.txt'
@@ -90,6 +146,8 @@ changelog:
 
 brews:
   - name: lingon
+    ids:
+      - needed-for-homebrew
     tap:
       owner: golingon
       name: homebrew-tap
