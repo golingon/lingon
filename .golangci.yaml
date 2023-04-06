@@ -5,7 +5,7 @@ service:
   golangci-lint-version: 1.51.x # use the fixed version to not introduce new linters unexpectedly
 
 run:
-  concurrency: 4
+#  concurrency: 4
   # timeout for analysis, e.g. 30s, 5m, default is 1m
   deadline: 20m
   # which dirs to skip: they won't be analyzed;
@@ -18,7 +18,7 @@ run:
     - vendor$
     - bin$
 
-  go: '1.19'
+  go: '1.20'
 
   # which files to skip: they will be analyzed, but issues from them
   # won't be reported. Default value is empty list, but there is
@@ -61,9 +61,9 @@ linters-settings:
     # report about assignment of errors to blank identifier: `num, _ := strconv.Atoi(numStr)`;
     # default is false: such cases aren't reported by default.
     check-blank: false
-  gocritic:
-    disabled-checks:
-      - exitAfterDefer
+#  gocritic:
+#    disabled-checks:
+#      - exitAfterDefer
   gofumpt:
     # Module path which contains the source code being formatted.
     module-path: github.com/volvo-cars/lingon
@@ -128,11 +128,6 @@ issues:
       linters:
         - errcheck
         - maligned
-
-    # keep it until we only support go1.20
-    - linters:
-        - staticcheck
-      text: "SA1019: rand.Seed has been deprecated"
 
   # Independently of option `exclude` we use default exclude patterns,
   # it can be disabled by this option. To list all
