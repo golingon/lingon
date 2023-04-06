@@ -17,7 +17,6 @@ gomod:
     - GOPROXY=https://proxy.golang.org,direct
 
 builds:
-
   - &buildstep
     id: explode
     binary: explode
@@ -48,14 +47,10 @@ builds:
   - <<: *buildstep
     id: kygo
     binary: kygo
-    # ensures mod timestamp to be the commit timestamp
-    mod_timestamp: '{{ .CommitTimestamp }}'
 
   - <<: *buildstep
     id: terragen
     binary: terragen
-    # ensures mod timestamp to be the commit timestamp
-    mod_timestamp: '{{ .CommitTimestamp }}'
 
 archives:
   - id: explode
@@ -73,14 +68,18 @@ archives:
     name_template: *artags
     builds:
       - terragen
+
 checksum:
   name_template: 'checksums.txt'
+
 sboms:
   - artifacts: archive
   - id: source # Two different sbom configurations need two different IDs
     artifacts: source
+
 snapshot:
   name_template: "{{ incpatch .Version }}-next"
+
 changelog:
   sort: asc
   filters:
@@ -88,6 +87,25 @@ changelog:
       - '^[Dd]ocs:'
       - '^[Tt]est:'
       - '^testdata:'
+
+brews:
+  - name: lingon
+    tap:
+      owner: golingon
+      name: homebrew-tap
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+    folder: Formula
+    homepage: "https://github.com/volvo-cars/lingon"
+    description: |
+      Lingon binaries:
+      - explode is a command line tool to organize kubernetes manifests according to their kind. (YAML to YAML)
+      - kygo is a command line tool to convert kubernetes YAML manifests to Go structs. (YAML to Go)
+      - terragen generates Go code for Terraform providers.
+    test: |
+      system "#{bin}/explode -v"
+      system "#{bin}/kygo -v"
+      system "#{bin}/terragen -v"
+
 # The lines beneath this are called `modelines`. See `:help modeline`
 # Feel free to remove those if you don't want/use them.
 # yaml-language-server: $schema=https://goreleaser.com/static/schema.json
