@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"go/parser"
 	"go/token"
+	"io"
 	"os"
 	"path/filepath"
 	"sort"
@@ -18,6 +19,7 @@ import (
 	"github.com/volvo-cars/lingon/pkg/kube"
 	"github.com/volvo-cars/lingon/pkg/kubeutil"
 	tu "github.com/volvo-cars/lingon/pkg/testutil"
+	"golang.org/x/exp/slog"
 	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	apiextensionsbeta "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -448,7 +450,30 @@ func cleanStr(m string) string {
 
 func TestJamel_VerboseLogger(t *testing.T) {
 	out := filepath.Join(defaultImportOutputDir, "tekton")
+	golden := filepath.Join("testdata", "golden", "log.golden")
 	var bufLog, bufOut bytes.Buffer
+
+	log := func(w io.Writer) *slog.Logger {
+		replace := func(groups []string, a slog.Attr) slog.Attr {
+			// Remove time.
+			if a.Key == slog.TimeKey && len(groups) == 0 {
+				a.Key = ""
+			}
+			// remove file:line
+			if a.Key == slog.SourceKey {
+				a.Key = ""
+			}
+			return a
+		}
+		return slog.New(
+			slog.HandlerOptions{
+				AddSource:   true,
+				ReplaceAttr: replace,
+			}.NewTextHandler(w).WithAttrs(
+				[]slog.Attr{slog.String("app", "lingon")},
+			),
+		)
+	}
 
 	err := kube.Import(
 		kube.WithImportAppName("tekton"),
@@ -462,12 +487,12 @@ func TestJamel_VerboseLogger(t *testing.T) {
 		kube.WithImportWriter(&bufOut),
 		kube.WithImportVerbose(true),
 		kube.WithImportIgnoreErrors(true),
-		kube.WithImportLogger(kube.Logger(&bufLog)),
+		kube.WithImportLogger(log(&bufLog)),
 	)
 	tu.AssertNoError(t, err, "failed to import")
 
 	got := bufLog.String()
-	want, err := os.ReadFile("testdata/golden/log.golden")
+	want, err := os.ReadFile(golden)
 	tu.AssertNoError(t, err, "reading golden file")
 	tu.AssertEqual(t, string(want), got)
 }
