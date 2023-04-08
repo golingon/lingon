@@ -41,9 +41,16 @@ func Example_import() {
 
 	if err := kube.Import(
 		kube.WithImportAppName("team"),
+		kube.WithImportPackageName("team"),
 		kube.WithImportManifestFiles([]string{"./manifest.yaml"}),
 		kube.WithImportOutputDirectory("./out"),
 		kube.WithImportSerializer(defaultSerializer()),
+		// do not print verbose information
+		kube.WithImportVerbose(false),
+		// do not ignore errors
+		kube.WithImportIgnoreErrors(false),
+		// use the default logger even if unused with WithImportVerbose(false)
+		kube.WithImportLogger(kube.Logger(os.Stderr)),
 	); err != nil {
 		fmt.Printf("%s\n", err)
 	}
@@ -88,4 +95,40 @@ func Example_export() {
 	// Output:
 	// successfully exported CRDs to manifests
 }
+```
+
+
+## How to find CRD types
+
+This is more of a heuristic than a rule.
+
+- go to the repo of the project
+- search for `AddToScheme` function
+
+Often it is in the `pkg/apis` or `apis` folder of the project.
+
+## List of well-known CRDs types
+
+> This is best-effort
+
+```go
+import(
+    certmanager "github.com/cert-manager/cert-manager/pkg/api"
+    kservev1alpha1 "github.com/kserve/kserve/pkg/apis/serving/v1alpha1"
+    servingv1alpha1 "github.com/kserve/modelmesh-serving/apis/serving/v1alpha1"
+    profilev1 "github.com/kubeflow/kubeflow/components/profile-controller/api/v1"
+    profilev1beta1 "github.com/kubeflow/kubeflow/components/profile-controller/api/v1beta1"
+    metacontrolleralpha "github.com/metacontroller/metacontroller/pkg/apis/metacontroller/v1alpha1"
+    tektonpipelinesv1 "github.com/tektoncd/pipeline/pkg/apis/pipeline/v1"
+    tektontriggersv1alpha1 "github.com/tektoncd/triggers/pkg/apis/triggers/v1alpha1"
+    istionetworkingv1alpha3 "istio.io/client-go/pkg/apis/networking/v1alpha3"
+    istionetworkingv1beta1 "istio.io/client-go/pkg/apis/networking/v1beta1"
+    istiosecurityv1beta1 "istio.io/client-go/pkg/apis/security/v1beta1"
+    "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions"
+    apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
+    "k8s.io/apimachinery/pkg/runtime"
+    utilruntime "k8s.io/apimachinery/pkg/util/runtime"
+    knativecachingalpha1 "knative.dev/caching/pkg/apis/caching/v1alpha1"
+    secretsstorev1 "sigs.k8s.io/secrets-store-csi-driver/apis/v1"
+)
 ```

@@ -33,6 +33,7 @@ func Example_import() {
 
 	if err := kube.Import(
 		kube.WithImportAppName("team"),
+		kube.WithImportPackageName("team"),
 		kube.WithImportManifestFiles([]string{"./manifest.yaml"}),
 		kube.WithImportOutputDirectory("./out"),
 		kube.WithImportSerializer(defaultSerializer()),

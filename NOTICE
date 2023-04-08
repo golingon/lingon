@@ -8,7 +8,7 @@ github.com/agext/levenshtein v1.2.3 : Apache-2.0
 github.com/apparentlymart/go-textseg/v13/textseg v13.0.0 : MIT
 github.com/dave/jennifer/jen v1.6.0 : MIT
 github.com/eidolon/wordwrap v0.0.0-20161011182207-e0f54129b8bb : MIT
-github.com/fatih/color v1.13.0 : MIT
+github.com/fatih/color v1.14.1 : MIT
 github.com/go-logr/logr v1.2.4 : Apache-2.0
 github.com/go-playground/locales v0.14.1 : MIT
 github.com/go-playground/universal-translator v0.18.1 : MIT
@@ -23,8 +23,8 @@ github.com/hashicorp/terraform-json v0.16.0 : MPL-2.0
 github.com/imdario/mergo v0.3.15 : BSD-3-Clause
 github.com/json-iterator/go v1.1.12 : MIT
 github.com/leodido/go-urn v1.2.2 : MIT
-github.com/mattn/go-colorable v0.1.9 : MIT
-github.com/mattn/go-isatty v0.0.14 : MIT
+github.com/mattn/go-colorable v0.1.13 : MIT
+github.com/mattn/go-isatty v0.0.17 : MIT
 github.com/mitchellh/go-wordwrap v1.0.1 : MIT
 github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd : Apache-2.0
 github.com/modern-go/reflect2 v1.0.2 : Apache-2.0
@@ -70,7 +70,7 @@ github.com/dave/jennifer/jen v1.6.0
 
 github.com/eidolon/wordwrap v0.0.0-20161011182207-e0f54129b8bb
 
-github.com/fatih/color v1.13.0
+github.com/fatih/color v1.14.1
 
 github.com/go-logr/logr v1.2.4
 
@@ -100,9 +100,9 @@ github.com/json-iterator/go v1.1.12
 
 github.com/leodido/go-urn v1.2.2
 
-github.com/mattn/go-colorable v0.1.9
+github.com/mattn/go-colorable v0.1.13
 
-github.com/mattn/go-isatty v0.0.14
+github.com/mattn/go-isatty v0.0.17
 
 github.com/mitchellh/go-wordwrap v1.0.1
 
@@ -558,7 +558,7 @@ SOFTWARE.
 ---
 
 MIT
-(github.com/fatih/color v1.13.0)
+(github.com/fatih/color v1.14.1)
 
 The MIT License (MIT)
 
@@ -2740,7 +2740,7 @@ SOFTWARE.
 ---
 
 MIT
-(github.com/mattn/go-colorable v0.1.9)
+(github.com/mattn/go-colorable v0.1.13)
 
 The MIT License (MIT)
 
@@ -2768,7 +2768,7 @@ SOFTWARE.
 ---
 
 MIT
-(github.com/mattn/go-isatty v0.0.14)
+(github.com/mattn/go-isatty v0.0.17)
 
 Copyright (c) Yasuhiro MATSUMOTO <mattn.jp@gmail.com>
 

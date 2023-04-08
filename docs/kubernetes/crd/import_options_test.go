@@ -52,6 +52,14 @@ func ExampleImport_withManifest() {
 		kube.WithImportGroupByKind(true),
 		// add convenience methods to the App struct
 		kube.WithImportAddMethods(true),
+		// do not print verbose information
+		kube.WithImportVerbose(false),
+		// do not ignore errors
+		kube.WithImportIgnoreErrors(false),
+		// just for example purposes
+		// how to create a logger (see [golang.org/x/tools/slog](https://golang.org/x/tools/slog))
+		// this has no effect with WithImportVerbose(false)
+		kube.WithImportLogger(kube.Logger(os.Stderr)),
 	)
 	if err != nil {
 		panic(fmt.Errorf("import: %w", err))
