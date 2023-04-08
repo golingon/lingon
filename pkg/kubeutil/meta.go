@@ -58,7 +58,7 @@ func ExtractMetadata(data []byte) (*Metadata, error) {
 	}
 
 	if m.Meta.Name == "" || m.Kind == "" {
-		return nil, fmt.Errorf("name or kind: %w", ErrFieldMissing)
+		return nil, fmt.Errorf("name or kind in %+v: %w", m, ErrFieldMissing)
 	}
 	if m.Meta.Namespace == "" {
 		m.Meta.Namespace = "default"

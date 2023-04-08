@@ -13,7 +13,6 @@ require (
 	github.com/hashicorp/terraform-json v0.16.0
 	github.com/imdario/mergo v0.3.15
 	github.com/rogpeppe/go-internal v1.10.0
-	github.com/stretchr/testify v1.8.2
 	github.com/veggiemonk/strcase v0.0.0-20230401153433-418fda9c7e1e
 	github.com/zclconf/go-cty v1.13.1
 	github.com/zegl/kube-score v1.16.1
@@ -30,7 +29,6 @@ require (
 require (
 	github.com/agext/levenshtein v1.2.3 // indirect
 	github.com/apparentlymart/go-textseg/v13 v13.0.0 // indirect
-	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/go-logr/logr v1.2.4 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
@@ -44,7 +42,6 @@ require (
 	github.com/mitchellh/go-wordwrap v1.0.1 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
-	github.com/pmezard/go-difflib v1.0.0 // indirect
 	golang.org/x/crypto v0.7.0 // indirect
 	golang.org/x/mod v0.9.0 // indirect
 	golang.org/x/net v0.8.0 // indirect

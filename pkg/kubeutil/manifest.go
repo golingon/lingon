@@ -29,7 +29,7 @@ func ManifestSplit(r io.Reader) ([]string, error) {
 		case strings.HasPrefix(txt, "#"):
 			continue
 		// Split by '---'
-		case strings.Contains(txt, "---"):
+		case txt == "---":
 			if buf.Len() > 0 {
 				content = append(content, buf.String())
 				buf.Reset()

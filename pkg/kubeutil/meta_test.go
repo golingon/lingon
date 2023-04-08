@@ -6,7 +6,7 @@ package kubeutil
 import (
 	"testing"
 
-	"github.com/google/go-cmp/cmp"
+	tu "github.com/volvo-cars/lingon/pkg/testutil"
 )
 
 func TestExtractMetadata(t *testing.T) {
@@ -69,12 +69,8 @@ metadata:
 		t.Run(
 			tc.tname, func(t *testing.T) {
 				got, err := ExtractMetadata([]byte(tc.in))
-				if err != nil {
-					t.Errorf("err: %s", err)
-				}
-				if !cmp.Equal(got, tc.want) {
-					t.Errorf(cmp.Diff(got, tc.want))
-				}
+				tu.AssertNoError(t, err)
+				tu.AssertEqual(t, tc.want, got)
 			},
 		)
 	}

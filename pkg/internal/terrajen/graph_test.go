@@ -8,8 +8,7 @@ import (
 	"testing"
 
 	tfjson "github.com/hashicorp/terraform-json"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
+	tu "github.com/volvo-cars/lingon/pkg/testutil"
 	"github.com/zclconf/go-cty/cty"
 )
 
@@ -39,12 +38,12 @@ func TestGraph_AttributeString(t *testing.T) {
 	}
 
 	g := newGraph(&sb)
-	require.Len(t, g.attributes, 1)
+	tu.IsEqual(t, len(g.attributes), 1)
 	ac := g.attributes[0]
-	assert.Equal(t, ac.name, ex.Name)
-	assert.True(t, ex.AttributeType.Equals(ac.ctyType))
-	assert.True(t, ac.isArg)
-	assert.True(t, ac.isRequired)
+	tu.IsEqual(t, ac.name, ex.Name)
+	tu.True(t, ex.AttributeType.Equals(ac.ctyType), "attribute type mismatch")
+	tu.True(t, ac.isArg, "ac.isArg")
+	tu.True(t, ac.isRequired, "ac.isRequired")
 }
 
 func TestGraph_Attributes(t *testing.T) {
@@ -62,7 +61,7 @@ func TestGraph_Attributes(t *testing.T) {
 	}
 
 	g := newGraph(&sb)
-	assert.Len(t, g.attributes, 10)
+	tu.IsEqual(t, len(g.attributes), 10)
 }
 
 func TestGraph_Blocks(t *testing.T) {
@@ -95,17 +94,21 @@ func TestGraph_Blocks(t *testing.T) {
 	}
 
 	g := newGraph(&sb)
-	require.Len(t, g.children, 1)
-	assert.Len(t, g.nodes, 1)
+	tu.IsEqual(t, len(g.children), 1)
+	tu.IsEqual(t, len(g.nodes), 1)
 
 	ac := g.children[0]
-	require.Len(t, ac.attributes, 1)
-	assert.Equal(t, ex.Name, ac.name)
-	assert.True(t, ac.isRequired)
-	assert.True(t, ac.isArg)
+	tu.IsEqual(t, len(ac.attributes), 1)
+	tu.IsEqual(t, ex.Name, ac.name)
+	tu.True(t, ac.isRequired, "ac.isRequired")
+	tu.True(t, ac.isArg, "ac.isArg")
 	acc := ac.attributes[0]
-	assert.Equal(t, acc.name, exAttr.Name)
-	assert.True(t, exAttr.AttributeType.Equals(acc.ctyType))
-	assert.True(t, acc.isArg)
-	assert.True(t, acc.isRequired)
+	tu.IsEqual(t, acc.name, exAttr.Name)
+	tu.True(
+		t,
+		exAttr.AttributeType.Equals(acc.ctyType),
+		"AttributeType mismatch",
+	)
+	tu.True(t, acc.isArg, "acc.isArg")
+	tu.True(t, acc.isRequired, "acc.isRequired")
 }

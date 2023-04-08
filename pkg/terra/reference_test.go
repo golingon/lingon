@@ -14,29 +14,29 @@ import (
 func TestReferenceCopy(t *testing.T) {
 	ref := ReferenceResource(&dummyResource{})
 	ref2 := ref.copy()
-	tu.Equal(t, ref.underlyingType, ref2.underlyingType)
-	tu.Equal(t, ref.res, ref2.res)
-	tu.Equal(t, ref.data, ref2.data)
+	tu.IsEqual(t, ref.underlyingType, ref2.underlyingType)
+	tu.IsEqual(t, ref.res, ref2.res)
+	tu.IsEqual(t, ref.data, ref2.data)
 }
 
 func TestReferenceTokens(t *testing.T) {
 	ref := ReferenceResource(&dummyResource{})
-	tu.Equal(t, "dummy.dummy", testTokensOrError(t, ref))
+	tu.IsEqual(t, "dummy.dummy", testTokensOrError(t, ref))
 
 	appendRef := ref.Append("abc")
-	tu.Equal(t, "dummy.dummy.abc", testTokensOrError(t, appendRef))
+	tu.IsEqual(t, "dummy.dummy.abc", testTokensOrError(t, appendRef))
 
 	keyRef := ref.key("a")
-	tu.Equal(t, "dummy.dummy[\"a\"]", testTokensOrError(t, keyRef))
+	tu.IsEqual(t, "dummy.dummy[\"a\"]", testTokensOrError(t, keyRef))
 
 	indexRef := ref.index(3)
-	tu.Equal(t, "dummy.dummy[3]", testTokensOrError(t, indexRef))
+	tu.IsEqual(t, "dummy.dummy[3]", testTokensOrError(t, indexRef))
 
 	splatRef := ref.splat()
-	tu.Equal(t, "dummy.dummy[*]", testTokensOrError(t, splatRef))
+	tu.IsEqual(t, "dummy.dummy[*]", testTokensOrError(t, splatRef))
 
 	// 	Check original has not been updated
-	tu.Equal(t, "dummy.dummy", testTokensOrError(t, ref))
+	tu.IsEqual(t, "dummy.dummy", testTokensOrError(t, ref))
 }
 
 func testTokensOrError(t *testing.T, value tkihcl.Tokenizer) string {

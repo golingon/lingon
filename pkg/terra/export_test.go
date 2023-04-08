@@ -5,10 +5,9 @@ package terra
 
 import (
 	"bytes"
-	"fmt"
 	"testing"
 
-	"github.com/stretchr/testify/require"
+	tu "github.com/volvo-cars/lingon/pkg/testutil"
 )
 
 func TestExport(t *testing.T) {
@@ -26,6 +25,33 @@ func TestExport(t *testing.T) {
 	}
 	var b bytes.Buffer
 	err := encodeStack(&st, &b)
-	require.NoError(t, err)
-	fmt.Println(b.String())
+	tu.IsNil(t, err)
+	want := `terraform {
+  backend "dummy" {
+  }
+  required_providers {
+    dummy = {
+      source  = "dummy"
+      version = "dummy"
+    }
+  }
+}
+
+// Provider blocks
+provider "dummy" {
+  name = "dummy"
+}
+
+// Data blocks
+data "dummy" "dummy" {
+  name = "dummy"
+}
+
+// Resource blocks
+resource "dummy" "dummy" {
+  name = "dummy"
+}
+
+`
+	tu.AssertEqual(t, want, b.String())
 }

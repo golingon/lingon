@@ -36,6 +36,12 @@ func Example_import() {
 		kube.WithImportManifestFiles([]string{"./manifest.yaml"}),
 		kube.WithImportOutputDirectory("./out"),
 		kube.WithImportSerializer(defaultSerializer()),
+		// do not print verbose information
+		kube.WithImportVerbose(false),
+		// do not ignore errors
+		kube.WithImportIgnoreErrors(false),
+		// use the default logger even if unused with WithImportVerbose(false)
+		kube.WithImportLogger(kube.Logger(os.Stderr)),
 	); err != nil {
 		fmt.Printf("%s\n", err)
 	}

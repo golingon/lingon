@@ -15,9 +15,8 @@ import (
 
 	tfjson "github.com/hashicorp/terraform-json"
 	"github.com/rogpeppe/go-internal/txtar"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"github.com/volvo-cars/lingon/pkg/terragen"
+	tu "github.com/volvo-cars/lingon/pkg/testutil"
 )
 
 type TxtarConfig struct {
@@ -32,25 +31,23 @@ type ProviderConfig struct {
 
 func TestTxtar(t *testing.T) {
 	txtarFiles, err := filepath.Glob("./testdata/*.txtar")
-	require.NoError(t, err)
+	tu.AssertNoError(t, err, "globbing testdata/*.txtar")
 	for _, txf := range txtarFiles {
 		ar, err := txtar.ParseFile(txf)
-		require.NoError(t, err)
+		tu.AssertNoError(t, err, "parsing txtar file")
 
 		t.Run(
 			txf, func(t *testing.T) {
 				wd := filepath.Join("testdata", "out", filepath.Base(txf))
-				err := RunTest(wd, ar)
-				if err != nil {
+				if err := RunTest(wd, ar); err != nil {
 					t.Error(err)
 					return
 				}
 				exp, err := os.ReadFile(filepath.Join(wd, "expected.tf"))
-				require.NoError(t, err)
+				tu.AssertNoError(t, err, "reading expected.tf file")
 				act, err := os.ReadFile(filepath.Join(wd, "out", "main.tf"))
-				require.NoError(t, err)
-
-				assert.Equal(t, string(exp), string(act))
+				tu.AssertNoError(t, err, "reading out/main.tf file")
+				tu.AssertEqual(t, string(act), string(exp))
 			},
 		)
 	}

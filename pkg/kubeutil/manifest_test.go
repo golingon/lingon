@@ -38,9 +38,31 @@ spec:
   selector:
     app.kubernetes.io/name: grafana
     app.kubernetes.io/instance: grafana
+`, `apiVersion: v1
+data:
+  _example: |
+    ################################
+    #                              #
+    #    EXAMPLE CONFIGURATION     #
+    #                              #
+    ################################
+    # This is an example config file highlighting the most common options.
+    # this is particularly annoying as --- is kind of important in YAML.
+    # ---------------------------------------
+    # Settings Category
+    # ---------------------------------------
+    # some settings here
+    bla: "48h"
+    blabla: true
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/component: controller
+    app.kubernetes.io/name: thename
+    app.kubernetes.io/version: 1.8.0
+  name: config---gc  # Oh you don't want that
+  namespace: thenamespace
 `,
 	}
-	if diff := tu.Diff(got, want); diff != "" {
-		t.Error(tu.Callers(), diff)
-	}
+	tu.AssertEqualSlice(t, want, got)
 }

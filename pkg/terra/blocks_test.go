@@ -7,8 +7,7 @@ import (
 	"io"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
+	tu "github.com/volvo-cars/lingon/pkg/testutil"
 )
 
 func TestExtractBlocks_Simple(t *testing.T) {
@@ -25,11 +24,11 @@ func TestExtractBlocks_Simple(t *testing.T) {
 		DummyData:  ddr,
 	}
 	sb, err := objectsFromStack(&st)
-	require.NoError(t, err)
-	require.Len(t, sb.Resources, 1)
-	assert.Equal(t, dr, sb.Resources[0])
-	require.Len(t, sb.DataResources, 1)
-	assert.Equal(t, ddr, sb.DataResources[0])
+	tu.AssertNoError(t, err)
+	tu.IsEqual(t, len(sb.Resources), 1)
+	tu.IsEqual[Resource](t, dr, sb.Resources[0])
+	tu.IsEqual(t, len(sb.DataResources), 1)
+	tu.IsEqual[DataResource](t, ddr, sb.DataResources[0])
 }
 
 func TestExtractBlocks_Complex(t *testing.T) {
@@ -57,9 +56,9 @@ func TestExtractBlocks_Complex(t *testing.T) {
 		OneData:  [1]*dummyDataResource{ddr},
 	}
 	sb, err := objectsFromStack(&st)
-	require.NoError(t, err)
-	assert.Len(t, sb.Resources, 4)
-	assert.Len(t, sb.DataResources, 2)
+	tu.AssertNoError(t, err)
+	tu.IsEqual(t, len(sb.Resources), 4)
+	tu.IsEqual(t, len(sb.DataResources), 2)
 }
 
 func TestExtractBlocks_UnknownField(t *testing.T) {
@@ -71,7 +70,7 @@ func TestExtractBlocks_UnknownField(t *testing.T) {
 		DummyStack: newDummyBaseStack(),
 	}
 	_, err := objectsFromStack(&st)
-	assert.ErrorIs(t, err, ErrUnknownPublicField)
+	tu.ErrorIs(t, err, ErrUnknownPublicField)
 }
 
 func TestExtractBlocks_PrivateField(t *testing.T) {
@@ -83,7 +82,7 @@ func TestExtractBlocks_PrivateField(t *testing.T) {
 		DummyStack: newDummyBaseStack(),
 	}
 	_, err := objectsFromStack(&st)
-	assert.ErrorIs(t, err, ErrNotExportedField)
+	tu.ErrorIs(t, err, ErrNotExportedField)
 }
 
 func newDummyBaseStack() DummyStack {
@@ -102,7 +101,7 @@ func TestExtractBlocks_IgnoredField(t *testing.T) {
 		DummyStack: newDummyBaseStack(),
 	}
 	_, err := objectsFromStack(&st)
-	require.NoError(t, err)
+	tu.IsNil(t, err)
 }
 
 type DummyStack struct {

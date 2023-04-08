@@ -6,11 +6,11 @@ package terrajen
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
+	tu "github.com/volvo-cars/lingon/pkg/testutil"
 )
 
 func TestProviderShortName(t *testing.T) {
 	expectedName := "some_resource"
 	trimmedName := providerShortName("aws_" + expectedName)
-	assert.Equal(t, expectedName, trimmedName)
+	tu.AssertEqual(t, expectedName, trimmedName)
 }

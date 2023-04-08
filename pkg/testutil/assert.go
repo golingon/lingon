@@ -14,10 +14,16 @@ func AssertEqual[C comparable](t *testing.T, expected, actual C) {
 	}
 }
 
-func AssertNoError(t *testing.T, err error, msg string) {
+func AssertEqualSlice[C comparable](t *testing.T, expected, actual []C) {
+	if diff := Diff(actual, expected); diff != "" {
+		t.Error(Callers(), diff)
+	}
+}
+
+func AssertNoError(t *testing.T, err error, msg ...string) {
 	t.Helper()
 	if err != nil {
-		t.Error(Callers(), msg, err)
+		t.Error(Callers(), err, msg)
 	}
 }
 
@@ -35,27 +41,30 @@ func equal[C comparable](a, b C) bool {
 	return a == b
 }
 
-func Equal[C comparable](t *testing.T, expected, actual C) {
+func IsEqual[C comparable](t *testing.T, expected, actual C) {
 	t.Helper()
 	if !equal(expected, actual) {
 		t.Fatalf("expected %v, got %v", expected, actual)
 	}
 }
 
-func NotEqual[C comparable](t *testing.T, expected, actual C) {
+func IsNotEqual[C comparable](t *testing.T, expected, actual C) {
 	t.Helper()
 	if equal(expected, actual) {
 		t.Fatalf("expected %v, got %v", expected, actual)
 	}
 }
 
-func Nil(t *testing.T, obj any) {
+func IsNil(t *testing.T, obj any) {
 	t.Helper()
-	switch obj.(type) {
+	switch o := obj.(type) {
+	case bool:
+		t.Fatalf("expected nil, got %v", o)
+	case int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64,
+		uintptr, float32, float64, complex64, complex128:
+		t.Fatalf("expected nil, got %v", o)
 	case string:
-		if obj != "" {
-			t.Fatalf("expected empty string, got %q", obj)
-		}
+		t.Fatalf("expected nil, got %v", o)
 	default:
 		if obj != nil {
 			t.Fatalf("expected nil, got %v", obj)
@@ -63,15 +72,18 @@ func Nil(t *testing.T, obj any) {
 	}
 }
 
-func NotNil(t *testing.T, obj any) {
+func IsNotNil(t *testing.T, obj any) {
 	t.Helper()
-	switch obj.(type) {
+	switch o := obj.(type) {
+	case bool:
+		t.Fatalf("expected not nil, got %v", o)
+	case int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64,
+		uintptr, float32, float64, complex64, complex128:
+		t.Fatalf("expected not nil, got %v", o)
 	case string:
-		if obj == "" {
-			t.Fatalf("expected not nil, got empty string")
-		}
+		t.Fatalf("expected not nil, got %v", o)
 	default:
-		if obj == nil {
+		if o == nil {
 			t.Fatalf("expected not nil, got nil")
 		}
 	}
@@ -117,7 +129,7 @@ func False(t *testing.T, condition bool, msg string) {
 
 func ErrorIs(t *testing.T, err, expected error) {
 	t.Helper()
-	if errors.Is(err, expected) {
-		t.Fatalf("expected error %v, got %v", expected, err)
+	if !errors.Is(err, expected) {
+		t.Fatalf("expected error \"%v\", got \"%v\"", expected, err)
 	}
 }

@@ -25,7 +25,7 @@ IF there is an issue with CRDs. Please visit https://github.com/volvo-cars/lingo
 
 func main() {
 	var in, out, appName, pkgName string
-	var v bool
+	var v, verbose, ignoreErr bool
 
 	groupByKind := true
 	removeAppName := true
@@ -66,7 +66,13 @@ func main() {
 		"specify if the app name should be removed from the variable, struct and file name.",
 	)
 	flag.BoolVar(&v, "v", false, "show version")
-
+	flag.BoolVar(&verbose, "verbose", false, "show logs")
+	flag.BoolVar(
+		&ignoreErr,
+		"ignore-errors",
+		false,
+		"ignore errors, useful to generate as much as possible",
+	)
 	flag.Parse()
 
 	if v {
@@ -85,6 +91,8 @@ func main() {
 		slog.String("app", appName),
 		slog.Bool("group", groupByKind),
 		slog.Bool("clean-name", removeAppName),
+		slog.Bool("verbose", verbose),
+		slog.Bool("ignore-errors", ignoreErr),
 	)
 
 	if err := run(
@@ -94,6 +102,8 @@ func main() {
 		pkgName,
 		groupByKind,
 		removeAppName,
+		verbose,
+		ignoreErr,
 	); err != nil {
 		slog.Error(
 			"run",
@@ -115,7 +125,7 @@ func defaultSerializer() runtime.Decoder {
 
 func run(
 	in, out, appName, pkgName string,
-	groupByKind, removeAppName bool,
+	groupByKind, removeAppName, verbose, ignoreErr bool,
 ) error {
 	opts := []kube.ImportOption{
 		kube.WithImportAppName(appName),
@@ -128,6 +138,12 @@ func run(
 	}
 	if removeAppName {
 		opts = append(opts, kube.WithImportRemoveAppName(true))
+	}
+	if verbose {
+		opts = append(opts, kube.WithImportVerbose(true))
+	}
+	if ignoreErr {
+		opts = append(opts, kube.WithImportIgnoreErrors(true))
 	}
 
 	// stdin

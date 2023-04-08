@@ -5,12 +5,10 @@ package hcl
 
 import (
 	"bytes"
-	"fmt"
 	"testing"
 
 	"github.com/hashicorp/hcl/v2/hclsimple"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
+	tu "github.com/volvo-cars/lingon/pkg/testutil"
 )
 
 type TerraformBlock struct {
@@ -160,15 +158,15 @@ func TestEncode(t *testing.T) {
 	// Run the encoder
 	var b bytes.Buffer
 	err := Encode(&b, args)
-	require.NoError(t, err)
-
-	fmt.Println(b.String())
+	tu.AssertNoError(t, err, "Encode failed")
 
 	// Decode the encoded HCL into a new instance of our test structure and compare
 	actualHCL := HCLFile{}
 	err = hclsimple.Decode("test.hcl", b.Bytes(), nil, &actualHCL)
-	require.NoError(t, err)
-	assert.Equal(t, expectedHCL, actualHCL)
+	tu.AssertNoError(t, err, "Decode failed")
+	if diff := tu.Diff(actualHCL, expectedHCL); diff != "" {
+		t.Error(tu.Callers(), diff)
+	}
 }
 
 func TestEncodeRaw(t *testing.T) {
@@ -214,13 +212,13 @@ func TestEncodeRaw(t *testing.T) {
 	}
 	var b bytes.Buffer
 	err := EncodeRaw(&b, expectedHCL)
-	require.NoError(t, err)
-
-	fmt.Println(b.String())
+	tu.AssertNoError(t, err, "EncodeRaw failed")
 
 	actualHCL := HCLFile{}
 	err = hclsimple.Decode("test.hcl", b.Bytes(), nil, &actualHCL)
-	require.NoError(t, err)
+	tu.AssertNoError(t, err, "Decode failed")
 
-	assert.Equal(t, expectedHCL, actualHCL)
+	if diff := tu.Diff(actualHCL, expectedHCL); diff != "" {
+		t.Error(tu.Callers(), diff)
+	}
 }
