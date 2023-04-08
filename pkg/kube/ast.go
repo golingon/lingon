@@ -159,13 +159,11 @@ func (j *jamel) convertValue(v reflect.Value) *jen.Statement {
 	// Struct types
 	//
 	case reflect.Struct:
-		name := v.Type().Name()
-		switch name {
+		switch v.Type().Name() {
 		case "Quantity":
 			return convertQuantity(v)
 		case "Secret":
-			return j.convertSecret(v).
-				Comment(commentSecret)
+			return j.convertSecret(v).Comment(commentSecret)
 		}
 
 		pk := j.prefixKind(v)
@@ -460,7 +458,16 @@ func convertQuantity(field reflect.Value) *jen.Statement {
 	).Call(jen.Lit(qty))
 }
 
-var repl = strings.NewReplacer("-", "", ".", "")
+var repl = strings.NewReplacer(
+	"-",
+	"",
+	".",
+	"",
+	"pkg/api/",
+	"",
+	"pkg/apis/",
+	"",
+)
 
 // storePkgPath stores the first non-native kubernetes package it finds,
 // hoping it will be the CRD Go package instead of the APIVersion URL.

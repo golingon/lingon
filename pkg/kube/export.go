@@ -15,6 +15,8 @@ import (
 	"github.com/volvo-cars/lingon/pkg/kubeutil"
 )
 
+var errOptConflictOutFiles = errors.New("option conflict: WithExportOutputFiles not compatible with WithExportOutputDir")
+
 type goky struct {
 	ar        *txtar.Archive
 	o         exportOption
@@ -36,8 +38,6 @@ func Export(km Exporter, opts ...ExportOption) error {
 
 	return g.export(km)
 }
-
-var errOptConflictOutFiles = errors.New("option conflict: WithExportOutputFiles not compatible with WithExportOutputDir")
 
 func gatekeeperExportOptions(o exportOption) error {
 	if o.Explode && o.SingleFile != "" {

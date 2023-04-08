@@ -22,6 +22,9 @@ const (
 
 func (j *jamel) render() error {
 	if err := j.generateGo(); err != nil {
+		if j.o.IgnoreErrors {
+			j.l.Error("generate go", logErrIgnored, "err", err)
+		}
 		return fmt.Errorf("generate go: %w", err)
 	}
 
@@ -69,7 +72,14 @@ func (j *jamel) renderFileByKind() error {
 		if j.o.OutputDir != "" {
 			filename = filepath.Join(j.o.OutputDir, filename)
 		}
+		if j.o.Verbose {
+			j.l.Info("render", "filename", filename)
+		}
 		if _, err = j.buf.Write([]byte("-- " + filename + " --\n")); err != nil {
+			if j.o.IgnoreErrors {
+				j.l.Error("render", logErrIgnored, "err", err)
+				continue
+			}
 			return err
 		}
 
@@ -106,6 +116,9 @@ func (j *jamel) renderFileByName() error {
 		if j.o.OutputDir != "" {
 			filename = filepath.Join(j.o.OutputDir, filename)
 		}
+		if j.o.Verbose {
+			j.l.Info("render", "filename", filename)
+		}
 		_, err := j.buf.Write([]byte("-- " + filename + " --\n"))
 		if err != nil {
 			return fmt.Errorf("write: %w", err)
@@ -130,6 +143,15 @@ func (j *jamel) fileMap() (map[string]*jen.File, error) {
 		stmt := j.objectsCode[nameVar]
 		objMeta, ok := j.objectsMeta[nameVar]
 		if !ok {
+			if j.o.IgnoreErrors {
+				j.l.Error(
+					"no object meta",
+					logErrIgnored,
+					"variable name",
+					nameVar,
+				)
+				continue
+			}
 			return nil, fmt.Errorf("no object meta for %s", nameVar)
 		}
 		nameVarObj := j.o.NameVarFunc(objMeta)

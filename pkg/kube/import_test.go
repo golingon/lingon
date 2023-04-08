@@ -14,7 +14,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/google/go-cmp/cmp"
 	"github.com/rogpeppe/go-internal/txtar"
 	"github.com/volvo-cars/lingon/pkg/kube"
 	"github.com/volvo-cars/lingon/pkg/kubeutil"
@@ -45,16 +44,10 @@ func TestImport(t *testing.T) {
 	}
 	TT := []args{
 		{
-			Name:   "convert with CRDs and remove app name and group by kind",
+			Name:   "with CRDs and remove app name and group by kind",
 			OutDir: filepath.Join(defaultImportOutputDir, "argocd"),
 			Opts: []kube.ImportOption{
 				kube.WithImportAppName("argocd"),
-				kube.WithImportOutputDirectory(
-					filepath.Join(
-						defaultImportOutputDir,
-						"argocd",
-					),
-				),
 				kube.WithImportManifestFiles([]string{"testdata/argocd.yaml"}),
 				kube.WithImportSerializer(defaultSerializer()),
 				kube.WithImportRemoveAppName(true),
@@ -76,20 +69,13 @@ func TestImport(t *testing.T) {
 				"out/jamel/argocd/stateful-set.go",
 			},
 		}, {
-			Name: "convert with CRDs and remove app name containing dash and group by kind",
+			Name: "with CRDs and remove app name containing dash and group by kind",
 			OutDir: filepath.Join(
 				defaultImportOutputDir,
 				"external-secrets",
 			),
 			Opts: []kube.ImportOption{
 				kube.WithImportAppName("external-secrets"),
-				kube.WithImportPackageName("externalsecrets"),
-				kube.WithImportOutputDirectory(
-					filepath.Join(
-						defaultImportOutputDir,
-						"external-secrets",
-					),
-				),
 				kube.WithImportManifestFiles([]string{"testdata/external-secrets.yaml"}),
 				kube.WithImportSerializer(defaultSerializer()),
 				kube.WithImportRemoveAppName(true),
@@ -109,17 +95,11 @@ func TestImport(t *testing.T) {
 				"out/jamel/external-secrets/validating-webhook-configuration.go",
 			},
 		}, {
-			Name:   "convert with CRDs and remove app name and split by name",
+			Name:   "with CRDs and remove app name and split by name",
 			OutDir: filepath.Join(defaultImportOutputDir, "karpenter"),
 			Opts: []kube.ImportOption{
 				kube.WithImportAppName("karpenter"),
 				kube.WithImportPackageName("karpenter"),
-				kube.WithImportOutputDirectory(
-					filepath.Join(
-						defaultImportOutputDir,
-						"karpenter",
-					),
-				),
 				kube.WithImportManifestFiles([]string{"testdata/karpenter.yaml"}),
 				kube.WithImportSerializer(defaultSerializer()),
 				kube.WithImportRemoveAppName(true),
@@ -149,17 +129,11 @@ func TestImport(t *testing.T) {
 				"out/jamel/karpenter/validation.webhook.config..sh_validatingwebhookconfigurations.go",
 			},
 		}, {
-			Name:   "convert with vanilla serializer and remove app name and group by kind",
+			Name:   "with vanilla serializer and remove app name and group by kind",
 			OutDir: filepath.Join(defaultImportOutputDir, "grafana"),
 			Opts: []kube.ImportOption{
 				kube.WithImportAppName("grafana"),
 				kube.WithImportPackageName("grafana"),
-				kube.WithImportOutputDirectory(
-					filepath.Join(
-						defaultImportOutputDir,
-						"grafana",
-					),
-				),
 				kube.WithImportManifestFiles([]string{"testdata/grafana.yaml"}),
 				kube.WithImportRemoveAppName(true),
 				kube.WithImportGroupByKind(true),
@@ -178,17 +152,11 @@ func TestImport(t *testing.T) {
 				"out/jamel/grafana/service.go",
 			},
 		}, {
-			Name:   "convert grafana with vanilla serializer and implement Exporter",
+			Name:   "with vanilla serializer and add methods",
 			OutDir: filepath.Join(defaultImportOutputDir, "manifester"),
 			Opts: []kube.ImportOption{
 				kube.WithImportAppName("grafana"),
 				kube.WithImportPackageName("grafana"),
-				kube.WithImportOutputDirectory(
-					filepath.Join(
-						defaultImportOutputDir,
-						"manifester",
-					),
-				),
 				kube.WithImportManifestFiles([]string{"testdata/grafana.yaml"}),
 				kube.WithImportRemoveAppName(true),
 				kube.WithImportGroupByKind(true),
@@ -215,14 +183,13 @@ func TestImport(t *testing.T) {
 		t.Run(
 			tt.Name, func(t *testing.T) {
 				t.Parallel()
-				tu.AssertNoError(t, os.RemoveAll(tc.OutDir), "rm out dir")
 				var buf bytes.Buffer
-				//nolint:gocritic
-				opts := append(
+				tc.Opts = append(
 					tc.Opts,
+					kube.WithImportOutputDirectory(tc.OutDir),
 					kube.WithImportWriter(&buf),
 				)
-				err := kube.Import(opts...)
+				err := kube.Import(tc.Opts...)
 				tu.AssertNoError(t, err, "failed to import")
 				ar := txtar.Parse(buf.Bytes())
 				got := make([]string, 0, len(ar.Files))
@@ -231,9 +198,7 @@ func TestImport(t *testing.T) {
 				}
 				sort.Strings(got)
 				want := tc.OutFiles
-				if diff := tu.Diff(got, want); diff != "" {
-					t.Error(tu.Callers(), diff)
-				}
+				tu.AssertEqualSlice(t, want, got)
 			},
 		)
 	}
@@ -245,14 +210,10 @@ func TestImport_Error(t *testing.T) {
 		kube.WithImportPackageName("foo-package"),
 		kube.WithImportManifestFiles([]string{"does-not-exists.yaml"}),
 	)
-	if err == nil {
-		t.Error("expected error, got nil")
-	}
+	tu.IsNotNil(t, err)
 	output := `import options: package name cannot contain a dash
 file does not exist: does-not-exists.yaml`
-	if diff := tu.Diff(output, err.Error()); diff != "" {
-		t.Error(tu.Callers(), diff)
-	}
+	tu.AssertEqual(t, output, err.Error())
 }
 
 func TestImport_ErrorEmptyManifest(t *testing.T) {
@@ -268,9 +229,7 @@ func TestImport_ErrorEmptyManifest(t *testing.T) {
 		kube.WithImportWriter(&buf),
 	)
 	tu.AssertNoError(t, err, "failed to import")
-	if diff := tu.Diff(buf.String(), string(golden)); diff != "" {
-		t.Error(tu.Callers(), diff)
-	}
+	tu.AssertEqual(t, string(golden), buf.String())
 }
 
 func TestJamel_SaveFromReader(t *testing.T) {
@@ -323,9 +282,7 @@ func TestJamel_SaveFromReader(t *testing.T) {
 		"out/jamel/reader/serviceaccount-grafana.go",
 	}
 
-	if diff := tu.Diff(got, want); diff != "" {
-		t.Error(tu.Callers(), diff)
-	}
+	tu.AssertEqualSlice(t, want, got)
 }
 
 func TestJamel_MissingCRDs(t *testing.T) {
@@ -351,10 +308,7 @@ func TestJamel_MissingCRDs(t *testing.T) {
 			},
 		),
 	)
-	errmsg := "generate go: stdin: decoding manifest for " +
-		"&{APIVersion:networking.istio.io/v1alpha3 Kind:EnvoyFilter " +
-		"Meta:{Name:stats-filter-1.13 Namespace:istio-system " +
-		"Labels:map[istio.io/rev:default] Annotations:map[]}}: " +
+	errmsg := "generate go: stdin: " +
 		"no kind \"EnvoyFilter\" is registered for version " +
 		"\"networking.istio.io/v1alpha3\" in scheme \"pkg/runtime/scheme.go:100\""
 	tu.AssertError(t, err, errmsg)
@@ -408,9 +362,7 @@ func TestJamel_ReaderWriter(t *testing.T) {
 		got[i] = f.Name
 	}
 	sort.Strings(got)
-	if diff := tu.Diff(got, want); diff != "" {
-		t.Error(tu.Callers(), diff)
-	}
+	tu.AssertEqualSlice(t, want, got)
 }
 
 func TestJamel_ConfigMapComments(t *testing.T) {
@@ -456,12 +408,8 @@ func TestJamel_ConfigMapComments(t *testing.T) {
 		"out/jamel/tekton/validating-webhook-configuration.go",
 	}
 
-	if len(got) != len(want) {
-		t.Errorf("expected %d files, got %d", len(want), len(got))
-	}
-	if !cmp.Equal(want, got) {
-		t.Error(tu.Diff(want, got))
-	}
+	tu.IsEqual(t, len(want), len(got))
+	tu.AssertEqualSlice(t, want, got)
 
 	src, err := os.ReadFile("out/jamel/tekton/config-map.go")
 	tu.AssertNoError(t, err, "reading config-map.go")
@@ -475,6 +423,7 @@ func TestJamel_ConfigMapComments(t *testing.T) {
 	set := token.NewFileSet()
 	astFile, err := parser.ParseFile(set, "", src, parser.ParseComments)
 	tu.AssertNoError(t, err, fmt.Sprintf("parsing %s", src))
+
 	if len(astFile.Comments) < len(comments) {
 		t.Errorf("not enough comments: %d", len(astFile.Comments))
 	}
@@ -482,15 +431,9 @@ func TestJamel_ConfigMapComments(t *testing.T) {
 	for _, comment := range astFile.Comments {
 		cc = append(cc, comment.Text())
 	}
-	sort.SliceStable(
-		cc, func(i, j int) bool {
-			return cc[i] < cc[j]
-		},
-	)
+	sort.SliceStable(cc, func(i, j int) bool { return cc[i] < cc[j] })
 	for i, comment := range comments {
-		if diff := tu.Diff(cleanStr(comment), cleanStr(cc[i])); diff != "" {
-			t.Errorf("diff: %s", diff)
-		}
+		tu.AssertEqual(t, cleanStr(comment), cleanStr(cc[i]))
 	}
 }
 
@@ -501,4 +444,30 @@ var clm = strings.NewReplacer(
 
 func cleanStr(m string) string {
 	return strings.TrimSpace(clm.Replace(m))
+}
+
+func TestJamel_VerboseLogger(t *testing.T) {
+	out := filepath.Join(defaultImportOutputDir, "tekton")
+	var bufLog, bufOut bytes.Buffer
+
+	err := kube.Import(
+		kube.WithImportAppName("tekton"),
+		kube.WithImportPackageName("tekton"),
+		kube.WithImportOutputDirectory(out),
+		kube.WithImportManifestFiles([]string{"testdata/tekton.yaml"}),
+		kube.WithImportSerializer(defaultSerializer()),
+		kube.WithImportRemoveAppName(true),
+		kube.WithImportGroupByKind(true),
+		kube.WithImportAddMethods(true),
+		kube.WithImportWriter(&bufOut),
+		kube.WithImportVerbose(true),
+		kube.WithImportIgnoreErrors(true),
+		kube.WithImportLogger(kube.Logger(&bufLog)),
+	)
+	tu.AssertNoError(t, err, "failed to import")
+
+	got := bufLog.String()
+	want, err := os.ReadFile("testdata/golden/log.golden")
+	tu.AssertNoError(t, err, "reading golden file")
+	tu.AssertEqual(t, string(want), got)
 }

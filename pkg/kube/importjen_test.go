@@ -39,10 +39,7 @@ type MyApp struct {
 	Depl *v1.Deployment
 }
 `
-
-	if diff := tu.Diff(buf.String(), want); diff != "" {
-		t.Error(tu.Callers(), diff)
-	}
+	tu.AssertEqual(t, buf.String(), want)
 }
 
 func TestImportAddMethods(t *testing.T) {
@@ -67,9 +64,7 @@ func (a *NAME) Export(dir string) error {
 	return kube.Export(a, kube.WithExportOutputDirectory(dir))
 }
 `
-	if diff := tu.Diff(buf.String(), want); diff != "" {
-		t.Error(tu.Callers(), diff)
-	}
+	tu.AssertEqual(t, buf.String(), want)
 }
 
 func TestStmtApplyFunc(t *testing.T) {
@@ -118,7 +113,5 @@ func Apply(ctx context.Context, km kube.Exporter) error {
 }
 `
 
-	if diff := tu.Diff(buf.String(), want); diff != "" {
-		t.Error(tu.Callers(), diff)
-	}
+	tu.AssertEqual(t, buf.String(), want)
 }

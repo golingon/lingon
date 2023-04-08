@@ -5,13 +5,11 @@ package kube
 
 import (
 	"os"
-	"reflect"
 	"strings"
 	"testing"
 
+	"github.com/volvo-cars/lingon/pkg/kubeutil"
 	tu "github.com/volvo-cars/lingon/pkg/testutil"
-	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/client-go/kubernetes/scheme"
 )
 
 func TestKube2GoJen(t *testing.T) {
@@ -43,38 +41,43 @@ func TestKube2GoJen(t *testing.T) {
 			manifest: "testdata/golden/configmap.yaml",
 			golden:   "testdata/golden/configmap.golden",
 		},
+		{
+			name:     "configmap with comments",
+			manifest: "testdata/golden/cm-comment.yaml",
+			golden:   "testdata/golden/cm-comment.golden",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(
 			tt.name, func(t *testing.T) {
-				obj := objectFromManifest(t, tt.manifest)
-				got := convert(t, obj, tt.redact)
+				got := convert(t, tt.manifest, tt.redact)
 				want := tu.ReadGolden(t, tt.golden)
-				if diff := tu.Diff(got, want); diff != "" {
-					t.Error(tu.Callers(), diff)
-				}
+				tu.AssertEqual(t, want, got)
 			},
 		)
 	}
 }
 
-func convert(t *testing.T, obj runtime.Object, redact bool) string {
-	t.Helper()
-	j := jamel{o: importOption{RedactSecrets: redact}}
-	code := j.convertValue(reflect.ValueOf(obj))
-	var b strings.Builder
-	err := code.Render(&b)
-	tu.AssertNoError(t, err, "render code")
-	return b.String()
-}
-
-func objectFromManifest(t *testing.T, path string) runtime.Object {
+func convert(
+	t *testing.T,
+	path string,
+	redact bool,
+) string {
 	t.Helper()
 	data, err := os.ReadFile(path)
 	tu.AssertNoError(t, err, "read manifest")
-
-	serializer := scheme.Codecs.UniversalDeserializer()
-	obj, _, err := serializer.Decode(data, nil, nil)
-	tu.AssertNoError(t, err, "decode manifest")
-	return obj
+	j := jamel{
+		o: importOption{
+			Serializer:    defaultSerializer(),
+			RedactSecrets: redact,
+		},
+	}
+	m, err := kubeutil.ExtractMetadata(data)
+	tu.AssertNoError(t, err, "extract metadata")
+	code, err := j.yaml2GoJen(data, m)
+	tu.AssertNoError(t, err, "convert yaml to go")
+	var b strings.Builder
+	err = code.Render(&b)
+	tu.AssertNoError(t, err, "render code")
+	return b.String()
 }

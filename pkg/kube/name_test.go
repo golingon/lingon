@@ -63,17 +63,10 @@ func TestBasicName(t *testing.T) {
 		},
 	}
 
-	assert := func(t *testing.T, tt TT) {
-		got := basicName(tt.in, tt.kind)
-		if diff := tu.Diff(got, tt.want); diff != "" {
-			t.Error(tu.Callers(), diff)
-		}
-	}
-
 	for _, tc := range tt {
 		t.Run(
 			tc.name, func(t *testing.T) {
-				assert(t, tc)
+				tu.AssertEqual(t, tc.want, basicName(tc.in, tc.kind))
 			},
 		)
 	}

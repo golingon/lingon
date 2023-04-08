@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"github.com/volvo-cars/lingon/pkg/kubeutil"
+	"golang.org/x/exp/slog"
 	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	apiextensionsbeta "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -71,15 +72,21 @@ type importOption struct {
 
 	// RedactSecrets flag removes the value, but not the keys, of kubernetes secrets
 	RedactSecrets bool
+
+	// Verbose flag enables verbose logging
+	Verbose bool
+
+	// IgnoreErrors flag ignores errors when reading manifests
+	IgnoreErrors bool
 }
 
 var importDefaultOpts = importOption{
-	AppName:        "lingon",
-	OutputPkgName:  "",
+	AppName:        defaultAppName,
+	OutputPkgName:  defaultAppName,
 	ManifestFiles:  make([]string, 0),
 	ManifestReader: os.Stdin,
 	GoCodeWriter:   os.Stdout,
-	OutputDir:      "out",
+	OutputDir:      defaultOutputDir,
 	Serializer:     defaultSerializer(),
 	NameFieldFunc:  NameFieldFunc,
 	NameVarFunc:    NameVarFunc,
@@ -88,14 +95,41 @@ var importDefaultOpts = importOption{
 	GroupByKind:    false, // FIXME: should default to true ?
 	AddMethods:     true,
 	RedactSecrets:  false,
+	Verbose:        false,
+	IgnoreErrors:   false,
 }
 
 func defaultSerializer() runtime.Decoder {
-	// NEEDED FOR CRDS
+	// NEEDED FOR CRDs
 	//
 	_ = apiextensions.AddToScheme(scheme.Scheme)
 	_ = apiextensionsbeta.AddToScheme(scheme.Scheme)
 	return scheme.Codecs.UniversalDeserializer()
+}
+
+// WithImportVerbose sets the flag to enable logging.
+func WithImportVerbose(v bool) ImportOption {
+	return func(j *jamel) {
+		j.o.Verbose = v
+	}
+}
+
+// WithImportIgnoreErrors sets the flag to ignore errors when reading manifests.
+// Useful with huge manifests or when there are many CRDs and not all of them
+// are registered with [scheme.AddToScheme].
+func WithImportIgnoreErrors(e bool) ImportOption {
+	return func(j *jamel) {
+		j.o.IgnoreErrors = e
+	}
+}
+
+// WithImportLogger sets the logger [slog.Logger] to log the import process.
+//
+// Default: [Logger]
+func WithImportLogger(l *slog.Logger) ImportOption {
+	return func(j *jamel) {
+		j.l = l
+	}
 }
 
 // WithImportSerializer sets the serializer [runtime.Decoder] to decode the kubernetes objects
@@ -220,6 +254,14 @@ func WithImportManifestFiles(files []string) ImportOption {
 	return func(j *jamel) {
 		j.useReader = false
 		j.o.ManifestFiles = files
+	}
+}
+
+// WithImportSingleManifest sets the manifest file to read the kubernetes objects from.
+func WithImportSingleManifest(file string) ImportOption {
+	return func(j *jamel) {
+		j.useReader = false
+		j.o.ManifestFiles = []string{file}
 	}
 }
 
