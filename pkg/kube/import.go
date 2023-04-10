@@ -228,7 +228,6 @@ func (j *jamel) convertToGo(splitYaml []string) error {
 			j.l.Info(
 				"converting manifest",
 				slog.Int("number", manifestNumber+1),
-				// slog.Int("bytes", len(data)),
 				slog.String("head", string(data[:head])+"..."),
 			)
 		}
@@ -238,14 +237,14 @@ func (j *jamel) convertToGo(splitYaml []string) error {
 				j.l.Error(
 					"extract metadata",
 					logErrIgnored,
-					slog.Int("manifest", manifestNumber),
+					slog.Int("manifest", manifestNumber+1),
 					slog.String("error", err.Error()),
 				)
 				continue
 			}
 			return fmt.Errorf(
 				"extract metadata of manifest %d: %w",
-				manifestNumber,
+				manifestNumber+1,
 				err,
 			)
 		}
@@ -259,7 +258,7 @@ func (j *jamel) convertToGo(splitYaml []string) error {
 				j.l.Error(
 					"yaml to go",
 					logErrIgnored,
-					slog.Int("manifest", manifestNumber),
+					slog.Int("manifest", manifestNumber+1),
 					slog.String("error", err.Error()),
 				)
 				continue

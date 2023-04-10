@@ -26,6 +26,7 @@ func (j *jamel) render() error {
 	if err := j.generateGo(); err != nil {
 		if j.o.IgnoreErrors {
 			j.l.Error("generate go", logErrIgnored, "err", err)
+			return nil
 		}
 		return fmt.Errorf("generate go: %w", err)
 	}
