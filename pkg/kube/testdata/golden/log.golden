@@ -1,4 +1,4 @@
-level=INFO msg=import app=lingon opt.app-name=tekton opt.package-name=tekton opt.output-dir=out/jamel/tekton opt.reader=false opt.manifests=[testdata/tekton.yaml] opt.writer=true opt.remove-app-name=true opt.group-by-kind=true opt.add-methods=true opt.redact-secrets=false opt.ignore-errors=true
+level=INFO msg=import app=lingon opt.app-name=tekton opt.package-name=tekton opt.output-dir=out/import/tekton opt.reader=false opt.manifests=[testdata/tekton.yaml] opt.writer=true opt.remove-app-name=true opt.group-by-kind=true opt.add-methods=true opt.redact-secrets=false opt.ignore-errors=true
 level=INFO msg="importing from manifest" app=lingon files=[testdata/tekton.yaml]
 level=INFO msg=manifest app=lingon file=testdata/tekton.yaml manifests=65
 level=INFO msg="converting manifest" app=lingon number=1 head="apiVersion: v1\nkind: Namespace\nmetadata:\n  name: tekton-pipelines\n  labels:\n    app.kubernetes.io/instance: default\n    app.kubernetes.io/part-of: tek..."
@@ -66,17 +66,18 @@ level=INFO msg="converting manifest" app=lingon number=62 head="apiVersion: apps
 level=INFO msg="converting manifest" app=lingon number=63 head="apiVersion: autoscaling/v2\nkind: HorizontalPodAutoscaler\nmetadata:\n  name: tekton-pipelines-webhook\n  namespace: tekton-pipelines\n  labels:\n    app.ku..."
 level=INFO msg="converting manifest" app=lingon number=64 head="apiVersion: apps/v1\nkind: Deployment\nmetadata:\n  # Note: the Deployment name must be the same as the Service name specified in\n  # config/400-webhook-..."
 level=INFO msg="converting manifest" app=lingon number=65 head="apiVersion: v1\nkind: Service\nmetadata:\n  labels:\n    app.kubernetes.io/name: webhook\n    app.kubernetes.io/component: webhook\n    app.kubernetes.io/in..."
-level=INFO msg=render app=lingon filename=out/jamel/tekton/cluster-role.go
-level=INFO msg=render app=lingon filename=out/jamel/tekton/cluster-role-binding.go
-level=INFO msg=render app=lingon filename=out/jamel/tekton/config-map.go
-level=INFO msg=render app=lingon filename=out/jamel/tekton/custom-resource-definition.go
-level=INFO msg=render app=lingon filename=out/jamel/tekton/deployment.go
-level=INFO msg=render app=lingon filename=out/jamel/tekton/horizontal-pod-autoscaler.go
-level=INFO msg=render app=lingon filename=out/jamel/tekton/mutating-webhook-configuration.go
-level=INFO msg=render app=lingon filename=out/jamel/tekton/namespace.go
-level=INFO msg=render app=lingon filename=out/jamel/tekton/role.go
-level=INFO msg=render app=lingon filename=out/jamel/tekton/role-binding.go
-level=INFO msg=render app=lingon filename=out/jamel/tekton/secret.go
-level=INFO msg=render app=lingon filename=out/jamel/tekton/service.go
-level=INFO msg=render app=lingon filename=out/jamel/tekton/service-account.go
-level=INFO msg=render app=lingon filename=out/jamel/tekton/validating-webhook-configuration.go
+level=INFO msg=render app=lingon filename=out/import/tekton/cluster-role.go
+level=INFO msg=render app=lingon filename=out/import/tekton/cluster-role-binding.go
+level=INFO msg=render app=lingon filename=out/import/tekton/config-map.go
+level=INFO msg=render app=lingon filename=out/import/tekton/custom-resource-definition.go
+level=INFO msg=render app=lingon filename=out/import/tekton/deployment.go
+level=INFO msg=render app=lingon filename=out/import/tekton/horizontal-pod-autoscaler.go
+level=INFO msg=render app=lingon filename=out/import/tekton/mutating-webhook-configuration.go
+level=INFO msg=render app=lingon filename=out/import/tekton/namespace.go
+level=INFO msg=render app=lingon filename=out/import/tekton/role.go
+level=INFO msg=render app=lingon filename=out/import/tekton/role-binding.go
+level=INFO msg=render app=lingon filename=out/import/tekton/secret.go
+level=INFO msg=render app=lingon filename=out/import/tekton/service.go
+level=INFO msg=render app=lingon filename=out/import/tekton/service-account.go
+level=INFO msg=render app=lingon filename=out/import/tekton/validating-webhook-configuration.go
+level=INFO msg=output app=lingon "bytes written"=112116

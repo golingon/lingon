@@ -5,6 +5,8 @@ package kube_test
 
 import (
 	"bytes"
+	"encoding/json"
+	"errors"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -25,22 +27,24 @@ const defaultExportOutputDir = "out/export"
 
 func TestExport(t *testing.T) {
 	type args struct {
-		Name     string
+		name     string
 		km       kube.Exporter
-		Opts     []kube.ExportOption
-		OutFiles []string
+		opts     []kube.ExportOption
+		outFiles []string
+		err      error
+		isErr    bool
 	}
 	outEBDS := filepath.Join(defaultExportOutputDir, "embeddedstruct")
 	outTekton := filepath.Join(defaultExportOutputDir, "tekton")
 	TT := []args{
 		{
-			Name: "embedded struct",
+			name: "embedded struct",
 			km:   newEmbeddedStruct(),
-			Opts: []kube.ExportOption{
+			opts: []kube.ExportOption{
 				kube.WithExportKustomize(true),
 				kube.WithExportOutputDirectory(outEBDS),
 			},
-			OutFiles: []string{
+			outFiles: []string{
 				"out/export/embeddedstruct/1_iamcr.yaml",
 				"out/export/embeddedstruct/1_iamsa.yaml",
 				"out/export/embeddedstruct/2_iamcrb.yaml",
@@ -50,13 +54,13 @@ func TestExport(t *testing.T) {
 			},
 		},
 		{
-			Name: "embedded struct explode",
+			name: "embedded struct explode",
 			km:   newEmbeddedStruct(),
-			Opts: []kube.ExportOption{
+			opts: []kube.ExportOption{
 				kube.WithExportExplodeManifests(true),
 				kube.WithExportOutputDirectory(outEBDS),
 			},
-			OutFiles: []string{
+			outFiles: []string{
 				"out/export/embeddedstruct/_cluster/rbac/1_iamcr.yaml",
 				"out/export/embeddedstruct/_cluster/rbac/2_iamcrb.yaml",
 				"out/export/embeddedstruct/defaultns/1_iamsa.yaml",
@@ -65,9 +69,9 @@ func TestExport(t *testing.T) {
 			},
 		},
 		{
-			Name: "embedded struct with name file func",
+			name: "embedded struct with name file func",
 			km:   newEmbeddedStruct(),
-			Opts: []kube.ExportOption{
+			opts: []kube.ExportOption{
 				kube.WithExportOutputDirectory(outEBDS),
 				kube.WithExportNameFileFunc(
 					func(name *kubeutil.Metadata) string {
@@ -75,7 +79,7 @@ func TestExport(t *testing.T) {
 					},
 				),
 			},
-			OutFiles: []string{
+			outFiles: []string{
 				"out/export/embeddedstruct/clusterrole_imthename.yaml",
 				"out/export/embeddedstruct/clusterrolebinding_imthename.yaml",
 				"out/export/embeddedstruct/deployment_anotherimthename.yaml",
@@ -84,9 +88,9 @@ func TestExport(t *testing.T) {
 			},
 		},
 		{
-			Name: "embedded struct with explode and name file func",
+			name: "embedded struct with explode and name file func",
 			km:   newEmbeddedStruct(),
-			Opts: []kube.ExportOption{
+			opts: []kube.ExportOption{
 				kube.WithExportOutputDirectory(outEBDS),
 				kube.WithExportExplodeManifests(true),
 				kube.WithExportNameFileFunc(
@@ -95,7 +99,7 @@ func TestExport(t *testing.T) {
 					},
 				),
 			},
-			OutFiles: []string{
+			outFiles: []string{
 				"out/export/embeddedstruct/_cluster/rbac/clusterrole_imthename.yaml",
 				"out/export/embeddedstruct/_cluster/rbac/clusterrolebinding_imthename.yaml",
 				"out/export/embeddedstruct/defaultns/deployment_anotherimthename.yaml",
@@ -104,12 +108,57 @@ func TestExport(t *testing.T) {
 			},
 		},
 		{
-			Name: "tekton",
+			name: "embedded struct with explode and name file func as JSON",
+			km:   newEmbeddedStruct(),
+			opts: []kube.ExportOption{
+				kube.WithExportOutputDirectory(outEBDS),
+				kube.WithExportExplodeManifests(true),
+				kube.WithExportOutputJSON(true),
+				kube.WithExportNameFileFunc(
+					func(name *kubeutil.Metadata) string {
+						return strings.ToLower(name.Kind) + "_" + name.Meta.Name + ".json"
+					},
+				),
+			},
+			outFiles: []string{
+				"out/export/embeddedstruct/_cluster/rbac/clusterrole_imthename.json",
+				"out/export/embeddedstruct/_cluster/rbac/clusterrolebinding_imthename.json",
+				"out/export/embeddedstruct/defaultns/deployment_anotherimthename.json",
+				"out/export/embeddedstruct/defaultns/deployment_imthename.json",
+				"out/export/embeddedstruct/defaultns/serviceaccount_imthename.json",
+			},
+		},
+		{
+			name: "incompatible options explode with single file",
+			km:   newEmbeddedStruct(),
+			opts: []kube.ExportOption{
+				kube.WithExportOutputDirectory(outEBDS),
+				kube.WithExportExplodeManifests(true),
+				kube.WithExportAsSingleFile("single.yaml"),
+				kube.WithExportKustomize(true),
+			},
+			err:   kube.ErrIncompatibleOptions,
+			isErr: true,
+		},
+		{
+			name: "incompatible options json with kustomize",
+			km:   newEmbeddedStruct(),
+			opts: []kube.ExportOption{
+				kube.WithExportOutputDirectory(outEBDS),
+				kube.WithExportExplodeManifests(true),
+				kube.WithExportOutputJSON(true),
+				kube.WithExportKustomize(true),
+			},
+			err:   kube.ErrIncompatibleOptions,
+			isErr: true,
+		},
+		{
+			name: "tekton",
 			km:   tekton.New(),
-			Opts: []kube.ExportOption{
+			opts: []kube.ExportOption{
 				kube.WithExportOutputDirectory(outTekton),
 			},
-			OutFiles: []string{
+			outFiles: []string{
 				"out/export/tekton/0_pipelines_ns.yaml",
 				"out/export/tekton/0_pipelines_resolvers_ns.yaml",
 				"out/export/tekton/1_aggregate_edit_cr.yaml",
@@ -178,9 +227,9 @@ func TestExport(t *testing.T) {
 			},
 		},
 		{
-			Name: "tekton",
+			name: "tekton",
 			km:   tekton.New(),
-			Opts: []kube.ExportOption{
+			opts: []kube.ExportOption{
 				kube.WithExportOutputDirectory(outTekton),
 				kube.WithExportKustomize(true),
 				kube.WithExportExplodeManifests(true),
@@ -190,7 +239,7 @@ func TestExport(t *testing.T) {
 					},
 				),
 			},
-			OutFiles: []string{
+			outFiles: []string{
 				// should not have any secrets since we use the secret hook
 				"out/export/tekton/_cluster/crd/1_clustertasks_dev_crd.yaml",
 				"out/export/tekton/_cluster/crd/1_customruns_dev_crd.yaml",
@@ -264,44 +313,89 @@ func TestExport(t *testing.T) {
 	for _, tt := range TT {
 		tc := tt
 		t.Run(
-			tt.Name, func(t *testing.T) {
+			tt.name, func(t *testing.T) {
 				t.Parallel()
 				var buf bytes.Buffer
-				//nolint:gocritic
-				tc.Opts = append(
-					tc.Opts,
+				tc.opts = append(
+					tc.opts,
 					kube.WithExportWriter(&buf),
 				)
-				err := kube.Export(tc.km, tc.Opts...)
-				tu.AssertNoError(t, err, "failed to import")
+				err := kube.Export(tc.km, tc.opts...)
+				if tc.isErr {
+					if !errors.Is(err, tc.err) {
+						t.Fatalf("expected error %v but got %v", tc.err, err)
+					}
+					return
+				}
+				tu.AssertNoError(t, tc.err, "failed to check error")
+				tu.AssertNoError(t, err, "failed to export")
 				ar := txtar.Parse(buf.Bytes())
 				got := make([]string, 0, len(ar.Files))
 				for _, f := range ar.Files {
 					got = append(got, f.Name)
 				}
 				sort.Strings(got)
-				want := tc.OutFiles
-				if diff := tu.Diff(got, want); diff != "" {
-					t.Error(diff)
-				}
+				want := tc.outFiles
+				tu.AssertEqualSlice(t, got, want)
 			},
 		)
 	}
 }
 
 func TestExport_SingleFile(t *testing.T) {
-	var buf bytes.Buffer
-	err := kube.Export(
-		tekton.New(),
-		kube.WithExportWriter(&buf),
-		kube.WithExportOutputDirectory("out/export"),
-		kube.WithExportAsSingleFile("tekton.yaml"),
-	)
-	tu.AssertNoError(t, err, "failed to import")
-	got, err := kubeutil.ManifestSplit(&buf)
-	tu.AssertNoError(t, err, "failed to split manifest")
-	if len(got) != 65 {
-		t.Errorf("expected 65 manifests, got %d", len(got))
+	type args struct {
+		name       string
+		km         kube.Exporter
+		opts       []kube.ExportOption
+		numObjects int
+		isJSON     bool
+	}
+	TT := []args{
+		{
+			name: "tekton yaml",
+			km:   tekton.New(),
+			opts: []kube.ExportOption{
+				kube.WithExportOutputDirectory("out/export"),
+				kube.WithExportAsSingleFile("tekton.yaml"),
+			},
+			numObjects: 65,
+		},
+		{
+			name: "tekton json",
+			km:   tekton.New(),
+			opts: []kube.ExportOption{
+				kube.WithExportOutputDirectory("out/export"),
+				kube.WithExportOutputJSON(true),
+				kube.WithExportAsSingleFile("tekton.json"),
+			},
+			numObjects: 65,
+			isJSON:     true,
+		},
+	}
+	for _, tt := range TT {
+		tc := tt
+		t.Run(
+			tt.name, func(t *testing.T) {
+				t.Parallel()
+				var buf bytes.Buffer
+				tc.opts = append(
+					tc.opts,
+					kube.WithExportWriter(&buf),
+				)
+				err := kube.Export(tc.km, tc.opts...)
+				tu.AssertNoError(t, err, "failed to import")
+				if tc.isJSON {
+					var got []map[string]interface{}
+					err := json.Unmarshal(buf.Bytes(), &got)
+					tu.AssertNoError(t, err, "failed to unmarshal json")
+					tu.IsEqual(t, len(got), tc.numObjects)
+				} else {
+					got, err := kubeutil.ManifestSplit(&buf)
+					tu.AssertNoError(t, err, "failed to split manifest")
+					tu.IsEqual(t, tc.numObjects, len(got))
+				}
+			},
+		)
 	}
 }
 

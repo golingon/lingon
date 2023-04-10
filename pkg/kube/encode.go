@@ -76,12 +76,18 @@ func (g *goky) encodeStruct(
 				return fmt.Errorf("extract metadata: %w", err)
 			}
 
+			ext := "yaml"
+			if g.o.OutputJSON {
+				ext = "json"
+			}
 			name := fmt.Sprintf(
-				"%d_%s.yaml",
+				"%d_%s.%s",
 				rankOfKind(m.Kind),
 				strcase.Snake(prefix)+strcase.Snake(sf.Name),
+				ext,
 			)
 
+			// compute the name of the file and directory
 			if g.o.NameFileFunc != nil {
 				name = g.o.NameFileFunc(m)
 			}
@@ -93,6 +99,16 @@ func (g *goky) encodeStruct(
 				name = filepath.Join(g.o.OutputDir, name)
 			}
 
+			if g.o.OutputJSON {
+				b, err = kyaml.YAMLToJSON(b)
+				if err != nil {
+					return fmt.Errorf(
+						"error converting %q to JSON: %w",
+						m.GVK(),
+						err,
+					)
+				}
+			}
 			g.ar.Files = append(g.ar.Files, txtar.File{Name: name, Data: b})
 
 		default:

@@ -44,7 +44,7 @@ type importOption struct {
 
 	// GoCodeWriter is used to write the generated Go code in txtar format
 	// for more info on txtar format see: https://pkg.go.dev/golang.org/x/tools/txtar
-	// Note that we are using https://github.com/rogpeppe/go-internal/blob/master/txtar/ instead
+	// Note that we are using https://github.com/rogpeppe/go-internal/blob/master/txtar/archive.go instead
 	// ex: os.Stdout
 	GoCodeWriter io.Writer
 

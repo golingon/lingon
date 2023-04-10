@@ -114,6 +114,23 @@ metadata:
 			wantFile:  "redis_sa.go",
 		},
 		{
+			tname: "service account 2",
+			in: `
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/component: redis
+    app.kubernetes.io/name: argocd-redis
+    app.kubernetes.io/part-of: argocd
+  name: argocd-redis
+`,
+			app:       "name",
+			wantVar:   "ArgocdRedisSA",
+			wantField: "ArgocdRedisSA",
+			wantFile:  "argocd-redis_sa.go",
+		},
+		{
 			tname: "karpenter cluster-role",
 			in: `
 apiVersion: rbac.authorization.k8s.io/v1
@@ -165,6 +182,19 @@ metadata:
 			wantVar:   "NotificationsCM",
 			wantField: "NotificationsCM",
 			wantFile:  "notifications_cm.go",
+		},
+		{
+			tname: "name is nameapp",
+			in: `
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd
+`,
+			app:       "argocd",
+			wantVar:   "CM",
+			wantField: "CM",
+			wantFile:  "cm.go",
 		},
 	}
 

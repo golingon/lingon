@@ -8,8 +8,27 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"os"
+	"path/filepath"
 	"strings"
 )
+
+// ManifestReadFile reads a YAML file and splits it into a list of YAML documents.
+func ManifestReadFile(filePath string) ([]string, error) {
+	e := filepath.Ext(filePath)
+	if e != ".yaml" && e != ".yml" {
+		return nil, fmt.Errorf("not yaml file: %s", filePath)
+	}
+	yf, err := os.ReadFile(filePath)
+	if err != nil {
+		return nil, fmt.Errorf("read manifest %s: %w", filePath, err)
+	}
+	splitYaml, err := ManifestSplit(bytes.NewReader(yf))
+	if err != nil {
+		return nil, fmt.Errorf("splitting manifest: %s: %w", filePath, err)
+	}
+	return splitYaml, nil
+}
 
 // ManifestSplit splits a YAML manifest where each object is separated by '---'
 // into a list of string containing YAML documents.

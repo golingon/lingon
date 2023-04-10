@@ -4,7 +4,6 @@
 package kubeutil
 
 import (
-	"bytes"
 	"errors"
 	"fmt"
 	"os"
@@ -60,23 +59,6 @@ func contains(e string, s []string) bool {
 		}
 	}
 	return false
-}
-
-// ReadManifest reads a YAML file and splits it into a list of YAML documents
-func ReadManifest(filePath string) ([]string, error) {
-	e := filepath.Ext(filePath)
-	if e != ".yaml" && e != ".yml" {
-		return nil, fmt.Errorf("not yaml file: %s", filePath)
-	}
-	yf, err := os.ReadFile(filePath)
-	if err != nil {
-		return nil, fmt.Errorf("read manifest %s: %w", filePath, err)
-	}
-	splitYaml, err := ManifestSplit(bytes.NewReader(yf))
-	if err != nil {
-		return nil, fmt.Errorf("splitting manifest: %s: %w", filePath, err)
-	}
-	return splitYaml, nil
 }
 
 func FileExists(filename string) bool {

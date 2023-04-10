@@ -39,7 +39,7 @@ type exportOption struct {
 	// Kustomize flag adds a kustomization.yaml file to the output
 	Kustomize bool
 
-	// Explode flag explodes files into multiple files
+	// Explode flag explodes files into multiple files according to their kind and namespace.
 	Explode bool
 
 	// SingleFile flag will write all the manifests in a single file.
@@ -48,6 +48,11 @@ type exportOption struct {
 	// Note that this is not compatible with [Explode] flag.
 	// It will ignore the use of [NameFileFunc].
 	SingleFile string
+
+	// OutputJSON sets the format of the output to JSON instead of YAML.
+	// Not that in the case of exporting to a single file, the format will be
+	// a JSON array of objects.
+	OutputJSON bool
 }
 
 var exportDefaultOpts = exportOption{
@@ -58,6 +63,7 @@ var exportDefaultOpts = exportOption{
 	Kustomize:      false,
 	Explode:        false,
 	SingleFile:     "",
+	OutputJSON:     false,
 }
 
 // WithExportNameFileFunc sets the function to format the name of the file
@@ -117,6 +123,15 @@ func WithExportWriter(w io.Writer) ExportOption {
 func WithExportStdOut() ExportOption {
 	return func(g *goky) {
 		g.useWriter = true
+	}
+}
+
+// WithExportOutputJSON sets the format of the output to JSON instead of YAML.
+// Not that in the case of exporting to a single file, the format will be
+// a JSON array of objects.
+func WithExportOutputJSON(b bool) ExportOption {
+	return func(g *goky) {
+		g.o.OutputJSON = b
 	}
 }
 

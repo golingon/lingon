@@ -5,6 +5,7 @@ package kube
 
 import (
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 	"sort"
@@ -12,6 +13,7 @@ import (
 	"github.com/dave/jennifer/jen"
 	"github.com/rogpeppe/go-internal/txtar"
 	"github.com/veggiemonk/strcase"
+	"golang.org/x/exp/slog"
 	"mvdan.cc/gofumpt/format"
 )
 
@@ -49,8 +51,21 @@ func (j *jamel) render() error {
 		return fmt.Errorf("app.go: %w", err)
 	}
 	if j.useWriter {
-		_, err := j.o.GoCodeWriter.Write(j.buf.Bytes())
-		return err
+		size := j.buf.Len()
+		written, err := io.Copy(j.o.GoCodeWriter, &j.buf)
+		if err != nil {
+			return fmt.Errorf("writing output: %w", err)
+		}
+		if written != int64(size) {
+			return fmt.Errorf(
+				"not all bytes written: %d >< %d",
+				written,
+				j.buf.Len(),
+			)
+		}
+		if j.o.Verbose {
+			j.l.Info("output", slog.Int64("bytes written", written))
+		}
 	}
 
 	return nil

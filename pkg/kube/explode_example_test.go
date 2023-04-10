@@ -73,7 +73,7 @@ func ExampleExplode_reader() {
 	defer func() {
 		_ = os.RemoveAll(out)
 	}()
-	manifest, err := kubeutil.ReadManifest("./testdata/golden/reader.yaml")
+	manifest, err := kubeutil.ManifestReadFile("./testdata/golden/reader.yaml")
 	if err != nil {
 		panic(fmt.Errorf("read manifest files: %w", err))
 	}

@@ -4,7 +4,6 @@
 package kube
 
 import (
-	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -14,8 +13,6 @@ import (
 	"github.com/rogpeppe/go-internal/txtar"
 	"github.com/volvo-cars/lingon/pkg/kubeutil"
 )
-
-var errOptConflictOutFiles = errors.New("option conflict: WithExportOutputFiles not compatible with WithExportOutputDir")
 
 type goky struct {
 	ar        *txtar.Archive
@@ -41,7 +38,17 @@ func Export(km Exporter, opts ...ExportOption) error {
 
 func gatekeeperExportOptions(o exportOption) error {
 	if o.Explode && o.SingleFile != "" {
-		return errOptConflictOutFiles
+		return fmt.Errorf(
+			"WithExportExplodeManifests and WithExportAsSingleFile: %w",
+			ErrIncompatibleOptions,
+		)
+	}
+
+	if o.OutputJSON && o.Kustomize {
+		return fmt.Errorf(
+			"WithExportJSON and WithExportKustomize: %w",
+			ErrIncompatibleOptions,
+		)
 	}
 	return nil
 }
@@ -65,7 +72,7 @@ func (g *goky) export(km Exporter) error {
 		return fmt.Errorf("no file to write")
 	}
 
-	if g.o.Kustomize {
+	if g.o.Kustomize && !g.o.OutputJSON {
 		// extract the filenames for kustomization.yaml
 		var filenames []string
 		for _, f := range g.ar.Files {
@@ -89,16 +96,29 @@ resources:`
 
 	if g.useWriter {
 		if g.o.SingleFile != "" {
+			// write to [io.Writer] as JSON array in a single file
+			if g.o.OutputJSON {
+				// The txtar is already in JSON format
+				if _, err = g.o.ManifestWriter.Write(kubeutil.Txtar2JSON(g.ar)); err != nil {
+					return fmt.Errorf("write: %w", err)
+				}
+				return nil
+			}
+			// write to [io.Writer] as YAML in a single file
 			if _, err = g.o.ManifestWriter.Write(kubeutil.Txtar2YAML(g.ar)); err != nil {
 				return fmt.Errorf("write: %w", err)
 			}
-		} else {
-			if _, err = g.o.ManifestWriter.Write(txtar.Format(g.ar)); err != nil {
-				return fmt.Errorf("write: %w", err)
-			}
+			return nil
+		}
+
+		// write to [io.Writer] as multiple files (txtar format)
+		if _, err = g.o.ManifestWriter.Write(txtar.Format(g.ar)); err != nil {
+			return fmt.Errorf("write: %w", err)
 		}
 		return nil
 	}
+
+	// write to files on disk
 
 	if err = os.MkdirAll(g.o.OutputDir, 0o755); err != nil {
 		return fmt.Errorf("mkdir %s: %w", g.o.OutputDir, err)
@@ -106,14 +126,27 @@ resources:`
 
 	if g.o.SingleFile != "" {
 		f := filepath.Join(g.o.OutputDir, g.o.SingleFile)
+		// write to single file named g.o.SingleFile as JSON array
+		if g.o.OutputJSON {
+			if err = os.WriteFile(
+				f,
+				kubeutil.Txtar2JSON(g.ar),
+				0o600,
+			); err != nil {
+				return fmt.Errorf("write file%s: %w", f, err)
+			}
+			return nil
+		}
+		// write to single file named g.o.SingleFile as YAML
 		if err = os.WriteFile(f, kubeutil.Txtar2YAML(g.ar), 0o600); err != nil {
 			return fmt.Errorf("write file%s: %w", f, err)
 		}
 		return nil
-	} else {
-		if err = txtar.Write(g.ar, "."); err != nil {
-			return fmt.Errorf("write txtar: %w", err)
-		}
+	}
+
+	// write to multiple files (txtar format)
+	if err = txtar.Write(g.ar, "."); err != nil {
+		return fmt.Errorf("write txtar: %w", err)
 	}
 
 	return err

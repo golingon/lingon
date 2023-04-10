@@ -26,7 +26,7 @@ import (
 	"k8s.io/client-go/kubernetes/scheme"
 )
 
-const defaultImportOutputDir = "out/jamel"
+const defaultImportOutputDir = "out/import"
 
 func defaultSerializer() runtime.Decoder {
 	// NEEDED FOR CRDS
@@ -56,19 +56,19 @@ func TestImport(t *testing.T) {
 				kube.WithImportGroupByKind(true),
 			},
 			OutFiles: []string{
-				"out/jamel/argocd/app.go",
-				"out/jamel/argocd/cluster-role-binding.go",
-				"out/jamel/argocd/cluster-role.go",
-				"out/jamel/argocd/config-map.go",
-				"out/jamel/argocd/custom-resource-definition.go",
-				"out/jamel/argocd/deployment.go",
-				"out/jamel/argocd/network-policy.go",
-				"out/jamel/argocd/role-binding.go",
-				"out/jamel/argocd/role.go",
-				"out/jamel/argocd/secret.go",
-				"out/jamel/argocd/service-account.go",
-				"out/jamel/argocd/service.go",
-				"out/jamel/argocd/stateful-set.go",
+				"out/import/argocd/app.go",
+				"out/import/argocd/cluster-role-binding.go",
+				"out/import/argocd/cluster-role.go",
+				"out/import/argocd/config-map.go",
+				"out/import/argocd/custom-resource-definition.go",
+				"out/import/argocd/deployment.go",
+				"out/import/argocd/network-policy.go",
+				"out/import/argocd/role-binding.go",
+				"out/import/argocd/role.go",
+				"out/import/argocd/secret.go",
+				"out/import/argocd/service-account.go",
+				"out/import/argocd/service.go",
+				"out/import/argocd/stateful-set.go",
 			},
 		}, {
 			Name: "with CRDs and remove app name containing dash and group by kind",
@@ -84,17 +84,17 @@ func TestImport(t *testing.T) {
 				kube.WithImportGroupByKind(true),
 			},
 			OutFiles: []string{
-				"out/jamel/external-secrets/app.go",
-				"out/jamel/external-secrets/cluster-role-binding.go",
-				"out/jamel/external-secrets/cluster-role.go",
-				"out/jamel/external-secrets/custom-resource-definition.go",
-				"out/jamel/external-secrets/deployment.go",
-				"out/jamel/external-secrets/role-binding.go",
-				"out/jamel/external-secrets/role.go",
-				"out/jamel/external-secrets/secret.go",
-				"out/jamel/external-secrets/service-account.go",
-				"out/jamel/external-secrets/service.go",
-				"out/jamel/external-secrets/validating-webhook-configuration.go",
+				"out/import/external-secrets/app.go",
+				"out/import/external-secrets/cluster-role-binding.go",
+				"out/import/external-secrets/cluster-role.go",
+				"out/import/external-secrets/custom-resource-definition.go",
+				"out/import/external-secrets/deployment.go",
+				"out/import/external-secrets/role-binding.go",
+				"out/import/external-secrets/role.go",
+				"out/import/external-secrets/secret.go",
+				"out/import/external-secrets/service-account.go",
+				"out/import/external-secrets/service.go",
+				"out/import/external-secrets/validating-webhook-configuration.go",
 			},
 		}, {
 			Name:   "with CRDs and remove app name and split by name",
@@ -107,28 +107,28 @@ func TestImport(t *testing.T) {
 				kube.WithImportRemoveAppName(true),
 			},
 			OutFiles: []string{
-				"out/jamel/karpenter/admin_cr.go",
-				"out/jamel/karpenter/app.go",
-				"out/jamel/karpenter/cert_secrets.go",
-				"out/jamel/karpenter/config-logging_cm.go",
-				"out/jamel/karpenter/core_cr.go",
-				"out/jamel/karpenter/core_crb.go",
-				"out/jamel/karpenter/cr.go",
-				"out/jamel/karpenter/crb.go",
-				"out/jamel/karpenter/defaulting.webhook..k8s.aws_mutatingwebhookconfigurations.go",
-				"out/jamel/karpenter/defaulting.webhook..sh_mutatingwebhookconfigurations.go",
-				"out/jamel/karpenter/deploy.go",
-				"out/jamel/karpenter/dns_rb.go",
-				"out/jamel/karpenter/dns_role.go",
-				"out/jamel/karpenter/global-settings_cm.go",
-				"out/jamel/karpenter/pdb.go",
-				"out/jamel/karpenter/rb.go",
-				"out/jamel/karpenter/role.go",
-				"out/jamel/karpenter/sa.go",
-				"out/jamel/karpenter/svc.go",
-				"out/jamel/karpenter/validation.webhook..k8s.aws_validatingwebhookconfigurations.go",
-				"out/jamel/karpenter/validation.webhook..sh_validatingwebhookconfigurations.go",
-				"out/jamel/karpenter/validation.webhook.config..sh_validatingwebhookconfigurations.go",
+				"out/import/karpenter/admin_cr.go",
+				"out/import/karpenter/app.go",
+				"out/import/karpenter/cert_secrets.go",
+				"out/import/karpenter/config-logging_cm.go",
+				"out/import/karpenter/core_cr.go",
+				"out/import/karpenter/core_crb.go",
+				"out/import/karpenter/cr.go",
+				"out/import/karpenter/crb.go",
+				"out/import/karpenter/defaulting.webhook..k8s.aws_mutatingwebhookconfigurations.go",
+				"out/import/karpenter/defaulting.webhook..sh_mutatingwebhookconfigurations.go",
+				"out/import/karpenter/deploy.go",
+				"out/import/karpenter/dns_rb.go",
+				"out/import/karpenter/dns_role.go",
+				"out/import/karpenter/global-settings_cm.go",
+				"out/import/karpenter/pdb.go",
+				"out/import/karpenter/rb.go",
+				"out/import/karpenter/role.go",
+				"out/import/karpenter/sa.go",
+				"out/import/karpenter/svc.go",
+				"out/import/karpenter/validation.webhook..k8s.aws_validatingwebhookconfigurations.go",
+				"out/import/karpenter/validation.webhook..sh_validatingwebhookconfigurations.go",
+				"out/import/karpenter/validation.webhook.config..sh_validatingwebhookconfigurations.go",
 			},
 		}, {
 			Name:   "with vanilla serializer and remove app name and group by kind",
@@ -141,17 +141,17 @@ func TestImport(t *testing.T) {
 				kube.WithImportGroupByKind(true),
 			},
 			OutFiles: []string{
-				"out/jamel/grafana/app.go",
-				"out/jamel/grafana/cluster-role-binding.go",
-				"out/jamel/grafana/cluster-role.go",
-				"out/jamel/grafana/config-map.go",
-				"out/jamel/grafana/deployment.go",
-				"out/jamel/grafana/pod.go",
-				"out/jamel/grafana/role-binding.go",
-				"out/jamel/grafana/role.go",
-				"out/jamel/grafana/secret.go",
-				"out/jamel/grafana/service-account.go",
-				"out/jamel/grafana/service.go",
+				"out/import/grafana/app.go",
+				"out/import/grafana/cluster-role-binding.go",
+				"out/import/grafana/cluster-role.go",
+				"out/import/grafana/config-map.go",
+				"out/import/grafana/deployment.go",
+				"out/import/grafana/pod.go",
+				"out/import/grafana/role-binding.go",
+				"out/import/grafana/role.go",
+				"out/import/grafana/secret.go",
+				"out/import/grafana/service-account.go",
+				"out/import/grafana/service.go",
 			},
 		}, {
 			Name:   "with vanilla serializer and add methods",
@@ -165,17 +165,17 @@ func TestImport(t *testing.T) {
 				kube.WithImportAddMethods(true),
 			},
 			OutFiles: []string{
-				"out/jamel/manifester/app.go",
-				"out/jamel/manifester/cluster-role-binding.go",
-				"out/jamel/manifester/cluster-role.go",
-				"out/jamel/manifester/config-map.go",
-				"out/jamel/manifester/deployment.go",
-				"out/jamel/manifester/pod.go",
-				"out/jamel/manifester/role-binding.go",
-				"out/jamel/manifester/role.go",
-				"out/jamel/manifester/secret.go",
-				"out/jamel/manifester/service-account.go",
-				"out/jamel/manifester/service.go",
+				"out/import/manifester/app.go",
+				"out/import/manifester/cluster-role-binding.go",
+				"out/import/manifester/cluster-role.go",
+				"out/import/manifester/config-map.go",
+				"out/import/manifester/deployment.go",
+				"out/import/manifester/pod.go",
+				"out/import/manifester/role-binding.go",
+				"out/import/manifester/role.go",
+				"out/import/manifester/secret.go",
+				"out/import/manifester/service-account.go",
+				"out/import/manifester/service.go",
 			},
 		},
 	}
@@ -213,7 +213,8 @@ func TestImport_Error(t *testing.T) {
 		kube.WithImportManifestFiles([]string{"does-not-exists.yaml"}),
 	)
 	tu.IsNotNil(t, err)
-	output := `import options: package name cannot contain a dash
+	output := `import options: incompatible options
+package name cannot contain a dash
 file does not exist: does-not-exists.yaml`
 	tu.AssertEqual(t, output, err.Error())
 }
@@ -234,7 +235,7 @@ func TestImport_ErrorEmptyManifest(t *testing.T) {
 	tu.AssertEqual(t, string(golden), buf.String())
 }
 
-func TestJamel_SaveFromReader(t *testing.T) {
+func TestImport_SaveFromReader(t *testing.T) {
 	filename := "testdata/grafana.yaml"
 	file, err := os.Open(filename)
 	tu.AssertNoError(t, err, fmt.Sprintf("failed to open file: %s", filename))
@@ -268,26 +269,26 @@ func TestJamel_SaveFromReader(t *testing.T) {
 	sort.Strings(got)
 
 	want := []string{
-		"out/jamel/reader/app.go",
-		"out/jamel/reader/clusterrole-grafana-clusterrole.go",
-		"out/jamel/reader/clusterrolebinding-grafana-clusterrolebinding.go",
-		"out/jamel/reader/configmap-grafana-dashboards-default.go",
-		"out/jamel/reader/configmap-grafana-test.go",
-		"out/jamel/reader/configmap-grafana.go",
-		"out/jamel/reader/deployment-grafana.go",
-		"out/jamel/reader/pod-grafana-test.go",
-		"out/jamel/reader/role-grafana.go",
-		"out/jamel/reader/rolebinding-grafana.go",
-		"out/jamel/reader/secret-grafana.go",
-		"out/jamel/reader/service-grafana.go",
-		"out/jamel/reader/serviceaccount-grafana-test.go",
-		"out/jamel/reader/serviceaccount-grafana.go",
+		"out/import/reader/app.go",
+		"out/import/reader/clusterrole-grafana-clusterrole.go",
+		"out/import/reader/clusterrolebinding-grafana-clusterrolebinding.go",
+		"out/import/reader/configmap-grafana-dashboards-default.go",
+		"out/import/reader/configmap-grafana-test.go",
+		"out/import/reader/configmap-grafana.go",
+		"out/import/reader/deployment-grafana.go",
+		"out/import/reader/pod-grafana-test.go",
+		"out/import/reader/role-grafana.go",
+		"out/import/reader/rolebinding-grafana.go",
+		"out/import/reader/secret-grafana.go",
+		"out/import/reader/service-grafana.go",
+		"out/import/reader/serviceaccount-grafana-test.go",
+		"out/import/reader/serviceaccount-grafana.go",
 	}
 
 	tu.AssertEqualSlice(t, want, got)
 }
 
-func TestJamel_MissingCRDs(t *testing.T) {
+func TestImport_MissingCRDs(t *testing.T) {
 	filename := "testdata/istio.yaml"
 	file, err := os.Open(filename)
 	tu.AssertNoError(t, err, fmt.Sprintf("failed to open file: %s", filename))
@@ -316,7 +317,7 @@ func TestJamel_MissingCRDs(t *testing.T) {
 	tu.AssertError(t, err, errmsg)
 }
 
-func TestJamel_ReaderWriter(t *testing.T) {
+func TestImport_ReaderWriter(t *testing.T) {
 	filename := "testdata/grafana.yaml"
 	file, err := os.Open(filename)
 	tu.AssertNoError(t, err, fmt.Sprintf("failed to open file: %s", filename))
@@ -367,7 +368,7 @@ func TestJamel_ReaderWriter(t *testing.T) {
 	tu.AssertEqualSlice(t, want, got)
 }
 
-func TestJamel_ConfigMapComments(t *testing.T) {
+func TestImport_ConfigMapComments(t *testing.T) {
 	out := filepath.Join(defaultImportOutputDir, "tekton")
 	tu.AssertNoError(t, os.RemoveAll(out), "rm out dir")
 	t.Cleanup(
@@ -393,27 +394,27 @@ func TestJamel_ConfigMapComments(t *testing.T) {
 	sort.Strings(got)
 
 	want := []string{
-		"out/jamel/tekton/app.go",
-		"out/jamel/tekton/cluster-role-binding.go",
-		"out/jamel/tekton/cluster-role.go",
-		"out/jamel/tekton/config-map.go",
-		"out/jamel/tekton/custom-resource-definition.go",
-		"out/jamel/tekton/deployment.go",
-		"out/jamel/tekton/horizontal-pod-autoscaler.go",
-		"out/jamel/tekton/mutating-webhook-configuration.go",
-		"out/jamel/tekton/namespace.go",
-		"out/jamel/tekton/role-binding.go",
-		"out/jamel/tekton/role.go",
-		"out/jamel/tekton/secret.go",
-		"out/jamel/tekton/service-account.go",
-		"out/jamel/tekton/service.go",
-		"out/jamel/tekton/validating-webhook-configuration.go",
+		"out/import/tekton/app.go",
+		"out/import/tekton/cluster-role-binding.go",
+		"out/import/tekton/cluster-role.go",
+		"out/import/tekton/config-map.go",
+		"out/import/tekton/custom-resource-definition.go",
+		"out/import/tekton/deployment.go",
+		"out/import/tekton/horizontal-pod-autoscaler.go",
+		"out/import/tekton/mutating-webhook-configuration.go",
+		"out/import/tekton/namespace.go",
+		"out/import/tekton/role-binding.go",
+		"out/import/tekton/role.go",
+		"out/import/tekton/secret.go",
+		"out/import/tekton/service-account.go",
+		"out/import/tekton/service.go",
+		"out/import/tekton/validating-webhook-configuration.go",
 	}
 
 	tu.IsEqual(t, len(want), len(got))
 	tu.AssertEqualSlice(t, want, got)
 
-	src, err := os.ReadFile("out/jamel/tekton/config-map.go")
+	src, err := os.ReadFile("out/import/tekton/config-map.go")
 	tu.AssertNoError(t, err, "reading config-map.go")
 
 	comments := []string{
@@ -448,7 +449,7 @@ func cleanStr(m string) string {
 	return strings.TrimSpace(clm.Replace(m))
 }
 
-func TestJamel_VerboseLogger(t *testing.T) {
+func TestImport_VerboseLogger(t *testing.T) {
 	out := filepath.Join(defaultImportOutputDir, "tekton")
 	golden := filepath.Join("testdata", "golden", "log.golden")
 	var bufLog, bufOut bytes.Buffer
