@@ -64,6 +64,9 @@ mage -l
 
 ## Release
 
+The release process is automated with [goreleaser](https://goreleaser.com/).
+A release is triggered by pushing a tag to the repo.
+
 ```shell
 function version () {
 	local shortsha=$(git rev-parse --short HEAD) # will output 91d9a52
