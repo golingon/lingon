@@ -208,6 +208,8 @@ func stmtApplyFunc() *jen.Statement {
 					jen.Id("km"),
 					jen.Qual(kubeAppPkgPath, "WithExportWriter").
 						Call(jen.Id("stdin")),
+					jen.Qual(kubeAppPkgPath, "WithExportAsSingleFile").
+						Call(jen.Lit("stdin")),
 				).Op(";").Id("errEW").Op("!=").Nil(),
 			).Block(
 				jen.Err().Op("=").Qual("errors", "Join").Call(

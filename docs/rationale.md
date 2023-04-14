@@ -2,7 +2,7 @@
 
 Why we built this? Because we had no other choice, no tools supported a controlled and reproducible way to upgrade our infrastructure.
 
-We didn't want to build yet another abstraction that tries to cover everyone's use cases (see https://xkcd.com/927/).
+We didn't want to build yet another abstraction that tries to cover everyone's use cases (see <https://xkcd.com/927/>).
 So we decided to build a library to facilitate the creation of **your** abstraction for your platform, regardless of the target infrastructure and services.
 
 ## Problem definition
@@ -28,8 +28,8 @@ the more difficult it is to add features to it. Everything related to developer 
 a third class citizen and getting things to work becomes the only priority.
 
 This has platform engineers jumping through hoops to get things to work, begging and pleading for help from
-other gate-keeping teams which have their own schedule, which requires the engineers 
-to find workarounds - mainly to write their own custom tools - and ultimately, the platform 
+other gate-keeping teams which have their own schedule, which requires the engineers
+to find workarounds - mainly to write their own custom tools - and ultimately, the platform
 that promised productivity and flexibility for end-users (data scientists, data engineers, ML engineers, developers, ...)
 becomes a bottleneck for the community.
 
@@ -56,7 +56,7 @@ instead of automating the process.
 Technically, the problem by having to manipulate the descriptive languages (YAML, JSON, HCL, SQL) to configure tools
 using things like bash scripts, sometimes Python. How and where those scripts run is usually a hassle.
 Since those scripts are not interacting directly with the APIs of the tools and frameworks,
-but mainly through configuration files, errors are discovered at runtime, often reported by an end-user asking for support. 
+but mainly through configuration files, errors are discovered at runtime, often reported by an end-user asking for support.
 Those scripts can also pose a security risk, as they are not audited and can sometimes be easily modified by end-users.
 
 > Since those descriptive languages are mainly **data**,
@@ -75,10 +75,12 @@ When it comes to manipulating data, **general programming languages** such as Py
 and software engineering best practices have been battle tested and proven.
 
 Lingon has been built from our experience using a general programming language to configure
-our applications and infrastructure.
+our applications and infrastructure in order to:
 
-* **Reduce cognitive load**: Building a platform within a single context (i.e. Go) will reduce cognitive load
+* **Reduce cognitive load** :Building a platform within a single context (i.e. Go) will reduce cognitive load
 by decreasing the number of tools and context switching in the process.
+It provides a better developer experience with out-of-the-box IDE support and a single language to learn with smooth learning curve.
+
 * **Type safety**: Detect misconfigurations in your text editor at **compile time** by using type-safe Go structs
 to exchange values across tool boundaries.
 This "shifts left" the majority of errors that occur to the earliest possible point in time.
@@ -89,14 +91,21 @@ This significantly reduces the effort in finding the root cause of errors and pr
 * **Limitless automation**: no need to write bash scripts to glue tools together.
 We have a general programming language at our disposal that enables us to automate and
 **test** the most critical component before they reach production.
+We are only limited by what a programming language can do.
+We can reuse part of what we build in libraries without external tooling.
+That is not possible with YAML as doesn't support "includes", therefore we need a tool for that.
+Configuration languages are limited by the features they provide.
+Gluing tools together with more tools and configuration to manage more tools and configuration is not a sustainable approach.
+We do use a limited set of tools that we learn well and can extend, but we automate them and test them together using Go.
 
+Note that we are in a particular situation where we need custom automation of the lifecycle of our cloud infrastructure.
 Lingon is aimed at people managing cloud infrastructure who have suffered the pain of configuration languages
 and the complexity of gluing tools together with yet another tool.
 
 > Lingon was created to manage platforms living in various environments at scale.
 
-Lingon is not a platform, it is a library meant to be consumed in a Go application that platform engineers write 
-to manage their platforms. It is a tool to build and automate the creation and the management of platforms 
+Lingon is not a platform, it is a library meant to be consumed in a Go application that platform engineers write
+to manage their platforms. It is a tool to build and automate the creation and the management of platforms
 regardless of the target infrastructure and services.
 
 ## FAQ

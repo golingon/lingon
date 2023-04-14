@@ -3,6 +3,8 @@
 
 ## Why Go
 
+* Because most outages are caused by a configuration error and a configuration language is the most important tool in the hands of a platform engineer.
+
 * _Configuration as code_ as in programming language code, not JSON, YAML or HCL.
 
 * _Go is a strongly typed language_. IDEs provide a great developer experience with autocompletion and type safety.
@@ -29,10 +31,13 @@
 
 ### References
 
-* [But Why Go](https://github.com/bwplotka/mimic#but-why-go) from [Mimic](https://github.com/bwplotka/mimic)
+* [But Why Go](https://github.com/bwplotka/mimic#but-why-go) from [Mimic](https://github.com/bwplotka/mimic) by [bwplotka](https://github.com/bwplotka)  👈 heavily inspired by this one.
+* [Not Another Markup Language](https://github.com/krisnova/naml) from [NAML](https://github.com/krisnova/naml) by [krisnova](https://github.com/krisnova)
 * [Go for Cloud](https://rakyll.org/go-cloud/) by [rakyll](https://rakyll.org)
 * [The yaml document from hell](https://ruudvanasseldonk.com/2023/01/11/the-yaml-document-from-hell) by [ruudvanasseldonk](https://ruudvanasseldonk.com)
-* [noyaml](https://noyaml.com)
+* [noyaml website](https://noyaml.com)
+* [YAML Considered Harmful - Philipp Krenn 🎥](https://youtu.be/WQurEEfSf8M)
+* [Nightmares On Cloud Street 29/10/20 - Joe Beda 🎥](https://youtu.be/8PpgqEqkQWA)
 
 ## Go resources
 
@@ -41,4 +46,3 @@
 * [Google Style guide](https://google.github.io/styleguide/go/guide)
 * [Google best practices](https://google.github.io/styleguide/go/best-practices)
 * [Context about decisions](https://google.github.io/styleguide/go/decisions)
-

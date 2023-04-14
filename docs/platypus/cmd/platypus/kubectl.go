@@ -4,6 +4,7 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"io"
@@ -127,8 +128,17 @@ func (k *Client) Apply(
 
 	go func() {
 		defer stdin.Close()
-		if err := kube.Export(km, kube.WithExportWriter(stdin)); err != nil {
-			log.Fatal(err)
+		var buf bytes.Buffer
+		if err := kube.Export(
+			km,
+			kube.WithExportWriter(&buf),
+			kube.WithExportAsSingleFile("karpenter.yaml"),
+		); err != nil {
+			log.Fatal("export", err)
+		}
+		log.Printf("kubectl apply: %s", buf.String())
+		if _, err := io.Copy(stdin, &buf); err != nil {
+			log.Fatal("copy", err)
 		}
 	}()
 

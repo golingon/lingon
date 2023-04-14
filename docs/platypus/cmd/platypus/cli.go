@@ -117,6 +117,7 @@ type ClusterParams struct {
 }
 
 func run(p runParams) error {
+	slog.Info("run", "params", p)
 	ctx := context.Background()
 	uniqueName := p.ClusterParams.Name
 	vpcOpts := vpc.Opts{

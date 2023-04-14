@@ -98,7 +98,7 @@ func Apply(ctx context.Context, km kube.Exporter) error {
 		defer func() {
 			err = errors.Join(err, stdin.Close())
 		}()
-		if errEW := kube.Export(km, kube.WithExportWriter(stdin)); errEW != nil {
+		if errEW := kube.Export(km, kube.WithExportWriter(stdin), kube.WithExportAsSingleFile("stdin")); errEW != nil {
 			err = errors.Join(err, errEW)
 		}
 	}()

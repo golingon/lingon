@@ -5,32 +5,32 @@
 # Lingon 🍒 - Libraries for building platforms with Go  <!-- omit in toc -->
 
 - [What is this?](#what-is-this)
+  - [It can do 4 things so far](#it-can-do-4-things-so-far)
 - [Who is this for?](#who-is-this-for)
 - [Project status](#project-status)
+- [Required knowledge](#required-knowledge)
 - [Getting started](#getting-started)
 - [Examples](#examples)
 - [Motivation](#motivation)
-  - [Reduce cognitive load](#reduce-cognitive-load)
-  - [Type safety](#type-safety)
-  - [Error handling](#error-handling)
-  - [Limitless automation](#limitless-automation)
+- [Extraordinary use cases](#extraordinary-use-cases)
 - [Why Go?](#why-go)
 - [Similar projects](#similar-projects)
 - [License](#license)
 
 ## What is this?
 
-Lingon is a collection of libraries and tools for building platforms using Go.
+Write [Terraform](./docs/terraform/) (HCL) and [Kubernetes](./docs/kubernetes/) (YAML) in Go. see [Rationale](./docs/rationale.md) for more details.
 
-> In short, we write Terraform (HCL) and Kubernetes (YAML) in Go. see [Rationale](./docs/rationale.md) for more details.
+> Lingon is not a platform, it is a thin wrapper around terraform and kubernetes API in a library
+> meant to be consumed in a Go application that platform engineers write to manage their platforms.
+> It is a tool to build and automate the creation and the management of platforms regardless of the target infrastructure and services.
 
-**Lingon is not a platform, it is a library meant to be consumed in a Go application that platform engineers write to manage their platforms. 
-It is a tool to build and automate the creation and the management of platforms regardless of the target infrastructure and services.**
+### It can do 4 things so far
 
-The following technologies are currently supported:
-
-- [Terraform](./docs/terraform/)
-- [Kubernetes](./docs/kubernetes/)
+- import kubernetes YAML manifests to valid Go code (even CRDs)  `kube.Import`
+- export Go code to kubernetes YAML manifests  `kube.Export`
+- generate Go code from Terraform providers `terragen.GenerateProviderSchema` and `terragen.GenerateGoCode`
+- export terraform Go code to valid Terraform HCL  `terra.Export`
 
 The only dependencies you need are:
 
@@ -40,7 +40,7 @@ The only dependencies you need are:
 
 ## Who is this for?
 
-Lingon is aimed at people who need to automate the lifecycle of their cloud infrastructure
+Lingon is aimed at advanced platform teams who need to automate the lifecycle of their cloud infrastructure
 and have suffered the pain of configuration languages and complexity of gluing tools together with more tools.
 
 ## Project status
@@ -50,6 +50,17 @@ The APIs are stable, but we do not promise backward compatibility at this point.
 We will eventually promise backward compatibility when the project is more battle tested.
 
 See [FAQ](./docs/faq.md) for more details.
+
+## Required knowledge
+
+This is not a tutorial on how to use Go, Terraform or Kubernetes.
+Lingon doesn't try to hide the complexity of these technologies, it embraces it.
+
+> Which is why you need to know how to use these technologies to use Lingon.
+
+- [Go](https://golang.org/)
+- [Terraform](https://www.terraform.io/)
+- [Kubernetes](https://kubernetes.io/)
 
 ## Getting started
 
@@ -65,55 +76,32 @@ See [FAQ](./docs/faq.md) for more details.
 
 All the [Examples](./docs/) are in the [documentation](./docs).
 
-There is a [web app to showcase the conversion from kubernetes manifests from YAML to Go ](https://lingonweb.bisconti.cloud/).
+There is a [web app to showcase](https://lingonweb.bisconti.cloud/) the conversion from kubernetes manifests from YAML to Go.
 
-A big example is [Platypus](./docs/platypus/) which shows how 
+A big example is [Platypus](./docs/platypus/) which shows how
 the [kubernetes](./docs/kubernetes/) and [terraform](./docs/terraform/) libraries can be used together.
 
 ## Motivation
 
 See [Rationale](./docs/rationale.md) for more details.
 
-Lingon was developed to achieve the following goals:
+## Extraordinary use cases
 
-### Reduce cognitive load
+Lingon might be helpful if you need to:
 
-Building a platform within a single context (i.e. Go) will reduce cognitive load by decreasing the number of tools and context switching in the process.
-It provides a better developer experience with out-of-the-box IDE support and a single language to learn with smooth learning curve.
-
-### Type safety
-
-Detect misconfigurations in your text editor by using type-safe Go structs to exchange values across tool boundaries.
-This "shifts left" the majority of errors that occur to the earliest possible point in time.
-
-### Error handling
-
-Go's error handling enables propagating meaningful errors to the user.
-This significantly reduces the effort in finding the root cause of errors and provides a better developer experience.
-
-### Limitless automation
-
-We are only limited by what a programming language can do. 
-We can reuse part of what we build in libraries without external tooling.
-That is not possible with YAML as doesn't support "includes", therefore we need a tool for that.
-Configuration languages are limited by the features they provide.
-Gluing tools together with more tools and configuration to manage more tools and configuration is not a sustainable approach.
-We do use a limited set of tools that we learn well and can extend, but we automate them and test them together using Go.
-
-Note that we are in a particular situation where we need custom automation of the lifecycle of our cloud infrastructure.
+- use the SDK of your cloud provider to access APIs (alpha, beta, deprecated) not included in a Terraform provider.
+- authenticate to a multitude of providers or webhook with specific requirements (e.g. Azure SSO, AWS, Github, Slack, etc.)
+- automate some part of the infrastructure that is really hard to test (e.g. iptables, DNS, IAM, etc.)
+- store the state of the infrastructure in a database for further analysis
+- collect advanced metrics about the failures occurring during the deployment of the infrastructure
+- enforce advanced rules on kubernetes manifests before deploying it (e.g. every service account must be related to a role and that role cannot have '*' in access rights, etc.)
+- define CI/CD pipelines as imperative code, not declarative.
+- execute smoke tests after deploying a new version of an application
+- write unit tests for your infrastructure
 
 ## Why Go?
 
-Because most outages are caused by a configuration error.
-
-- [Why Go](./docs/go.md) from us, inspired by 👇
-- [But Why Go](https://github.com/bwplotka/mimic#but-why-go) from [Mimic](https://github.com/bwplotka/mimic)
-- [Not Another Markup Language](https://github.com/krisnova/naml) from [NAML](https://github.com/krisnova/naml)
-- [Go for Cloud](https://rakyll.org/go-cloud/) by [rakyll](https://rakyll.org)
-- [The yaml document from hell](https://ruudvanasseldonk.com/2023/01/11/the-yaml-document-from-hell) by [ruudvanasseldonk](https://ruudvanasseldonk.com)
-- [noyaml website](https://noyaml.com)
-- [YAML Considered Harmful - Philipp Krenn 🎥](https://youtu.be/WQurEEfSf8M)
-- [Nightmares On Cloud Street 29/10/20 - Joe Beda 🎥](https://youtu.be/8PpgqEqkQWA)
+See [Why Go](./docs/go.md) for more details.
 
 ## Similar projects
 
