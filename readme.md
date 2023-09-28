@@ -15,7 +15,6 @@
 - [Getting started](#getting-started)
 - [Examples](#examples)
 - [Install binaries](#install-binaries)
-  - [Homebrew](#homebrew)
   - [Github releases](#github-releases)
   - [Install from source](#install-from-source)
 - [Motivation](#motivation)
@@ -23,6 +22,10 @@
 - [Why Go?](#why-go)
 - [Similar projects](#similar-projects)
 - [License](#license)
+
+## Project Status
+
+This was a proof-of-concept that after evaluation we have decided not to take forward.
 
 ## What is this?
 
@@ -83,7 +86,6 @@ Lingon doesn't try to hide the complexity of these technologies, it embraces it.
 
 - All the [Examples](./docs/) are in the [documentation](./docs).
 - Convert kubernetes manifests from YAML containing CRDs to Go: [example_import_test.go](./docs/kubernetes/crd/example_import_test.go)
-- A web app to showcase the conversion from kubernetes manifests from YAML to Go: <https://lingonweb.bisconti.cloud/>
 - Export Go code to kubernetes manifests: [kube_test.go](./docs/kubernetes/kube/kube_test.go)
 - Create the HCL code for Terraform: [aws_test.go](./docs/terraform/aws_test.go)
 - An example is [Platypus](./docs/platypus/) which shows how
@@ -96,15 +98,6 @@ Lingon provides helper binaries.
 - `explode` - explode a kubernetes manifests YAML file into multiple files organized by kind and namespace.
 - `kygo` - convert kubernetes YAML manifests to Go code
 - `terragen` - generate Go code from Terraform providers
-
-### Homebrew
-
-You can install the binaries with [Homebrew](https://brew.sh) :
-
-```bash
-brew tap golingon/homebrew-tap
-brew install lingon
-```
 
 ### Github releases
 
