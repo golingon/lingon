@@ -192,6 +192,8 @@ github.com/vbatts/tar-split v0.11.5 h1:3bHCTIheBm1qFTcgh9oPu+nNBtX+XJIupG/vacinC
 github.com/vbatts/tar-split v0.11.5/go.mod h1:yZbwRsSeGjusneWgA781EKej9HF8vme8okylkAeNKLk=
 github.com/veggiemonk/strcase v0.0.0-20230627213939-a882c834bcab h1:XFqIqepU0qLA2+oK9XEjZE4yuh33T4Mc/v4uurLBrSI=
 github.com/veggiemonk/strcase v0.0.0-20230627213939-a882c834bcab/go.mod h1:FhMPOXYKshhGzQYJHiD5+zsWaVMP2NGpi/HfPu14QPA=
+github.com/volvo-cars/lingon v0.0.0-20230814121704-8832578d7bbf h1:I6lyZsl8gkM5L+5bOspOLMoE3GoGeW504oETFHlNPjk=
+github.com/volvo-cars/lingon v0.0.0-20230814121704-8832578d7bbf/go.mod h1:DPIM+w2TT8BCQwcoHA7+8qv2ZUbNiSLe6ixsuntQDfE=
 github.com/xanzy/ssh-agent v0.3.0 h1:wUMzuKtKilRgBAD1sUb8gOwwRr2FGoBVumcjoOACClI=
 github.com/xanzy/ssh-agent v0.3.0/go.mod h1:3s9xbODqPuuhK9JV1R321M/FlMZSBvE5aY6eAcqrDh0=
 github.com/yuin/goldmark v1.1.27/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=

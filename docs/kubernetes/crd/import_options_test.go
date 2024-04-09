@@ -60,7 +60,7 @@ func ExampleImport_withManifest() {
 		kube.WithImportIgnoreErrors(false),
 		// just for example purposes
 		// how to create a logger (see
-		// [golang.org/x/tools/slog](https://golang.org/x/tools/slog))
+		// [pkg.go.dev/log/slog](https://pkg.go.dev/log/slog))
 		// this has no effect with WithImportVerbose(false)
 		kube.WithImportLogger(kube.Logger(os.Stderr)),
 		// remove the status field and

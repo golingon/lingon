@@ -30,10 +30,12 @@ err := kube.Import(
 			return scheme.Codecs.UniversalDeserializer()
 		}(),
 	),
-	// will try to remove "tekton" from the name of the variable in the Go code, make them shorter
+	// will try to remove "tekton" from the name of the variable in the Go
+	// code, make them shorter
 	kube.WithImportRemoveAppName(true),
 	// group all the resources from the same kind into one file each
-	// example: 10 ConfigMaps => 1 file "config-map.go" containing 10 variables storing ConfigMap, etc...
+	// example: 10 ConfigMaps => 1 file "config-map.go" containing 10
+	// variables storing ConfigMap, etc...
 	kube.WithImportGroupByKind(true),
 	// add convenience methods to the App struct
 	kube.WithImportAddMethods(true),
@@ -42,7 +44,8 @@ err := kube.Import(
 	// do not ignore errors
 	kube.WithImportIgnoreErrors(false),
 	// just for example purposes
-	// how to create a logger (see [golang.org/x/tools/slog](https://golang.org/x/tools/slog))
+	// how to create a logger (see
+	// [pkg.go.dev/log/slog](https://pkg.go.dev/log/slog))
 	// this has no effect with WithImportVerbose(false)
 	kube.WithImportLogger(kube.Logger(os.Stderr)),
 	// remove the status field and

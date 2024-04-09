@@ -11,6 +11,7 @@ require (
 	github.com/eidolon/wordwrap v0.0.0-20161011182207-e0f54129b8bb
 	github.com/fatih/color v1.15.0
 	github.com/go-playground/validator/v10 v10.15.1
+	github.com/golingon/lingon v0.0.0-20230821085204-81fbacc93e96
 	github.com/golingon/terraproviders/aws/4.60.0 v0.0.0-20230821062044-8717820dd713
 	github.com/golingon/terraproviders/tls/4.0.4 v0.0.0-20230821062044-8717820dd713
 	github.com/google/go-containerregistry v0.16.1
@@ -21,7 +22,6 @@ require (
 	github.com/invopop/yaml v0.2.0
 	github.com/rogpeppe/go-internal v1.11.0
 	github.com/stretchr/testify v1.8.4
-	github.com/golingon/lingon v0.0.0-20230821085204-81fbacc93e96
 	github.com/zegl/kube-score v1.17.0
 	istio.io/api v1.19.0-beta.1
 	istio.io/client-go v1.18.1
@@ -74,6 +74,7 @@ require (
 	github.com/tidwall/sjson v1.2.5 // indirect
 	github.com/vbatts/tar-split v0.11.5 // indirect
 	github.com/veggiemonk/strcase v0.0.0-20230627213939-a882c834bcab // indirect
+	github.com/volvo-cars/lingon v0.0.0-20230814121704-8832578d7bbf // indirect
 	github.com/zclconf/go-cty v1.13.2 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	golang.org/x/crypto v0.12.0 // indirect
