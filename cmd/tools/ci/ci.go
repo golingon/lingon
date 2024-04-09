@@ -39,10 +39,6 @@ const (
 	goCILintVersion = "@v1.53.3"
 	goCILint        = goCILintRepo + goCILintVersion
 
-	// copyWriteCheck is hashicorp/copywrite to check license headers
-	copyWriteRepo    = "github.com/hashicorp/copywrite"
-	copyWriteVersion = "@v0.16.3"
-
 	// goFumpt is mvdan.cc/gofumpt to format code
 	goFumptRepo    = "mvdan.cc/gofumpt"
 	goFumptVersion = "@v0.5.0"
@@ -200,8 +196,7 @@ func Lint() {
 
 func Fix() {
 	Lint()
-	fmt.Println("📋 copywrite and licenses fix")
-	iferr(CopyWriteFix())
+	fmt.Println("📋 licenses fix")
 	iferr(Notice())
 	fmt.Println("✅ All fixes applied")
 }
@@ -249,16 +244,6 @@ func Go(args ...string) error {
 
 func GoRun(args ...string) error {
 	return Go(append([]string{"run", mod}, args...)...)
-}
-
-// CopyWriteFix is hashicorp/copywrite to fix license headers
-func CopyWriteFix() error {
-	return GoRun(
-		copyWriteRepo+copyWriteVersion,
-		"headers",
-		"--dirPath", "./",
-		"--config", "./.copywrite.hcl",
-	)
 }
 
 // HasGitDiff displays the git diff and errors if there is a diff
