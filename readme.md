@@ -25,7 +25,9 @@
 
 ## Project Status
 
-This was a proof-of-concept that after evaluation we have decided not to take forward.
+This was a proof-of-concept at [volvo-cars](https://github.com/volvo-cars/lingon). 
+Management decided to go another route but we ([jacob](https://github.com/jlarfors) and [julien](https://github.com/veggiemonk)) believe in the concept 
+and the knowledge acquired throughout the process. We are maintainers of the project and will make sure that the project is healthy and keep receiving updates.
 
 ## What is this?
 
