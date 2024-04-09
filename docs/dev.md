@@ -11,7 +11,7 @@
 ## FIRST run this
 
 ```shell
-git clone https://github.com/volvo-cars/lingon.git
+git clone https://github.com/golingon/lingon.git
 cd lingon
 
 go mod download
@@ -34,7 +34,7 @@ go generate ./...
 
 ```shell
 godoc -http=:6060
-# and open http://localhost:6060/pkg/github.com/volvo-cars/lingon/
+# and open http://localhost:6060/pkg/github.com/golingon/lingon/
 ```
 
 Or if you prefer to have the same experience as <https://pkg.go.dev>
@@ -42,7 +42,7 @@ Or if you prefer to have the same experience as <https://pkg.go.dev>
 ```shell
 go install golang.org/x/pkgsite/cmd/pkgsite@latest && pkgsite
 
-# open http://localhost:8080/github.com/volvo-cars/lingon.
+# open http://localhost:8080/github.com/golingon/lingon.
 ```
 
 ### Docs examples

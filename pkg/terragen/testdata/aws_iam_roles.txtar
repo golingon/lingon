@@ -12,7 +12,7 @@
 package main
 
 import (
-	"github.com/volvo-cars/lingon/pkg/terra"
+	"github.com/golingon/lingon/pkg/terra"
 	"golang.org/x/exp/slog"
 	"os"
 	"test/out/aws"

@@ -10,7 +10,7 @@ import (
 	"github.com/golingon/terraproviders/aws/4.60.0/dataiampolicydocument"
 	"github.com/golingon/terraproviders/aws/4.60.0/eksfargateprofile"
 
-	"github.com/volvo-cars/lingon/pkg/terra"
+	"github.com/golingon/lingon/pkg/terra"
 )
 
 const (

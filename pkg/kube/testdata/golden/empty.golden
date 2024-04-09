@@ -47,7 +47,7 @@ package foopackage
 import (
 	"context"
 	"errors"
-	kube "github.com/volvo-cars/lingon/pkg/kube"
+	kube "github.com/golingon/lingon/pkg/kube"
 	corev1 "k8s.io/api/core/v1"
 	"os"
 	"os/exec"

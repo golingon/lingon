@@ -10,7 +10,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/volvo-cars/lingon/pkg/internal/hcl"
+	"github.com/golingon/lingon/pkg/internal/hcl"
 )
 
 const (
@@ -138,9 +138,11 @@ func encodeStack(stack Exporter, w io.Writer) error {
 	return nil
 }
 
-// validateStack is an attempt to catch errors with the Terraform configuration before
+// validateStack is an attempt to catch errors with the Terraform configuration
+// before
 // calling Terraform validate.
-// The struct validate tags should handle most of the basic config validation but what we can
+// The struct validate tags should handle most of the basic config validation
+// but what we can
 // check for additionally here are things like providers existing for resources.
 // Future things to check for (TODO):
 // 1. Each resource/data block's specific provider exists

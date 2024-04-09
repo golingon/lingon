@@ -42,7 +42,7 @@ function tool() {
   popd > /dev/null
 
   pushd "$TEMPD"/lingonweb > /dev/null
-  [ $DEBUG ] && printf  "\n replace github.com/volvo-cars/lingon => ../../../../../ \n" >> go.mod
+  [ $DEBUG ] && printf  "\n replace github.com/golingon/lingon => ../../../../../ \n" >> go.mod
   go mod tidy
   go build -o kygo ./cmd/kygo && mv kygo "$TEMPD"
   popd > /dev/null

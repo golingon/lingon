@@ -4,7 +4,7 @@
 package cilium
 
 import (
-	"github.com/volvo-cars/lingon/pkg/kubeutil"
+	"github.com/golingon/lingon/pkg/kubeutil"
 	appsv1 "k8s.io/api/apps/v1"
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
@@ -69,7 +69,9 @@ var Daemon = &appsv1.DaemonSet{
 						VolumeSource: v1.VolumeSource{
 							HostPath: &v1.HostPathVolumeSource{
 								Path: "/run/cilium/cgroupv2",
-								Type: P(v1.HostPathDirectoryOrCreate), // v1.HostPathType("DirectoryOrCreate")),
+								Type: P(
+									v1.HostPathDirectoryOrCreate,
+								), // v1.HostPathType("DirectoryOrCreate")),
 							},
 						},
 					},
@@ -94,7 +96,9 @@ var Daemon = &appsv1.DaemonSet{
 					{
 						Name: "lib-modules",
 						VolumeSource: v1.VolumeSource{
-							HostPath: &v1.HostPathVolumeSource{Path: "/lib/modules"},
+							HostPath: &v1.HostPathVolumeSource{
+								Path: "/lib/modules",
+							},
 						},
 					},
 					{
@@ -206,8 +210,10 @@ var Daemon = &appsv1.DaemonSet{
 								MountPath: "/hostbin",
 							},
 						},
-						TerminationMessagePolicy: v1.TerminationMessagePolicy("FallbackToLogsOnError"),
-						ImagePullPolicy:          v1.PullPolicy("IfNotPresent"),
+						TerminationMessagePolicy: v1.TerminationMessagePolicy(
+							"FallbackToLogsOnError",
+						),
+						ImagePullPolicy: v1.PullPolicy("IfNotPresent"),
 						SecurityContext: &v1.SecurityContext{
 							Capabilities: &v1.Capabilities{
 								Add: []v1.Capability{
@@ -247,8 +253,10 @@ var Daemon = &appsv1.DaemonSet{
 								MountPath: "/hostbin",
 							},
 						},
-						TerminationMessagePolicy: v1.TerminationMessagePolicy("FallbackToLogsOnError"),
-						ImagePullPolicy:          v1.PullPolicy("IfNotPresent"),
+						TerminationMessagePolicy: v1.TerminationMessagePolicy(
+							"FallbackToLogsOnError",
+						),
+						ImagePullPolicy: v1.PullPolicy("IfNotPresent"),
 						SecurityContext: &v1.SecurityContext{
 							Capabilities: &v1.Capabilities{
 								Add: []v1.Capability{
@@ -272,17 +280,25 @@ var Daemon = &appsv1.DaemonSet{
 							"-c",
 							"--",
 						},
-						Args: []string{`mount | grep "/sys/fs/bpf type bpf" || mount -t bpf bpf /sys/fs/bpf`},
+						Args: []string{
+							`mount | grep "/sys/fs/bpf type bpf" || mount -t bpf bpf /sys/fs/bpf`,
+						},
 						VolumeMounts: []v1.VolumeMount{
 							{
-								Name:             "bpf-maps",
-								MountPath:        "/sys/fs/bpf",
-								MountPropagation: P(v1.MountPropagationMode("Bidirectional")),
+								Name:      "bpf-maps",
+								MountPath: "/sys/fs/bpf",
+								MountPropagation: P(
+									v1.MountPropagationMode("Bidirectional"),
+								),
 							},
 						},
-						TerminationMessagePolicy: v1.TerminationMessagePolicy("FallbackToLogsOnError"),
-						ImagePullPolicy:          v1.PullPolicy("IfNotPresent"),
-						SecurityContext:          &v1.SecurityContext{Privileged: P(true)},
+						TerminationMessagePolicy: v1.TerminationMessagePolicy(
+							"FallbackToLogsOnError",
+						),
+						ImagePullPolicy: v1.PullPolicy("IfNotPresent"),
+						SecurityContext: &v1.SecurityContext{
+							Privileged: P(true),
+						},
 					},
 					{
 						Name:    "clean-cilium-state",
@@ -305,17 +321,23 @@ var Daemon = &appsv1.DaemonSet{
 								Name: "CILIUM_BPF_STATE",
 								ValueFrom: &v1.EnvVarSource{
 									ConfigMapKeyRef: &v1.ConfigMapKeySelector{
-										LocalObjectReference: v1.LocalObjectReference{Name: "cilium-config"},
-										Key:                  "clean-cilium-bpf-state",
-										Optional:             P(true),
+										LocalObjectReference: v1.LocalObjectReference{
+											Name: "cilium-config",
+										},
+										Key:      "clean-cilium-bpf-state",
+										Optional: P(true),
 									},
 								},
 							},
 						},
 						Resources: v1.ResourceRequirements{
 							Requests: v1.ResourceList{
-								v1.ResourceName("cpu"):    resource.MustParse("100m"),
-								v1.ResourceName("memory"): resource.MustParse("100Mi"),
+								v1.ResourceName("cpu"): resource.MustParse(
+									"100m",
+								),
+								v1.ResourceName("memory"): resource.MustParse(
+									"100Mi",
+								),
 							},
 						},
 						VolumeMounts: []v1.VolumeMount{
@@ -324,17 +346,21 @@ var Daemon = &appsv1.DaemonSet{
 								MountPath: "/sys/fs/bpf",
 							},
 							{
-								Name:             "cilium-cgroup",
-								MountPath:        "/run/cilium/cgroupv2",
-								MountPropagation: P(v1.MountPropagationMode("HostToContainer")),
+								Name:      "cilium-cgroup",
+								MountPath: "/run/cilium/cgroupv2",
+								MountPropagation: P(
+									v1.MountPropagationMode("HostToContainer"),
+								),
 							},
 							{
 								Name:      "cilium-run",
 								MountPath: "/var/run/cilium",
 							},
 						},
-						TerminationMessagePolicy: v1.TerminationMessagePolicy("FallbackToLogsOnError"),
-						ImagePullPolicy:          v1.PullPolicy("IfNotPresent"),
+						TerminationMessagePolicy: v1.TerminationMessagePolicy(
+							"FallbackToLogsOnError",
+						),
+						ImagePullPolicy: v1.PullPolicy("IfNotPresent"),
 						SecurityContext: &v1.SecurityContext{
 							Capabilities: &v1.Capabilities{
 								Add: []v1.Capability{
@@ -357,7 +383,9 @@ var Daemon = &appsv1.DaemonSet{
 						Name:    "cilium-agent",
 						Image:   "quay.io/cilium/cilium:v1.12.4@sha256:4b074fcfba9325c18e97569ed1988464309a5ebf64bbc79bec6f3d58cafcb8cf",
 						Command: []string{"cilium-agent"},
-						Args:    []string{"--config-dir=/tmp/cilium/config-map"},
+						Args: []string{
+							"--config-dir=/tmp/cilium/config-map",
+						},
 						Env: []v1.EnvVar{
 							{
 								Name: "K8S_NODE_NAME",
@@ -385,9 +413,11 @@ var Daemon = &appsv1.DaemonSet{
 								Name: "CILIUM_CNI_CHAINING_MODE",
 								ValueFrom: &v1.EnvVarSource{
 									ConfigMapKeyRef: &v1.ConfigMapKeySelector{
-										LocalObjectReference: v1.LocalObjectReference{Name: "cilium-config"},
-										Key:                  "cni-chaining-mode",
-										Optional:             P(true),
+										LocalObjectReference: v1.LocalObjectReference{
+											Name: "cilium-config",
+										},
+										Key:      "cni-chaining-mode",
+										Optional: P(true),
 									},
 								},
 							},
@@ -395,9 +425,11 @@ var Daemon = &appsv1.DaemonSet{
 								Name: "CILIUM_CUSTOM_CNI_CONF",
 								ValueFrom: &v1.EnvVarSource{
 									ConfigMapKeyRef: &v1.ConfigMapKeySelector{
-										LocalObjectReference: v1.LocalObjectReference{Name: "cilium-config"},
-										Key:                  "custom-cni-conf",
-										Optional:             P(true),
+										LocalObjectReference: v1.LocalObjectReference{
+											Name: "cilium-config",
+										},
+										Key:      "custom-cni-conf",
+										Optional: P(true),
 									},
 								},
 							},
@@ -412,9 +444,11 @@ var Daemon = &appsv1.DaemonSet{
 								MountPath: "/host/proc/sys/kernel",
 							},
 							{
-								Name:             "bpf-maps",
-								MountPath:        "/sys/fs/bpf",
-								MountPropagation: P(v1.MountPropagationMode("HostToContainer")),
+								Name:      "bpf-maps",
+								MountPath: "/sys/fs/bpf",
+								MountPropagation: P(
+									v1.MountPropagationMode("HostToContainer"),
+								),
 							},
 							{
 								Name:      "cilium-run",
@@ -523,10 +557,16 @@ var Daemon = &appsv1.DaemonSet{
 									},
 								},
 							},
-							PreStop: &v1.LifecycleHandler{Exec: &v1.ExecAction{Command: []string{"/cni-uninstall.sh"}}},
+							PreStop: &v1.LifecycleHandler{
+								Exec: &v1.ExecAction{
+									Command: []string{"/cni-uninstall.sh"},
+								},
+							},
 						},
-						TerminationMessagePolicy: v1.TerminationMessagePolicy("FallbackToLogsOnError"),
-						ImagePullPolicy:          v1.PullPolicy("IfNotPresent"),
+						TerminationMessagePolicy: v1.TerminationMessagePolicy(
+							"FallbackToLogsOnError",
+						),
+						ImagePullPolicy: v1.PullPolicy("IfNotPresent"),
 						SecurityContext: &v1.SecurityContext{
 							Capabilities: &v1.Capabilities{
 								Add: []v1.Capability{
@@ -554,26 +594,36 @@ var Daemon = &appsv1.DaemonSet{
 				},
 				RestartPolicy:                 v1.RestartPolicy("Always"),
 				TerminationGracePeriodSeconds: P(int64(1)),
-				NodeSelector:                  map[string]string{"kubernetes.io/os": "linux"},
-				ServiceAccountName:            "cilium",
-				HostNetwork:                   true,
+				NodeSelector: map[string]string{
+					"kubernetes.io/os": "linux",
+				},
+				ServiceAccountName: "cilium",
+				HostNetwork:        true,
 				Affinity: &v1.Affinity{
 					PodAntiAffinity: &v1.PodAntiAffinity{
 						RequiredDuringSchedulingIgnoredDuringExecution: []v1.PodAffinityTerm{
 							{
-								LabelSelector: &metav1.LabelSelector{MatchLabels: map[string]string{"k8s-app": "cilium"}},
-								TopologyKey:   "kubernetes.io/hostname",
+								LabelSelector: &metav1.LabelSelector{
+									MatchLabels: map[string]string{
+										"k8s-app": "cilium",
+									},
+								},
+								TopologyKey: "kubernetes.io/hostname",
 							},
 						},
 					},
 				},
-				Tolerations:       []v1.Toleration{{Operator: v1.TolerationOperator("Exists")}},
+				Tolerations: []v1.Toleration{
+					{Operator: v1.TolerationOperator("Exists")},
+				},
 				PriorityClassName: "system-node-critical",
 			},
 		},
 		UpdateStrategy: appsv1.DaemonSetUpdateStrategy{
-			Type:          appsv1.DaemonSetUpdateStrategyType("RollingUpdate"),
-			RollingUpdate: &appsv1.RollingUpdateDaemonSet{MaxUnavailable: &intstr.IntOrString{IntVal: 2}},
+			Type: appsv1.DaemonSetUpdateStrategyType("RollingUpdate"),
+			RollingUpdate: &appsv1.RollingUpdateDaemonSet{
+				MaxUnavailable: &intstr.IntOrString{IntVal: 2},
+			},
 		},
 	},
 }

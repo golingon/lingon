@@ -8,9 +8,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/volvo-cars/lingon/pkg/kube"
-	ku "github.com/volvo-cars/lingon/pkg/kubeutil"
-	tu "github.com/volvo-cars/lingon/pkg/testutil"
+	"github.com/golingon/lingon/pkg/kube"
+	ku "github.com/golingon/lingon/pkg/kubeutil"
+	tu "github.com/golingon/lingon/pkg/testutil"
 )
 
 func TestExport(t *testing.T) {

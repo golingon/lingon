@@ -334,7 +334,7 @@ func Notice() error {
 		"report",
 		recDir,
 		"--template=./cmd/tools/ci/licenses.tpl",
-		"--ignore=github.com/volvo-cars/lingon",
+		"--ignore=github.com/golingon/lingon",
 	)
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr

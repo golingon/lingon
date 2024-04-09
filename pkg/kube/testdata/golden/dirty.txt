@@ -151,7 +151,7 @@ package lingon
 import (
 	"context"
 	"errors"
-	kube "github.com/volvo-cars/lingon/pkg/kube"
+	kube "github.com/golingon/lingon/pkg/kube"
 	appsv1 "k8s.io/api/apps/v1"
 	"os"
 	"os/exec"

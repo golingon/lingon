@@ -13,19 +13,19 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/volvo-cars/lingon/pkg/kube"
-	"github.com/volvo-cars/lingon/pkg/terra"
-	"github.com/volvo-cars/lingoneks/benthos"
-	"github.com/volvo-cars/lingoneks/infra"
-	"github.com/volvo-cars/lingoneks/karpenter"
-	karpentercrd "github.com/volvo-cars/lingoneks/karpenter/crd"
-	"github.com/volvo-cars/lingoneks/monitoring/metricsserver"
-	"github.com/volvo-cars/lingoneks/monitoring/promcrd"
-	"github.com/volvo-cars/lingoneks/monitoring/vmcrd"
-	"github.com/volvo-cars/lingoneks/monitoring/vmk8s"
-	"github.com/volvo-cars/lingoneks/monitoring/vmop"
-	"github.com/volvo-cars/lingoneks/nats"
-	"github.com/volvo-cars/lingoneks/terraclient"
+	"github.com/golingon/lingon/pkg/kube"
+	"github.com/golingon/lingon/pkg/terra"
+	"github.com/golingon/lingoneks/benthos"
+	"github.com/golingon/lingoneks/infra"
+	"github.com/golingon/lingoneks/karpenter"
+	karpentercrd "github.com/golingon/lingoneks/karpenter/crd"
+	"github.com/golingon/lingoneks/monitoring/metricsserver"
+	"github.com/golingon/lingoneks/monitoring/promcrd"
+	"github.com/golingon/lingoneks/monitoring/vmcrd"
+	"github.com/golingon/lingoneks/monitoring/vmk8s"
+	"github.com/golingon/lingoneks/monitoring/vmop"
+	"github.com/golingon/lingoneks/nats"
+	"github.com/golingon/lingoneks/terraclient"
 )
 
 var S = terra.String
@@ -333,7 +333,10 @@ func run(p runParams) error {
 	timeout := "5m"
 	objID := fmt.Sprintf(
 		"%s/%s",
-		kap.Deploy.TypeMeta.GetObjectKind().GroupVersionKind().GroupKind().String(),
+		kap.Deploy.TypeMeta.GetObjectKind().
+			GroupVersionKind().
+			GroupKind().
+			String(),
 		kap.Deploy.ObjectMeta.Name,
 	)
 

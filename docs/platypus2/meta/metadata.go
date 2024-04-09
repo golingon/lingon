@@ -7,7 +7,7 @@ import (
 	"errors"
 	"fmt"
 
-	ku "github.com/volvo-cars/lingon/pkg/kubeutil"
+	ku "github.com/golingon/lingon/pkg/kubeutil"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -92,7 +92,9 @@ func (b Metadata) ObjectMetaNoNS() metav1.ObjectMeta {
 	}
 }
 
-func (b Metadata) ObjectMetaAnnotations(annotations map[string]string) metav1.ObjectMeta {
+func (b Metadata) ObjectMetaAnnotations(
+	annotations map[string]string,
+) metav1.ObjectMeta {
 	if len(b.Name) > MAX_CHAR {
 		panic("name is longer than " + d(MAX_CHAR) + " char: " + b.Name)
 	}

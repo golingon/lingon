@@ -7,8 +7,8 @@ import (
 	"bytes"
 	"testing"
 
+	tu "github.com/golingon/lingon/pkg/testutil"
 	"github.com/hashicorp/hcl/v2/hclsimple"
-	tu "github.com/volvo-cars/lingon/pkg/testutil"
 )
 
 type TerraformBlock struct {
@@ -56,7 +56,8 @@ type CommonBlockConfig struct {
 	NumberField int    `hcl:"number_field,attr"`
 }
 
-// HCLFile is the test structure which we will use to encode HCL and also decode the resulting HCL
+// HCLFile is the test structure which we will use to encode HCL and also decode
+// the resulting HCL
 // into
 type HCLFile struct {
 	Terraform     TerraformBlock      `hcl:"terraform,block"`
@@ -65,7 +66,8 @@ type HCLFile struct {
 	Resources     []ResourceBlock     `hcl:"resource,block"`
 }
 
-// Create a common config which we reuse. We might want to make this a bit more diverse
+// Create a common config which we reuse. We might want to make this a bit more
+// diverse
 // or create separate instance of this for greater coverage.
 var cbcfg = CommonBlockConfig{
 	StringField: "test",
@@ -76,13 +78,16 @@ var cbcfg = CommonBlockConfig{
 // The approach is to
 // 1. Create an expected HCL value
 // 2. Encode HCL based on the expected value
-// 3. Use the hcl library to decode the encoded HCL into a new instance of the expected value
+// 3. Use the hcl library to decode the encoded HCL into a new instance of the
+// expected value
 // 4. Assert that they match
 //
-// This is a bit complex but much more convincing and easier to maintain in the long run than
+// This is a bit complex but much more convincing and easier to maintain in the
+// long run than
 // string-based comparisons.
 func TestEncode(t *testing.T) {
-	// Create the expected HCL values which we will use to create the encoder arguments
+	// Create the expected HCL values which we will use to create the encoder
+	// arguments
 	expectedHCL := HCLFile{
 		Terraform: TerraformBlock{
 			Backend: BackendBlock{
@@ -160,7 +165,8 @@ func TestEncode(t *testing.T) {
 	err := Encode(&b, args)
 	tu.AssertNoError(t, err, "Encode failed")
 
-	// Decode the encoded HCL into a new instance of our test structure and compare
+	// Decode the encoded HCL into a new instance of our test structure and
+	// compare
 	actualHCL := HCLFile{}
 	err = hclsimple.Decode("test.hcl", b.Bytes(), nil, &actualHCL)
 	tu.AssertNoError(t, err, "Decode failed")

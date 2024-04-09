@@ -8,13 +8,13 @@ import (
 	"os"
 	"os/exec"
 
+	"github.com/golingon/lingoneks/infra"
+	"github.com/golingon/lingoneks/karpenter"
+	"github.com/golingon/lingoneks/terraclient"
 	aws "github.com/golingon/terraproviders/aws/5.13.1"
 	"github.com/golingon/terraproviders/aws/5.13.1/provider"
-	"github.com/volvo-cars/lingoneks/infra"
-	"github.com/volvo-cars/lingoneks/karpenter"
-	"github.com/volvo-cars/lingoneks/terraclient"
 
-	"github.com/volvo-cars/lingon/pkg/terra"
+	"github.com/golingon/lingon/pkg/terra"
 )
 
 func newAWSStackConfig(name string, p runParams) AWSStackConfig {

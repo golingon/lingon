@@ -4,7 +4,7 @@
 package crd
 
 //go:generate rm -rf out/
-//go:generate go run github.com/dave/rebecca/cmd/becca@v0.9.2  -package=github.com/volvo-cars/lingon/docs/kubernetes/crd -input readme.md.tpl
+//go:generate go run github.com/dave/rebecca/cmd/becca@v0.9.2  -package=github.com/golingon/lingon/docs/kubernetes/crd -input readme.md.tpl
 
 //go:generate echo "\n>>>> CRD: importing YAML to Go\n"
 //go:generate go test -v example_import_test.go

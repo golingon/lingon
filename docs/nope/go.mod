@@ -9,7 +9,7 @@ require (
 	github.com/nats-io/nkeys v0.4.4
 	github.com/onsi/ginkgo/v2 v2.9.5
 	github.com/onsi/gomega v1.27.7
-	github.com/volvo-cars/lingon v0.0.0-20230620123651-0b5705e2a939
+	github.com/golingon/lingon v0.0.0-20230620123651-0b5705e2a939
 	k8s.io/apimachinery v0.28.0-alpha.3
 	k8s.io/client-go v0.28.0-alpha.3
 	sigs.k8s.io/controller-runtime v0.15.0

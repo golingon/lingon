@@ -8,7 +8,7 @@ import (
 	"os"
 	"os/exec"
 
-	kube "github.com/volvo-cars/lingon/pkg/kube"
+	kube "github.com/golingon/lingon/pkg/kube"
 	networkingv1beta1 "istio.io/client-go/pkg/apis/networking/v1beta1"
 
 	secretsstorecsidriverapisv1 "sigs.k8s.io/secrets-store-csi-driver/apis/v1"

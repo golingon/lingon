@@ -9,8 +9,8 @@ import (
 	"os"
 	"path/filepath"
 
-	team "github.com/volvo-cars/lingon/docs/kubernetes/crd/out"
-	"github.com/volvo-cars/lingon/pkg/kube"
+	team "github.com/golingon/lingon/docs/kubernetes/crd/out"
+	"github.com/golingon/lingon/pkg/kube"
 )
 
 var defaultOut = "out"

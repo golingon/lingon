@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/volvo-cars/lingon/pkg/kube"
+	"github.com/golingon/lingon/pkg/kube"
 	istionetworkingv1beta1 "istio.io/client-go/pkg/apis/networking/v1beta1"
 	"k8s.io/apiextensions-apiserver/pkg/apis/apiextensions"
 	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
@@ -78,8 +78,8 @@ import (
 	"os"
 	"path/filepath"
 
-	team "github.com/volvo-cars/lingon/docs/kubernetes/crd/out"
-	"github.com/volvo-cars/lingon/pkg/kube"
+	team "github.com/golingon/lingon/docs/kubernetes/crd/out"
+	"github.com/golingon/lingon/pkg/kube"
 )
 
 var defaultOut = "out"

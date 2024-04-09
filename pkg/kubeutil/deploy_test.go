@@ -7,8 +7,8 @@ import (
 	"reflect"
 	"testing"
 
+	tu "github.com/golingon/lingon/pkg/testutil"
 	"github.com/google/go-cmp/cmp"
-	tu "github.com/volvo-cars/lingon/pkg/testutil"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -121,7 +121,9 @@ func TestSimpleDeployment(t *testing.T) {
 				),
 				Spec: appsv1.DeploymentSpec{
 					Replicas: P(int32(1)),
-					Selector: &metav1.LabelSelector{MatchLabels: map[string]string{"app": "depl"}},
+					Selector: &metav1.LabelSelector{
+						MatchLabels: map[string]string{"app": "depl"},
+					},
 					Template: corev1.PodTemplateSpec{
 						ObjectMeta: metav1.ObjectMeta{
 							Labels: map[string]string{"app": "depl"},

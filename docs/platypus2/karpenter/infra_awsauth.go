@@ -4,7 +4,7 @@
 package karpenter
 
 import (
-	"github.com/volvo-cars/lingoneks/infra"
+	"github.com/golingon/lingoneks/infra"
 )
 
 func AWSAuthMapRoles(nodeRoleARN, fargateRoleARN string) []*infra.RolesAuth {

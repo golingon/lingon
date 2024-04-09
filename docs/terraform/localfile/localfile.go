@@ -4,14 +4,15 @@
 package localfile
 
 //go:generate echo "\n>>>> LOCALFILE: generating hashicorp/local terra provider\n"
-//go:generate go run -mod=readonly github.com/volvo-cars/lingon/cmd/terragen -out ./out/local -pkg github.com/volvo-cars/lingon/examples/localfile/out/local -force -provider local=hashicorp/local:2.4.0
+//go:generate go run -mod=readonly github.com/golingon/lingon/cmd/terragen -out ./out/local -pkg github.com/golingon/lingon/examples/localfile/out/local -force -provider local=hashicorp/local:2.4.0
 
 import (
-	"github.com/volvo-cars/lingon/docs/terraform/localfile/out/local"
-	"github.com/volvo-cars/lingon/pkg/terra"
+	"github.com/golingon/lingon/docs/terraform/localfile/out/local"
+	"github.com/golingon/lingon/pkg/terra"
 )
 
-// NewLocalFileStack returns a new LocalFileStack which implements the terra.Exporter interface
+// NewLocalFileStack returns a new LocalFileStack which implements the
+// terra.Exporter interface
 // and can be exported into Terraform configuration
 func NewLocalFileStack(filename string) *LocalFileStack {
 	return &LocalFileStack{
@@ -44,7 +45,8 @@ type LocalBackend struct {
 	Path string `hcl:"path,attr" validate:"required"`
 }
 
-// BackendType defines the type of the backend and implements the terra.Backend interface
+// BackendType defines the type of the backend and implements the terra.Backend
+// interface
 func (b LocalBackend) BackendType() string {
 	return "local"
 }

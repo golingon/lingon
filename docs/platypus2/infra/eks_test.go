@@ -9,10 +9,10 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/golingon/lingon/pkg/terra"
+	tu "github.com/golingon/lingon/pkg/testutil"
 	aws "github.com/golingon/terraproviders/aws/5.13.1"
 	"github.com/hashicorp/terraform-exec/tfexec"
-	"github.com/volvo-cars/lingon/pkg/terra"
-	tu "github.com/volvo-cars/lingon/pkg/testutil"
 )
 
 func testExportValidateStack(

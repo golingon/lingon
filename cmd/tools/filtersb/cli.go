@@ -13,7 +13,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/volvo-cars/lingon/pkg/terragen"
+	"github.com/golingon/lingon/pkg/terragen"
 )
 
 func main() {
@@ -122,7 +122,9 @@ func (p *providerFlag) Set(value string) error {
 	localName := pMap[0]
 	sourceVersion := strings.SplitN(pMap[1], ":", 2)
 	if len(sourceVersion) == 1 {
-		return fmt.Errorf("provider format incorrect: missing `:` in `source:version`")
+		return fmt.Errorf(
+			"provider format incorrect: missing `:` in `source:version`",
+		)
 	}
 	source := sourceVersion[0]
 	version := sourceVersion[1]

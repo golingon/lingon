@@ -11,9 +11,9 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/golingon/lingon/pkg/kube"
+	"github.com/golingon/lingon/pkg/kubeutil"
 	"github.com/rogpeppe/go-internal/txtar"
-	"github.com/volvo-cars/lingon/pkg/kube"
-	"github.com/volvo-cars/lingon/pkg/kubeutil"
 	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	apiextensionsbeta "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -45,10 +45,12 @@ func ExampleImport_withManifest() {
 				return scheme.Codecs.UniversalDeserializer()
 			}(),
 		),
-		// will try to remove "tekton" from the name of the variable in the Go code, make them shorter
+		// will try to remove "tekton" from the name of the variable in the Go
+		// code, make them shorter
 		kube.WithImportRemoveAppName(true),
 		// group all the resources from the same kind into one file each
-		// example: 10 ConfigMaps => 1 file "config-map.go" containing 10 variables storing ConfigMap, etc...
+		// example: 10 ConfigMaps => 1 file "config-map.go" containing 10
+		// variables storing ConfigMap, etc...
 		kube.WithImportGroupByKind(true),
 		// add convenience methods to the App struct
 		kube.WithImportAddMethods(true),
@@ -57,7 +59,8 @@ func ExampleImport_withManifest() {
 		// do not ignore errors
 		kube.WithImportIgnoreErrors(false),
 		// just for example purposes
-		// how to create a logger (see [golang.org/x/tools/slog](https://golang.org/x/tools/slog))
+		// how to create a logger (see
+		// [golang.org/x/tools/slog](https://golang.org/x/tools/slog))
 		// this has no effect with WithImportVerbose(false)
 		kube.WithImportLogger(kube.Logger(os.Stderr)),
 		// remove the status field and

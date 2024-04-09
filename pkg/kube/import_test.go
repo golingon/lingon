@@ -16,9 +16,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/volvo-cars/lingon/pkg/kube"
-	"github.com/volvo-cars/lingon/pkg/kubeutil"
-	tu "github.com/volvo-cars/lingon/pkg/testutil"
+	"github.com/golingon/lingon/pkg/kube"
+	"github.com/golingon/lingon/pkg/kubeutil"
+	tu "github.com/golingon/lingon/pkg/testutil"
 	"golang.org/x/tools/txtar"
 	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	apiextensionsbeta "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
@@ -79,7 +79,9 @@ func TestImport(t *testing.T) {
 			),
 			Opts: []kube.ImportOption{
 				kube.WithImportAppName("external-secrets"),
-				kube.WithImportManifestFiles([]string{"testdata/external-secrets.yaml"}),
+				kube.WithImportManifestFiles(
+					[]string{"testdata/external-secrets.yaml"},
+				),
 				kube.WithImportSerializer(defaultSerializer()),
 				kube.WithImportRemoveAppName(true),
 				kube.WithImportGroupByKind(true),
@@ -104,7 +106,9 @@ func TestImport(t *testing.T) {
 			Opts: []kube.ImportOption{
 				kube.WithImportAppName("karpenter"),
 				kube.WithImportPackageName("karpenter"),
-				kube.WithImportManifestFiles([]string{"testdata/karpenter.yaml"}),
+				kube.WithImportManifestFiles(
+					[]string{"testdata/karpenter.yaml"},
+				),
 				kube.WithImportSerializer(defaultSerializer()),
 				kube.WithImportRemoveAppName(true),
 				kube.WithImportGroupByKind(false),

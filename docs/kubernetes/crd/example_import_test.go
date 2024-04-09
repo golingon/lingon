@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/volvo-cars/lingon/pkg/kube"
+	"github.com/golingon/lingon/pkg/kube"
 	istionetworkingv1beta1 "istio.io/client-go/pkg/apis/networking/v1beta1"
 	"k8s.io/apiextensions-apiserver/pkg/apis/apiextensions"
 	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"

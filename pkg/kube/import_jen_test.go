@@ -8,8 +8,8 @@ import (
 	"testing"
 
 	"github.com/dave/jennifer/jen"
-	"github.com/volvo-cars/lingon/pkg/internal/api"
-	tu "github.com/volvo-cars/lingon/pkg/testutil"
+	"github.com/golingon/lingon/pkg/internal/api"
+	tu "github.com/golingon/lingon/pkg/testutil"
 )
 
 func TestStmtStruct(t *testing.T) {
@@ -28,7 +28,7 @@ func TestStmtStruct(t *testing.T) {
 	want := `package test
 
 import (
-	kube "github.com/volvo-cars/lingon/pkg/kube"
+	kube "github.com/golingon/lingon/pkg/kube"
 	v1 "k8s.io/api/apps/v1"
 )
 
@@ -51,7 +51,7 @@ func TestImportAddMethods(t *testing.T) {
 
 import (
 	"context"
-	kube "github.com/volvo-cars/lingon/pkg/kube"
+	kube "github.com/golingon/lingon/pkg/kube"
 )
 
 // Apply applies the kubernetes objects to the cluster
@@ -77,7 +77,7 @@ func TestStmtApplyFunc(t *testing.T) {
 import (
 	"context"
 	"errors"
-	kube "github.com/volvo-cars/lingon/pkg/kube"
+	kube "github.com/golingon/lingon/pkg/kube"
 	"os"
 	"os/exec"
 )

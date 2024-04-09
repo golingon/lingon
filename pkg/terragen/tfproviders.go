@@ -9,7 +9,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/volvo-cars/lingon/pkg/internal/hcl"
+	"github.com/golingon/lingon/pkg/internal/hcl"
 
 	"github.com/hashicorp/terraform-exec/tfexec"
 	tfjson "github.com/hashicorp/terraform-json"
@@ -25,7 +25,8 @@ type TerraformBlock struct {
 	RequiredProviders RequiredProviders `hcl:"required_providers,block"`
 }
 
-// RequiredProviders represents the map of required providers for a Terraform stack
+// RequiredProviders represents the map of required providers for a Terraform
+// stack
 type RequiredProviders struct {
 	Providers map[string]Provider `hcl:",remain"`
 }

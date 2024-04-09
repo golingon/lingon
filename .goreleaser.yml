@@ -159,7 +159,7 @@ brews:
       name: homebrew-tap
       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
     folder: Formula
-    homepage: "https://github.com/volvo-cars/lingon"
+    homepage: "https://github.com/golingon/lingon"
     description: |
       Lingon binaries:
       - explode is a command line tool to organize kubernetes manifests according to their kind. (YAML to YAML)

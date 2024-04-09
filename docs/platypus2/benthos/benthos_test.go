@@ -10,10 +10,10 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/golingon/lingon/pkg/kube"
+	tu "github.com/golingon/lingon/pkg/testutil"
 	"github.com/rogpeppe/go-internal/txtar"
 	"github.com/tidwall/gjson"
-	"github.com/volvo-cars/lingon/pkg/kube"
-	tu "github.com/volvo-cars/lingon/pkg/testutil"
 	corev1 "k8s.io/api/core/v1"
 
 	"sigs.k8s.io/yaml"
@@ -41,7 +41,10 @@ func TestBenthos_LintConfig(t *testing.T) {
 				Port:      Port{},
 				Replicas:  0,
 				EnvVar: &[]corev1.EnvVar{
-					{Name: "NATS_URL", Value: "nats://nats.nats.svc.cluster.local:4222"},
+					{
+						Name:  "NATS_URL",
+						Value: "nats://nats.nats.svc.cluster.local:4222",
+					},
 				},
 				Resource: corev1.ResourceRequirements{},
 			},
@@ -57,7 +60,10 @@ func TestBenthos_LintConfig(t *testing.T) {
 				Port:      Port{},
 				Replicas:  0,
 				EnvVar: &[]corev1.EnvVar{
-					{Name: "NATS_URL", Value: "nats://nats.nats.svc.cluster.local:4222"},
+					{
+						Name:  "NATS_URL",
+						Value: "nats://nats.nats.svc.cluster.local:4222",
+					},
 					{Name: "NATS_TOPIC", Value: "demo.output"},
 				},
 				Resource: corev1.ResourceRequirements{},

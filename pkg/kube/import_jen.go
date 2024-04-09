@@ -5,8 +5,8 @@ package kube
 
 import (
 	"github.com/dave/jennifer/jen"
+	"github.com/golingon/lingon/pkg/internal/api"
 	"github.com/veggiemonk/strcase"
-	"github.com/volvo-cars/lingon/pkg/internal/api"
 )
 
 func stmtKubeObjectFile(
@@ -74,7 +74,8 @@ func (j *jamel) appFile() *jen.File {
 	return appFile
 }
 
-// stmtStruct generates the statements for struct containing the kubernetes objects (and kube.App)
+// stmtStruct generates the statements for struct containing the kubernetes
+// objects (and kube.App)
 func stmtStruct(
 	nameStruct string,
 	kubeAppStructCode map[string]*jen.Statement,
@@ -94,7 +95,8 @@ func stmtStruct(
 	)
 }
 
-// stmtNewApp generates the statements for the New function instantiating the struct
+// stmtNewApp generates the statements for the New function instantiating the
+// struct
 func stmtNewApp(
 	nameStruct string,
 	nameFieldVar map[string]string,
@@ -113,7 +115,8 @@ func stmtNewApp(
 	)
 }
 
-// addMethods adds the Apply and Export methods to the struct in the app.go file.
+// addMethods adds the Apply and Export methods to the struct in the app.go
+// file.
 // it modifies the file in place and also returns it.
 func addMethods(f *jen.File, nameStruct string) {
 	// Apply
@@ -133,8 +136,11 @@ func addMethods(f *jen.File, nameStruct string) {
 	f.Line().Line()
 
 	// Export
-	f.Comment("Export exports the kubernetes objects to YAML files in the given directory").Line().
-		Func().Params(jen.Id("a").Op("*").Id(nameStruct)).Id("Export").
+	f.Comment("Export exports the kubernetes objects to YAML files in the given directory").
+		Line().
+		Func().
+		Params(jen.Id("a").Op("*").Id(nameStruct)).
+		Id("Export").
 		Params(jen.Id("dir").String()).
 		Params(jen.Error()).
 		BlockFunc(
@@ -158,7 +164,9 @@ func addMethods(f *jen.File, nameStruct string) {
 // stmtApplyFunc generates the statements for the Apply function
 func stmtApplyFunc() *jen.Statement {
 	return jen.
-		Comment("Apply applies the kubernetes objects contained in Exporter to the cluster").Line().
+		Comment(
+			"Apply applies the kubernetes objects contained in Exporter to the cluster",
+		).Line().
 		Func().Id("Apply").Params(
 		jen.Id("ctx").Qual("context", "Context"),
 		jen.Id("km").Qual(kubeAppPkgPath, "Exporter"),

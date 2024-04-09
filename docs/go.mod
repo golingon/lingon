@@ -1,8 +1,8 @@
-module github.com/volvo-cars/lingon/docs
+module github.com/golingon/lingon/docs
 
 go 1.21
 
-replace github.com/volvo-cars/lingon => ../
+replace github.com/golingon/lingon => ../
 
 require (
 	github.com/Masterminds/semver/v3 v3.2.1
@@ -21,7 +21,7 @@ require (
 	github.com/invopop/yaml v0.2.0
 	github.com/rogpeppe/go-internal v1.11.0
 	github.com/stretchr/testify v1.8.4
-	github.com/volvo-cars/lingon v0.0.0-20230821085204-81fbacc93e96
+	github.com/golingon/lingon v0.0.0-20230821085204-81fbacc93e96
 	github.com/zegl/kube-score v1.17.0
 	istio.io/api v1.19.0-beta.1
 	istio.io/client-go v1.18.1

@@ -5,9 +5,9 @@ package vmk8s
 
 import (
 	"github.com/VictoriaMetrics/operator/api/victoriametrics/v1beta1"
-	"github.com/volvo-cars/lingon/pkg/kube"
-	ku "github.com/volvo-cars/lingon/pkg/kubeutil"
-	"github.com/volvo-cars/lingoneks/meta"
+	"github.com/golingon/lingon/pkg/kube"
+	ku "github.com/golingon/lingon/pkg/kubeutil"
+	"github.com/golingon/lingoneks/meta"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -57,8 +57,10 @@ var APIServerScrape = &v1beta1.VMServiceScrape{
 				},
 			},
 		},
-		JobLabel:          "component",
-		NamespaceSelector: v1beta1.NamespaceSelector{MatchNames: []string{ku.NSKubeSystem}},
+		JobLabel: "component",
+		NamespaceSelector: v1beta1.NamespaceSelector{
+			MatchNames: []string{ku.NSKubeSystem},
+		},
 		Selector: metav1.LabelSelector{
 			MatchLabels: map[string]string{
 				"component": "kube-apiserver",

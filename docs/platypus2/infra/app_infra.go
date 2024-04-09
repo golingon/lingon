@@ -4,7 +4,7 @@
 package infra
 
 import (
-	"github.com/volvo-cars/lingon/pkg/terra"
+	"github.com/golingon/lingon/pkg/terra"
 )
 
 const KarpenterDiscoveryKey = "karpenter.sh/discovery"

@@ -9,7 +9,7 @@ import (
 	aws "github.com/golingon/terraproviders/aws/4.60.0"
 	"github.com/golingon/terraproviders/aws/4.60.0/dataiampolicydocument"
 
-	"github.com/volvo-cars/lingon/pkg/terra"
+	"github.com/golingon/lingon/pkg/terra"
 )
 
 // InstanceProfile is the AWS EC2 Instance Profile for the nodes provisioned by

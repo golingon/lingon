@@ -4,15 +4,16 @@
 package infra
 
 import (
+	"github.com/golingon/lingon/pkg/terra"
 	aws "github.com/golingon/terraproviders/aws/5.13.1"
 	"github.com/golingon/terraproviders/aws/5.13.1/s3bucketserversideencryptionconfiguration"
 	"github.com/golingon/terraproviders/aws/5.13.1/s3bucketversioning"
-	"github.com/volvo-cars/lingon/pkg/terra"
 )
 
 type Bucket struct {
 	S3 *aws.S3Bucket `validate:"required"`
-	// ACL          *aws.S3BucketAcl                               `validate:"required"`
+	// ACL          *aws.S3BucketAcl
+	// `validate:"required"`
 	Versioning   *aws.S3BucketVersioning                        `validate:"required"`
 	PublicAccess *aws.S3BucketPublicAccessBlock                 `validate:"required"`
 	SSE          *aws.S3BucketServerSideEncryptionConfiguration `validate:"required"`

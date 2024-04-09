@@ -4,7 +4,7 @@
 package certmanager
 
 import (
-	ku "github.com/volvo-cars/lingon/pkg/kubeutil"
+	ku "github.com/golingon/lingon/pkg/kubeutil"
 	batchv1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
@@ -67,14 +67,22 @@ var StartupapicheckJOBS = &batchv1.Job{
 						Image:           "quay.io/jetstack/cert-manager-ctl:v1.12.2",
 						ImagePullPolicy: corev1.PullPolicy("IfNotPresent"),
 						Name:            "cert-manager-startupapicheck",
-						SecurityContext: &corev1.SecurityContext{Capabilities: &corev1.Capabilities{Drop: []corev1.Capability{corev1.Capability("ALL")}}},
+						SecurityContext: &corev1.SecurityContext{
+							Capabilities: &corev1.Capabilities{
+								Drop: []corev1.Capability{
+									corev1.Capability("ALL"),
+								},
+							},
+						},
 					},
 				},
 				NodeSelector:  map[string]string{"kubernetes.io/os": "linux"},
 				RestartPolicy: corev1.RestartPolicy("OnFailure"),
 				SecurityContext: &corev1.PodSecurityContext{
-					RunAsNonRoot:   P(true),
-					SeccompProfile: &corev1.SeccompProfile{Type: corev1.SeccompProfileType("RuntimeDefault")},
+					RunAsNonRoot: P(true),
+					SeccompProfile: &corev1.SeccompProfile{
+						Type: corev1.SeccompProfileType("RuntimeDefault"),
+					},
 				},
 				ServiceAccountName: "cert-manager-startupapicheck",
 			},

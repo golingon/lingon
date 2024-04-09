@@ -11,7 +11,7 @@
 <polygon fill="white" stroke="none" points="-4,4 -4,-527 972,-527 972,4 -4,4"/>
 <g id="clust1" class="cluster">
 <title>cluster_github.com/volvo&#45;cars/lingon</title>
-<g id="a_clust1"><a xlink:href="https://pkg.go.dev/github.com/volvo-cars/lingon@" xlink:title="github.com/volvo&#45;cars/lingon (local)">
+<g id="a_clust1"><a xlink:href="https://pkg.go.dev/github.com/golingon/lingon@" xlink:title="github.com/volvo&#45;cars/lingon (local)">
 <polygon fill="none" stroke="black" points="8,-8 8,-515 960,-515 960,-8 8,-8"/>
 <text text-anchor="middle" x="484" y="-499.8" font-family="Times,serif" font-size="14.00">github.com/volvo&#45;cars/lingon (local)</text>
 </a>
@@ -28,7 +28,7 @@
 <!-- github.com/volvo&#45;cars/lingon/cmd/explode -->
 <g id="node2" class="node">
 <title>github.com/volvo&#45;cars/lingon/cmd/explode</title>
-<g id="a_node2"><a xlink:href="https://pkg.go.dev/github.com/volvo-cars/lingon/cmd/explode" xlink:title="github.com/volvo&#45;cars/lingon/cmd/explode" target="_graphviz">
+<g id="a_node2"><a xlink:href="https://pkg.go.dev/github.com/golingon/lingon/cmd/explode" xlink:title="github.com/volvo&#45;cars/lingon/cmd/explode" target="_graphviz">
 <polygon fill="none" stroke="#4f0791" stroke-width="2" stroke-opacity="0.698039" points="250,-430 34,-430 34,-394 250,-394 250,-430"/>
 <text text-anchor="start" x="42" y="-415" font-family="Times,serif" font-size="10.00">github.com/volvo&#45;cars/lingon/cmd/explode</text>
 <text text-anchor="start" x="42" y="-404" font-family="Times,serif" font-size="10.00">165 / 6.0KB</text>
@@ -38,7 +38,7 @@
 <!-- github.com/volvo&#45;cars/lingon/pkg/kube -->
 <g id="node10" class="node">
 <title>github.com/volvo&#45;cars/lingon/pkg/kube</title>
-<g id="a_node10"><a xlink:href="https://pkg.go.dev/github.com/volvo-cars/lingon/pkg/kube" xlink:title="github.com/volvo&#45;cars/lingon/pkg/kube" target="_graphviz">
+<g id="a_node10"><a xlink:href="https://pkg.go.dev/github.com/golingon/lingon/pkg/kube" xlink:title="github.com/volvo&#45;cars/lingon/pkg/kube" target="_graphviz">
 <polygon fill="none" stroke="#074c91" stroke-width="2" stroke-opacity="0.698039" points="592,-403 376,-403 376,-367 592,-367 592,-403"/>
 <text text-anchor="start" x="384" y="-388" font-family="Times,serif" font-size="10.00">github.com/volvo&#45;cars/lingon/pkg/kube</text>
 <text text-anchor="start" x="384" y="-377" font-family="Times,serif" font-size="10.00">2240 / 63.1KB</text>
@@ -57,7 +57,7 @@
 <!-- github.com/volvo&#45;cars/lingon/pkg/kubeutil -->
 <g id="node12" class="node">
 <title>github.com/volvo&#45;cars/lingon/pkg/kubeutil</title>
-<g id="a_node12"><a xlink:href="https://pkg.go.dev/github.com/volvo-cars/lingon/pkg/kubeutil" xlink:title="github.com/volvo&#45;cars/lingon/pkg/kubeutil" target="_graphviz">
+<g id="a_node12"><a xlink:href="https://pkg.go.dev/github.com/golingon/lingon/pkg/kubeutil" xlink:title="github.com/volvo&#45;cars/lingon/pkg/kubeutil" target="_graphviz">
 <polygon fill="none" stroke="#079149" stroke-width="2" stroke-opacity="0.698039" points="934,-421 718,-421 718,-385 934,-385 934,-421"/>
 <text text-anchor="start" x="726" y="-406" font-family="Times,serif" font-size="10.00">github.com/volvo&#45;cars/lingon/pkg/kubeutil</text>
 <text text-anchor="start" x="726" y="-395" font-family="Times,serif" font-size="10.00">914 / 26.3KB</text>
@@ -76,7 +76,7 @@
 <!-- github.com/volvo&#45;cars/lingon/cmd/kygo -->
 <g id="node3" class="node">
 <title>github.com/volvo&#45;cars/lingon/cmd/kygo</title>
-<g id="a_node3"><a xlink:href="https://pkg.go.dev/github.com/volvo-cars/lingon/cmd/kygo" xlink:title="github.com/volvo&#45;cars/lingon/cmd/kygo" target="_graphviz">
+<g id="a_node3"><a xlink:href="https://pkg.go.dev/github.com/golingon/lingon/cmd/kygo" xlink:title="github.com/volvo&#45;cars/lingon/cmd/kygo" target="_graphviz">
 <polygon fill="none" stroke="#913407" stroke-width="2" stroke-opacity="0.698039" points="250,-376 34,-376 34,-340 250,-340 250,-376"/>
 <text text-anchor="start" x="42" y="-361" font-family="Times,serif" font-size="10.00">github.com/volvo&#45;cars/lingon/cmd/kygo</text>
 <text text-anchor="start" x="42" y="-350" font-family="Times,serif" font-size="10.00">257 / 7.0KB</text>
@@ -104,7 +104,7 @@
 <!-- github.com/volvo&#45;cars/lingon/cmd/terragen -->
 <g id="node4" class="node">
 <title>github.com/volvo&#45;cars/lingon/cmd/terragen</title>
-<g id="a_node4"><a xlink:href="https://pkg.go.dev/github.com/volvo-cars/lingon/cmd/terragen" xlink:title="github.com/volvo&#45;cars/lingon/cmd/terragen" target="_graphviz">
+<g id="a_node4"><a xlink:href="https://pkg.go.dev/github.com/golingon/lingon/cmd/terragen" xlink:title="github.com/volvo&#45;cars/lingon/cmd/terragen" target="_graphviz">
 <polygon fill="none" stroke="#459107" stroke-width="2" stroke-opacity="0.698039" points="250,-322 34,-322 34,-286 250,-286 250,-322"/>
 <text text-anchor="start" x="42" y="-307" font-family="Times,serif" font-size="10.00">github.com/volvo&#45;cars/lingon/cmd/terragen</text>
 <text text-anchor="start" x="42" y="-296" font-family="Times,serif" font-size="10.00">132 / 3.1KB</text>
@@ -114,7 +114,7 @@
 <!-- github.com/volvo&#45;cars/lingon/pkg/terragen -->
 <g id="node14" class="node">
 <title>github.com/volvo&#45;cars/lingon/pkg/terragen</title>
-<g id="a_node14"><a xlink:href="https://pkg.go.dev/github.com/volvo-cars/lingon/pkg/terragen" xlink:title="github.com/volvo&#45;cars/lingon/pkg/terragen" target="_graphviz">
+<g id="a_node14"><a xlink:href="https://pkg.go.dev/github.com/golingon/lingon/pkg/terragen" xlink:title="github.com/volvo&#45;cars/lingon/pkg/terragen" target="_graphviz">
 <polygon fill="none" stroke="#916d07" stroke-width="2" stroke-opacity="0.698039" points="592,-263 376,-263 376,-227 592,-227 592,-263"/>
 <text text-anchor="start" x="384" y="-248" font-family="Times,serif" font-size="10.00">github.com/volvo&#45;cars/lingon/pkg/terragen</text>
 <text text-anchor="start" x="384" y="-237" font-family="Times,serif" font-size="10.00">330 / 8.8KB</text>
@@ -133,7 +133,7 @@
 <!-- github.com/volvo&#45;cars/lingon/cmd/tools/apisources -->
 <g id="node5" class="node">
 <title>github.com/volvo&#45;cars/lingon/cmd/tools/apisources</title>
-<g id="a_node5"><a xlink:href="https://pkg.go.dev/github.com/volvo-cars/lingon/cmd/tools/apisources" xlink:title="github.com/volvo&#45;cars/lingon/cmd/tools/apisources" target="_graphviz">
+<g id="a_node5"><a xlink:href="https://pkg.go.dev/github.com/golingon/lingon/cmd/tools/apisources" xlink:title="github.com/volvo&#45;cars/lingon/cmd/tools/apisources" target="_graphviz">
 <polygon fill="none" stroke="#3e0791" stroke-width="2" stroke-opacity="0.698039" points="268,-268 16,-268 16,-232 268,-232 268,-268"/>
 <text text-anchor="start" x="24" y="-253" font-family="Times,serif" font-size="10.00">github.com/volvo&#45;cars/lingon/cmd/tools/apisources</text>
 <text text-anchor="start" x="24" y="-242" font-family="Times,serif" font-size="10.00">285 / 6.5KB</text>
@@ -143,7 +143,7 @@
 <!-- github.com/volvo&#45;cars/lingon/cmd/tools/filtersb -->
 <g id="node6" class="node">
 <title>github.com/volvo&#45;cars/lingon/cmd/tools/filtersb</title>
-<g id="a_node6"><a xlink:href="https://pkg.go.dev/github.com/volvo-cars/lingon/cmd/tools/filtersb" xlink:title="github.com/volvo&#45;cars/lingon/cmd/tools/filtersb" target="_graphviz">
+<g id="a_node6"><a xlink:href="https://pkg.go.dev/github.com/golingon/lingon/cmd/tools/filtersb" xlink:title="github.com/volvo&#45;cars/lingon/cmd/tools/filtersb" target="_graphviz">
 <polygon fill="none" stroke="#330791" stroke-width="2" stroke-opacity="0.698039" points="250,-214 34,-214 34,-178 250,-178 250,-214"/>
 <text text-anchor="start" x="42" y="-199" font-family="Times,serif" font-size="10.00">github.com/volvo&#45;cars/lingon/cmd/tools/filtersb</text>
 <text text-anchor="start" x="42" y="-188" font-family="Times,serif" font-size="10.00">133 / 3.2KB</text>
@@ -162,7 +162,7 @@
 <!-- github.com/volvo&#45;cars/lingon/pkg/internal/api -->
 <g id="node7" class="node">
 <title>github.com/volvo&#45;cars/lingon/pkg/internal/api</title>
-<g id="a_node7"><a xlink:href="https://pkg.go.dev/github.com/volvo-cars/lingon/pkg/internal/api" xlink:title="github.com/volvo&#45;cars/lingon/pkg/internal/api" target="_graphviz">
+<g id="a_node7"><a xlink:href="https://pkg.go.dev/github.com/golingon/lingon/pkg/internal/api" xlink:title="github.com/volvo&#45;cars/lingon/pkg/internal/api" target="_graphviz">
 <polygon fill="none" stroke="#07913f" stroke-width="2" stroke-opacity="0.698039" points="934,-367 718,-367 718,-331 934,-331 934,-367"/>
 <text text-anchor="start" x="726" y="-352" font-family="Times,serif" font-size="10.00">github.com/volvo&#45;cars/lingon/pkg/internal/api</text>
 <text text-anchor="start" x="726" y="-341" font-family="Times,serif" font-size="10.00">569 / 18.5KB</text>
@@ -172,7 +172,7 @@
 <!-- github.com/volvo&#45;cars/lingon/pkg/internal/hcl -->
 <g id="node8" class="node">
 <title>github.com/volvo&#45;cars/lingon/pkg/internal/hcl</title>
-<g id="a_node8"><a xlink:href="https://pkg.go.dev/github.com/volvo-cars/lingon/pkg/internal/hcl" xlink:title="github.com/volvo&#45;cars/lingon/pkg/internal/hcl" target="_graphviz">
+<g id="a_node8"><a xlink:href="https://pkg.go.dev/github.com/golingon/lingon/pkg/internal/hcl" xlink:title="github.com/volvo&#45;cars/lingon/pkg/internal/hcl" target="_graphviz">
 <polygon fill="none" stroke="#4c0791" stroke-width="2" stroke-opacity="0.698039" points="934,-209 718,-209 718,-173 934,-173 934,-209"/>
 <text text-anchor="start" x="726" y="-194" font-family="Times,serif" font-size="10.00">github.com/volvo&#45;cars/lingon/pkg/internal/hcl</text>
 <text text-anchor="start" x="726" y="-183" font-family="Times,serif" font-size="10.00">420 / 9.9KB</text>
@@ -182,7 +182,7 @@
 <!-- github.com/volvo&#45;cars/lingon/pkg/internal/terrajen -->
 <g id="node9" class="node">
 <title>github.com/volvo&#45;cars/lingon/pkg/internal/terrajen</title>
-<g id="a_node9"><a xlink:href="https://pkg.go.dev/github.com/volvo-cars/lingon/pkg/internal/terrajen" xlink:title="github.com/volvo&#45;cars/lingon/pkg/internal/terrajen" target="_graphviz">
+<g id="a_node9"><a xlink:href="https://pkg.go.dev/github.com/golingon/lingon/pkg/internal/terrajen" xlink:title="github.com/volvo&#45;cars/lingon/pkg/internal/terrajen" target="_graphviz">
 <polygon fill="none" stroke="#500791" stroke-width="2" stroke-opacity="0.698039" points="952,-263 700,-263 700,-227 952,-227 952,-263"/>
 <text text-anchor="start" x="708" y="-248" font-family="Times,serif" font-size="10.00">github.com/volvo&#45;cars/lingon/pkg/internal/terrajen</text>
 <text text-anchor="start" x="708" y="-237" font-family="Times,serif" font-size="10.00">1939 / 50.7KB</text>
@@ -210,7 +210,7 @@
 <!-- github.com/volvo&#45;cars/lingon/pkg/kubeconfig -->
 <g id="node11" class="node">
 <title>github.com/volvo&#45;cars/lingon/pkg/kubeconfig</title>
-<g id="a_node11"><a xlink:href="https://pkg.go.dev/github.com/volvo-cars/lingon/pkg/kubeconfig" xlink:title="github.com/volvo&#45;cars/lingon/pkg/kubeconfig" target="_graphviz">
+<g id="a_node11"><a xlink:href="https://pkg.go.dev/github.com/golingon/lingon/pkg/kubeconfig" xlink:title="github.com/volvo&#45;cars/lingon/pkg/kubeconfig" target="_graphviz">
 <polygon fill="none" stroke="#7f0791" stroke-width="2" stroke-opacity="0.698039" points="250,-160 34,-160 34,-124 250,-124 250,-160"/>
 <text text-anchor="start" x="42" y="-145" font-family="Times,serif" font-size="10.00">github.com/volvo&#45;cars/lingon/pkg/kubeconfig</text>
 <text text-anchor="start" x="42" y="-134" font-family="Times,serif" font-size="10.00">563 / 20.9KB</text>
@@ -220,7 +220,7 @@
 <!-- github.com/volvo&#45;cars/lingon/pkg/terra -->
 <g id="node13" class="node">
 <title>github.com/volvo&#45;cars/lingon/pkg/terra</title>
-<g id="a_node13"><a xlink:href="https://pkg.go.dev/github.com/volvo-cars/lingon/pkg/terra" xlink:title="github.com/volvo&#45;cars/lingon/pkg/terra" target="_graphviz">
+<g id="a_node13"><a xlink:href="https://pkg.go.dev/github.com/golingon/lingon/pkg/terra" xlink:title="github.com/volvo&#45;cars/lingon/pkg/terra" target="_graphviz">
 <polygon fill="none" stroke="#073e91" stroke-width="2" stroke-opacity="0.698039" points="574,-209 394,-209 394,-173 574,-173 574,-209"/>
 <text text-anchor="start" x="402" y="-194" font-family="Times,serif" font-size="10.00">github.com/volvo&#45;cars/lingon/pkg/terra</text>
 <text text-anchor="start" x="402" y="-183" font-family="Times,serif" font-size="10.00">1308 / 34.2KB</text>
@@ -257,7 +257,7 @@
 <!-- github.com/volvo&#45;cars/lingon/pkg/test -->
 <g id="node15" class="node">
 <title>github.com/volvo&#45;cars/lingon/pkg/test</title>
-<g id="a_node15"><a xlink:href="https://pkg.go.dev/github.com/volvo-cars/lingon/pkg/test" xlink:title="github.com/volvo&#45;cars/lingon/pkg/test" target="_graphviz">
+<g id="a_node15"><a xlink:href="https://pkg.go.dev/github.com/golingon/lingon/pkg/test" xlink:title="github.com/volvo&#45;cars/lingon/pkg/test" target="_graphviz">
 <polygon fill="none" stroke="#07917a" stroke-width="2" stroke-opacity="0.698039" points="232,-106 52,-106 52,-70 232,-70 232,-106"/>
 <text text-anchor="start" x="60" y="-91" font-family="Times,serif" font-size="10.00">github.com/volvo&#45;cars/lingon/pkg/test</text>
 <text text-anchor="start" x="60" y="-80" font-family="Times,serif" font-size="10.00">0 / 0B</text>
@@ -267,7 +267,7 @@
 <!-- github.com/volvo&#45;cars/lingon/pkg/testutil -->
 <g id="node16" class="node">
 <title>github.com/volvo&#45;cars/lingon/pkg/testutil</title>
-<g id="a_node16"><a xlink:href="https://pkg.go.dev/github.com/volvo-cars/lingon/pkg/testutil" xlink:title="github.com/volvo&#45;cars/lingon/pkg/testutil" target="_graphviz">
+<g id="a_node16"><a xlink:href="https://pkg.go.dev/github.com/golingon/lingon/pkg/testutil" xlink:title="github.com/volvo&#45;cars/lingon/pkg/testutil" target="_graphviz">
 <polygon fill="none" stroke="#179107" stroke-width="2" stroke-opacity="0.698039" points="250,-52 34,-52 34,-16 250,-16 250,-52"/>
 <text text-anchor="start" x="42" y="-37" font-family="Times,serif" font-size="10.00">github.com/volvo&#45;cars/lingon/pkg/testutil</text>
 <text text-anchor="start" x="42" y="-26" font-family="Times,serif" font-size="10.00">426 / 10.1KB</text>

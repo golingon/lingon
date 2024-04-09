@@ -13,11 +13,11 @@ import (
 
 	"github.com/hashicorp/terraform-exec/tfexec"
 
-	tu "github.com/volvo-cars/lingon/pkg/testutil"
+	tu "github.com/golingon/lingon/pkg/testutil"
 
 	aws "github.com/golingon/terraproviders/aws/4.60.0"
 
-	"github.com/volvo-cars/lingon/pkg/terra"
+	"github.com/golingon/lingon/pkg/terra"
 )
 
 func testExportValidateStack(

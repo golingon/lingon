@@ -7,7 +7,7 @@ import (
 	"bytes"
 	"testing"
 
-	tu "github.com/volvo-cars/lingon/pkg/testutil"
+	tu "github.com/golingon/lingon/pkg/testutil"
 )
 
 func TestExport(t *testing.T) {

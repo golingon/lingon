@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"log/slog"
 
-	"github.com/volvo-cars/lingoneks/terraclient"
+	"github.com/golingon/lingoneks/terraclient"
 )
 
 func finishAndDestroy(

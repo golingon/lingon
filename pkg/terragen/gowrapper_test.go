@@ -6,7 +6,7 @@ package terragen
 import (
 	"testing"
 
-	tu "github.com/volvo-cars/lingon/pkg/testutil"
+	tu "github.com/golingon/lingon/pkg/testutil"
 )
 
 func TestParseProvider(t *testing.T) {

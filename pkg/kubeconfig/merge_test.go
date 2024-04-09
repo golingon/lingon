@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	k "github.com/volvo-cars/lingon/pkg/kubeconfig"
-	tu "github.com/volvo-cars/lingon/pkg/testutil"
+	k "github.com/golingon/lingon/pkg/kubeconfig"
+	tu "github.com/golingon/lingon/pkg/testutil"
 )
 
 const (

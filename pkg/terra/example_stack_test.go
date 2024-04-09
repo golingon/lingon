@@ -9,7 +9,7 @@ import (
 	"log/slog"
 	"os"
 
-	"github.com/volvo-cars/lingon/pkg/terra"
+	"github.com/golingon/lingon/pkg/terra"
 )
 
 // EmptyStack shows how to create a Terraform stack.

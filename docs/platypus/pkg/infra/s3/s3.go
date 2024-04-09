@@ -8,7 +8,7 @@ import (
 	"github.com/golingon/terraproviders/aws/4.60.0/s3bucketserversideencryptionconfiguration"
 	"github.com/golingon/terraproviders/aws/4.60.0/s3bucketversioning"
 
-	"github.com/volvo-cars/lingon/pkg/terra"
+	"github.com/golingon/lingon/pkg/terra"
 )
 
 type Bucket struct {

@@ -4,7 +4,7 @@
 package samples
 
 import (
-	"github.com/volvo-cars/lingon/pkg/kube"
+	"github.com/golingon/lingon/pkg/kube"
 	v1 "github.com/volvo-cars/nope/api/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )

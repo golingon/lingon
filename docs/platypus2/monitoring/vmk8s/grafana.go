@@ -8,9 +8,9 @@ import (
 	"fmt"
 
 	"github.com/VictoriaMetrics/operator/api/victoriametrics/v1beta1"
-	"github.com/volvo-cars/lingon/pkg/kube"
-	ku "github.com/volvo-cars/lingon/pkg/kubeutil"
-	"github.com/volvo-cars/lingoneks/meta"
+	"github.com/golingon/lingon/pkg/kube"
+	ku "github.com/golingon/lingon/pkg/kubeutil"
+	"github.com/golingon/lingoneks/meta"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
@@ -274,14 +274,18 @@ var GrafanaDeploy = &appsv1.Deployment{
 	Spec: appsv1.DeploymentSpec{
 		Replicas: P(int32(1)),
 		Selector: &metav1.LabelSelector{MatchLabels: Graf.MatchLabels()},
-		Strategy: appsv1.DeploymentStrategy{Type: appsv1.RollingUpdateDeploymentStrategyType},
+		Strategy: appsv1.DeploymentStrategy{
+			Type: appsv1.RollingUpdateDeploymentStrategyType,
+		},
 		Template: corev1.PodTemplateSpec{
 			ObjectMeta: metav1.ObjectMeta{
 				Annotations: map[string]string{
-					"checksum/config":                         GrafCAM.Hash(),
-					"checksum/provider":                       SideCarProvider.Hash(),
-					"checksum/datasource":                     GrafanaDataSource.Hash(),
-					"checksum/secret":                         ku.HashSecret(GrafanaSecrets),
+					"checksum/config":     GrafCAM.Hash(),
+					"checksum/provider":   SideCarProvider.Hash(),
+					"checksum/datasource": GrafanaDataSource.Hash(),
+					"checksum/secret": ku.HashSecret(
+						GrafanaSecrets,
+					),
 					"kubectl.kubernetes.io/default-container": GrafanaContainer.Name,
 				},
 				Labels: Graf.MatchLabels(),
@@ -544,7 +548,9 @@ func YamlMust(a any) string {
 }
 
 var GrafanaDataSource = ku.ConfigAndMount{
-	ObjectMeta:  PatchDataSourceLabels(Graf.ObjectMetaNameSuffix("datasources")),
+	ObjectMeta: PatchDataSourceLabels(
+		Graf.ObjectMetaNameSuffix("datasources"),
+	),
 	VolumeMount: corev1.VolumeMount{},
 	Data:        map[string]string{"datasource.yaml": YamlMust(GrafDSConfig)},
 }

@@ -4,10 +4,10 @@
 package certmanager
 
 import (
+	"github.com/golingon/lingon/pkg/kube"
+	ku "github.com/golingon/lingon/pkg/kubeutil"
 	promoperatorv1 "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	v1 "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
-	"github.com/volvo-cars/lingon/pkg/kube"
-	ku "github.com/volvo-cars/lingon/pkg/kubeutil"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	policyv1 "k8s.io/api/policy/v1"
@@ -52,7 +52,9 @@ var ControllerDeploy = &appsv1.Deployment{
 	ObjectMeta: CM.Controller.ObjectMeta(),
 	Spec: appsv1.DeploymentSpec{
 		Replicas: P(int32(1)),
-		Selector: &metav1.LabelSelector{MatchLabels: CM.Controller.MatchLabels()},
+		Selector: &metav1.LabelSelector{
+			MatchLabels: CM.Controller.MatchLabels(),
+		},
 		Template: corev1.PodTemplateSpec{
 			ObjectMeta: metav1.ObjectMeta{Labels: CM.Controller.Labels()},
 			Spec: corev1.PodSpec{
@@ -82,13 +84,21 @@ var ControllerDeploy = &appsv1.Deployment{
 						Resources: ku.Resources(
 							"10m", "32Mi", "100m", "64Mi",
 						),
-						SecurityContext: &corev1.SecurityContext{Capabilities: &corev1.Capabilities{Drop: []corev1.Capability{corev1.Capability("ALL")}}},
+						SecurityContext: &corev1.SecurityContext{
+							Capabilities: &corev1.Capabilities{
+								Drop: []corev1.Capability{
+									corev1.Capability("ALL"),
+								},
+							},
+						},
 					},
 				},
 				NodeSelector: map[string]string{ku.LabelOSStable: "linux"},
 				SecurityContext: &corev1.PodSecurityContext{
-					RunAsNonRoot:   P(true),
-					SeccompProfile: &corev1.SeccompProfile{Type: corev1.SeccompProfileType("RuntimeDefault")},
+					RunAsNonRoot: P(true),
+					SeccompProfile: &corev1.SeccompProfile{
+						Type: corev1.SeccompProfileType("RuntimeDefault"),
+					},
 				},
 			},
 		},
@@ -113,7 +123,9 @@ var ServiceMonitor = &v1.ServiceMonitor{
 				Interval:      v1.Duration("60s"),
 				Path:          "/metrics",
 				ScrapeTimeout: v1.Duration("30s"),
-				TargetPort:    P(intstr.FromString(CM.ControllerPort.Service.Name)),
+				TargetPort: P(
+					intstr.FromString(CM.ControllerPort.Service.Name),
+				),
 			},
 		},
 		JobLabel: "cert-manager",
@@ -132,6 +144,8 @@ var PDB = &policyv1.PodDisruptionBudget{
 	ObjectMeta: CM.Controller.ObjectMeta(),
 	Spec: policyv1.PodDisruptionBudgetSpec{
 		MinAvailable: P(intstr.FromInt(1)),
-		Selector:     &metav1.LabelSelector{MatchLabels: CM.Controller.MatchLabels()},
+		Selector: &metav1.LabelSelector{
+			MatchLabels: CM.Controller.MatchLabels(),
+		},
 	},
 }

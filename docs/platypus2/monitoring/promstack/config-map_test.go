@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	tu "github.com/volvo-cars/lingon/pkg/testutil"
+	tu "github.com/golingon/lingon/pkg/testutil"
 	corev1 "k8s.io/api/core/v1"
 )
 

@@ -6,8 +6,8 @@ package infra
 import (
 	"fmt"
 
+	"github.com/golingon/lingon/pkg/terra"
 	aws "github.com/golingon/terraproviders/aws/5.13.1"
-	"github.com/volvo-cars/lingon/pkg/terra"
 )
 
 type Opts struct {

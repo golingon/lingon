@@ -6,11 +6,11 @@ package cluster_eks
 import (
 	"fmt"
 
+	"github.com/golingon/lingon/pkg/terra"
 	aws "github.com/golingon/terraproviders/aws/4.60.0"
 	"github.com/golingon/terraproviders/aws/4.60.0/dataiampolicydocument"
 	"github.com/golingon/terraproviders/aws/4.60.0/ekscluster"
 	tls "github.com/golingon/terraproviders/tls/4.0.4"
-	"github.com/volvo-cars/lingon/pkg/terra"
 )
 
 var (
@@ -19,13 +19,17 @@ var (
 )
 
 var (
-	arnClusterPolicy         = S("arn:aws:iam::aws:policy/AmazonEKSClusterPolicy")
-	arnVPCResourceController = S("arn:aws:iam::aws:policy/AmazonEKSVPCResourceController")
-	PORT_HTTPS               = N(443)
-	PORT_DNS                 = N(53)
-	PROTOCOL_TCP             = S("tcp")
-	INGRESS                  = S("ingress")
-	EGRESS                   = S("egress")
+	arnClusterPolicy = S(
+		"arn:aws:iam::aws:policy/AmazonEKSClusterPolicy",
+	)
+	arnVPCResourceController = S(
+		"arn:aws:iam::aws:policy/AmazonEKSVPCResourceController",
+	)
+	PORT_HTTPS   = N(443)
+	PORT_DNS     = N(53)
+	PROTOCOL_TCP = S("tcp")
+	INGRESS      = S("ingress")
+	EGRESS       = S("egress")
 )
 
 type ClusterOpts struct {
@@ -75,11 +79,13 @@ func NewEKSCluster(opts ClusterOpts) *Cluster {
 		"eks", aws.SecurityGroupRuleArgs{
 			SecurityGroupId:       sgAttrs.Id(),
 			SourceSecurityGroupId: sgAttrs.Id(),
-			Description:           S("Allow all for EKS control plane and managed worker nodes"),
-			Protocol:              S("-1"),
-			FromPort:              N(0),
-			ToPort:                N(0),
-			Type:                  INGRESS,
+			Description: S(
+				"Allow all for EKS control plane and managed worker nodes",
+			),
+			Protocol: S("-1"),
+			FromPort: N(0),
+			ToPort:   N(0),
+			Type:     INGRESS,
 		},
 	)
 	egressAllowAll := aws.NewSecurityGroupRule(
@@ -155,7 +161,12 @@ func NewEKSCluster(opts ClusterOpts) *Cluster {
 
 	tlsCert := tls.NewDataCertificate(
 		"eks", tls.DataCertificateArgs{
-			Url: eksCluster.Attributes().Identity().Index(0).Oidc().Index(0).Issuer(),
+			Url: eksCluster.Attributes().
+				Identity().
+				Index(0).
+				Oidc().
+				Index(0).
+				Issuer(),
 		},
 	)
 	iamOIDCProvider := aws.NewIamOpenidConnectProvider(
@@ -166,7 +177,12 @@ func NewEKSCluster(opts ClusterOpts) *Cluster {
 					Certificates().
 					Splat().Sha1Fingerprint(),
 			),
-			Url: eksCluster.Attributes().Identity().Index(0).Oidc().Index(0).Issuer(),
+			Url: eksCluster.Attributes().
+				Identity().
+				Index(0).
+				Oidc().
+				Index(0).
+				Issuer(),
 		},
 	)
 

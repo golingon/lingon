@@ -20,7 +20,7 @@ import (
 
 const (
 	embeddedStructName = "App"
-	kubeAppPkgPath     = "github.com/volvo-cars/lingon/pkg/kube"
+	kubeAppPkgPath     = "github.com/golingon/lingon/pkg/kube"
 )
 
 func (j *jamel) render() error {
@@ -178,7 +178,8 @@ func (j *jamel) fileMap() (map[string]*jen.File, error) {
 
 		// if last letter of nameVar is a number, it is a duplicate
 		// we add that number to the nameVarObj
-		if lastChar := nameVar[len(nameVar)-1]; lastChar >= '0' && lastChar <= '9' {
+		if lastChar := nameVar[len(nameVar)-1]; lastChar >= '0' &&
+			lastChar <= '9' {
 			nameVarObj += string(lastChar)
 		}
 

@@ -16,8 +16,8 @@ import (
 	"testing"
 	"time"
 
+	tu "github.com/golingon/lingon/pkg/testutil"
 	"github.com/grafana/dashboard-linter/lint"
-	tu "github.com/volvo-cars/lingon/pkg/testutil"
 	"github.com/zeitlinger/conflate"
 )
 
@@ -112,27 +112,33 @@ var srcDash = []DashSource{
 	// Karpenter dashboards
 	// {
 	// 	Name:   "karpenter-performance-dashboard.json",
-	// 	URL:    "https://raw.githubusercontent.com/aws/karpenter/main/website/content/en/v0.28/getting-started/getting-started-with-karpenter/karpenter-performance-dashboard.json",
+	// 	URL:
+	// "https://raw.githubusercontent.com/aws/karpenter/main/website/content/en/v0.28/getting-started/getting-started-with-karpenter/karpenter-performance-dashboard.json",
 	// },
 	// {
 	// 	Name:   "karpenter-controllers.json",
-	// 	URL:    "https://raw.githubusercontent.com/aws/karpenter/main/website/content/en/v0.28/getting-started/getting-started-with-karpenter/karpenter-controllers.json",
+	// 	URL:
+	// "https://raw.githubusercontent.com/aws/karpenter/main/website/content/en/v0.28/getting-started/getting-started-with-karpenter/karpenter-controllers.json",
 	// },
 	// {
 	// 	Name:   "karpenter-controllers-allocation.json",
-	// 	URL:    "https://raw.githubusercontent.com/aws/karpenter/main/website/content/en/v0.28/getting-started/getting-started-with-karpenter/karpenter-controllers-allocation.json",
+	// 	URL:
+	// "https://raw.githubusercontent.com/aws/karpenter/main/website/content/en/v0.28/getting-started/getting-started-with-karpenter/karpenter-controllers-allocation.json",
 	// },
 	// {
 	// 	Name:   "karpenter-capacity-dashboard.json",
-	// 	URL:    "https://raw.githubusercontent.com/aws/karpenter/main/website/content/en/v0.28/getting-started/getting-started-with-karpenter/karpenter-capacity-dashboard.json",
+	// 	URL:
+	// "https://raw.githubusercontent.com/aws/karpenter/main/website/content/en/v0.28/getting-started/getting-started-with-karpenter/karpenter-capacity-dashboard.json",
 	// },
 	// {
 	// 	Name: "nats-dash.json",
-	// 	URL:  "https://github.com/nats-io/prometheus-nats-exporter/raw/main/walkthrough/grafana-nats-dash.json",
+	// 	URL:
+	// "https://github.com/nats-io/prometheus-nats-exporter/raw/main/walkthrough/grafana-nats-dash.json",
 	// },
 	// {
 	// 	Name: "nats-jetstream-dash.json",
-	// 	URL:  "https://github.com/nats-io/prometheus-nats-exporter/raw/main/walkthrough/grafana-jetstream-dash.json",
+	// 	URL:
+	// "https://github.com/nats-io/prometheus-nats-exporter/raw/main/walkthrough/grafana-jetstream-dash.json",
 	// },
 }
 

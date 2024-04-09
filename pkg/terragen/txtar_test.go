@@ -13,8 +13,8 @@ import (
 	"strings"
 	"testing"
 
+	tu "github.com/golingon/lingon/pkg/testutil"
 	tfjson "github.com/hashicorp/terraform-json"
-	tu "github.com/volvo-cars/lingon/pkg/testutil"
 	"golang.org/x/tools/txtar"
 )
 
@@ -79,10 +79,10 @@ func RunTest(wd string, ar *txtar.Archive) error {
 		return fmt.Errorf("reading root go.mod file: %w", err)
 	}
 	goModStr := strings.Replace(
-		string(goMod), "module github.com/volvo-cars/lingon",
+		string(goMod), "module github.com/golingon/lingon",
 		"module test", 1,
 	)
-	goModStr += "\nreplace github.com/volvo-cars/lingon => ../../../../../\n"
+	goModStr += "\nreplace github.com/golingon/lingon => ../../../../../\n"
 	if err := os.WriteFile(
 		filepath.Join(wd, "go.mod"),
 		[]byte(goModStr),

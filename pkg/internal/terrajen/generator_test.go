@@ -6,7 +6,7 @@ package terrajen
 import (
 	"testing"
 
-	tu "github.com/volvo-cars/lingon/pkg/testutil"
+	tu "github.com/golingon/lingon/pkg/testutil"
 )
 
 func TestProviderShortName(t *testing.T) {

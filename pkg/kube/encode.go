@@ -10,9 +10,9 @@ import (
 	"reflect"
 	"sort"
 
+	"github.com/golingon/lingon/pkg/kubeutil"
 	"github.com/tidwall/sjson"
 	"github.com/veggiemonk/strcase"
-	"github.com/volvo-cars/lingon/pkg/kubeutil"
 	"golang.org/x/tools/txtar"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -177,7 +177,8 @@ func (g *goky) encodeStruct(
 			g.ar.Files = append(g.ar.Files, txtar.File{Name: name, Data: yb})
 
 		default:
-			// Not sure if this should be an error, but rather be explicit at this point
+			// Not sure if this should be an error, but rather be explicit at
+			// this point
 			return fmt.Errorf(
 				"unsupported type: %s, type: %s, kind: %s",
 				sf.Name,

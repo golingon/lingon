@@ -4,7 +4,7 @@
 package karpenter
 
 import (
-	"github.com/volvo-cars/lingon/pkg/kubeutil"
+	"github.com/golingon/lingon/pkg/kubeutil"
 	ar "k8s.io/api/admissionregistration/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -188,9 +188,13 @@ var WebhookValidationKarpenterConfig = &ar.ValidatingWebhookConfiguration{
 	},
 	Webhooks: []ar.ValidatingWebhook{
 		{
-			Name:                    "validation.webhook.config.karpenter.sh",
-			ClientConfig:            webHookClientConfig,
-			ObjectSelector:          &metav1.LabelSelector{MatchLabels: map[string]string{"app.kubernetes.io/part-of": "karpenter"}},
+			Name:         "validation.webhook.config.karpenter.sh",
+			ClientConfig: webHookClientConfig,
+			ObjectSelector: &metav1.LabelSelector{
+				MatchLabels: map[string]string{
+					"app.kubernetes.io/part-of": "karpenter",
+				},
+			},
 			FailurePolicy:           P(ar.Fail),
 			SideEffects:             P(ar.SideEffectClassNone),
 			AdmissionReviewVersions: []string{"v1"},

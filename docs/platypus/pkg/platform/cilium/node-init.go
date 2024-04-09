@@ -4,8 +4,8 @@
 package cilium
 
 import (
+	"github.com/golingon/lingon/pkg/kubeutil"
 	"github.com/hexops/valast"
-	"github.com/volvo-cars/lingon/pkg/kubeutil"
 	appsv1 "k8s.io/api/apps/v1"
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
@@ -27,8 +27,10 @@ var NodeInit = &appsv1.DaemonSet{
 		},
 		Template: v1.PodTemplateSpec{
 			ObjectMeta: metav1.ObjectMeta{
-				Labels:      map[string]string{"app": "cilium-node-init"},
-				Annotations: map[string]string{"container.apparmor.security.beta.kubernetes.io/node-init": "unconfined"},
+				Labels: map[string]string{"app": "cilium-node-init"},
+				Annotations: map[string]string{
+					"container.apparmor.security.beta.kubernetes.io/node-init": "unconfined",
+				},
 			},
 			Spec: v1.PodSpec{
 				Containers: []v1.Container{
@@ -43,8 +45,12 @@ var NodeInit = &appsv1.DaemonSet{
 						},
 						Resources: v1.ResourceRequirements{
 							Requests: v1.ResourceList{
-								v1.ResourceName("cpu"):    resource.MustParse("100m"),
-								v1.ResourceName("memory"): resource.MustParse("100Mi"),
+								v1.ResourceName("cpu"): resource.MustParse(
+									"100m",
+								),
+								v1.ResourceName("memory"): resource.MustParse(
+									"100Mi",
+								),
 							},
 						},
 						Lifecycle: &v1.Lifecycle{
@@ -62,8 +68,10 @@ var NodeInit = &appsv1.DaemonSet{
 								},
 							},
 						},
-						TerminationMessagePolicy: v1.TerminationMessagePolicy("FallbackToLogsOnError"),
-						ImagePullPolicy:          v1.PullPolicy("IfNotPresent"),
+						TerminationMessagePolicy: v1.TerminationMessagePolicy(
+							"FallbackToLogsOnError",
+						),
+						ImagePullPolicy: v1.PullPolicy("IfNotPresent"),
 						SecurityContext: &v1.SecurityContext{
 							Capabilities: &v1.Capabilities{
 								Add: []v1.Capability{
@@ -82,14 +90,20 @@ var NodeInit = &appsv1.DaemonSet{
 						},
 					},
 				},
-				NodeSelector:      map[string]string{"kubernetes.io/os": "linux"},
-				HostNetwork:       true,
-				HostPID:           true,
-				Tolerations:       []v1.Toleration{{Operator: v1.TolerationOperator("Exists")}},
+				NodeSelector: map[string]string{
+					"kubernetes.io/os": "linux",
+				},
+				HostNetwork: true,
+				HostPID:     true,
+				Tolerations: []v1.Toleration{
+					{Operator: v1.TolerationOperator("Exists")},
+				},
 				PriorityClassName: "system-node-critical",
 			},
 		},
-		UpdateStrategy: appsv1.DaemonSetUpdateStrategy{Type: appsv1.DaemonSetUpdateStrategyType("RollingUpdate")},
+		UpdateStrategy: appsv1.DaemonSetUpdateStrategy{
+			Type: appsv1.DaemonSetUpdateStrategyType("RollingUpdate"),
+		},
 	},
 }
 

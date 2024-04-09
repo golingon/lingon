@@ -6,7 +6,7 @@ syntax = "proto3";
 package natspb;
 
 
-option go_package = "github.com/volvo-cars/lingoneks/natspb";
+option go_package = "github.com/golingon/lingoneks/natspb";
 
 
 message Envelope {

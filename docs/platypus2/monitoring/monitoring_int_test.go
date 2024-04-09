@@ -14,13 +14,13 @@ import (
 	"testing"
 	"time"
 
-	ku "github.com/volvo-cars/lingon/pkg/kubeutil"
-	tu "github.com/volvo-cars/lingon/pkg/testutil"
-	"github.com/volvo-cars/lingoneks/monitoring/metricsserver"
-	"github.com/volvo-cars/lingoneks/monitoring/promcrd"
-	"github.com/volvo-cars/lingoneks/monitoring/vmcrd"
-	"github.com/volvo-cars/lingoneks/monitoring/vmk8s"
-	"github.com/volvo-cars/lingoneks/monitoring/vmop"
+	ku "github.com/golingon/lingon/pkg/kubeutil"
+	tu "github.com/golingon/lingon/pkg/testutil"
+	"github.com/golingon/lingoneks/monitoring/metricsserver"
+	"github.com/golingon/lingoneks/monitoring/promcrd"
+	"github.com/golingon/lingoneks/monitoring/vmcrd"
+	"github.com/golingon/lingoneks/monitoring/vmk8s"
+	"github.com/golingon/lingoneks/monitoring/vmop"
 	"sigs.k8s.io/kind/pkg/apis/config/v1alpha4"
 	"sigs.k8s.io/kind/pkg/cluster"
 	"sigs.k8s.io/kind/pkg/cmd"
@@ -82,7 +82,8 @@ func TestKindDeploy(t *testing.T) {
 		TypeMeta: v1alpha4.TypeMeta{
 			Kind: "Cluster", APIVersion: "kind.x-k8s.io/v1alpha4",
 		},
-		// Name: clusterName, // will be overridden by provider.Create(clusterName)
+		// Name: clusterName, // will be overridden by
+		// provider.Create(clusterName)
 		Nodes: []v1alpha4.Node{
 			{Role: v1alpha4.ControlPlaneRole},
 			{Role: v1alpha4.WorkerRole},

@@ -9,7 +9,7 @@ import (
 	"fmt"
 
 	"github.com/VictoriaMetrics/operator/api/victoriametrics/v1beta1"
-	ku "github.com/volvo-cars/lingon/pkg/kubeutil"
+	ku "github.com/golingon/lingon/pkg/kubeutil"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 

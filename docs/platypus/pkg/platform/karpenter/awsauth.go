@@ -3,7 +3,7 @@
 
 package karpenter
 
-import "github.com/volvo-cars/lingon/docs/platypus/pkg/platform/awsauth"
+import "github.com/golingon/lingon/docs/platypus/pkg/platform/awsauth"
 
 func AWSAuthMapRoles(nodeRoleARN, fargateRoleARN string) []*awsauth.RolesAuth {
 	return []*awsauth.RolesAuth{

@@ -4,14 +4,15 @@
 package terraclient
 
 import (
+	"github.com/golingon/lingon/pkg/terra"
 	tfjson "github.com/hashicorp/terraform-json"
-	"github.com/volvo-cars/lingon/pkg/terra"
 )
 
 type StateMode int
 
 const (
-	// StateModeUnknown the state mode has not been determined yet (no plan/apply)
+	// StateModeUnknown the state mode has not been determined yet (no
+	// plan/apply)
 	StateModeUnknown StateMode = 0
 	// StateModeEmpty there is no state (no apply yet)
 	StateModeEmpty StateMode = 1

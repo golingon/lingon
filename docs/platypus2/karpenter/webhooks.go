@@ -4,7 +4,7 @@
 package karpenter
 
 import (
-	"github.com/volvo-cars/lingon/pkg/kubeutil"
+	"github.com/golingon/lingon/pkg/kubeutil"
 	ar "k8s.io/api/admissionregistration/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -87,7 +87,9 @@ var WebhookValidationKarpenterConfig = &ar.ValidatingWebhookConfiguration{
 			},
 			ObjectSelector: &metav1.LabelSelector{
 				// FIXME: not set on anything ??
-				MatchLabels: map[string]string{"app.kubernetes.io/part-of": "karpenter"},
+				MatchLabels: map[string]string{
+					"app.kubernetes.io/part-of": "karpenter",
+				},
 			},
 		},
 	},
