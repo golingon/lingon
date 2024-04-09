@@ -8,7 +8,7 @@ import (
 
 	"github.com/VictoriaMetrics/metricsql"
 	"github.com/VictoriaMetrics/operator/api/victoriametrics/v1beta1"
-	tu "github.com/volvo-cars/lingon/pkg/testutil"
+	tu "github.com/golingon/lingon/pkg/testutil"
 )
 
 func TestRules(t *testing.T) {

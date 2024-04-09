@@ -8,15 +8,15 @@ import (
 	"os"
 	"os/exec"
 
+	"github.com/golingon/lingon/docs/platypus/pkg/infra/awsvpc"
+	"github.com/golingon/lingon/docs/platypus/pkg/infra/cluster_eks"
+	"github.com/golingon/lingon/docs/platypus/pkg/platform/grafana"
+	"github.com/golingon/lingon/docs/platypus/pkg/platform/karpenter"
+	"github.com/golingon/lingon/docs/platypus/pkg/terraclient"
 	aws "github.com/golingon/terraproviders/aws/4.60.0"
 	"github.com/golingon/terraproviders/aws/4.60.0/provider"
-	"github.com/volvo-cars/lingon/docs/platypus/pkg/infra/awsvpc"
-	"github.com/volvo-cars/lingon/docs/platypus/pkg/infra/cluster_eks"
-	"github.com/volvo-cars/lingon/docs/platypus/pkg/platform/grafana"
-	"github.com/volvo-cars/lingon/docs/platypus/pkg/platform/karpenter"
-	"github.com/volvo-cars/lingon/docs/platypus/pkg/terraclient"
 
-	"github.com/volvo-cars/lingon/pkg/terra"
+	"github.com/golingon/lingon/pkg/terra"
 )
 
 func newAWSStackConfig(name string, p runParams) AWSStackConfig {

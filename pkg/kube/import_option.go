@@ -8,14 +8,15 @@ import (
 	"log/slog"
 	"os"
 
-	"github.com/volvo-cars/lingon/pkg/kubeutil"
+	"github.com/golingon/lingon/pkg/kubeutil"
 	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	apiextensionsbeta "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/kubernetes/scheme"
 )
 
-// ImportOption is used to configure conversion from kubernetes objects in YAML to Go code
+// ImportOption is used to configure conversion from kubernetes objects in YAML
+// to Go code
 // Helpers function are provided to those field, see WithExportXXX functions
 type ImportOption func(*jamel)
 
@@ -26,25 +27,31 @@ type importOption struct {
 	// ex: "tekton"
 	AppName string
 
-	// OutputPkgName is the name of the package where the generated code will be written (default: same as AppName)
+	// OutputPkgName is the name of the package where the generated code will be
+	// written (default: same as AppName)
 	// ex: "tekton" but not "github.com/xxx/tekton"
 	OutputPkgName string
 
-	// OutputDir is the directory where the generated code will be written (default: out)
+	// OutputDir is the directory where the generated code will be written
+	// (default: out)
 	// ex: "./tekton"
 	OutputDir string
 
-	// ManifestFiles is used to read the kubernetes objects from files, exclusive of ManifestReader
+	// ManifestFiles is used to read the kubernetes objects from files,
+	// exclusive of ManifestReader
 	// ex: []string{"./manifests/webapp1.yaml", "./manifests/webapp2.yaml"}
 	ManifestFiles []string
 
-	// ManifestReader is used to read the kubernetes objects from, exclusive of ManifestFiles
+	// ManifestReader is used to read the kubernetes objects from, exclusive of
+	// ManifestFiles
 	// ex: os.Stdout, bytes.Buffer
 	ManifestReader io.Reader
 
 	// GoCodeWriter is used to write the generated Go code in txtar format
-	// for more info on txtar format see: https://pkg.go.dev/golang.org/x/tools/txtar
-	// Note that we are using https://github.com/rogpeppe/go-internal/blob/master/txtar/archive.go instead
+	// for more info on txtar format see:
+	// https://pkg.go.dev/golang.org/x/tools/txtar Note that we are using
+	// https://github.com/rogpeppe/go-internal/blob/master/txtar/archive.go
+	// instead
 	// ex: os.Stdout
 	GoCodeWriter io.Writer
 
@@ -55,10 +62,12 @@ type importOption struct {
 	// NameFieldFunc formats the name of the field in the application struct
 	NameFieldFunc func(object kubeutil.Metadata) string
 
-	// NameVarFunc formats the name of the variable containing the kubernetes object
+	// NameVarFunc formats the name of the variable containing the kubernetes
+	// object
 	NameVarFunc func(object kubeutil.Metadata) string
 
-	// NameFileFunc formats the name of the file containing the kubernetes object
+	// NameFileFunc formats the name of the file containing the kubernetes
+	// object
 	NameFileFunc func(object kubeutil.Metadata) string
 
 	// RemoveAppName flag removes the app name from the object name
@@ -70,7 +79,8 @@ type importOption struct {
 	// AddMethods flag adds convenience methods to the generated code
 	AddMethods bool
 
-	// RedactSecrets flag removes the value, but not the keys, of kubernetes secrets
+	// RedactSecrets flag removes the value, but not the keys, of kubernetes
+	// secrets
 	RedactSecrets bool
 
 	// Verbose flag enables verbose logging
@@ -146,7 +156,8 @@ func WithImportLogger(l *slog.Logger) ImportOption {
 	}
 }
 
-// WithImportSerializer sets the serializer [runtime.Decoder] to decode the kubernetes objects
+// WithImportSerializer sets the serializer [runtime.Decoder] to decode the
+// kubernetes objects
 //
 // Usage:
 //
@@ -196,7 +207,8 @@ func WithImportPackageName(name string) ImportOption {
 	}
 }
 
-// WithImportRemoveAppName tries to remove the name of the application from the object name.
+// WithImportRemoveAppName tries to remove the name of the application from the
+// object name.
 // Default: false
 func WithImportRemoveAppName(b bool) ImportOption {
 	return func(j *jamel) {
@@ -216,7 +228,9 @@ func WithImportRemoveAppName(b bool) ImportOption {
 //		// ...
 //		ThisIsTheNameFieldCM  *corev1.ConfigMap
 //	}
-func WithImportNameFieldFunc(f func(object kubeutil.Metadata) string) ImportOption {
+func WithImportNameFieldFunc(
+	f func(object kubeutil.Metadata) string,
+) ImportOption {
 	return func(j *jamel) {
 		j.o.NameFieldFunc = f
 	}
@@ -237,7 +251,9 @@ func WithImportNameFieldFunc(f func(object kubeutil.Metadata) string) ImportOpti
 //			...
 //		}
 //	}
-func WithImportNameVarFunc(f func(object kubeutil.Metadata) string) ImportOption {
+func WithImportNameVarFunc(
+	f func(object kubeutil.Metadata) string,
+) ImportOption {
 	return func(j *jamel) {
 		j.o.NameVarFunc = f
 	}
@@ -253,7 +269,9 @@ func WithImportNameVarFunc(f func(object kubeutil.Metadata) string) ImportOption
 //	WithImportNameFileFunc(func(m kubeutil.Metadata) string {
 //		return fmt.Sprintf("%s-%s.go", strings.ToLower(m.Kind),	m.Meta.Name)
 //	})
-func WithImportNameFileFunc(f func(object kubeutil.Metadata) string) ImportOption {
+func WithImportNameFileFunc(
+	f func(object kubeutil.Metadata) string,
+) ImportOption {
 	return func(j *jamel) {
 		j.o.NameFileFunc = f
 	}
@@ -263,7 +281,8 @@ func WithImportNameFileFunc(f func(object kubeutil.Metadata) string) ImportOptio
 //  INPUT (files, reader)
 //
 
-// WithImportManifestFiles sets the manifest files to read the kubernetes objects from.
+// WithImportManifestFiles sets the manifest files to read the kubernetes
+// objects from.
 func WithImportManifestFiles(files []string) ImportOption {
 	return func(j *jamel) {
 		j.useReader = false
@@ -271,7 +290,8 @@ func WithImportManifestFiles(files []string) ImportOption {
 	}
 }
 
-// WithImportSingleManifest sets the manifest file to read the kubernetes objects from.
+// WithImportSingleManifest sets the manifest file to read the kubernetes
+// objects from.
 func WithImportSingleManifest(file string) ImportOption {
 	return func(j *jamel) {
 		j.useReader = false
@@ -323,11 +343,13 @@ func WithImportGroupByKind(b bool) ImportOption {
 }
 
 // WithImportWriter writes the generated Go code to [io.Writer].
-// Note that the format is txtar, for more info on [golang.org/x/tools/txtar.Archive] format
+// Note that the format is txtar, for more info on
+// [golang.org/x/tools/txtar.Archive] format
 // see: https://pkg.go.dev/golang.org/x/tools/txtar
 //
-// A txtar archive is zero or more comment lines and then a sequence of file entries.
-// Each file entry begins with a file marker line of the form "-- FILENAME --" and
+// A txtar archive is zero or more comment lines and then a sequence of file
+// entries. Each file entry begins with a file marker line of the form "--
+// FILENAME --" and
 // is followed by zero or more file content lines making up the file data.
 // The comment or file content ends at the next file marker line.
 // The file marker line must begin with the three-byte sequence "-- " and
@@ -353,7 +375,8 @@ func WithImportOutputDirectory(name string) ImportOption {
 	}
 }
 
-// WithImportRedactSecrets removes the value, but not the keys, of kubernetes secrets.
+// WithImportRedactSecrets removes the value, but not the keys, of kubernetes
+// secrets.
 // Default: true
 func WithImportRedactSecrets(b bool) ImportOption {
 	return func(j *jamel) {
@@ -368,10 +391,16 @@ func WithImportRedactSecrets(b bool) ImportOption {
 //	// Apply applies the kubernetes objects to the cluster
 //	func (a *Tekton) Apply(ctx context.Context) error
 //
-//	// Export exports the kubernetes objects to YAML files in the given directory
+//	// Export exports the kubernetes objects to YAML files in the given
+//
+// directory
+//
 //	func (a *Tekton) Export(dir string) error
 //
-//	// Apply applies the kubernetes objects contained in [Exporter] to the cluster
+//	// Apply applies the kubernetes objects contained in [Exporter] to the
+//
+// cluster
+//
 //	func Apply(ctx context.Context, km kube.Exporter) error
 func WithImportAddMethods(b bool) ImportOption {
 	return func(j *jamel) {

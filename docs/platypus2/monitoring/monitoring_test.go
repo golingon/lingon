@@ -7,13 +7,13 @@ import (
 	"os"
 	"testing"
 
-	"github.com/volvo-cars/lingon/pkg/kube"
-	tu "github.com/volvo-cars/lingon/pkg/testutil"
-	"github.com/volvo-cars/lingoneks/monitoring/metricsserver"
-	"github.com/volvo-cars/lingoneks/monitoring/promcrd"
-	"github.com/volvo-cars/lingoneks/monitoring/vmcrd"
-	"github.com/volvo-cars/lingoneks/monitoring/vmk8s"
-	"github.com/volvo-cars/lingoneks/monitoring/vmop"
+	"github.com/golingon/lingon/pkg/kube"
+	tu "github.com/golingon/lingon/pkg/testutil"
+	"github.com/golingon/lingoneks/monitoring/metricsserver"
+	"github.com/golingon/lingoneks/monitoring/promcrd"
+	"github.com/golingon/lingoneks/monitoring/vmcrd"
+	"github.com/golingon/lingoneks/monitoring/vmk8s"
+	"github.com/golingon/lingoneks/monitoring/vmop"
 )
 
 func TestMonitoringExport(t *testing.T) {

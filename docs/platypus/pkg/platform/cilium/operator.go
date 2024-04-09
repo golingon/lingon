@@ -4,7 +4,7 @@
 package cilium
 
 import (
-	"github.com/volvo-cars/lingon/pkg/kubeutil"
+	"github.com/golingon/lingon/pkg/kubeutil"
 	appsv1 "k8s.io/api/apps/v1"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -39,7 +39,9 @@ var Operator = &appsv1.Deployment{
 						Name: "cilium-config-path",
 						VolumeSource: v1.VolumeSource{
 							ConfigMap: &v1.ConfigMapVolumeSource{
-								LocalObjectReference: v1.LocalObjectReference{Name: "cilium-config"},
+								LocalObjectReference: v1.LocalObjectReference{
+									Name: "cilium-config",
+								},
 							},
 						},
 					},
@@ -76,9 +78,11 @@ var Operator = &appsv1.Deployment{
 								Name: "CILIUM_DEBUG",
 								ValueFrom: &v1.EnvVarSource{
 									ConfigMapKeyRef: &v1.ConfigMapKeySelector{
-										LocalObjectReference: v1.LocalObjectReference{Name: "cilium-config"},
-										Key:                  "debug",
-										Optional:             P(true),
+										LocalObjectReference: v1.LocalObjectReference{
+											Name: "cilium-config",
+										},
+										Key:      "debug",
+										Optional: P(true),
 									},
 								},
 							},
@@ -90,26 +94,36 @@ var Operator = &appsv1.Deployment{
 								MountPath: "/tmp/cilium/config-map",
 							},
 						},
-						LivenessProbe:            liveness,
-						TerminationMessagePolicy: v1.TerminationMessagePolicy("FallbackToLogsOnError"),
-						ImagePullPolicy:          v1.PullPolicy("IfNotPresent"),
+						LivenessProbe: liveness,
+						TerminationMessagePolicy: v1.TerminationMessagePolicy(
+							"FallbackToLogsOnError",
+						),
+						ImagePullPolicy: v1.PullPolicy("IfNotPresent"),
 					},
 				},
-				RestartPolicy:      v1.RestartPolicy("Always"),
-				NodeSelector:       map[string]string{"kubernetes.io/os": "linux"},
+				RestartPolicy: v1.RestartPolicy("Always"),
+				NodeSelector: map[string]string{
+					"kubernetes.io/os": "linux",
+				},
 				ServiceAccountName: "cilium-operator",
 				HostNetwork:        true,
 				Affinity: &v1.Affinity{
 					PodAntiAffinity: &v1.PodAntiAffinity{
 						RequiredDuringSchedulingIgnoredDuringExecution: []v1.PodAffinityTerm{
 							{
-								LabelSelector: &metav1.LabelSelector{MatchLabels: map[string]string{"io.cilium/app": "operator"}},
-								TopologyKey:   "kubernetes.io/hostname",
+								LabelSelector: &metav1.LabelSelector{
+									MatchLabels: map[string]string{
+										"io.cilium/app": "operator",
+									},
+								},
+								TopologyKey: "kubernetes.io/hostname",
 							},
 						},
 					},
 				},
-				Tolerations:       []v1.Toleration{{Operator: v1.TolerationOperator("Exists")}},
+				Tolerations: []v1.Toleration{
+					{Operator: v1.TolerationOperator("Exists")},
+				},
 				PriorityClassName: "system-cluster-critical",
 			},
 		},

@@ -6,8 +6,8 @@ package certmanager
 import (
 	"fmt"
 
-	"github.com/volvo-cars/lingon/pkg/kube"
-	ku "github.com/volvo-cars/lingon/pkg/kubeutil"
+	"github.com/golingon/lingon/pkg/kube"
+	ku "github.com/golingon/lingon/pkg/kubeutil"
 	admissionregistrationv1 "k8s.io/api/admissionregistration/v1"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -50,7 +50,9 @@ var WebhookDeploy = &appsv1.Deployment{
 						ImagePullPolicy: corev1.PullIfNotPresent,
 						Args: []string{
 							"--v=2",
-							"--secure-port=" + d(CM.WebhookPort.Container.ContainerPort),
+							"--secure-port=" + d(
+								CM.WebhookPort.Container.ContainerPort,
+							),
 							"--dynamic-serving-ca-secret-namespace=$(POD_NAMESPACE)",
 							"--dynamic-serving-ca-secret-name=cert-manager-webhook-ca",
 							"--dynamic-serving-dns-names=" + CM.Webhook.Name,
@@ -94,13 +96,21 @@ var WebhookDeploy = &appsv1.Deployment{
 							SuccessThreshold: int32(1),
 							TimeoutSeconds:   int32(1),
 						},
-						SecurityContext: &corev1.SecurityContext{Capabilities: &corev1.Capabilities{Drop: []corev1.Capability{corev1.Capability("ALL")}}},
+						SecurityContext: &corev1.SecurityContext{
+							Capabilities: &corev1.Capabilities{
+								Drop: []corev1.Capability{
+									corev1.Capability("ALL"),
+								},
+							},
+						},
 					},
 				},
 				NodeSelector: map[string]string{ku.LabelOSStable: "linux"},
 				SecurityContext: &corev1.PodSecurityContext{
-					RunAsNonRoot:   P(true),
-					SeccompProfile: &corev1.SeccompProfile{Type: corev1.SeccompProfileType("RuntimeDefault")},
+					RunAsNonRoot: P(true),
+					SeccompProfile: &corev1.SeccompProfile{
+						Type: corev1.SeccompProfileType("RuntimeDefault"),
+					},
 				},
 			},
 		},

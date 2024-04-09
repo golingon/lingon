@@ -6,11 +6,12 @@ package terra
 import (
 	"fmt"
 
+	tkihcl "github.com/golingon/lingon/pkg/internal/hcl"
 	"github.com/hashicorp/hcl/v2/hclwrite"
-	tkihcl "github.com/volvo-cars/lingon/pkg/internal/hcl"
 )
 
-// Dependency represents a Terraform dependency using the depends_on meta-argument
+// Dependency represents a Terraform dependency using the depends_on
+// meta-argument
 type Dependency interface {
 	DependOn() Reference
 }

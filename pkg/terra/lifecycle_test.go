@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"log/slog"
 
-	"github.com/volvo-cars/lingon/pkg/internal/hcl"
+	"github.com/golingon/lingon/pkg/internal/hcl"
 )
 
 func ExampleLifecycle() {

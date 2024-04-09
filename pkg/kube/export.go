@@ -10,7 +10,7 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/volvo-cars/lingon/pkg/kubeutil"
+	"github.com/golingon/lingon/pkg/kubeutil"
 	"golang.org/x/tools/txtar"
 )
 

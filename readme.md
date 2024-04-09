@@ -1,7 +1,7 @@
-[![Go Reference](https://pkg.go.dev/badge/github.com/volvo-cars/lingon.svg)](https://pkg.go.dev/github.com/volvo-cars/lingon)
-[![GoReportCard example](https://goreportcard.com/badge/github.com/volvo-cars/lingon)](https://goreportcard.com/report/github.com/volvo-cars/lingon)
+[![Go Reference](https://pkg.go.dev/badge/github.com/golingon/lingon.svg)](https://pkg.go.dev/github.com/golingon/lingon)
+[![GoReportCard example](https://goreportcard.com/badge/github.com/golingon/lingon)](https://goreportcard.com/report/github.com/golingon/lingon)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Go Version](https://img.shields.io/github/go-mod/go-version/volvo-cars/lingon)](go.mod)
+[![Go Version](https://img.shields.io/github/go-mod/go-version/golingon/lingon)](go.mod)
 ![Go Test Coverage](.github/coverage.svg)
 
 
@@ -101,14 +101,14 @@ Lingon provides helper binaries.
 
 ### Github releases
 
-Or simply download the binaries from the [releases](https://github.com/volvo-cars/lingon/releases/latest) page.
+Or simply download the binaries from the [releases](https://github.com/golingon/lingon/releases/latest) page.
 
 ### Install from source
 
 ```bash
-go install github.com/volvo-cars/lingon/cmd/explode@latest
-go install github.com/volvo-cars/lingon/cmd/kygo@latest
-go install github.com/volvo-cars/lingon/cmd/terragen@latest 
+go install github.com/golingon/lingon/cmd/explode@latest
+go install github.com/golingon/lingon/cmd/kygo@latest
+go install github.com/golingon/lingon/cmd/terragen@latest 
 
 ```
 

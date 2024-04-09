@@ -7,8 +7,8 @@ import (
 	"os"
 	"testing"
 
+	"github.com/golingon/lingon/pkg/kube"
 	"github.com/stretchr/testify/require"
-	"github.com/volvo-cars/lingon/pkg/kube"
 )
 
 func TestExport(t *testing.T) {

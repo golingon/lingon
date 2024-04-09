@@ -10,8 +10,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/volvo-cars/lingon/pkg/kubeutil"
-	tu "github.com/volvo-cars/lingon/pkg/testutil"
+	"github.com/golingon/lingon/pkg/kubeutil"
+	tu "github.com/golingon/lingon/pkg/testutil"
 	rbacv1 "k8s.io/api/rbac/v1"
 )
 

@@ -8,7 +8,7 @@ Using `terragen` :
 
 ```shell 
 # install terragen
-go install github.com/volvo-cars/lingon/cmd/terragen@latest
+go install github.com/golingon/lingon/cmd/terragen@latest
 
 # generate providers
 go generate -x ./...

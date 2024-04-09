@@ -12,14 +12,14 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/volvo-cars/lingon/docs/platypus/pkg/infra/awsvpc"
-	"github.com/volvo-cars/lingon/docs/platypus/pkg/infra/cluster_eks"
-	"github.com/volvo-cars/lingon/docs/platypus/pkg/platform/awsauth"
-	"github.com/volvo-cars/lingon/docs/platypus/pkg/platform/grafana"
-	"github.com/volvo-cars/lingon/docs/platypus/pkg/platform/karpenter"
-	"github.com/volvo-cars/lingon/docs/platypus/pkg/terraclient"
+	"github.com/golingon/lingon/docs/platypus/pkg/infra/awsvpc"
+	"github.com/golingon/lingon/docs/platypus/pkg/infra/cluster_eks"
+	"github.com/golingon/lingon/docs/platypus/pkg/platform/awsauth"
+	"github.com/golingon/lingon/docs/platypus/pkg/platform/grafana"
+	"github.com/golingon/lingon/docs/platypus/pkg/platform/karpenter"
+	"github.com/golingon/lingon/docs/platypus/pkg/terraclient"
 
-	"github.com/volvo-cars/lingon/pkg/terra"
+	"github.com/golingon/lingon/pkg/terra"
 )
 
 var (
@@ -265,10 +265,14 @@ func run(p runParams) error {
 	if err := k.Apply(ctx, kap); err != nil {
 		return fmt.Errorf("applying karpenter app: %w", err)
 	}
-	// Wait for Karpenter to start before applying CRDs otherwise the webhooks fail
+	// Wait for Karpenter to start before applying CRDs otherwise the webhooks
+	// fail
 	objID := fmt.Sprintf(
 		"%s/%s",
-		kap.Deploy.TypeMeta.GetObjectKind().GroupVersionKind().GroupKind().String(),
+		kap.Deploy.TypeMeta.GetObjectKind().
+			GroupVersionKind().
+			GroupKind().
+			String(),
 		kap.Deploy.ObjectMeta.Name,
 	)
 	timeout := "5m"

@@ -4,7 +4,7 @@
 package karpenter
 
 import (
-	"github.com/volvo-cars/lingon/pkg/kubeutil"
+	"github.com/golingon/lingon/pkg/kubeutil"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	policyv1 "k8s.io/api/policy/v1"
@@ -64,8 +64,10 @@ var SetNodeAffinity = &corev1.Affinity{
 				{
 					MatchExpressions: []corev1.NodeSelectorRequirement{
 						{
-							Key:      "karpenter.sh/provisioner-name",
-							Operator: corev1.NodeSelectorOperator("DoesNotExist"),
+							Key: "karpenter.sh/provisioner-name",
+							Operator: corev1.NodeSelectorOperator(
+								"DoesNotExist",
+							),
 						},
 					},
 				},
@@ -90,8 +92,12 @@ var Environment = []corev1.EnvVar{
 		Value: "8081",
 	},
 	{
-		Name:      "SYSTEM_NAMESPACE",
-		ValueFrom: &corev1.EnvVarSource{FieldRef: &corev1.ObjectFieldSelector{FieldPath: "metadata.namespace"}},
+		Name: "SYSTEM_NAMESPACE",
+		ValueFrom: &corev1.EnvVarSource{
+			FieldRef: &corev1.ObjectFieldSelector{
+				FieldPath: "metadata.namespace",
+			},
+		},
 	},
 	{
 		Name: "MEMORY_LIMIT",
@@ -129,12 +135,20 @@ var Deploy = &appsv1.Deployment{
 						Env:   Environment,
 						Resources: corev1.ResourceRequirements{
 							Limits: corev1.ResourceList{
-								corev1.ResourceName("cpu"):    resource.MustParse("1"),
-								corev1.ResourceName("memory"): resource.MustParse("1Gi"),
+								corev1.ResourceName("cpu"): resource.MustParse(
+									"1",
+								),
+								corev1.ResourceName("memory"): resource.MustParse(
+									"1Gi",
+								),
 							},
 							Requests: corev1.ResourceList{
-								corev1.ResourceName("cpu"):    resource.MustParse("1"),
-								corev1.ResourceName("memory"): resource.MustParse("1Gi"),
+								corev1.ResourceName("cpu"): resource.MustParse(
+									"1",
+								),
+								corev1.ResourceName("memory"): resource.MustParse(
+									"1Gi",
+								),
 							},
 						},
 						LivenessProbe: &corev1.Probe{
@@ -162,11 +176,15 @@ var Deploy = &appsv1.Deployment{
 						ImagePullPolicy: corev1.PullPolicy("IfNotPresent"),
 					},
 				},
-				DNSPolicy:          corev1.DNSPolicy("Default"),
-				NodeSelector:       map[string]string{"kubernetes.io/os": "linux"},
+				DNSPolicy: corev1.DNSPolicy("Default"),
+				NodeSelector: map[string]string{
+					"kubernetes.io/os": "linux",
+				},
 				ServiceAccountName: "karpenter",
-				SecurityContext:    &corev1.PodSecurityContext{FSGroup: P(int64(1000))},
-				Affinity:           SetNodeAffinity,
+				SecurityContext: &corev1.PodSecurityContext{
+					FSGroup: P(int64(1000)),
+				},
+				Affinity: SetNodeAffinity,
 				Tolerations: []corev1.Toleration{
 					{
 						Key:      "CriticalAddonsOnly",
@@ -176,9 +194,11 @@ var Deploy = &appsv1.Deployment{
 				PriorityClassName: "system-cluster-critical",
 				TopologySpreadConstraints: []corev1.TopologySpreadConstraint{
 					{
-						MaxSkew:           1,
-						TopologyKey:       "topology.kubernetes.io/zone",
-						WhenUnsatisfiable: corev1.UnsatisfiableConstraintAction("ScheduleAnyway"),
+						MaxSkew:     1,
+						TopologyKey: "topology.kubernetes.io/zone",
+						WhenUnsatisfiable: corev1.UnsatisfiableConstraintAction(
+							"ScheduleAnyway",
+						),
 						LabelSelector: &metav1.LabelSelector{
 							MatchLabels: matchLabels,
 						},
@@ -186,7 +206,11 @@ var Deploy = &appsv1.Deployment{
 				},
 			},
 		},
-		Strategy:             appsv1.DeploymentStrategy{RollingUpdate: &appsv1.RollingUpdateDeployment{MaxUnavailable: &intstr.IntOrString{IntVal: 1}}},
+		Strategy: appsv1.DeploymentStrategy{
+			RollingUpdate: &appsv1.RollingUpdateDeployment{
+				MaxUnavailable: &intstr.IntOrString{IntVal: 1},
+			},
+		},
 		RevisionHistoryLimit: P(int32(10)),
 	},
 }

@@ -6,8 +6,8 @@
 package certmanager
 
 import (
-	ku "github.com/volvo-cars/lingon/pkg/kubeutil"
-	"github.com/volvo-cars/lingoneks/meta"
+	ku "github.com/golingon/lingon/pkg/kubeutil"
+	"github.com/golingon/lingoneks/meta"
 	admissionregistrationv1 "k8s.io/api/admissionregistration/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )

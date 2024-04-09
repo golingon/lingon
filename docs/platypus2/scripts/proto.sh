@@ -15,7 +15,7 @@ ROOT_DIR=$(git rev-parse --show-toplevel)
 
 PROTO="$ROOT_DIR/docs/platypus2/proto"
 OUT="$ROOT_DIR/docs/platypus2/cmd/tools/nats"
-PACKAGE="github.com/volvo-cars/lingoneks"
+PACKAGE="github.com/golingon/lingoneks"
 
 protoc -I="$PROTO" \
   --go_opt=module="$PACKAGE" \

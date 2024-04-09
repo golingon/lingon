@@ -11,8 +11,8 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/volvo-cars/lingon/pkg/kube"
-	"github.com/volvo-cars/lingoneks/meta"
+	"github.com/golingon/lingon/pkg/kube"
+	"github.com/golingon/lingoneks/meta"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
 )

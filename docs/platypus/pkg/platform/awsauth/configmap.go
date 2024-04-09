@@ -6,8 +6,8 @@ package awsauth
 import (
 	"fmt"
 
+	"github.com/golingon/lingon/pkg/kube"
 	"github.com/invopop/yaml"
-	"github.com/volvo-cars/lingon/pkg/kube"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )

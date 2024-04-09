@@ -15,8 +15,8 @@ import (
 	"strings"
 
 	"github.com/dave/jennifer/jen"
-	"github.com/volvo-cars/lingon/pkg/internal/api"
-	"github.com/volvo-cars/lingon/pkg/kubeutil"
+	"github.com/golingon/lingon/pkg/internal/api"
+	"github.com/golingon/lingon/pkg/kubeutil"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 )
@@ -42,20 +42,24 @@ type jamel struct {
 	objectsCode       map[string]*jen.Statement    // obj name => obj as Go struct
 	kubeAppStructCode map[string]*jen.Statement    // fieldName => fieldType
 	objectsMeta       map[string]kubeutil.Metadata // obj name => obj meta
-	// nameFieldVar maps object name to object variable name for the kube.App struct
+	// nameFieldVar maps object name to object variable name for the kube.App
+	// struct
 	nameFieldVar map[string]string
-	// crdPkgAlias keeps alias for those CRD packages discovered during the conversion to Go
+	// crdPkgAlias keeps alias for those CRD packages discovered during the
+	// conversion to Go
 	crdPkgAlias map[string]string
 	// crdCurrent holds the current package containing CRD types,
 	// only useful for top level var declaration of CRD types.
 	crdCurrent string
 	// o is all the importOption
 	o importOption // options
-	// buf is the buffer, also [io.Writer] all the Go generated code is written to
+	// buf is the buffer, also [io.Writer] all the Go generated code is written
+	// to
 	buf bytes.Buffer
 	// useReader specifies to read the manifests from io.Reader or from files
 	useReader bool
-	// useWriter specifies to write the generated code to o.ManifestReader or to files
+	// useWriter specifies to write the generated code to o.ManifestReader or to
+	// files
 	useWriter bool
 }
 
@@ -321,7 +325,8 @@ func (j *jamel) convertToGo(splitYaml []string) error {
 		structFieldType := jen.Qual(pkgPath, m.Kind)
 		j.kubeAppStructCode[nameField] = structFieldType
 
-		// nameFieldVar is used to map the name of the object to the variable name
+		// nameFieldVar is used to map the name of the object to the variable
+		// name
 		j.nameFieldVar[nameField] = nameVar
 		// objectsMeta maps the name of the variable to the Metadata
 		j.objectsMeta[nameVar] = *m

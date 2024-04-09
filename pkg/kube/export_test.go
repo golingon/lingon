@@ -11,10 +11,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/volvo-cars/lingon/pkg/kube"
-	"github.com/volvo-cars/lingon/pkg/kube/testdata/go/tekton"
-	"github.com/volvo-cars/lingon/pkg/kubeutil"
-	tu "github.com/volvo-cars/lingon/pkg/testutil"
+	"github.com/golingon/lingon/pkg/kube"
+	"github.com/golingon/lingon/pkg/kube/testdata/go/tekton"
+	"github.com/golingon/lingon/pkg/kubeutil"
+	tu "github.com/golingon/lingon/pkg/testutil"
 	"golang.org/x/tools/txtar"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -74,7 +74,9 @@ func TestExport(t *testing.T) {
 				kube.WithExportOutputDirectory(outEBDS),
 				kube.WithExportNameFileFunc(
 					func(name *kubeutil.Metadata) string {
-						return strings.ToLower(name.Kind) + "_" + name.Meta.Name + ".yaml"
+						return strings.ToLower(
+							name.Kind,
+						) + "_" + name.Meta.Name + ".yaml"
 					},
 				),
 			},
@@ -94,7 +96,9 @@ func TestExport(t *testing.T) {
 				kube.WithExportExplodeManifests(true),
 				kube.WithExportNameFileFunc(
 					func(name *kubeutil.Metadata) string {
-						return strings.ToLower(name.Kind) + "_" + name.Meta.Name + ".yaml"
+						return strings.ToLower(
+							name.Kind,
+						) + "_" + name.Meta.Name + ".yaml"
 					},
 				),
 			},
@@ -115,7 +119,9 @@ func TestExport(t *testing.T) {
 				kube.WithExportOutputJSON(true),
 				kube.WithExportNameFileFunc(
 					func(name *kubeutil.Metadata) string {
-						return strings.ToLower(name.Kind) + "_" + name.Meta.Name + ".json"
+						return strings.ToLower(
+							name.Kind,
+						) + "_" + name.Meta.Name + ".json"
 					},
 				),
 			},

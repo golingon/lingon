@@ -6,8 +6,8 @@ package grafana
 import (
 	"fmt"
 
-	"github.com/volvo-cars/lingon/pkg/kube"
-	"github.com/volvo-cars/lingon/pkg/kubeutil"
+	"github.com/golingon/lingon/pkg/kube"
+	"github.com/golingon/lingon/pkg/kubeutil"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	rbacv1 "k8s.io/api/rbac/v1"

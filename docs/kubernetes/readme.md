@@ -62,8 +62,8 @@ import (
 	"os"
 	"path/filepath"
 
-	team "github.com/volvo-cars/lingon/docs/kubernetes/crd/out"
-	"github.com/volvo-cars/lingon/pkg/kube"
+	team "github.com/golingon/lingon/docs/kubernetes/crd/out"
+	"github.com/golingon/lingon/pkg/kube"
 )
 
 var defaultOut = "out"
@@ -195,7 +195,7 @@ An example of how to convert custom resource from YAML to Go can be found in the
 
 ## [Packages](../../pkg/)
 
-Have a look at the [godoc](https://pkg.go.dev/github.com/volvo-cars/lingon) for more information.
+Have a look at the [godoc](https://pkg.go.dev/github.com/golingon/lingon) for more information.
 
 ### [Kube](../../pkg/kube/)
 

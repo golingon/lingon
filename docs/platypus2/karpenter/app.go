@@ -4,10 +4,10 @@
 package karpenter
 
 import (
+	"github.com/golingon/lingon/pkg/kube"
+	ku "github.com/golingon/lingon/pkg/kubeutil"
+	"github.com/golingon/lingoneks/meta"
 	promoperatorv1 "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
-	"github.com/volvo-cars/lingon/pkg/kube"
-	ku "github.com/volvo-cars/lingon/pkg/kubeutil"
-	"github.com/volvo-cars/lingoneks/meta"
 	ar "k8s.io/api/admissionregistration/v1"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -22,10 +22,12 @@ var _ kube.Exporter = (*Karpenter)(nil)
 // KARPENTER
 //
 // to activate spot instance:
-//		aws --profile=XXX iam create-service-linked-role --aws-service-name spot.amazonaws.com
+// 		aws --profile=XXX iam create-service-linked-role --aws-service-name
+// spot.amazonaws.com
 //
 // to see the logs:
-// 		kubectl logs -f -n karpenter -l app.kubernetes.io/name=karpenter -c controller
+// 		kubectl logs -f -n karpenter -l app.kubernetes.io/name=karpenter -c
+// controller
 //
 
 var KA = Core()
@@ -50,7 +52,8 @@ func Core() Meta {
 			Registry: "public.ecr.aws/karpenter",
 			Image:    "controller",
 			Sha:      "bac5ea470c09df21eb3742cf9448e9b806138ed5b6321d4e04697bbdf122eac6",
-			// Sha:      "3009f10487d9338f77c325adee3c208513cd06c7f191653327ef3a44006bf9c8",
+			// Sha:
+			// "3009f10487d9338f77c325adee3c208513cd06c7f191653327ef3a44006bf9c8",
 			Tag: "v" + version,
 		},
 	}
@@ -186,7 +189,9 @@ func New(opts Opts) *Karpenter {
 				Endpoints: []promoperatorv1.Endpoint{
 					{Path: ku.PathMetrics, Port: KA.Metrics.Service.Name},
 				},
-				Selector:          metav1.LabelSelector{MatchLabels: KA.MatchLabels()},
+				Selector: metav1.LabelSelector{
+					MatchLabels: KA.MatchLabels(),
+				},
 				NamespaceSelector: promoperatorv1.NamespaceSelector{Any: true},
 			},
 		},
@@ -212,7 +217,8 @@ func New(opts Opts) *Karpenter {
 		WHValidation:       WebhookValidationKarpenter,
 		WHValidationAWS:    WebhookValidationKarpenterAWS,
 		WHValidationConfig: WebhookValidationKarpenterConfig,
-		// WHMutation:         WebhookMutatingKarpenter, // removed when updating to 0.27.5
+		// WHMutation:         WebhookMutatingKarpenter, // removed when
+		// updating to 0.27.5
 		WHMutationAWS: WebhookMutatingKarpenterAws,
 	}
 }

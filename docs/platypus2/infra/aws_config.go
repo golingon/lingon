@@ -6,7 +6,7 @@ package infra
 import (
 	"fmt"
 
-	"github.com/volvo-cars/lingon/pkg/kube"
+	"github.com/golingon/lingon/pkg/kube"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kyaml "sigs.k8s.io/yaml"

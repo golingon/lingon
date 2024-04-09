@@ -12,24 +12,28 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/volvo-cars/lingon/pkg/internal/terrajen"
+	"github.com/golingon/lingon/pkg/internal/terrajen"
 
 	tfjson "github.com/hashicorp/terraform-json"
 )
 
 var (
-	ErrPackageLocationNotEmpty = errors.New("providers pkg location is not empty")
-	ErrProviderSchemaNotFound  = errors.New("provider schema not found")
+	ErrPackageLocationNotEmpty = errors.New(
+		"providers pkg location is not empty",
+	)
+	ErrProviderSchemaNotFound = errors.New("provider schema not found")
 )
 
 type GenerateGoArgs struct {
 	ProviderName    string
 	ProviderSource  string
 	ProviderVersion string
-	// OutDir is the filesystem location where the generated files will be created.
+	// OutDir is the filesystem location where the generated files will be
+	// created.
 	OutDir string
-	// PkgPath is the Go pkg path to the generated files location, specified by OutDir.
-	// E.g. if OutDir is in a module called "my-module" in a directory called "gen",
+	// PkgPath is the Go pkg path to the generated files location, specified by
+	// OutDir. E.g. if OutDir is in a module called "my-module" in a directory
+	// called "gen",
 	// then the PkgPath should be "my-module/gen".
 	PkgPath string
 	// Force enables overriding any existing generated files per-provider.
@@ -229,7 +233,8 @@ func createDirIfNotEmpty(path string, force bool) error {
 		}
 		return err
 	}
-	// The directory is not empty. If force flag is provided, clean the directory, else error
+	// The directory is not empty. If force flag is provided, clean the
+	// directory, else error
 	if !force {
 		return ErrPackageLocationNotEmpty
 	}

@@ -11,15 +11,15 @@ import (
 	"runtime/debug"
 	"strings"
 
-	"github.com/volvo-cars/lingon/pkg/kube"
-	"github.com/volvo-cars/lingon/pkg/kubeutil"
+	"github.com/golingon/lingon/pkg/kube"
+	"github.com/golingon/lingon/pkg/kubeutil"
 	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	apiextensionsbeta "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
 	"k8s.io/apimachinery/pkg/runtime"
 	kubescheme "k8s.io/client-go/kubernetes/scheme"
 )
 
-const crdMsg = "IF there is an issue with CRDs. Please visit this page to solve it https://github.com/volvo-cars/lingon/tree/main/docs/kubernetes/crd"
+const crdMsg = "IF there is an issue with CRDs. Please visit this page to solve it https://github.com/golingon/lingon/tree/main/docs/kubernetes/crd"
 
 func main() {
 	var in, out, appName, pkgName string

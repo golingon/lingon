@@ -8,7 +8,7 @@ import (
 	"testing"
 
 	"github.com/dave/jennifer/jen"
-	tu "github.com/volvo-cars/lingon/pkg/testutil"
+	tu "github.com/golingon/lingon/pkg/testutil"
 )
 
 func TestImportKubernetesPkgAlias(t *testing.T) {

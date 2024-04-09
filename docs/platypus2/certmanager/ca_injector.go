@@ -4,8 +4,8 @@
 package certmanager
 
 import (
-	"github.com/volvo-cars/lingon/pkg/kube"
-	ku "github.com/volvo-cars/lingon/pkg/kubeutil"
+	"github.com/golingon/lingon/pkg/kube"
+	ku "github.com/golingon/lingon/pkg/kubeutil"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
@@ -50,13 +50,21 @@ var CaInjectorDeploy = &appsv1.Deployment{
 						Resources: ku.Resources(
 							"10m", "32Mi", "100m", "64Mi",
 						),
-						SecurityContext: &corev1.SecurityContext{Capabilities: &corev1.Capabilities{Drop: []corev1.Capability{corev1.Capability("ALL")}}},
+						SecurityContext: &corev1.SecurityContext{
+							Capabilities: &corev1.Capabilities{
+								Drop: []corev1.Capability{
+									corev1.Capability("ALL"),
+								},
+							},
+						},
 					},
 				},
 				NodeSelector: map[string]string{ku.LabelOSStable: "linux"},
 				SecurityContext: &corev1.PodSecurityContext{
-					RunAsNonRoot:   P(true),
-					SeccompProfile: &corev1.SeccompProfile{Type: corev1.SeccompProfileType("RuntimeDefault")},
+					RunAsNonRoot: P(true),
+					SeccompProfile: &corev1.SeccompProfile{
+						Type: corev1.SeccompProfileType("RuntimeDefault"),
+					},
 				},
 			},
 		},

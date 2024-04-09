@@ -18,10 +18,10 @@ import (
 	"time"
 
 	"github.com/ardanlabs/conf/v3"
+	"github.com/golingon/lingoneks/cmd/tools/nats/natspb"
 	"github.com/nats-io/nats.go"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"github.com/volvo-cars/lingoneks/cmd/tools/nats/natspb"
 	_ "go.uber.org/automaxprocs"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"

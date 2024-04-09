@@ -85,7 +85,7 @@ func createNotice(notice io.Writer, lics []license) error {
 	var txt bytes.Buffer
 
 	txt.WriteString("Copyright 2023 Volvo Car Corporation\n\n")
-	txt.WriteString("[github.com/volvo-cars/lingon]\n\n")
+	txt.WriteString("[github.com/golingon/lingon]\n\n")
 	txt.WriteString("Components:\n\n")
 	for _, lic := range lics {
 		txt.WriteString(

@@ -66,7 +66,7 @@ Either:
 		"path/filepath"
 
 		"github.com/XXX/YYY/myapp"
-		"github.com/volvo-cars/lingon/pkg/kube"
+		"github.com/golingon/lingon/pkg/kube"
 	)
 
 	func main() {

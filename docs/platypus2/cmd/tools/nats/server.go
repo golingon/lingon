@@ -8,8 +8,8 @@ import (
 	"errors"
 	"log/slog"
 
+	"github.com/golingon/lingoneks/cmd/tools/nats/natspb"
 	"github.com/nats-io/nats.go"
-	"github.com/volvo-cars/lingoneks/cmd/tools/nats/natspb"
 	"google.golang.org/protobuf/proto"
 )
 

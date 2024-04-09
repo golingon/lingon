@@ -6,7 +6,7 @@
 package policy
 
 import (
-	ku "github.com/volvo-cars/lingon/pkg/kubeutil"
+	ku "github.com/golingon/lingon/pkg/kubeutil"
 	corev1 "k8s.io/api/core/v1"
 )
 

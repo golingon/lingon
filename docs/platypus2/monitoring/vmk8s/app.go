@@ -13,8 +13,8 @@ import (
 	"os/exec"
 
 	"github.com/VictoriaMetrics/operator/api/victoriametrics/v1beta1"
-	"github.com/volvo-cars/lingon/pkg/kube"
-	ku "github.com/volvo-cars/lingon/pkg/kubeutil"
+	"github.com/golingon/lingon/pkg/kube"
+	ku "github.com/golingon/lingon/pkg/kubeutil"
 	corev1 "k8s.io/api/core/v1"
 )
 

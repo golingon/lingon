@@ -10,7 +10,7 @@ import (
 	"log/slog"
 	"os"
 
-	"github.com/volvo-cars/lingon/pkg/terra"
+	"github.com/golingon/lingon/pkg/terra"
 )
 
 // StackConfig defines a reusable stack configuration containing things like

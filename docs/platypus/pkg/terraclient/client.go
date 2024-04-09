@@ -13,9 +13,9 @@ import (
 	"path/filepath"
 	"sync"
 
+	"github.com/golingon/lingon/pkg/terra"
 	"github.com/hashicorp/terraform-exec/tfexec"
 	tfjson "github.com/hashicorp/terraform-json"
-	"github.com/volvo-cars/lingon/pkg/terra"
 )
 
 const (
@@ -65,7 +65,8 @@ type clientOpts struct {
 	destroy bool
 }
 
-// Client runs Terraform stacks and keeps a record of the runs in order to provide a summary of
+// Client runs Terraform stacks and keeps a record of the runs in order to
+// provide a summary of
 // the changes
 type Client struct {
 	mu     sync.Mutex

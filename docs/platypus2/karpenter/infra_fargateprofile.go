@@ -10,7 +10,7 @@ import (
 	"github.com/golingon/terraproviders/aws/5.13.1/dataiampolicydocument"
 	"github.com/golingon/terraproviders/aws/5.13.1/eksfargateprofile"
 
-	"github.com/volvo-cars/lingon/pkg/terra"
+	"github.com/golingon/lingon/pkg/terra"
 )
 
 const (
@@ -53,8 +53,10 @@ func newFargateProfile(opts InfraOpts) FargateProfile {
 
 	iamRole := aws.NewIamRole(
 		"fargate", aws.IamRoleArgs{
-			Name:             S(opts.Name + "-fargate"),
-			Description:      S("IAM Role for Fargate profile for Karpenter pods to run"),
+			Name: S(opts.Name + "-fargate"),
+			Description: S(
+				"IAM Role for Fargate profile for Karpenter pods to run",
+			),
 			AssumeRolePolicy: arPolicy.Attributes().Json(),
 		},
 	)

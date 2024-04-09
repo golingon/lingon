@@ -133,7 +133,7 @@ An example of how to convert custom resource from YAML to Go can be found in the
 
 ## [Packages](../../pkg/)
 
-Have a look at the [godoc](https://pkg.go.dev/github.com/volvo-cars/lingon) for more information.
+Have a look at the [godoc](https://pkg.go.dev/github.com/golingon/lingon) for more information.
 
 ### [Kube](../../pkg/kube/)
 

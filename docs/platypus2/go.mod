@@ -1,8 +1,8 @@
-module github.com/volvo-cars/lingoneks
+module github.com/golingon/lingoneks
 
 go 1.21
 
-replace github.com/volvo-cars/lingon => ../../
+replace github.com/golingon/lingon => ../../
 
 require (
 	github.com/VictoriaMetrics/metricsql v0.63.0
@@ -20,7 +20,7 @@ require (
 	github.com/prometheus/client_golang v1.16.0
 	github.com/rogpeppe/go-internal v1.11.0
 	github.com/tidwall/gjson v1.16.0
-	github.com/volvo-cars/lingon v0.0.0-20230821085204-81fbacc93e96
+	github.com/golingon/lingon v0.0.0-20230821085204-81fbacc93e96
 	github.com/zeitlinger/conflate v0.0.0-20230622100834-279724abda8c
 	go.uber.org/automaxprocs v1.5.3
 	golang.org/x/exp v0.0.0-20230817173708-d852ddb80c63

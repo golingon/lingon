@@ -5,8 +5,9 @@ package kubeutil
 
 // autogenerate the typemeta_gen.go file
 // /!\ it needs a kubernetes cluster to extract all the metadata. /!\
-// --> remove the space between the `//` and `go:generate` to enable it and run `go generate ./...`
-// go:generate go run -mod=readonly github.com/volvo-cars/lingon/cmd/tools/apisources -out typemeta_gen.go -typemeta
+// --> remove the space between the `//` and `go:generate` to enable it and run
+// `go generate ./...`
+// go:generate go run -mod=readonly github.com/golingon/lingon/cmd/tools/apisources -out typemeta_gen.go -typemeta
 
 import (
 	"errors"

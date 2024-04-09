@@ -4,7 +4,7 @@
 package externalsecrets
 
 import (
-	"github.com/volvo-cars/lingon/pkg/kubeutil"
+	"github.com/golingon/lingon/pkg/kubeutil"
 )
 
 var CertControllerLabels = map[string]string{

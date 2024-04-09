@@ -6,7 +6,7 @@ package api
 import (
 	"testing"
 
-	tu "github.com/volvo-cars/lingon/pkg/testutil"
+	tu "github.com/golingon/lingon/pkg/testutil"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 

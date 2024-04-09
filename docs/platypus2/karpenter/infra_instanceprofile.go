@@ -9,7 +9,7 @@ import (
 	aws "github.com/golingon/terraproviders/aws/5.13.1"
 	"github.com/golingon/terraproviders/aws/5.13.1/dataiampolicydocument"
 
-	"github.com/volvo-cars/lingon/pkg/terra"
+	"github.com/golingon/lingon/pkg/terra"
 )
 
 // InstanceProfile is the AWS EC2 Instance Profile for the nodes provisioned by
@@ -44,8 +44,10 @@ func newInstanceProfile() InstanceProfile {
 
 	iamRole := aws.NewIamRole(
 		"eks_node", aws.IamRoleArgs{
-			Name:             S("platypus-karpenter-node"),
-			Description:      S("IAM Role for Karpenter's InstanceProfile to use when launching nodes"),
+			Name: S("platypus-karpenter-node"),
+			Description: S(
+				"IAM Role for Karpenter's InstanceProfile to use when launching nodes",
+			),
 			AssumeRolePolicy: arPolicy.Attributes().Json(),
 		},
 	)

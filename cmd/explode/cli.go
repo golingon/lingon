@@ -10,8 +10,8 @@ import (
 	"path/filepath"
 	"runtime/debug"
 
-	"github.com/volvo-cars/lingon/pkg/kube"
-	"github.com/volvo-cars/lingon/pkg/kubeutil"
+	"github.com/golingon/lingon/pkg/kube"
+	"github.com/golingon/lingon/pkg/kubeutil"
 )
 
 func main() {

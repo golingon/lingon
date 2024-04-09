@@ -6,8 +6,8 @@ package kubeconfig_test
 import (
 	"testing"
 
-	k "github.com/volvo-cars/lingon/pkg/kubeconfig"
-	tu "github.com/volvo-cars/lingon/pkg/testutil"
+	k "github.com/golingon/lingon/pkg/kubeconfig"
+	tu "github.com/golingon/lingon/pkg/testutil"
 )
 
 func TestLoadKubeConfig(t *testing.T) {

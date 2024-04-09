@@ -10,8 +10,8 @@ import (
 	"fmt"
 	"strings"
 
-	ku "github.com/volvo-cars/lingon/pkg/kubeutil"
-	"github.com/volvo-cars/lingoneks/meta"
+	ku "github.com/golingon/lingon/pkg/kubeutil"
+	"github.com/golingon/lingoneks/meta"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"

@@ -42,7 +42,7 @@ Additionally, you need to provide an `out` location and the path to the `pkg` fo
 We recommend creating a Go file with a `go:generate` directive to invoke the `terragen` command. E.g.
 
 ```go
-//go:generate go run -mod=readonly github.com/volvo-cars/lingon/cmd/terragen -out ./gen/aws -pkg mypkg/gen/aws -provider local=hashicorp/aws:4.60.0 -force 
+//go:generate go run -mod=readonly github.com/golingon/lingon/cmd/terragen -out ./gen/aws -pkg mypkg/gen/aws -provider local=hashicorp/aws:4.60.0 -force 
 ```
 
 ## Creating and Exporting Terraform Stacks

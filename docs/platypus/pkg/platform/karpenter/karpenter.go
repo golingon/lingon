@@ -4,10 +4,10 @@
 package karpenter
 
 import (
-	"github.com/volvo-cars/lingon/docs/platypus/pkg/platform/karpenter/crd"
+	"github.com/golingon/lingon/docs/platypus/pkg/platform/karpenter/crd"
 
-	"github.com/volvo-cars/lingon/pkg/kube"
-	"github.com/volvo-cars/lingon/pkg/kubeutil"
+	"github.com/golingon/lingon/pkg/kube"
+	"github.com/golingon/lingon/pkg/kubeutil"
 	ar "k8s.io/api/admissionregistration/v1"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"

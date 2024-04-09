@@ -6,8 +6,8 @@ package kube
 import (
 	"testing"
 
-	"github.com/volvo-cars/lingon/pkg/kubeutil"
-	tu "github.com/volvo-cars/lingon/pkg/testutil"
+	"github.com/golingon/lingon/pkg/kubeutil"
+	tu "github.com/golingon/lingon/pkg/testutil"
 )
 
 func TestBasicName(t *testing.T) {

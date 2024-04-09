@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"testing"
 
-	tu "github.com/volvo-cars/lingon/pkg/testutil"
+	tu "github.com/golingon/lingon/pkg/testutil"
 
 	"github.com/hashicorp/hcl/v2/hclwrite"
 )

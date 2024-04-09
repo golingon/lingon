@@ -10,7 +10,7 @@ import (
 	"github.com/golingon/terraproviders/aws/4.60.0/dataiampolicydocument"
 	"github.com/golingon/terraproviders/aws/4.60.0/iamrole"
 
-	"github.com/volvo-cars/lingon/pkg/terra"
+	"github.com/golingon/lingon/pkg/terra"
 )
 
 var S = terra.String
@@ -150,9 +150,11 @@ func newIAMRole(
 					Resources: terra.SetString("*"),
 					Condition: []dataiampolicydocument.Condition{
 						{
-							Test:     S("StringEquals"),
-							Variable: S("ec2:ResourceTag/karpenter.sh/discovery"),
-							Values:   terra.ListString(opts.ClusterName),
+							Test: S("StringEquals"),
+							Variable: S(
+								"ec2:ResourceTag/karpenter.sh/discovery",
+							),
+							Values: terra.ListString(opts.ClusterName),
 						},
 					},
 				},
@@ -193,7 +195,9 @@ func newIAMRole(
 			Name: terra.String(
 				opts.Name + "-controller",
 			),
-			Description:      S("IAM Role for Karpenter Controller (pod) to assume"),
+			Description: S(
+				"IAM Role for Karpenter Controller (pod) to assume",
+			),
 			AssumeRolePolicy: assumeRolePolicy.Attributes().Json(),
 
 			InlinePolicy: []iamrole.InlinePolicy{

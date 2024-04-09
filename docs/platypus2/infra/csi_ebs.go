@@ -4,10 +4,10 @@
 package infra
 
 import (
+	"github.com/golingon/lingon/pkg/terra"
 	aws "github.com/golingon/terraproviders/aws/5.13.1"
 	"github.com/golingon/terraproviders/aws/5.13.1/dataiampolicydocument"
 	"github.com/golingon/terraproviders/aws/5.13.1/iamrole"
-	"github.com/volvo-cars/lingon/pkg/terra"
 )
 
 type CSI struct {
@@ -58,7 +58,11 @@ func newIAMRole(opts CSIOpts) *IAMRole {
 						{
 							Test:     S("StringEquals"),
 							Variable: S(opts.OIDCProviderURL + ":sub"),
-							Values:   terra.List(S("system:serviceaccount:kube-system:ebs-csi-controller-sa")),
+							Values: terra.List(
+								S(
+									"system:serviceaccount:kube-system:ebs-csi-controller-sa",
+								),
+							),
 						},
 						{
 							Test:     S("StringEquals"),
@@ -190,8 +194,10 @@ func newIAMRole(opts CSIOpts) *IAMRole {
 	pa := aws.NewIamRolePolicyAttachment(
 		"csiebs_attach_AmazonEBSCSIDriverPolicy",
 		aws.IamRolePolicyAttachmentArgs{
-			PolicyArn: S("arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"),
-			Role:      csiRole.Attributes().Name(),
+			PolicyArn: S(
+				"arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy",
+			),
+			Role: csiRole.Attributes().Name(),
 		},
 	)
 

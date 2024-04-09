@@ -6,9 +6,9 @@ package terra
 import (
 	"fmt"
 
+	tkihcl "github.com/golingon/lingon/pkg/internal/hcl"
 	"github.com/hashicorp/hcl/v2/hclsyntax"
 	"github.com/hashicorp/hcl/v2/hclwrite"
-	tkihcl "github.com/volvo-cars/lingon/pkg/internal/hcl"
 	"github.com/zclconf/go-cty/cty"
 )
 

@@ -7,8 +7,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/volvo-cars/lingon/pkg/kube"
-	tu "github.com/volvo-cars/lingon/pkg/testutil"
+	"github.com/golingon/lingon/pkg/kube"
+	tu "github.com/golingon/lingon/pkg/testutil"
 )
 
 func TestApp(t *testing.T) {

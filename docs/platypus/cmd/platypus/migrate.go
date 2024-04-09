@@ -8,11 +8,11 @@ import (
 	"fmt"
 	"log/slog"
 
+	"github.com/golingon/lingon/docs/platypus/pkg/platform/grafana"
+	"github.com/golingon/lingon/docs/platypus/pkg/terraclient"
 	aws "github.com/golingon/terraproviders/aws/4.60.0"
-	"github.com/volvo-cars/lingon/docs/platypus/pkg/platform/grafana"
-	"github.com/volvo-cars/lingon/docs/platypus/pkg/terraclient"
 
-	"github.com/volvo-cars/lingon/pkg/terra"
+	"github.com/golingon/lingon/pkg/terra"
 )
 
 func migrateGrafana(

@@ -1,4 +1,4 @@
-module github.com/volvo-cars/lingon
+module github.com/golingon/lingon
 
 go 1.21
 

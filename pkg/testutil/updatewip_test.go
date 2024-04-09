@@ -11,11 +11,11 @@ import (
 	"path/filepath"
 	"sort"
 
+	"github.com/golingon/lingon/pkg/kube"
+	"github.com/golingon/lingon/pkg/kubeutil"
+	tu "github.com/golingon/lingon/pkg/testutil"
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
-	"github.com/volvo-cars/lingon/pkg/kube"
-	"github.com/volvo-cars/lingon/pkg/kubeutil"
-	tu "github.com/volvo-cars/lingon/pkg/testutil"
 	"golang.org/x/tools/txtar"
 	"k8s.io/apimachinery/pkg/runtime"
 	"mvdan.cc/gofumpt/format"
@@ -30,11 +30,13 @@ import (
 // 3. Smart diff the two sets of YAML files
 //  --> with small checks to what changes
 //    * the numbers of configMaps, deployments, CRDs, etc
-//    * in PodTemplates, the number of containers, the number of volumes, env vars, etc
+// * in PodTemplates, the number of containers, the number of volumes, env vars,
+// etc
 //    * Services and Ingresses -> ports
 //    * RBAC roles and bindings permissions
 
-// diffLatest is meant to be used to show the difference between a kubernetes manifest
+// diffLatest is meant to be used to show the difference between a kubernetes
+// manifest
 // in Go and the latest version of the same manifest in yaml.
 //
 //	out := filepath.Join(defaultImportOutputDir, "update")

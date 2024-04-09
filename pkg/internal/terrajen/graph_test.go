@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"testing"
 
+	tu "github.com/golingon/lingon/pkg/testutil"
 	tfjson "github.com/hashicorp/terraform-json"
-	tu "github.com/volvo-cars/lingon/pkg/testutil"
 	"github.com/zclconf/go-cty/cty"
 )
 

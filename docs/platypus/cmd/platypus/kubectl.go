@@ -13,7 +13,7 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/volvo-cars/lingon/pkg/kube"
+	"github.com/golingon/lingon/pkg/kube"
 )
 
 func Kubectl(
@@ -76,7 +76,8 @@ func NewClient(optParams ...func(o *clientOpts)) (*Client, error) {
 	}, nil
 }
 
-// Client rerepsents a kubectl client setup to communicate with a single Kubernetes cluster
+// Client rerepsents a kubectl client setup to communicate with a single
+// Kubernetes cluster
 type Client struct {
 	opts clientOpts
 }

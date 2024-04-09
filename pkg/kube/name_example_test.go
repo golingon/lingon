@@ -6,7 +6,7 @@ package kube
 import (
 	"fmt"
 
-	"github.com/volvo-cars/lingon/pkg/kubeutil"
+	"github.com/golingon/lingon/pkg/kubeutil"
 )
 
 func ExampleNameVarFunc_addKind() {

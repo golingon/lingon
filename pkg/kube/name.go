@@ -7,12 +7,13 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/golingon/lingon/pkg/internal/api"
+	"github.com/golingon/lingon/pkg/kubeutil"
 	"github.com/veggiemonk/strcase"
-	"github.com/volvo-cars/lingon/pkg/internal/api"
-	"github.com/volvo-cars/lingon/pkg/kubeutil"
 )
 
-// NameVarFunc returns the name of the variable containing the imported kubernetes object.
+// NameVarFunc returns the name of the variable containing the imported
+// kubernetes object.
 //
 // TIP: ALWAYS put the kind somewhere in the name to avoid collisions
 func NameVarFunc(m kubeutil.Metadata) string {
@@ -48,7 +49,8 @@ func NameFileFunc(m kubeutil.Metadata) string {
 // RemoveAppName removes the app name from the name
 func RemoveAppName(name, appName string) string {
 	res := strings.ReplaceAll(name, appName, "")
-	// if the first character is uppercase, try to replace the PascalCase version
+	// if the first character is uppercase, try to replace the PascalCase
+	// version
 	first := string(name[0])
 	if strings.ToUpper(first) == first {
 		res = strings.ReplaceAll(res, strcase.Pascal(appName), "")
@@ -66,13 +68,15 @@ func RemoveAppName(name, appName string) string {
 }
 
 func isRuneAlphaNumeric(r rune) bool {
-	return (r >= 'a' && r <= 'z') || (r >= 'A' && r <= 'Z') || (r >= '0' && r <= '9')
+	return (r >= 'a' && r <= 'z') || (r >= 'A' && r <= 'Z') ||
+		(r >= '0' && r <= '9')
 }
 
 func basicName(name, kind string) string {
 	sk := shortKind(kind)
 
-	// when the short kind is already the suffix: i.e. for podsecuritypolicy: webapp_psp
+	// when the short kind is already the suffix: i.e. for podsecuritypolicy:
+	// webapp_psp
 	if strings.HasSuffix(strings.ToLower(name), strings.ToLower(sk)) {
 		n := strings.TrimSuffix(name, sk)
 		// remove the last dash
@@ -91,10 +95,12 @@ func basicName(name, kind string) string {
 		return name + "_" + sk
 	}
 
-	// replace the kind by the short suffixed in the name: i.e. podsecuritypolicy: webapp_psp
+	// replace the kind by the short suffixed in the name: i.e.
+	// podsecuritypolicy: webapp_psp
 	if strings.HasSuffix(strings.ToLower(name), strings.ToLower(kind)) {
 		n := name[:len(name)-len(kind)-1]
-		// fmt.Printf("removing kind %q from name %q to get %q\n", kind, name, n)
+		// fmt.Printf("removing kind %q from name %q to get %q\n", kind, name,
+		// n)
 		return n + "_" + sk
 	}
 
@@ -120,13 +126,31 @@ func rankOfKind(kind string) int {
 	case "namespace":
 		return 0
 	// not namespaced or don't depend on anything else
-	case "customresourcedefinition", "serviceaccount", "clusterrole", "role", "persistentvolume", "service":
+	case "customresourcedefinition",
+		"serviceaccount",
+		"clusterrole",
+		"role",
+		"persistentvolume",
+		"service":
 		return 1
 	// These depend on something above, but not each other
-	case "resourcequota", "limitrange", "secret", "configmap", "rolebinding", "clusterrolebinding", "persistentvolumeclaim", "ingress": // nolint: lll
+	case "resourcequota",
+		"limitrange",
+		"secret",
+		"configmap",
+		"rolebinding",
+		"clusterrolebinding",
+		"persistentvolumeclaim",
+		"ingress": // nolint: lll
 		return 2
 	// These depend on something above, but not each other
-	case "daemonset", "deployment", "replicationcontroller", "replicaset", "job", "cronjob", "statefulset":
+	case "daemonset",
+		"deployment",
+		"replicationcontroller",
+		"replicaset",
+		"job",
+		"cronjob",
+		"statefulset":
 		return 3
 	// best effort: no dependency
 	default:

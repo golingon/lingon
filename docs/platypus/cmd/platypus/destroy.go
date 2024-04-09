@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"log/slog"
 
-	"github.com/volvo-cars/lingon/docs/platypus/pkg/terraclient"
+	"github.com/golingon/lingon/docs/platypus/pkg/terraclient"
 )
 
 func finishAndDestroy(

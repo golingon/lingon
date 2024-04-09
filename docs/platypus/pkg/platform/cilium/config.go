@@ -4,7 +4,7 @@
 package cilium
 
 import (
-	"github.com/volvo-cars/lingon/pkg/kubeutil"
+	"github.com/golingon/lingon/pkg/kubeutil"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -23,12 +23,13 @@ func Config(data map[string]string) *corev1.ConfigMap {
 var DefaultConfigData = map[string]string{
 	// Identity allocation mode selects how identities are shared between cilium
 	// nodes by setting how they are stored. The options are "crd" or "kvstore".
-	// - "crd" stores identities in kubernetes as CRDs (custom resource definition).
+	// - "crd" stores identities in kubernetes as CRDs (custom resource
+	// definition).
 	//   These can be queried with:
 	//     kubectl get ciliumid
 	// - "kvstore" stores identities in an etcd kvstore, that is
 	//   configured below. Cilium versions before 1.6 supported only the kvstore
-	//   backend. Upgrades from these older cilium versions should continue using
+	// backend. Upgrades from these older cilium versions should continue using
 	//   the kvstore by commenting out the identity-allocation-mode below, or
 	//   setting it to "kvstore".
 	"identity-allocation-mode":      "crd",
@@ -52,11 +53,13 @@ var DefaultConfigData = map[string]string{
 	// Enable IPv6 addressing. If enabled, all endpoints are allocated an IPv6
 	// address.
 	"enable-ipv6": "false",
-	// Users who wish to specify their own custom CNI configuration file must set
-	// custom-cni-conf to "true", otherwise Cilium may overwrite the configuration.
+	// Users who wish to specify their own custom CNI configuration file must
+	// set custom-cni-conf to "true", otherwise Cilium may overwrite the
+	// configuration.
 	"custom-cni-conf":        "false",
 	"enable-bpf-clock-probe": "true",
-	// If you want cilium monitor to aggregate tracing for packets, set this level
+	// If you want cilium monitor to aggregate tracing for packets, set this
+	// level
 	// to "low", "medium", or "maximum". The higher the level, the less packets
 	// that will be seen in monitor output.
 	"monitor-aggregation": "medium",
@@ -86,16 +89,18 @@ var DefaultConfigData = map[string]string{
 	"bpf-lb-external-clusterip": "false",
 
 	// Pre-allocation of map entries allows per-packet latency to be reduced, at
-	// the expense of up-front memory allocation for the entries in the maps. The
-	// default value below will minimize memory usage in the default installation;
+	// the expense of up-front memory allocation for the entries in the maps.
+	// The default value below will minimize memory usage in the default
+	// installation;
 	// users who are sensitive to latency may consider setting this to "true".
 	//
 	// This option was introduced in Cilium 1.4. Cilium 1.3 and earlier ignore
 	// this option and behave as though it is set to "true".
 	//
-	// If this value is modified, then during the next Cilium startup the restore
-	// of existing endpoints and tracking of ongoing connections may be disrupted.
-	// As a result, reply packets may be dropped and the load-balancing decisions
+	// If this value is modified, then during the next Cilium startup the
+	// restore of existing endpoints and tracking of ongoing connections may be
+	// disrupted. As a result, reply packets may be dropped and the
+	// load-balancing decisions
 	// for established connections may change.
 	//
 	// If this option is set to "false" during an upgrade from 1.3 or earlier to
@@ -109,7 +114,8 @@ var DefaultConfigData = map[string]string{
 	// Name of the cluster. Only relevant when building a mesh of clusters.
 	"cluster-name": "go-terriyaki-test-1",
 	// Unique ID of the cluster. Must be unique across all conneted clusters and
-	// in the range of 1 and 255. Only relevant when building a mesh of clusters.
+	// in the range of 1 and 255. Only relevant when building a mesh of
+	// clusters.
 	"cluster-id": "1",
 
 	// Encapsulation mode for communication between nodes

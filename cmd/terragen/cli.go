@@ -20,9 +20,13 @@ The flags are:
 	-pkg string
 		Go pkg for the generated Go files (required)
 	-provider value
+
+
 		provider to generate Go files for (required), e.g. aws=hashicorp/aws:4.49.0
 	-tfout string
-		directory to generate Terraform providers schema (default ".lingon/schemas")
+
+
+	directory to generate Terraform providers schema (default ".lingon/schemas")
 */
 package main
 
@@ -35,7 +39,7 @@ import (
 	"path/filepath"
 	"runtime/debug"
 
-	"github.com/volvo-cars/lingon/pkg/terragen"
+	"github.com/golingon/lingon/pkg/terragen"
 )
 
 func main() {

@@ -6,8 +6,8 @@ package terra
 import (
 	"fmt"
 
+	tkihcl "github.com/golingon/lingon/pkg/internal/hcl"
 	"github.com/hashicorp/hcl/v2/hclwrite"
-	tkihcl "github.com/volvo-cars/lingon/pkg/internal/hcl"
 )
 
 // IgnoreChanges takes a list of object attributes to include in the

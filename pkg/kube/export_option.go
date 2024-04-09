@@ -7,39 +7,45 @@ import (
 	"io"
 	"os"
 
-	"github.com/volvo-cars/lingon/pkg/kubeutil"
+	"github.com/golingon/lingon/pkg/kubeutil"
 	corev1 "k8s.io/api/core/v1"
 )
 
-// ExportOption is used to configure conversion from Go code to kubernetes objects in YAML.
+// ExportOption is used to configure conversion from Go code to kubernetes
+// objects in YAML.
 // Helpers function are provided to those field, see WithExportXXX functions
 type ExportOption func(*goky)
 
 // exportOption is used to configure the goky, all fields have sane defaults.
 type exportOption struct {
-	// OutputDir is the directory where the generated code will be written (default: out)
+	// OutputDir is the directory where the generated code will be written
+	// (default: out)
 	// ex: "./tekton"
 	OutputDir string
 
 	// Writer is used to write the exported manifests in txtar format
-	// for more info on [golang.org/x/tools/txtar.Archive] format see: https://pkg.go.dev/golang.org/x/tools/txtar
-	// Note that we are using https://github.com/rogpeppe/go-internal/blob/master/txtar/ instead.
+	// for more info on [golang.org/x/tools/txtar.Archive] format see:
+	// https://pkg.go.dev/golang.org/x/tools/txtar Note that we are using
+	// https://github.com/rogpeppe/go-internal/blob/master/txtar/ instead.
 	//
 	// ex: [os.Stdout], [bytes.Buffer]
 	ManifestWriter io.Writer
 
-	// NameFileFunc formats the name of the file containing the kubernetes object
+	// NameFileFunc formats the name of the file containing the kubernetes
+	// object
 	NameFileFunc func(m *kubeutil.Metadata) string
 
 	// SecretHook is used to process the secrets before they are exported.
 	// The hook is called for each secret.
-	// This is useful to redact the secrets in order not to save them in plain text.
+	// This is useful to redact the secrets in order not to save them in plain
+	// text.
 	SecretHook func(secret *corev1.Secret) error
 
 	// Kustomize flag adds a kustomization.yaml file to the output
 	Kustomize bool
 
-	// Explode flag explodes files into multiple files according to their kind and namespace.
+	// Explode flag explodes files into multiple files according to their kind
+	// and namespace.
 	Explode bool
 
 	// SingleFile flag will write all the manifests in a single file.
@@ -82,7 +88,8 @@ func WithExportNameFileFunc(f func(m *kubeutil.Metadata) string) ExportOption {
 }
 
 // WithExportExplodeManifests explodes the manifests into separate files
-// organized by namespace to match closely the structure of the kubernetes cluster.
+// organized by namespace to match closely the structure of the kubernetes
+// cluster.
 // See [Explode] for more info.
 // Note that this option is incompatible [WithExportAsSingleFile].
 func WithExportExplodeManifests(b bool) ExportOption {
@@ -93,11 +100,13 @@ func WithExportExplodeManifests(b bool) ExportOption {
 }
 
 // WithExportWriter writes the generated manifests to [io.Writer].
-// Note that the format is txtar, for more info on [golang.org/x/tools/txtar.Archive] format
+// Note that the format is txtar, for more info on
+// [golang.org/x/tools/txtar.Archive] format
 // see: https://pkg.go.dev/golang.org/x/tools/txtar
 //
-// A txtar archive is zero or more comment lines and then a sequence of file entries.
-// Each file entry begins with a file marker line of the form "-- FILENAME --" and
+// A txtar archive is zero or more comment lines and then a sequence of file
+// entries. Each file entry begins with a file marker line of the form "--
+// FILENAME --" and
 // is followed by zero or more file content lines making up the file data.
 // The comment or file content ends at the next file marker line.
 // The file marker line must begin with the three-byte sequence "-- " and
@@ -116,11 +125,13 @@ func WithExportWriter(w io.Writer) ExportOption {
 }
 
 // WithExportStdOut writes the generated manifests to [os.Stdout]
-// Note that the format is txtar, for more info on [golang.org/x/tools/txtar.Archive] format
+// Note that the format is txtar, for more info on
+// [golang.org/x/tools/txtar.Archive] format
 // see: https://pkg.go.dev/golang.org/x/tools/txtar
 // See [WithExportWriter] for more info.
 //
-// If you want to write in the YAML format, use [WithExportAsSingleFile] instead.
+// If you want to write in the YAML format, use [WithExportAsSingleFile]
+// instead.
 func WithExportStdOut() ExportOption {
 	return func(g *goky) {
 		g.useWriter = true
@@ -164,7 +175,8 @@ func WithExportKustomize(b bool) ExportOption {
 	}
 }
 
-// WithExportOutputDirectory sets the output directory for the generated manifests.
+// WithExportOutputDirectory sets the output directory for the generated
+// manifests.
 func WithExportOutputDirectory(dir string) ExportOption {
 	return func(g *goky) {
 		g.o.OutputDir = dir
@@ -177,7 +189,8 @@ func WithExportOutputDirectory(dir string) ExportOption {
 // and not to save them in plain text.
 // Base64 encoded secrets are not secure.
 //
-// NOTE: the secrets will *NOT* be written to the output directory or [io.Writer]
+// NOTE: the secrets will *NOT* be written to the output directory or
+// [io.Writer]
 // if this option is used.
 func WithExportSecretHook(f func(s *corev1.Secret) error) ExportOption {
 	return func(g *goky) {

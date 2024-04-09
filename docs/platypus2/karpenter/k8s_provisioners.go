@@ -6,8 +6,8 @@ package karpenter
 import (
 	"github.com/aws/karpenter-core/pkg/apis/v1alpha5"
 	"github.com/aws/karpenter/pkg/apis/v1alpha1"
-	"github.com/volvo-cars/lingon/pkg/kube"
-	"github.com/volvo-cars/lingoneks/infra"
+	"github.com/golingon/lingon/pkg/kube"
+	"github.com/golingon/lingoneks/infra"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )

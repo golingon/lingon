@@ -6,7 +6,7 @@
 package certmanager
 
 import (
-	ku "github.com/volvo-cars/lingon/pkg/kubeutil"
+	ku "github.com/golingon/lingon/pkg/kubeutil"
 )
 
 var ControllerApproveIoCRB = ku.BindClusterRole(

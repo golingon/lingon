@@ -123,7 +123,7 @@ package app_test
 import (
     "testing"
     "example.com/example/app"
-    "github.com/volvo-cars/lingon/pkg/kube"
+    "github.com/golingon/lingon/pkg/kube"
 )
 func TestAppExport(t *testing.T) {
     if err := kube.Export(app.New() /*, kube.WithExportOptions(...) */); err != nil {

@@ -13,20 +13,24 @@ import (
 	tfjson "github.com/hashicorp/terraform-json"
 )
 
-// ProviderGenerator is created for each provider and is used to generate the schema
+// ProviderGenerator is created for each provider and is used to generate the
+// schema
 // for each resource and data object, and the provider configuration.
-// The schemas are used by the generator to create the Go files and sub packages.
+// The schemas are used by the generator to create the Go files and sub
+// packages.
 type ProviderGenerator struct {
 	// GoProviderPkgPath is the Go pkg path to the generated provider directory.
-	// E.g. github.com/volvo-cars/github.com/volvo-cars/lingon/gen/aws
+	// E.g. github.com/golingon/lingon/gen/aws
 	GoProviderPkgPath string
-	// GeneratedPackageLocation is the directory on the filesystem where the generated
+	// GeneratedPackageLocation is the directory on the filesystem where the
+	// generated
 	// Go files will be created.
 	// The GoProviderPkgPath path must match the location of the generated files
 	// so that they can be imported correctly.
-	// E.g. if we are in a Go module called "my-module" and we generate the files in a
-	// "gen" directory within the root of "my-module", then GoProviderPkgPath is "my-module/gen"
-	// and the GeneratedPackageLocation is "./gen" assuming we are running from the root of
+	// E.g. if we are in a Go module called "my-module" and we generate the
+	// files in a "gen" directory within the root of "my-module", then
+	// GoProviderPkgPath is "my-module/gen" and the GeneratedPackageLocation is
+	// "./gen" assuming we are running from the root of
 	// "my-module"
 	GeneratedPackageLocation string
 	// ProviderName is the local name of the provider.
@@ -50,12 +54,13 @@ const (
 	SchemaTypeData     SchemaType = "data"
 )
 
-// SchemaProvider creates a schema for the provider config block for the provider
+// SchemaProvider creates a schema for the provider config block for the
+// provider
 // represented by ProviderGenerator
 func (a *ProviderGenerator) SchemaProvider(sb *tfjson.SchemaBlock) *Schema {
 	return &Schema{
 		SchemaType:               SchemaTypeProvider,
-		GoProviderPkgPath:        a.GoProviderPkgPath,        // github.com/volvo-cars/github.com/volvo-cars/lingon/gen/aws
+		GoProviderPkgPath:        a.GoProviderPkgPath,        // github.com/golingon/lingon/gen/aws
 		GeneratedPackageLocation: a.GeneratedPackageLocation, // gen/aws
 		ProviderName:             a.ProviderName,             // aws
 		ProviderSource:           a.ProviderSource,           // registry.terraform.io/hashicorp/aws
@@ -88,7 +93,7 @@ func (a *ProviderGenerator) SchemaResource(
 	fp := filepath.Join(a.GeneratedPackageLocation, shortName+fileExtension)
 	rs := &Schema{
 		SchemaType:               SchemaTypeResource,
-		GoProviderPkgPath:        a.GoProviderPkgPath,        // github.com/volvo-cars/github.com/volvo-cars/lingon/gen/aws
+		GoProviderPkgPath:        a.GoProviderPkgPath,        // github.com/golingon/lingon/gen/aws
 		GeneratedPackageLocation: a.GeneratedPackageLocation, // gen/aws
 		ProviderName:             a.ProviderName,             // aws
 		ProviderSource:           a.ProviderSource,           // hashicorp/aws
@@ -97,11 +102,21 @@ func (a *ProviderGenerator) SchemaResource(
 		PackageName:              a.ProviderName,             // aws
 		Type:                     name,                       // aws
 
-		StructName:           strcase.Pascal(shortName),                   // iam_role => IamRole
-		ArgumentStructName:   strcase.Pascal(shortName) + suffixArgs,      // iam_role => IamRoleArgs
-		AttributesStructName: strcase.Camel(shortName) + suffixAttributes, // iam_role => iamRoleAttributes
-		StateStructName:      strcase.Camel(shortName) + suffixState,      // iam_role => IamRoleOut
-		Receiver:             structReceiverFromName(shortName),           // iam_role => ir
+		StructName: strcase.Pascal(
+			shortName,
+		), // iam_role => IamRole
+		ArgumentStructName: strcase.Pascal(
+			shortName,
+		) + suffixArgs, // iam_role => IamRoleArgs
+		AttributesStructName: strcase.Camel(
+			shortName,
+		) + suffixAttributes, // iam_role => iamRoleAttributes
+		StateStructName: strcase.Camel(
+			shortName,
+		) + suffixState, // iam_role => IamRoleOut
+		Receiver: structReceiverFromName(
+			shortName,
+		), // iam_role => ir
 
 		NewFuncName:    "New" + strcase.Pascal(shortName),
 		SubPackageName: spn, // iam_role => iamrole
@@ -125,7 +140,7 @@ func (a *ProviderGenerator) SchemaData(
 
 	ds := &Schema{
 		SchemaType:               SchemaTypeData,
-		GoProviderPkgPath:        a.GoProviderPkgPath,        // github.com/volvo-cars/github.com/volvo-cars/lingon/gen/aws
+		GoProviderPkgPath:        a.GoProviderPkgPath,        // github.com/golingon/lingon/gen/aws
 		GeneratedPackageLocation: a.GeneratedPackageLocation, // gen/aws
 		ProviderName:             a.ProviderName,             // aws
 		ProviderSource:           a.ProviderSource,           // hashicorp/aws
@@ -134,10 +149,12 @@ func (a *ProviderGenerator) SchemaData(
 		PackageName:              a.ProviderName,             // aws
 		Type:                     name,                       // aws_iam_role
 
-		StructName:           "Data" + pn,                       // iam_role => DataIamRole
-		ArgumentStructName:   "Data" + pn + suffixArgs,          // iam_role => DataIamRoleArgs
-		AttributesStructName: "data" + pn + suffixAttributes,    // iam_role => dataIamRoleAttributes
-		Receiver:             structReceiverFromName(shortName), // iam_role => ir
+		StructName:           "Data" + pn,                    // iam_role => DataIamRole
+		ArgumentStructName:   "Data" + pn + suffixArgs,       // iam_role => DataIamRoleArgs
+		AttributesStructName: "data" + pn + suffixAttributes, // iam_role => dataIamRoleAttributes
+		Receiver: structReceiverFromName(
+			shortName,
+		), // iam_role => ir
 
 		NewFuncName:    "NewData" + pn, // iam_role => NewDataIamRole
 		SubPackageName: "data" + spn,   // iam_role => dataiamrole
@@ -148,7 +165,8 @@ func (a *ProviderGenerator) SchemaData(
 	return ds
 }
 
-// providerShortName takes a name like "aws_iam_role" and returns the name without
+// providerShortName takes a name like "aws_iam_role" and returns the name
+// without
 // the leading provider prefix, i.e. it returns "iam_role"
 func providerShortName(name string) string {
 	underscoreIndex := strings.Index(name, "_")
@@ -158,8 +176,9 @@ func providerShortName(name string) string {
 	return name[underscoreIndex+1:]
 }
 
-// structReceiverFromName calculates a suitable receiver from the name of the object.
-// It gets the first character of each word separated by underscores, e.g. iam_role => ir
+// structReceiverFromName calculates a suitable receiver from the name of the
+// object. It gets the first character of each word separated by underscores,
+// e.g. iam_role => ir
 func structReceiverFromName(name string) string {
 	ss := strings.Split(name, "_")
 	var receiver strings.Builder
@@ -176,10 +195,11 @@ func structReceiverFromName(name string) string {
 
 // Schema is used to store all the relevant information required for the Go
 // code generator.
-// A schema can represent a resource, a data object or the provider configuration.
+// A schema can represent a resource, a data object or the provider
+// configuration.
 type Schema struct {
 	SchemaType               SchemaType // resource / provider / data
-	GoProviderPkgPath        string     // github.com/volvo-cars/github.com/volvo-cars/lingon/gen/providers
+	GoProviderPkgPath        string     // github.com/golingon/lingon/gen/providers
 	GeneratedPackageLocation string     // gen/providers/aws
 	ProviderName             string     // aws
 	ProviderSource           string     // registry.terraform.io/hashicorp/aws

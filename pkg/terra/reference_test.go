@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"testing"
 
-	tkihcl "github.com/volvo-cars/lingon/pkg/internal/hcl"
-	tu "github.com/volvo-cars/lingon/pkg/testutil"
+	tkihcl "github.com/golingon/lingon/pkg/internal/hcl"
+	tu "github.com/golingon/lingon/pkg/testutil"
 )
 
 func TestReferenceCopy(t *testing.T) {

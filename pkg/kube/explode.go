@@ -9,10 +9,11 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/volvo-cars/lingon/pkg/kubeutil"
+	"github.com/golingon/lingon/pkg/kubeutil"
 )
 
-// Explode reads a YAML manifests from [io.Reader] and writes the objects to files in dir.
+// Explode reads a YAML manifests from [io.Reader] and writes the objects to
+// files in dir.
 // Each object is written to a file named after the object's kind and name.
 // The file name is prefixed with a number that indicates the rank of the kind.
 // The rank is used to sort the files in the directory and prioritize the order

@@ -6,7 +6,7 @@
 package vmop
 
 import (
-	ku "github.com/volvo-cars/lingon/pkg/kubeutil"
+	ku "github.com/golingon/lingon/pkg/kubeutil"
 	admissionregistrationv1 "k8s.io/api/admissionregistration/v1"
 )
 

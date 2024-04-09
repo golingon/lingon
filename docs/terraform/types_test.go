@@ -4,8 +4,8 @@
 package terraform
 
 import (
+	"github.com/golingon/lingon/pkg/terra"
 	aws "github.com/golingon/terraproviders/aws/4.60.0"
-	"github.com/volvo-cars/lingon/pkg/terra"
 )
 
 func Example_typesVars() {

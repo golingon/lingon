@@ -9,9 +9,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/volvo-cars/lingon/pkg/kube"
-	"github.com/volvo-cars/lingon/pkg/kubeutil"
-	tu "github.com/volvo-cars/lingon/pkg/testutil"
+	"github.com/golingon/lingon/pkg/kube"
+	"github.com/golingon/lingon/pkg/kubeutil"
+	tu "github.com/golingon/lingon/pkg/testutil"
 	"github.com/volvo-cars/nope/config/samples"
 )
 
@@ -26,7 +26,9 @@ func TestExport(t *testing.T) {
 		app,
 		kube.WithExportOutputDirectory(outDir),
 		kube.WithExportNameFileFunc(func(m *kubeutil.Metadata) string {
-			return strings.ToLower(fmt.Sprintf("%s_%s.yaml", m.Kind, m.Meta.Name))
+			return strings.ToLower(
+				fmt.Sprintf("%s_%s.yaml", m.Kind, m.Meta.Name),
+			)
 		}),
 	)
 	tu.AssertNoError(t, err, "exporting samples")

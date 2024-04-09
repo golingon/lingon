@@ -16,7 +16,7 @@ import (
 
 	"test/out/aws/emrcluster"
 
-	"github.com/volvo-cars/lingon/pkg/terra"
+	"github.com/golingon/lingon/pkg/terra"
 	"golang.org/x/exp/slog"
 
 	"test/out/aws"

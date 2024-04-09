@@ -8,7 +8,7 @@ import (
 
 	aws "github.com/golingon/terraproviders/aws/4.60.0"
 
-	"github.com/volvo-cars/lingon/pkg/terra"
+	"github.com/golingon/lingon/pkg/terra"
 )
 
 var (
@@ -48,13 +48,17 @@ type AWSVPC struct {
 const (
 	TagManagedBy      = "ManagedBy"
 	TagManagedByValue = "Lingon"
-	// TagName human-readable resource name. Note that the AWS Console UI displays the case-sensitive "Name" tag.
+	// TagName human-readable resource name. Note that the AWS Console UI
+	// displays the case-sensitive "Name" tag.
 	TagName = "Name"
-	// TagAppID is a tag specifying the application identifier, application using the resource.
+	// TagAppID is a tag specifying the application identifier, application
+	// using the resource.
 	TagAppID = "app-id"
-	// TagAppRole is a tag specifying the resource's technical function, e.g. webserver, database, etc.
+	// TagAppRole is a tag specifying the resource's technical function, e.g.
+	// webserver, database, etc.
 	TagAppRole = "app-role"
-	// TagPurpose  is a tag specifying the resource's business purpose, e.g. "frontend ui", "payment processor", etc.
+	// TagPurpose  is a tag specifying the resource's business purpose, e.g.
+	// "frontend ui", "payment processor", etc.
 	TagPurpose = "purpose"
 	// TagEnv is a tag specifying the environment.
 	TagEnv = "environment"
@@ -62,12 +66,15 @@ const (
 	TagProject = "project"
 	// TagOwner is a tag specifying the person of contact.
 	TagOwner = "owner"
-	// TagCostCenter is a tag specifying the cost center that will receive the bill.
+	// TagCostCenter is a tag specifying the cost center that will receive the
+	// bill.
 	TagCostCenter = "cost-center"
-	// TagAutomationExclude is a tag specifying if the resource should be excluded from automation.
+	// TagAutomationExclude is a tag specifying if the resource should be
+	// excluded from automation.
 	// Value: true/false
 	TagAutomationExclude = "automation-exclude"
-	// TagPII is a tag specifying if the resource contains Personally Identifiable Information.
+	// TagPII is a tag specifying if the resource contains Personally
+	// Identifiable Information.
 	// Value: true/false
 	TagPII = "pii"
 )
@@ -105,7 +112,10 @@ func mergeTags(m ...map[string]string) terra.MapValue[terra.StringValue] {
 	return terra.Map(sv)
 }
 
-func mergeSTags(m map[string]string, ss ...string) terra.MapValue[terra.StringValue] {
+func mergeSTags(
+	m map[string]string,
+	ss ...string,
+) terra.MapValue[terra.StringValue] {
 	sv := make(map[string]terra.StringValue, 0)
 	for k, v := range m {
 		sv[k] = S(v)

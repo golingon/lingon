@@ -6,7 +6,7 @@ package karpenter
 import (
 	"fmt"
 
-	ku "github.com/volvo-cars/lingon/pkg/kubeutil"
+	ku "github.com/golingon/lingon/pkg/kubeutil"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	policyv1 "k8s.io/api/policy/v1"
@@ -87,11 +87,15 @@ var Deploy = &appsv1.Deployment{
 						ImagePullPolicy: corev1.PullIfNotPresent,
 					},
 				},
-				DNSPolicy:          corev1.DNSDefault,
-				NodeSelector:       map[string]string{ku.LabelOSStable: "linux"},
+				DNSPolicy: corev1.DNSDefault,
+				NodeSelector: map[string]string{
+					ku.LabelOSStable: "linux",
+				},
 				ServiceAccountName: "TO_BE_SET_IN_NEW",
-				SecurityContext:    &corev1.PodSecurityContext{FSGroup: P(int64(1000))},
-				Affinity:           SetNodeAffinity,
+				SecurityContext: &corev1.PodSecurityContext{
+					FSGroup: P(int64(1000)),
+				},
+				Affinity: SetNodeAffinity,
 				Tolerations: []corev1.Toleration{
 					{
 						Key:      "CriticalAddonsOnly",
@@ -101,10 +105,14 @@ var Deploy = &appsv1.Deployment{
 				PriorityClassName: "system-cluster-critical",
 				TopologySpreadConstraints: []corev1.TopologySpreadConstraint{
 					{
-						MaxSkew:           1,
-						TopologyKey:       ku.LabelTopologyZone,
-						WhenUnsatisfiable: corev1.UnsatisfiableConstraintAction("ScheduleAnyway"),
-						LabelSelector:     &metav1.LabelSelector{MatchLabels: KA.MatchLabels()},
+						MaxSkew:     1,
+						TopologyKey: ku.LabelTopologyZone,
+						WhenUnsatisfiable: corev1.UnsatisfiableConstraintAction(
+							"ScheduleAnyway",
+						),
+						LabelSelector: &metav1.LabelSelector{
+							MatchLabels: KA.MatchLabels(),
+						},
 					},
 				},
 			},
@@ -149,8 +157,10 @@ var SetNodeAffinity = &corev1.Affinity{
 	PodAntiAffinity: &corev1.PodAntiAffinity{
 		RequiredDuringSchedulingIgnoredDuringExecution: []corev1.PodAffinityTerm{
 			{
-				LabelSelector: &metav1.LabelSelector{MatchLabels: KA.MatchLabels()},
-				TopologyKey:   ku.LabelHostname,
+				LabelSelector: &metav1.LabelSelector{
+					MatchLabels: KA.MatchLabels(),
+				},
+				TopologyKey: ku.LabelHostname,
 			},
 		},
 	},
