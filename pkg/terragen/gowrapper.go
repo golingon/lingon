@@ -4,6 +4,7 @@
 package terragen
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"io"
@@ -13,6 +14,7 @@ import (
 	"strings"
 
 	"github.com/golingon/lingon/pkg/internal/terrajen"
+	"golang.org/x/tools/txtar"
 
 	tfjson "github.com/hashicorp/terraform-json"
 )
@@ -44,7 +46,7 @@ type GenerateGoArgs struct {
 // providers and their schemas.
 func GenerateGoCode(
 	args GenerateGoArgs,
-	schemas *tfjson.ProviderSchemas,
+	providerSchema *tfjson.ProviderSchema,
 ) error {
 	if args.OutDir == "" {
 		return errors.New("outDir is empty")
@@ -59,7 +61,7 @@ func GenerateGoCode(
 		slog.String("source", args.ProviderSource),
 		slog.String("version", args.ProviderVersion),
 	)
-	tfArgs := terrajen.ProviderGenerator{
+	providerGenerator := terrajen.ProviderGenerator{
 		GoProviderPkgPath:        args.PkgPath,
 		GeneratedPackageLocation: args.OutDir,
 		ProviderName:             args.ProviderName,
@@ -67,146 +69,133 @@ func GenerateGoCode(
 		ProviderVersion:          args.ProviderVersion,
 	}
 
-	pSchema, ok := schemas.Schemas[args.ProviderSource]
-	if !ok {
-		// Try adding registry.terraform.io/ prefix if not already added
-		if !strings.HasPrefix(args.ProviderSource, "registry.terraform.io/") {
-			pSchema, ok = schemas.Schemas[fmt.Sprintf(
-				"registry.terraform.io/%s",
-				args.ProviderSource,
-			)]
-		}
-		// If still not ok, indicate an error
-		if !ok {
-			return fmt.Errorf(
-				"provider source: %s: %w",
-				args.ProviderSource,
-				ErrProviderSchemaNotFound,
-			)
-		}
-	}
-	err := generateProvider(args, tfArgs, pSchema)
+	arch, err := generateProviderTxtar(providerGenerator, providerSchema)
 	if err != nil {
 		return err
+	}
+	if err := createDirIfNotEmpty(args.OutDir, args.Force); err != nil {
+		return fmt.Errorf(
+			"creating providers pkg directory %q: %w",
+			args.OutDir,
+			err,
+		)
+	}
+	// Write the txtar archive to the filesystem.
+	if err := writeTxtarArchive(arch); err != nil {
+		return fmt.Errorf("writing txtar archive: %w", err)
 	}
 
 	return nil
 }
 
-func generateProvider(
-	genArgs GenerateGoArgs,
-	provider terrajen.ProviderGenerator,
-	providerSchema *tfjson.ProviderSchema,
-) error {
-	if err := createDirIfNotEmpty(
-		provider.GeneratedPackageLocation,
-		genArgs.Force,
-	); err != nil {
-		return fmt.Errorf(
-			"creating providers pkg directory %s: %w",
-			provider.GeneratedPackageLocation,
-			err,
-		)
+func writeTxtarArchive(ar *txtar.Archive) error {
+	for _, file := range ar.Files {
+		dir := filepath.Dir(file.Name)
+		if err := os.MkdirAll(dir, os.ModePerm); err != nil {
+			return fmt.Errorf("creating directory %q: %w", dir, err)
+		}
+		if err := os.WriteFile(file.Name, file.Data, 0o644); err != nil {
+			return fmt.Errorf("writing file %q: %w", file.Name, err)
+		}
 	}
+	return nil
+}
+
+func generateProviderTxtar(
+	provider terrajen.ProviderGenerator,
+	schema *tfjson.ProviderSchema,
+) (*txtar.Archive, error) {
+	ar := txtar.Archive{}
+
 	//
 	// Generate Provider
 	//
-	ps := provider.SchemaProvider(providerSchema.ConfigSchema.Block)
-	f := terrajen.ProviderFile(ps)
-	if err := f.Save(ps.FilePath); err != nil {
+	providerSchema := provider.SchemaProvider(schema.ConfigSchema.Block)
+	providerFile := terrajen.ProviderFile(providerSchema)
+	providerBuf := bytes.Buffer{}
+	if err := providerFile.Render(&providerBuf); err != nil {
 		terrajen.JenDebug(err)
-		return fmt.Errorf("saving provider file %s: %w", ps.FilePath, err)
+		return nil, fmt.Errorf("rendering provider file: %w", err)
 	}
+	ar.Files = append(ar.Files, txtar.File{
+		Name: providerSchema.FilePath,
+		Data: providerBuf.Bytes(),
+	})
 
-	subPkgFile, ok := terrajen.SubPkgFile(ps)
+	subPkgFile, ok := terrajen.SubPkgFile(providerSchema)
 	if ok {
-		subPkgDir := filepath.Dir(ps.SubPkgPath())
-		if err := os.MkdirAll(subPkgDir, os.ModePerm); err != nil {
-			return fmt.Errorf(
-				"creating sub package directory %s: %w",
-				subPkgDir,
-				err,
-			)
-		}
-		if err := subPkgFile.Save(ps.SubPkgPath()); err != nil {
+		subPkgBuf := bytes.Buffer{}
+		if err := subPkgFile.Render(&subPkgBuf); err != nil {
 			terrajen.JenDebug(err)
-			return fmt.Errorf(
-				"saving sub package file %s: %w",
-				ps.SubPkgPath(),
-				err,
-			)
+			return nil, fmt.Errorf("rendering sub package file: %w", err)
 		}
+		ar.Files = append(ar.Files, txtar.File{
+			Name: providerSchema.SubPkgPath(),
+			Data: subPkgBuf.Bytes(),
+		})
 	}
 	//
 	// Generate Resources
 	//
-	for name, resource := range providerSchema.ResourceSchemas {
+	for name, resource := range schema.ResourceSchemas {
 		rs := provider.SchemaResource(name, resource.Block)
 		rsf := terrajen.ResourceFile(rs)
-		if err := rsf.Save(rs.FilePath); err != nil {
+		resourceBuf := bytes.Buffer{}
+		if err := rsf.Render(&resourceBuf); err != nil {
 			terrajen.JenDebug(err)
-			return fmt.Errorf(
-				"saving resource file %s: %w",
-				rs.FilePath,
-				err,
-			)
+			return nil, fmt.Errorf("rendering resource file: %w", err)
 		}
+		ar.Files = append(ar.Files, txtar.File{
+			Name: rs.FilePath,
+			Data: resourceBuf.Bytes(),
+		})
 
 		rsSubPkgFile, ok := terrajen.SubPkgFile(rs)
 		if !ok {
 			continue
 		}
-		subPkgDir := filepath.Dir(rs.SubPkgPath())
-		if err := os.MkdirAll(subPkgDir, os.ModePerm); err != nil {
-			return fmt.Errorf(
-				"creating sub package directory %s: %w",
-				subPkgDir,
-				err,
-			)
-		}
-		if err := rsSubPkgFile.Save(rs.SubPkgPath()); err != nil {
+		rsSubPkgBuf := bytes.Buffer{}
+		if err := rsSubPkgFile.Render(&rsSubPkgBuf); err != nil {
 			terrajen.JenDebug(err)
-			return fmt.Errorf(
-				"saving sub package file %s: %w",
-				rs.SubPkgPath(),
-				err,
-			)
+			return nil, fmt.Errorf("rendering sub package file: %w", err)
 		}
+		ar.Files = append(ar.Files, txtar.File{
+			Name: rs.SubPkgPath(),
+			Data: rsSubPkgBuf.Bytes(),
+		})
 	}
 
 	//
 	// Generate Data blocks
 	//
-	for name, data := range providerSchema.DataSourceSchemas {
+	for name, data := range schema.DataSourceSchemas {
 		ds := provider.SchemaData(name, data.Block)
 		df := terrajen.DataSourceFile(ds)
-		if err := df.Save(ds.FilePath); err != nil {
+		dataBuf := bytes.Buffer{}
+		if err := df.Render(&dataBuf); err != nil {
 			terrajen.JenDebug(err)
-			return fmt.Errorf("saving data file %s: %w", ds.FilePath, err)
+			return nil, fmt.Errorf("rendering data file: %w", err)
 		}
+		ar.Files = append(ar.Files, txtar.File{
+			Name: ds.FilePath,
+			Data: dataBuf.Bytes(),
+		})
 
 		dataSubPkgFile, ok := terrajen.SubPkgFile(ds)
 		if !ok {
 			continue
 		}
-		subPkgDir := filepath.Dir(ds.SubPkgPath())
-		if err := os.MkdirAll(subPkgDir, os.ModePerm); err != nil {
-			return fmt.Errorf(
-				"creating sub package directory %s: %w",
-				subPkgDir,
-				err,
-			)
-		}
-		if err := dataSubPkgFile.Save(ds.SubPkgPath()); err != nil {
+		dataSubPkgBuf := bytes.Buffer{}
+		if err := dataSubPkgFile.Render(&dataSubPkgBuf); err != nil {
 			terrajen.JenDebug(err)
-			return fmt.Errorf(
-				"saving sub package file %s: %w",
-				ds.SubPkgPath(),
-				err,
-			)
+			return nil, fmt.Errorf("rendering sub package file: %w", err)
 		}
+		ar.Files = append(ar.Files, txtar.File{
+			Name: ds.SubPkgPath(),
+			Data: dataSubPkgBuf.Bytes(),
+		})
 	}
-	return nil
+	return &ar, nil
 }
 
 func createDirIfNotEmpty(path string, force bool) error {
