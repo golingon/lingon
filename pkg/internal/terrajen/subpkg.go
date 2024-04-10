@@ -10,6 +10,13 @@ import (
 	"github.com/veggiemonk/strcase"
 )
 
+// SubPkgFile generates a Go file for the given schema.
+// The schema should represent a sub-package or be the sub-types of a top-level
+// provider/resource/data source.
+//
+// For example, the AWS provider has a top-level provider config, with many
+// nested subtypes.
+// SubPkgFile would generate a file containing all the subtypes.
 func SubPkgFile(s *Schema) (*jen.File, bool) {
 	// Skip sub pkg if there are no blocks to render
 	if s.graph.isEmpty() {
