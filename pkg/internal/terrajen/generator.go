@@ -23,8 +23,7 @@ type ProviderGenerator struct {
 	// E.g. github.com/golingon/lingon/gen/aws
 	GoProviderPkgPath string
 	// GeneratedPackageLocation is the directory on the filesystem where the
-	// generated
-	// Go files will be created.
+	// generated Go files will be created.
 	// The GoProviderPkgPath path must match the location of the generated files
 	// so that they can be imported correctly.
 	// E.g. if we are in a Go module called "my-module" and we generate the

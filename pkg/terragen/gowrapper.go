@@ -46,7 +46,7 @@ type GenerateGoArgs struct {
 // providers and their schemas.
 func GenerateGoCode(
 	args GenerateGoArgs,
-	schemas *tfjson.ProviderSchemas,
+	providerSchema *tfjson.ProviderSchema,
 ) error {
 	if args.OutDir == "" {
 		return errors.New("outDir is empty")
@@ -69,25 +69,7 @@ func GenerateGoCode(
 		ProviderVersion:          args.ProviderVersion,
 	}
 
-	providerSchema, ok := schemas.Schemas[args.ProviderSource]
-	if !ok {
-		// Try adding registry.terraform.io/ prefix if not already added
-		if !strings.HasPrefix(args.ProviderSource, "registry.terraform.io/") {
-			providerSchema, ok = schemas.Schemas[fmt.Sprintf(
-				"registry.terraform.io/%s",
-				args.ProviderSource,
-			)]
-		}
-		// If still not ok, indicate an error
-		if !ok {
-			return fmt.Errorf(
-				"provider source: %s: %w",
-				args.ProviderSource,
-				ErrProviderSchemaNotFound,
-			)
-		}
-	}
-	arch, err := generateProvider(providerGenerator, providerSchema)
+	arch, err := generateProviderTxtar(providerGenerator, providerSchema)
 	if err != nil {
 		return err
 	}
@@ -119,7 +101,7 @@ func writeTxtarArchive(ar *txtar.Archive) error {
 	return nil
 }
 
-func generateProvider(
+func generateProviderTxtar(
 	provider terrajen.ProviderGenerator,
 	schema *tfjson.ProviderSchema,
 ) (*txtar.Archive, error) {
