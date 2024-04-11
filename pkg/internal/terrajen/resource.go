@@ -10,7 +10,8 @@ import (
 	"github.com/veggiemonk/strcase"
 )
 
-// ResourceFile generates a Go file for a Terraform resource configuration based on the given Schema
+// ResourceFile generates a Go file for a Terraform resource configuration based
+// on the given Schema
 func ResourceFile(s *Schema) *jen.File {
 	f := jen.NewFile(s.PackageName)
 	f.ImportAlias(pkgHCL, pkgHCLAlias)
@@ -152,7 +153,8 @@ func resourceStateStruct(s *Schema) *jen.Statement {
 			stmt.Index()
 		}
 
-		stmt.Qual(s.SubPkgQualPath(), strcase.Pascal(child.name)+suffixState)
+		stmt.Id(strcase.Pascal(child.uniqueName) + suffixState)
+		// stmt.Qual(s.SubPkgQualPath(), strcase.Pascal(child.name)+suffixState)
 		stmt.Tag(
 			map[string]string{
 				tagJSON: child.name,
@@ -160,5 +162,10 @@ func resourceStateStruct(s *Schema) *jen.Statement {
 		)
 		fields = append(fields, stmt)
 	}
-	return jen.Type().Id(s.StateStructName).Struct(fields...)
+	return jen.
+		Type().
+		Id(s.StateStructName).
+		Struct(fields...).
+		Line().
+		Line()
 }

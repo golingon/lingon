@@ -48,9 +48,9 @@ type ProviderGenerator struct {
 type SchemaType string
 
 const (
-	SchemaTypeProvider SchemaType = "provider"
-	SchemaTypeResource SchemaType = "resource"
-	SchemaTypeData     SchemaType = "data"
+	SchemaTypeProvider   SchemaType = "provider"
+	SchemaTypeResource   SchemaType = "resource"
+	SchemaTypeDataSource SchemaType = "data"
 )
 
 // SchemaProvider creates a schema for the provider config block for the
@@ -58,21 +58,25 @@ const (
 // represented by ProviderGenerator
 func (a *ProviderGenerator) SchemaProvider(sb *tfjson.SchemaBlock) *Schema {
 	return &Schema{
-		SchemaType:               SchemaTypeProvider,
-		GoProviderPkgPath:        a.GoProviderPkgPath,        // github.com/golingon/lingon/gen/aws
-		GeneratedPackageLocation: a.GeneratedPackageLocation, // gen/aws
-		ProviderName:             a.ProviderName,             // aws
-		ProviderSource:           a.ProviderSource,           // registry.terraform.io/hashicorp/aws
-		ProviderVersion:          a.ProviderVersion,          // 4.49.0
-		PackageName:              a.ProviderName,             // aws
-		ShortName:                "provider",
-		Type:                     "provider",
-		StructName:               "Provider",
-		ArgumentStructName:       "ProviderArgs",
-		Receiver:                 structReceiverFromName("provider"),
+		SchemaType:           SchemaTypeProvider,
+		GoProviderPkgPath:    a.GoProviderPkgPath,        // github.com/golingon/lingon/gen/aws
+		GeneratedPkgLocation: a.GeneratedPackageLocation, // gen/aws
+		ProviderName:         a.ProviderName,             // aws
+		ProviderSource:       a.ProviderSource,           // registry.terraform.io/hashicorp/aws
+		ProviderVersion:      a.ProviderVersion,          // 4.49.0
+		PackageName:          a.ProviderName,             // aws
+		Type:                 "provider",
+		StructName:           "Provider",
+		ArgumentStructName:   "Provider", // Edge case for provider: args struct *is* the provider struct.
+		StateStructName:      "n/a",      // Providers do not have a state.
+		Receiver:             structReceiverFromName("provider"),
 
-		NewFuncName:    "NewProvider",
-		SubPackageName: "provider",
+		NewFuncName: "n/a", // Not used.
+		SubPkgName:  a.ProviderName,
+		SubPkgPath: filepath.Join(
+			a.GeneratedPackageLocation,
+			"provider_types"+fileExtension,
+		),
 		FilePath: filepath.Join(
 			a.GeneratedPackageLocation,
 			"provider"+fileExtension,
@@ -87,40 +91,41 @@ func (a *ProviderGenerator) SchemaResource(
 	name string,
 	sb *tfjson.SchemaBlock,
 ) *Schema {
-	shortName := providerShortName(name)
-	spn := strings.ReplaceAll(shortName, "_", "")
-	fp := filepath.Join(a.GeneratedPackageLocation, shortName+fileExtension)
 	rs := &Schema{
-		SchemaType:               SchemaTypeResource,
-		GoProviderPkgPath:        a.GoProviderPkgPath,        // github.com/golingon/lingon/gen/aws
-		GeneratedPackageLocation: a.GeneratedPackageLocation, // gen/aws
-		ProviderName:             a.ProviderName,             // aws
-		ProviderSource:           a.ProviderSource,           // hashicorp/aws
-		ProviderVersion:          a.ProviderVersion,          // 4.49.0
-		ShortName:                shortName,                  // aws_iam_role => iam_role
-		PackageName:              a.ProviderName,             // aws
-		Type:                     name,                       // aws
+		SchemaType:           SchemaTypeResource,
+		GoProviderPkgPath:    a.GoProviderPkgPath,        // github.com/golingon/lingon/gen/aws
+		GeneratedPkgLocation: a.GeneratedPackageLocation, // gen/aws
+		ProviderName:         a.ProviderName,             // aws
+		ProviderSource:       a.ProviderSource,           // hashicorp/aws
+		ProviderVersion:      a.ProviderVersion,          // 4.49.0
+		PackageName:          name,                       // aws_iam_role
+		Type:                 name,                       // aws_iam_role
 
-		StructName: strcase.Pascal(
-			shortName,
-		), // iam_role => IamRole
-		ArgumentStructName: strcase.Pascal(
-			shortName,
-		) + suffixArgs, // iam_role => IamRoleArgs
+		StructName:         "Resource",
+		ArgumentStructName: suffixArgs, // Args
 		AttributesStructName: strcase.Camel(
-			shortName,
-		) + suffixAttributes, // iam_role => iamRoleAttributes
+			name,
+		) + suffixAttributes, // iam_role => awsIamRoleAttributes
 		StateStructName: strcase.Camel(
-			shortName,
-		) + suffixState, // iam_role => IamRoleOut
+			name,
+		) + suffixState, // aws_iam_role => awsIamRoleState
 		Receiver: structReceiverFromName(
-			shortName,
+			name,
 		), // iam_role => ir
 
-		NewFuncName:    "New" + strcase.Pascal(shortName),
-		SubPackageName: spn, // iam_role => iamrole
-		FilePath:       fp,
-		graph:          newGraph(sb),
+		NewFuncName: "New",
+		SubPkgName:  name, // aws_iam_role => aws_iam_role
+		SubPkgPath: filepath.Join(
+			a.GeneratedPackageLocation,
+			name,
+			name+"_types"+fileExtension,
+		),
+		FilePath: filepath.Join(
+			a.GeneratedPackageLocation,
+			name,
+			name+fileExtension,
+		),
+		graph: newGraph(sb),
 	}
 	return rs
 }
@@ -131,48 +136,43 @@ func (a *ProviderGenerator) SchemaData(
 	name string,
 	sb *tfjson.SchemaBlock,
 ) *Schema {
-	shortName := providerShortName(name)
-	spn := strings.ReplaceAll(shortName, "_", "")
-	dataName := "data_" + shortName
-	fp := filepath.Join(a.GeneratedPackageLocation, dataName+fileExtension)
-	pn := strcase.Pascal(shortName)
-
+	dataName := "data_" + name
 	ds := &Schema{
-		SchemaType:               SchemaTypeData,
-		GoProviderPkgPath:        a.GoProviderPkgPath,        // github.com/golingon/lingon/gen/aws
-		GeneratedPackageLocation: a.GeneratedPackageLocation, // gen/aws
-		ProviderName:             a.ProviderName,             // aws
-		ProviderSource:           a.ProviderSource,           // hashicorp/aws
-		ProviderVersion:          a.ProviderVersion,          // 4.49.0
-		ShortName:                shortName,                  // aws_iam_role => iam_role
-		PackageName:              a.ProviderName,             // aws
-		Type:                     name,                       // aws_iam_role
+		SchemaType:           SchemaTypeDataSource,
+		GoProviderPkgPath:    a.GoProviderPkgPath,        // github.com/golingon/lingon/gen/aws
+		GeneratedPkgLocation: a.GeneratedPackageLocation, // gen/aws
+		ProviderName:         a.ProviderName,             // aws
+		ProviderSource:       a.ProviderSource,           // hashicorp/aws
+		ProviderVersion:      a.ProviderVersion,          // 4.49.0
+		PackageName:          name,                       // aws_iam_role
+		Type:                 name,                       // aws_iam_role
 
-		StructName:           "Data" + pn,                    // iam_role => DataIamRole
-		ArgumentStructName:   "Data" + pn + suffixArgs,       // iam_role => DataIamRoleArgs
-		AttributesStructName: "data" + pn + suffixAttributes, // iam_role => dataIamRoleAttributes
+		StructName:         "DataSource",
+		ArgumentStructName: prefixStructDataSource + suffixArgs, // aws_iam_role => DataArgs
+		AttributesStructName: strcase.Camel(
+			dataName,
+		) + suffixAttributes, // iam_role => dataAwsIamRoleAttributes
+		StateStructName: "n/a", // Data sources do not have a state.
 		Receiver: structReceiverFromName(
-			shortName,
+			name,
 		), // iam_role => ir
 
-		NewFuncName:    "NewData" + pn, // iam_role => NewDataIamRole
-		SubPackageName: "data" + spn,   // iam_role => dataiamrole
-		FilePath:       fp,
-		graph:          newGraph(sb),
+		NewFuncName: "Data",
+		SubPkgName:  name, // aws_iam_role => aws_iam_role
+		SubPkgPath: filepath.Join(
+			a.GeneratedPackageLocation,
+			name,
+			dataName+"_types"+fileExtension,
+		), // gen/aws/aws_iam_role/data_aws_iam_role_types.go
+		FilePath: filepath.Join(
+			a.GeneratedPackageLocation,
+			name,
+			dataName+fileExtension,
+		), // gen/aws/aws_iam_role/data_aws_iam_role.go
+		graph: newGraph(sb),
 	}
 
 	return ds
-}
-
-// providerShortName takes a name like "aws_iam_role" and returns the name
-// without
-// the leading provider prefix, i.e. it returns "iam_role"
-func providerShortName(name string) string {
-	underscoreIndex := strings.Index(name, "_")
-	if underscoreIndex == -1 {
-		return name
-	}
-	return name[underscoreIndex+1:]
 }
 
 // structReceiverFromName calculates a suitable receiver from the name of the
@@ -197,15 +197,14 @@ func structReceiverFromName(name string) string {
 // A schema can represent a resource, a data object or the provider
 // configuration.
 type Schema struct {
-	SchemaType               SchemaType // resource / provider / data
-	GoProviderPkgPath        string     // github.com/golingon/lingon/gen/providers
-	GeneratedPackageLocation string     // gen/providers/aws
-	ProviderName             string     // aws
-	ProviderSource           string     // registry.terraform.io/hashicorp/aws
-	ProviderVersion          string     // 4.49.0
-	ShortName                string     // aws_iam_role => iam_role
-	PackageName              string     // aws
-	Type                     string     // aws_iam_role
+	SchemaType           SchemaType // resource / provider / data
+	GoProviderPkgPath    string     // github.com/golingon/lingon/gen/providers
+	GeneratedPkgLocation string     // gen/providers/aws
+	ProviderName         string     // aws
+	ProviderSource       string     // registry.terraform.io/hashicorp/aws
+	ProviderVersion      string     // 4.49.0
+	PackageName          string     // aws
+	Type                 string     // aws_iam_role
 
 	// Structs
 	StructName           string // iam_role => IamRole
@@ -215,20 +214,15 @@ type Schema struct {
 
 	Receiver string // iam_role => ir
 
-	NewFuncName    string // iam_role => NewIamRole
-	SubPackageName string // iam_role => iamrole
-	FilePath       string // gen/providers/aws/ xxx
-	graph          *graph
+	NewFuncName string // iam_role => NewIamRole
+	SubPkgName  string // iam_role => iamrole
+	// SubPkgPath is the filepath for the schema entities types (args,
+	// attributes, state).
+	SubPkgPath string
+	FilePath   string // gen/providers/aws/ xxx
+	graph      *graph
 }
 
 func (s *Schema) SubPkgQualPath() string {
-	return s.GoProviderPkgPath + "/" + s.SubPackageName
-}
-
-func (s *Schema) SubPkgPath() string {
-	return filepath.Join(
-		s.GeneratedPackageLocation,
-		s.SubPackageName,
-		s.ShortName+fileExtension,
-	)
+	return s.GoProviderPkgPath + "/" + s.SubPkgName
 }

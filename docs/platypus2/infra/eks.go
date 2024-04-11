@@ -7,10 +7,14 @@ import (
 	"fmt"
 
 	"github.com/golingon/lingon/pkg/terra"
-	aws "github.com/golingon/terraproviders/aws/5.13.1"
-	"github.com/golingon/terraproviders/aws/5.13.1/dataiampolicydocument"
-	"github.com/golingon/terraproviders/aws/5.13.1/ekscluster"
-	tls "github.com/golingon/terraproviders/tls/4.0.4"
+	"github.com/golingon/lingoneks/out/aws/aws_eks_cluster"
+	"github.com/golingon/lingoneks/out/aws/aws_iam_openid_connect_provider"
+	"github.com/golingon/lingoneks/out/aws/aws_iam_policy_document"
+	"github.com/golingon/lingoneks/out/aws/aws_iam_role"
+	"github.com/golingon/lingoneks/out/aws/aws_iam_role_policy_attachment"
+	"github.com/golingon/lingoneks/out/aws/aws_security_group"
+	"github.com/golingon/lingoneks/out/aws/aws_security_group_rule"
+	"github.com/golingon/terra_tls/tls_certificate"
 )
 
 var (
@@ -32,25 +36,25 @@ type ClusterOpts struct {
 }
 
 type Cluster struct {
-	EKSCluster           *aws.EksCluster              `validate:"required"`
-	IAMPolicyDocument    *aws.DataIamPolicyDocument   `validate:"required"`
-	IAMRole              *aws.IamRole                 `validate:"required"`
-	IAMRoleClusterPolicy *aws.IamRolePolicyAttachment `validate:"required"`
-	IAMRoleVPCController *aws.IamRolePolicyAttachment `validate:"required"`
+	EKSCluster           *aws_eks_cluster.Resource                `validate:"required"`
+	IAMPolicyDocument    *aws_iam_policy_document.DataSource      `validate:"required"`
+	IAMRole              *aws_iam_role.Resource                   `validate:"required"`
+	IAMRoleClusterPolicy *aws_iam_role_policy_attachment.Resource `validate:"required"`
+	IAMRoleVPCController *aws_iam_role_policy_attachment.Resource `validate:"required"`
 
 	// SecurityGroup is the AWS security group for both the EKS control plane
 	// and worker nodes
-	SecurityGroup   *aws.SecurityGroup     `validate:"required"`
-	IngressAllowAll *aws.SecurityGroupRule `validate:"required"`
-	EgressAllowAll  *aws.SecurityGroupRule `validate:"required"`
+	SecurityGroup   *aws_security_group.Resource      `validate:"required"`
+	IngressAllowAll *aws_security_group_rule.Resource `validate:"required"`
+	EgressAllowAll  *aws_security_group_rule.Resource `validate:"required"`
 
-	TLSCert         *tls.DataCertificate          `validate:"required"`
-	IAMOIDCProvider *aws.IamOpenidConnectProvider `validate:"required"`
+	TLSCert         *tls_certificate.DataSource               `validate:"required"`
+	IAMOIDCProvider *aws_iam_openid_connect_provider.Resource `validate:"required"`
 }
 
 func NewCluster(opts ClusterOpts) *Cluster {
-	sg := aws.NewSecurityGroup(
-		"eks", aws.SecurityGroupArgs{
+	sg := aws_security_group.New(
+		"eks", aws_security_group.Args{
 			Name: S("eks-" + opts.Name),
 			Description: S(
 				fmt.Sprintf(
@@ -67,8 +71,8 @@ func NewCluster(opts ClusterOpts) *Cluster {
 
 	sgAttrs := sg.Attributes()
 
-	ingressAllowAll := aws.NewSecurityGroupRule(
-		"eks", aws.SecurityGroupRuleArgs{
+	ingressAllowAll := aws_security_group_rule.New(
+		"eks", aws_security_group_rule.Args{
 			SecurityGroupId:       sgAttrs.Id(),
 			SourceSecurityGroupId: sgAttrs.Id(),
 			Description: S(
@@ -80,8 +84,8 @@ func NewCluster(opts ClusterOpts) *Cluster {
 			Type:     INGRESS,
 		},
 	)
-	egressAllowAll := aws.NewSecurityGroupRule(
-		"node_egress_all", aws.SecurityGroupRuleArgs{
+	egressAllowAll := aws_security_group_rule.New(
+		"node_egress_all", aws_security_group_rule.Args{
 			SecurityGroupId: sgAttrs.Id(),
 			Description:     S("Allow all egress"),
 			Protocol:        S("-1"),
@@ -92,13 +96,13 @@ func NewCluster(opts ClusterOpts) *Cluster {
 		},
 	)
 
-	iamPolicyDocument := aws.NewDataIamPolicyDocument(
-		"eks", aws.DataIamPolicyDocumentArgs{
-			Statement: []dataiampolicydocument.Statement{
+	iamPolicyDocument := aws_iam_policy_document.Data(
+		"eks", aws_iam_policy_document.DataArgs{
+			Statement: []aws_iam_policy_document.DataStatement{
 				{
 					Sid:     S("EKSClusterAssumeRole"),
 					Actions: terra.Set(S("sts:AssumeRole")),
-					Principals: []dataiampolicydocument.Principals{
+					Principals: []aws_iam_policy_document.DataStatementPrincipals{
 						{
 							Type:        S("Service"),
 							Identifiers: terra.Set(S("eks.amazonaws.com")),
@@ -109,31 +113,31 @@ func NewCluster(opts ClusterOpts) *Cluster {
 		},
 	)
 
-	iamRole := aws.NewIamRole(
-		"eks", aws.IamRoleArgs{
+	iamRole := aws_iam_role.New(
+		"eks", aws_iam_role.Args{
 			Name:             S("eks-" + opts.Name),
 			AssumeRolePolicy: iamPolicyDocument.Attributes().Json(),
 		},
 	)
 
-	clusterPolicy := aws.NewIamRolePolicyAttachment(
-		"cluster_policy", aws.IamRolePolicyAttachmentArgs{
+	clusterPolicy := aws_iam_role_policy_attachment.New(
+		"cluster_policy", aws_iam_role_policy_attachment.Args{
 			PolicyArn: arnClusterPolicy,
 			Role:      iamRole.Attributes().Name(),
 		},
 	)
-	vpcController := aws.NewIamRolePolicyAttachment(
-		"vpc_controller", aws.IamRolePolicyAttachmentArgs{
+	vpcController := aws_iam_role_policy_attachment.New(
+		"vpc_controller", aws_iam_role_policy_attachment.Args{
 			PolicyArn: arnVPCResourceController,
 			Role:      iamRole.Attributes().Name(),
 		},
 	)
 
-	eksCluster := aws.NewEksCluster(
-		"eks", aws.EksClusterArgs{
+	eksCluster := aws_eks_cluster.New(
+		"eks", aws_eks_cluster.Args{
 			Name:    S(opts.Name),
 			RoleArn: iamRole.Attributes().Arn(),
-			VpcConfig: &ekscluster.VpcConfig{
+			VpcConfig: &aws_eks_cluster.VpcConfig{
 				SecurityGroupIds: terra.Set(sgAttrs.Id()),
 				SubnetIds:        terra.SetString(opts.PrivateSubnetIDs[:]...),
 			},
@@ -153,8 +157,8 @@ func NewCluster(opts ClusterOpts) *Cluster {
 	// 	),
 	// }
 
-	tlsCert := tls.NewDataCertificate(
-		"eks", tls.DataCertificateArgs{
+	tlsCert := tls_certificate.Data(
+		"eks", tls_certificate.DataArgs{
 			Url: eksCluster.Attributes().
 				Identity().
 				Index(0).
@@ -163,8 +167,8 @@ func NewCluster(opts ClusterOpts) *Cluster {
 				Issuer(),
 		},
 	)
-	iamOIDCProvider := aws.NewIamOpenidConnectProvider(
-		"eks", aws.IamOpenidConnectProviderArgs{
+	iamOIDCProvider := aws_iam_openid_connect_provider.New(
+		"eks", aws_iam_openid_connect_provider.Args{
 			ClientIdList: terra.Set(terra.String("sts.amazonaws.com")),
 			ThumbprintList: terra.CastAsList(
 				tlsCert.Attributes().

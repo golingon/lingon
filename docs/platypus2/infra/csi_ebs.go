@@ -5,13 +5,14 @@ package infra
 
 import (
 	"github.com/golingon/lingon/pkg/terra"
-	aws "github.com/golingon/terraproviders/aws/5.13.1"
-	"github.com/golingon/terraproviders/aws/5.13.1/dataiampolicydocument"
-	"github.com/golingon/terraproviders/aws/5.13.1/iamrole"
+	"github.com/golingon/lingoneks/out/aws/aws_eks_addon"
+	"github.com/golingon/lingoneks/out/aws/aws_iam_policy_document"
+	"github.com/golingon/lingoneks/out/aws/aws_iam_role"
+	"github.com/golingon/lingoneks/out/aws/aws_iam_role_policy_attachment"
 )
 
 type CSI struct {
-	CSIDriver *aws.EksAddon `validate:"required"`
+	CSIDriver *aws_eks_addon.Resource `validate:"required"`
 	IAMRole   `validate:"required"`
 }
 
@@ -22,17 +23,17 @@ type CSIOpts struct {
 }
 
 type IAMRole struct {
-	AssumeRolePolicy *aws.DataIamPolicyDocument   `validate:"required"`
-	Role             *aws.IamRole                 `validate:"required"`
-	RolePolicy       *aws.DataIamPolicyDocument   `validate:"required"`
-	PolicyAttach     *aws.IamRolePolicyAttachment `validate:"required"`
+	AssumeRolePolicy *aws_iam_policy_document.DataSource      `validate:"required"`
+	Role             *aws_iam_role.Resource                   `validate:"required"`
+	RolePolicy       *aws_iam_policy_document.DataSource      `validate:"required"`
+	PolicyAttach     *aws_iam_role_policy_attachment.Resource `validate:"required"`
 }
 
 func NewCSIEBS(opts CSIOpts) *CSI {
 	ir := newIAMRole(opts)
 	return &CSI{
-		CSIDriver: aws.NewEksAddon(
-			opts.ClusterName+"-csiebs", aws.EksAddonArgs{
+		CSIDriver: aws_eks_addon.New(
+			opts.ClusterName+"-csiebs", aws_eks_addon.Args{
 				AddonName: S("aws-ebs-csi-driver"),
 				// AddonVersion:             S("v1.19.0-eksbuild.1"),
 				AddonVersion:             S("v1.21.0-eksbuild.1"),
@@ -47,14 +48,14 @@ func NewCSIEBS(opts CSIOpts) *CSI {
 }
 
 func newIAMRole(opts CSIOpts) *IAMRole {
-	assumeRolePolicy := aws.NewDataIamPolicyDocument(
-		"csi_assume_role", aws.DataIamPolicyDocumentArgs{
-			Statement: []dataiampolicydocument.Statement{
+	assumeRolePolicy := aws_iam_policy_document.Data(
+		"csi_assume_role", aws_iam_policy_document.DataArgs{
+			Statement: []aws_iam_policy_document.DataStatement{
 				{
 					Actions: terra.Set(S("sts:AssumeRoleWithWebIdentity")),
 					Effect:  S("Allow"),
 
-					Condition: []dataiampolicydocument.Condition{
+					Condition: []aws_iam_policy_document.DataStatementCondition{
 						{
 							Test:     S("StringEquals"),
 							Variable: S(opts.OIDCProviderURL + ":sub"),
@@ -70,7 +71,7 @@ func newIAMRole(opts CSIOpts) *IAMRole {
 							Values:   terra.ListString("sts.amazonaws.com"),
 						},
 					},
-					Principals: []dataiampolicydocument.Principals{
+					Principals: []aws_iam_policy_document.DataStatementPrincipals{
 						{
 							Type:        S("Federated"),
 							Identifiers: terra.Set(S(opts.OIDCProviderArn)),
@@ -82,12 +83,12 @@ func newIAMRole(opts CSIOpts) *IAMRole {
 	)
 
 	// small utility function to avoid repeting fields in the policy
-	cond := func(action, v, val string) dataiampolicydocument.Statement {
-		return dataiampolicydocument.Statement{
+	cond := func(action, v, val string) aws_iam_policy_document.DataStatement {
+		return aws_iam_policy_document.DataStatement{
 			Effect:    S("Allow"),
 			Actions:   terra.SetString(action),
 			Resources: terra.SetString("*"),
-			Condition: []dataiampolicydocument.Condition{
+			Condition: []aws_iam_policy_document.DataStatementCondition{
 				{
 					Test:     S("StringLike"),
 					Variable: S(v),
@@ -100,9 +101,9 @@ func newIAMRole(opts CSIOpts) *IAMRole {
 	// converted from
 	// https://github.com/kubernetes-sigs/aws-ebs-csi-driver/blob/master/docs/example-iam-policy.json
 	//
-	policy := aws.NewDataIamPolicyDocument(
-		"csiebs", aws.DataIamPolicyDocumentArgs{
-			Statement: []dataiampolicydocument.Statement{
+	policy := aws_iam_policy_document.Data(
+		"csiebs", aws_iam_policy_document.DataArgs{
+			Statement: []aws_iam_policy_document.DataStatement{
 				{
 					Effect: S("Allow"),
 					Actions: terra.SetString(
@@ -126,7 +127,7 @@ func newIAMRole(opts CSIOpts) *IAMRole {
 						"arn:aws:ec2:*:*:volume/*",
 						"arn:aws:ec2:*:*:snapshot/*",
 					),
-					Condition: []dataiampolicydocument.Condition{
+					Condition: []aws_iam_policy_document.DataStatementCondition{
 						{
 							Test:     S("StringEquals"),
 							Variable: S("ec2:CreateAction"),
@@ -177,13 +178,13 @@ func newIAMRole(opts CSIOpts) *IAMRole {
 		},
 	)
 
-	csiRole := aws.NewIamRole(
-		"csiebs_role", aws.IamRoleArgs{
+	csiRole := aws_iam_role.New(
+		"csiebs_role", aws_iam_role.Args{
 			Name:             S(opts.ClusterName + "-csi"),
 			Description:      S("IAM Role for CSI EBS driver"),
 			AssumeRolePolicy: assumeRolePolicy.Attributes().Json(),
 
-			InlinePolicy: []iamrole.InlinePolicy{
+			InlinePolicy: []aws_iam_role.InlinePolicy{
 				{
 					Name:   S("csi-ebs-driver"),
 					Policy: policy.Attributes().Json(),
@@ -191,9 +192,9 @@ func newIAMRole(opts CSIOpts) *IAMRole {
 			},
 		},
 	)
-	pa := aws.NewIamRolePolicyAttachment(
+	pa := aws_iam_role_policy_attachment.New(
 		"csiebs_attach_AmazonEBSCSIDriverPolicy",
-		aws.IamRolePolicyAttachmentArgs{
+		aws_iam_role_policy_attachment.Args{
 			PolicyArn: S(
 				"arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy",
 			),

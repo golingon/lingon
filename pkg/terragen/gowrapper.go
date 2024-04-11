@@ -40,6 +40,9 @@ type GenerateGoArgs struct {
 	PkgPath string
 	// Force enables overriding any existing generated files per-provider.
 	Force bool
+	// Clean enables cleaning the generated files location before generating the
+	// new files.
+	Clean bool
 }
 
 // GenerateGoCode generates Go code for creating Terraform objects for the given
@@ -73,7 +76,7 @@ func GenerateGoCode(
 	if err != nil {
 		return err
 	}
-	if err := createDirIfNotEmpty(args.OutDir, args.Force); err != nil {
+	if err := createDirIfNotEmpty(args.OutDir, args.Force, args.Clean); err != nil {
 		return fmt.Errorf(
 			"creating providers pkg directory %q: %w",
 			args.OutDir,
@@ -130,7 +133,7 @@ func generateProviderTxtar(
 			return nil, fmt.Errorf("rendering sub package file: %w", err)
 		}
 		ar.Files = append(ar.Files, txtar.File{
-			Name: providerSchema.SubPkgPath(),
+			Name: providerSchema.SubPkgPath,
 			Data: subPkgBuf.Bytes(),
 		})
 	}
@@ -138,19 +141,19 @@ func generateProviderTxtar(
 	// Generate Resources
 	//
 	for name, resource := range schema.ResourceSchemas {
-		rs := provider.SchemaResource(name, resource.Block)
-		rsf := terrajen.ResourceFile(rs)
+		resourceSchema := provider.SchemaResource(name, resource.Block)
+		rsf := terrajen.ResourceFile(resourceSchema)
 		resourceBuf := bytes.Buffer{}
 		if err := rsf.Render(&resourceBuf); err != nil {
 			terrajen.JenDebug(err)
 			return nil, fmt.Errorf("rendering resource file: %w", err)
 		}
 		ar.Files = append(ar.Files, txtar.File{
-			Name: rs.FilePath,
+			Name: resourceSchema.FilePath,
 			Data: resourceBuf.Bytes(),
 		})
 
-		rsSubPkgFile, ok := terrajen.SubPkgFile(rs)
+		rsSubPkgFile, ok := terrajen.SubPkgFile(resourceSchema)
 		if !ok {
 			continue
 		}
@@ -160,7 +163,7 @@ func generateProviderTxtar(
 			return nil, fmt.Errorf("rendering sub package file: %w", err)
 		}
 		ar.Files = append(ar.Files, txtar.File{
-			Name: rs.SubPkgPath(),
+			Name: resourceSchema.SubPkgPath,
 			Data: rsSubPkgBuf.Bytes(),
 		})
 	}
@@ -169,19 +172,19 @@ func generateProviderTxtar(
 	// Generate Data blocks
 	//
 	for name, data := range schema.DataSourceSchemas {
-		ds := provider.SchemaData(name, data.Block)
-		df := terrajen.DataSourceFile(ds)
+		dataSchema := provider.SchemaData(name, data.Block)
+		df := terrajen.DataSourceFile(dataSchema)
 		dataBuf := bytes.Buffer{}
 		if err := df.Render(&dataBuf); err != nil {
 			terrajen.JenDebug(err)
 			return nil, fmt.Errorf("rendering data file: %w", err)
 		}
 		ar.Files = append(ar.Files, txtar.File{
-			Name: ds.FilePath,
+			Name: dataSchema.FilePath,
 			Data: dataBuf.Bytes(),
 		})
 
-		dataSubPkgFile, ok := terrajen.SubPkgFile(ds)
+		dataSubPkgFile, ok := terrajen.SubPkgFile(dataSchema)
 		if !ok {
 			continue
 		}
@@ -191,14 +194,14 @@ func generateProviderTxtar(
 			return nil, fmt.Errorf("rendering sub package file: %w", err)
 		}
 		ar.Files = append(ar.Files, txtar.File{
-			Name: ds.SubPkgPath(),
+			Name: dataSchema.SubPkgPath,
 			Data: dataSubPkgBuf.Bytes(),
 		})
 	}
 	return &ar, nil
 }
 
-func createDirIfNotEmpty(path string, force bool) error {
+func createDirIfNotEmpty(path string, force, clean bool) error {
 	f, err := os.Open(path)
 	if err != nil {
 		if !os.IsNotExist(err) {
@@ -222,16 +225,19 @@ func createDirIfNotEmpty(path string, force bool) error {
 		}
 		return err
 	}
-	// The directory is not empty. If force flag is provided, clean the
-	// directory, else error
-	if !force {
+	// The directory is not empty. If force or clean flags are not provided, we
+	// have a problem.
+	if !force && !clean {
 		return ErrPackageLocationNotEmpty
+	}
+	if !clean {
+		return nil
 	}
 	if err := os.RemoveAll(path); err != nil {
 		return fmt.Errorf("cleaning directory: %w", err)
 	}
 	// Create the directory again now that it's gone
-	return createDirIfNotEmpty(path, false)
+	return createDirIfNotEmpty(path, false, false)
 }
 
 // ParseProvider takes a provider as a string and returns a Provider object.

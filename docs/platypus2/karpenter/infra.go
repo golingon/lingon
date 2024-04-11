@@ -6,9 +6,10 @@ package karpenter
 import (
 	"fmt"
 
-	aws "github.com/golingon/terraproviders/aws/5.13.1"
-	"github.com/golingon/terraproviders/aws/5.13.1/dataiampolicydocument"
-	"github.com/golingon/terraproviders/aws/5.13.1/iamrole"
+	"github.com/golingon/lingoneks/out/aws/aws_iam_policy_document"
+	"github.com/golingon/lingoneks/out/aws/aws_iam_role"
+	"github.com/golingon/lingoneks/out/aws/aws_sqs_queue"
+	"github.com/golingon/lingoneks/out/aws/aws_sqs_queue_policy"
 
 	"github.com/golingon/lingon/pkg/terra"
 )
@@ -42,9 +43,9 @@ type Controller struct {
 }
 
 type NodeTerminationQueue struct {
-	SimpleQueue         *aws.SqsQueue              `validate:"required"`
-	QueuePolicy         *aws.SqsQueuePolicy        `validate:"required"`
-	QueuePolicyDocument *aws.DataIamPolicyDocument `validate:"required"`
+	SimpleQueue         *aws_sqs_queue.Resource             `validate:"required"`
+	QueuePolicy         *aws_sqs_queue_policy.Resource      `validate:"required"`
+	QueuePolicyDocument *aws_iam_policy_document.DataSource `validate:"required"`
 }
 
 func NewInfra(opts InfraOpts) Infra {
@@ -56,7 +57,7 @@ func NewInfra(opts InfraOpts) Infra {
 	}
 }
 
-func newController(opts InfraOpts, ipRole *aws.IamRole) Controller {
+func newController(opts InfraOpts, ipRole *aws_iam_role.Resource) Controller {
 	queue := newNodeTerminationQueue(opts)
 	return Controller{
 		IAMRole:              newIAMRole(opts, ipRole, queue.SimpleQueue),
@@ -65,28 +66,28 @@ func newController(opts InfraOpts, ipRole *aws.IamRole) Controller {
 }
 
 type IAMRole struct {
-	AssumeRolePolicy *aws.DataIamPolicyDocument `validate:"required"`
-	Role             *aws.IamRole               `validate:"required"`
-	RolePolicy       *aws.DataIamPolicyDocument `validate:"required"`
+	AssumeRolePolicy *aws_iam_policy_document.DataSource `validate:"required"`
+	Role             *aws_iam_role.Resource              `validate:"required"`
+	RolePolicy       *aws_iam_policy_document.DataSource `validate:"required"`
 }
 
 func newIAMRole(
 	opts InfraOpts,
-	ipRole *aws.IamRole,
-	queue *aws.SqsQueue,
+	ipRole *aws_iam_role.Resource,
+	queue *aws_sqs_queue.Resource,
 ) IAMRole {
-	assumeRolePolicy := aws.NewDataIamPolicyDocument(
-		KA.Name+"_assume_role", aws.DataIamPolicyDocumentArgs{
-			Statement: []dataiampolicydocument.Statement{
+	assumeRolePolicy := aws_iam_policy_document.Data(
+		KA.Name+"_assume_role", aws_iam_policy_document.DataArgs{
+			Statement: []aws_iam_policy_document.DataStatement{
 				{
 					Actions: terra.Set(S("sts:AssumeRoleWithWebIdentity")),
-					Principals: []dataiampolicydocument.Principals{
+					Principals: []aws_iam_policy_document.DataStatementPrincipals{
 						{
 							Type:        S("Federated"),
 							Identifiers: terra.Set(S(opts.OIDCProviderArn)),
 						},
 					},
-					Condition: []dataiampolicydocument.Condition{
+					Condition: []aws_iam_policy_document.DataStatementCondition{
 						{
 							Test:     S("StringEquals"),
 							Variable: S(opts.OIDCProviderURL + ":sub"),
@@ -108,9 +109,9 @@ func newIAMRole(
 			},
 		},
 	)
-	policy := aws.NewDataIamPolicyDocument(
-		KA.Name, aws.DataIamPolicyDocumentArgs{
-			Statement: []dataiampolicydocument.Statement{
+	policy := aws_iam_policy_document.Data(
+		KA.Name, aws_iam_policy_document.DataArgs{
+			Statement: []aws_iam_policy_document.DataStatement{
 				{
 					Actions: terra.SetString(
 						"ec2:DescribeImages",
@@ -140,7 +141,7 @@ func newIAMRole(
 					),
 					Effect:    S("Allow"),
 					Resources: terra.SetString("*"),
-					Condition: []dataiampolicydocument.Condition{
+					Condition: []aws_iam_policy_document.DataStatementCondition{
 						{
 							Test: S("StringEquals"),
 							Variable: S(
@@ -178,15 +179,15 @@ func newIAMRole(
 			},
 		},
 	)
-	role := aws.NewIamRole(
-		KA.Name, aws.IamRoleArgs{
+	role := aws_iam_role.New(
+		KA.Name, aws_iam_role.Args{
 			Name: S(opts.Name + "-controller"),
 			Description: S(
 				"IAM Role for Karpenter Controller (pod) to assume",
 			),
 			AssumeRolePolicy: assumeRolePolicy.Attributes().Json(),
 
-			InlinePolicy: []iamrole.InlinePolicy{
+			InlinePolicy: []aws_iam_role.InlinePolicy{
 				{
 					Name:   S(KA.Name),
 					Policy: policy.Attributes().Json(),
@@ -202,20 +203,20 @@ func newIAMRole(
 }
 
 func newNodeTerminationQueue(opts InfraOpts) NodeTerminationQueue {
-	queue := aws.NewSqsQueue(
-		KA.Name, aws.SqsQueueArgs{
+	queue := aws_sqs_queue.New(
+		KA.Name, aws_sqs_queue.Args{
 			Name:                    S(opts.Name),
 			MessageRetentionSeconds: terra.Number(300),
 		},
 	)
-	policyDoc := aws.NewDataIamPolicyDocument(
-		"node_termination_queue", aws.DataIamPolicyDocumentArgs{
-			Statement: []dataiampolicydocument.Statement{
+	policyDoc := aws_iam_policy_document.Data(
+		"node_termination_queue", aws_iam_policy_document.DataArgs{
+			Statement: []aws_iam_policy_document.DataStatement{
 				{
 					Sid:       S("SQSWrite"),
 					Resources: terra.Set(queue.Attributes().Arn()),
 					Actions:   terra.SetString("sqs:SendMessage"),
-					Principals: []dataiampolicydocument.Principals{
+					Principals: []aws_iam_policy_document.DataStatementPrincipals{
 						{
 							Type: S("Service"),
 							Identifiers: terra.SetString(
@@ -228,8 +229,8 @@ func newNodeTerminationQueue(opts InfraOpts) NodeTerminationQueue {
 			},
 		},
 	)
-	queuePolicy := aws.NewSqsQueuePolicy(
-		KA.Name, aws.SqsQueuePolicyArgs{
+	queuePolicy := aws_sqs_queue_policy.New(
+		KA.Name, aws_sqs_queue_policy.Args{
 			QueueUrl: queue.Attributes().Url(),
 			Policy:   policyDoc.Attributes().Json(),
 		},

@@ -10,8 +10,10 @@ import (
 
 	tfjson "github.com/hashicorp/terraform-json"
 
+	aws "github.com/golingon/lingon/docs/terraform/out/aws"
+	"github.com/golingon/lingon/docs/terraform/out/aws/aws_subnet"
+	"github.com/golingon/lingon/docs/terraform/out/aws/aws_vpc"
 	"github.com/golingon/lingon/pkg/terra"
-	aws "github.com/golingon/terraproviders/aws/4.60.0"
 )
 
 func Example_awsProvider() {
@@ -22,30 +24,26 @@ func Example_awsProvider() {
 
 	// Initialise a stack with the AWS provider configuration
 	_ = AWSStack{
-		Provider: aws.NewProvider(
-			aws.ProviderArgs{
-				Region: terra.String("eu-north-1"),
-			},
-		),
+		Provider: &aws.Provider{
+			Region: terra.String("eu-north-1"),
+		},
 	}
 }
 
 func Example_awsVPC() {
 	type AWSStack struct {
 		terra.Stack
-		Provider *aws.Provider `validate:"required"`
-		VPC      *aws.Vpc      `validate:"required"`
+		Provider *aws.Provider     `validate:"required"`
+		VPC      *aws_vpc.Resource `validate:"required"`
 	}
 
 	// Initialise a stack with the AWS provider configuration
 	stack := AWSStack{
-		Provider: aws.NewProvider(
-			aws.ProviderArgs{
-				Region: terra.String("eu-north-1"),
-			},
-		),
-		VPC: aws.NewVpc(
-			"vpc", aws.VpcArgs{
+		Provider: &aws.Provider{
+			Region: terra.String("eu-north-1"),
+		},
+		VPC: aws_vpc.New(
+			"vpc", aws_vpc.Args{
 				CidrBlock:        terra.String("10.0.0.0/16"),
 				EnableDnsSupport: terra.Bool(true),
 			},
@@ -64,7 +62,7 @@ func Example_awsVPC() {
 	//   required_providers {
 	//     aws = {
 	//       source  = "hashicorp/aws"
-	//       version = "4.60.0"
+	//       version = "5.44.0"
 	//     }
 	//   }
 	// }
@@ -84,19 +82,19 @@ func Example_awsVPC() {
 func Example_awsVPCWithSubnet() {
 	type AWSStack struct {
 		terra.Stack
-		Provider *aws.Provider `validate:"required"`
-		VPC      *aws.Vpc      `validate:"required"`
-		Subnet   *aws.Subnet   `validate:"required"`
+		Provider *aws.Provider        `validate:"required"`
+		VPC      *aws_vpc.Resource    `validate:"required"`
+		Subnet   *aws_subnet.Resource `validate:"required"`
 	}
 
-	vpc := aws.NewVpc(
-		"vpc", aws.VpcArgs{
+	vpc := aws_vpc.New(
+		"vpc", aws_vpc.Args{
 			CidrBlock:        terra.String("10.0.0.0/16"),
 			EnableDnsSupport: terra.Bool(true),
 		},
 	)
-	subnet := aws.NewSubnet(
-		"subnet", aws.SubnetArgs{
+	subnet := aws_subnet.New(
+		"subnet", aws_subnet.Args{
 			// Reference the VPC's ID, which will translate into a reference
 			// in the Terraform configuration
 			VpcId: vpc.Attributes().Id(),
@@ -105,11 +103,9 @@ func Example_awsVPCWithSubnet() {
 
 	// Initialise a stack with the AWS provider configuration
 	stack := AWSStack{
-		Provider: aws.NewProvider(
-			aws.ProviderArgs{
-				Region: terra.String("eu-north-1"),
-			},
-		),
+		Provider: &aws.Provider{
+			Region: terra.String("eu-north-1"),
+		},
 		VPC:    vpc,
 		Subnet: subnet,
 	}
@@ -126,7 +122,7 @@ func Example_awsVPCWithSubnet() {
 	//   required_providers {
 	//     aws = {
 	//       source  = "hashicorp/aws"
-	//       version = "4.60.0"
+	//       version = "5.44.0"
 	//     }
 	//   }
 	// }
@@ -150,19 +146,17 @@ func Example_awsVPCWithSubnet() {
 func Example_awsVPCImportState() {
 	type AWSStack struct {
 		terra.Stack
-		Provider *aws.Provider `validate:"required"`
-		VPC      *aws.Vpc      `validate:"required"`
+		Provider *aws.Provider     `validate:"required"`
+		VPC      *aws_vpc.Resource `validate:"required"`
 	}
 
 	// Initialise a stack with the AWS provider configuration
 	stack := AWSStack{
-		Provider: aws.NewProvider(
-			aws.ProviderArgs{
-				Region: terra.String("eu-north-1"),
-			},
-		),
-		VPC: aws.NewVpc(
-			"vpc", aws.VpcArgs{
+		Provider: &aws.Provider{
+			Region: terra.String("eu-north-1"),
+		},
+		VPC: aws_vpc.New(
+			"vpc", aws_vpc.Args{
 				CidrBlock:        terra.String("10.0.0.0/16"),
 				EnableDnsSupport: terra.Bool(true),
 			},

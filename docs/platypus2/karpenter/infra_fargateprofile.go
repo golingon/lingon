@@ -6,9 +6,10 @@ package karpenter
 import (
 	"fmt"
 
-	aws "github.com/golingon/terraproviders/aws/5.13.1"
-	"github.com/golingon/terraproviders/aws/5.13.1/dataiampolicydocument"
-	"github.com/golingon/terraproviders/aws/5.13.1/eksfargateprofile"
+	"github.com/golingon/lingoneks/out/aws/aws_eks_fargate_profile"
+	"github.com/golingon/lingoneks/out/aws/aws_iam_policy_document"
+	"github.com/golingon/lingoneks/out/aws/aws_iam_role"
+	"github.com/golingon/lingoneks/out/aws/aws_iam_role_policy_attachment"
 
 	"github.com/golingon/lingon/pkg/terra"
 )
@@ -25,20 +26,20 @@ const (
 // FargateProfile is the AWS EKS Fargate profile for the Karpenter pods to
 // run on
 type FargateProfile struct {
-	FargateProfile    *aws.EksFargateProfile         `validate:"required"`
-	IAMRole           *aws.IamRole                   `validate:"required"`
-	AssumeRole        *aws.DataIamPolicyDocument     `validate:"required"`
-	PolicyAttachments []*aws.IamRolePolicyAttachment `validate:"required,dive,required"`
+	FargateProfile    *aws_eks_fargate_profile.Resource          `validate:"required"`
+	IAMRole           *aws_iam_role.Resource                     `validate:"required"`
+	AssumeRole        *aws_iam_policy_document.DataSource        `validate:"required"`
+	PolicyAttachments []*aws_iam_role_policy_attachment.Resource `validate:"required,dive,required"`
 }
 
 func newFargateProfile(opts InfraOpts) FargateProfile {
-	arPolicy := aws.NewDataIamPolicyDocument(
-		"fargate", aws.DataIamPolicyDocumentArgs{
-			Statement: []dataiampolicydocument.Statement{
+	arPolicy := aws_iam_policy_document.Data(
+		"fargate", aws_iam_policy_document.DataArgs{
+			Statement: []aws_iam_policy_document.DataStatement{
 				{
 					Effect:  S("Allow"),
 					Actions: terra.SetString("sts:AssumeRole"),
-					Principals: []dataiampolicydocument.Principals{
+					Principals: []aws_iam_policy_document.DataStatementPrincipals{
 						{
 							Type: S("Service"),
 							Identifiers: terra.SetString(
@@ -51,8 +52,8 @@ func newFargateProfile(opts InfraOpts) FargateProfile {
 		},
 	)
 
-	iamRole := aws.NewIamRole(
-		"fargate", aws.IamRoleArgs{
+	iamRole := aws_iam_role.New(
+		"fargate", aws_iam_role.Args{
 			Name: S(opts.Name + "-fargate"),
 			Description: S(
 				"IAM Role for Fargate profile for Karpenter pods to run",
@@ -66,24 +67,27 @@ func newFargateProfile(opts InfraOpts) FargateProfile {
 		awsEKSCNIPolicy,
 	}
 
-	policyAttachments := make([]*aws.IamRolePolicyAttachment, len(policies))
+	policyAttachments := make(
+		[]*aws_iam_role_policy_attachment.Resource,
+		len(policies),
+	)
 	for i, policy := range policies {
-		policyAttachments[i] = aws.NewIamRolePolicyAttachment(
+		policyAttachments[i] = aws_iam_role_policy_attachment.New(
 			fmt.Sprintf("%s_attach_%s", "fargate", policy),
-			aws.IamRolePolicyAttachmentArgs{
+			aws_iam_role_policy_attachment.Args{
 				PolicyArn: S(awsPolicyARNPrefix + policy),
 				Role:      iamRole.Attributes().Name(),
 			},
 		)
 	}
 
-	fargateProfile := aws.NewEksFargateProfile(
-		KA.Name, aws.EksFargateProfileArgs{
+	fargateProfile := aws_eks_fargate_profile.New(
+		KA.Name, aws_eks_fargate_profile.Args{
 			ClusterName:         S(opts.ClusterName),
 			FargateProfileName:  S(KA.Name),
 			PodExecutionRoleArn: iamRole.Attributes().Arn(),
 			SubnetIds:           terra.SetString(opts.PrivateSubnetIDs[:]...),
-			Selector: []eksfargateprofile.Selector{
+			Selector: []aws_eks_fargate_profile.Selector{
 				{
 					Namespace: S(KA.Namespace),
 				},

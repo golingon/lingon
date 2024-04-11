@@ -89,39 +89,31 @@ func Example() {
 	//
 	// import "github.com/golingon/lingon/pkg/terra"
 	//
-	// func NewProvider(args ProviderArgs) *Provider {
-	//	return &Provider{Args: args}
-	// }
-	//
 	// var _ terra.Provider = (*Provider)(nil)
 	//
+	// // Provider contains the configurations for provider.
 	// type Provider struct {
-	//	Args ProviderArgs
+	// 	// Field: string, required
+	// 	Field terra.StringValue `hcl:"field,attr" validate:"required"`
 	// }
 	//
 	// // LocalName returns the provider local name for [Provider].
 	// func (p *Provider) LocalName() string {
-	//	return "google"
+	// 	return "google"
 	// }
 	//
 	// // Source returns the provider source for [Provider].
 	// func (p *Provider) Source() string {
-	//	return "hashicorp/google"
+	// 	return "hashicorp/google"
 	// }
 	//
 	// // Version returns the provider version for [Provider].
 	// func (p *Provider) Version() string {
-	//	return "4.58.0"
+	// 	return "4.58.0"
 	// }
 	//
-	// // Configuration returns the configuration (args) for [Provider].
+	// // Configuration returns the provider configuration for [Provider].
 	// func (p *Provider) Configuration() interface{} {
-	//	return p.Args
-	// }
-	//
-	// // ProviderArgs contains the configurations for provider.
-	// type ProviderArgs struct {
-	//	// Field: string, required
-	//	Field terra.StringValue `hcl:"field,attr" validate:"required"`
+	// 	return p
 	// }
 }

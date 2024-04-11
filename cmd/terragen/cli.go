@@ -14,19 +14,19 @@ Usage:
 The flags are:
 
 	-force
-		override any existing generated Go files (required)
+		force code generation even if out is not an empty directory
+	-clean
+		clean the out directory before generating Go files
 	-out string
 		directory to generate Go files in (required)
 	-pkg string
 		Go pkg for the generated Go files (required)
 	-provider value
-
-
-		provider to generate Go files for (required), e.g. aws=hashicorp/aws:4.49.0
+		provider to generate Go files for (required),
+		e.g. aws=hashicorp/aws:4.49.0
 	-tfout string
-
-
-	directory to generate Terraform providers schema (default ".lingon/schemas")
+		directory to generate Terraform providers schema
+		(default ".lingon/schemas")
 */
 package main
 
@@ -49,6 +49,7 @@ func main() {
 		pkgPath     string
 		providerStr string
 		force       bool
+		clean       bool
 		v           bool
 	)
 
@@ -70,7 +71,13 @@ func main() {
 		&force,
 		"force",
 		false,
-		"override any existing generated Go files",
+		"force code generation even if out is not an empty directory",
+	)
+	flag.BoolVar(
+		&clean,
+		"clean",
+		false,
+		"clean the out directory before generating Go files",
 	)
 	flag.BoolVar(&v, "v", false, "show version")
 
@@ -125,6 +132,7 @@ func main() {
 			OutDir:          outDir,
 			PkgPath:         pkgPath,
 			Force:           force,
+			Clean:           clean,
 		},
 		schemas,
 	); err != nil {

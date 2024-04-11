@@ -9,7 +9,8 @@ import (
 	"github.com/dave/jennifer/jen"
 )
 
-// DataSourceFile generates a Go file for a Terraform data source configuration based on the given
+// DataSourceFile generates a Go file for a Terraform data source configuration
+// based on the given
 // Schema
 func DataSourceFile(s *Schema) *jen.File {
 	f := jen.NewFile(s.PackageName)

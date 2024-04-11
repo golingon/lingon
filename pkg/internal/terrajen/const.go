@@ -19,6 +19,8 @@ const (
 	suffixArgs       = "Args"
 	suffixAttributes = "Attributes"
 	suffixState      = "State"
+
+	prefixStructDataSource = "Data"
 )
 
 const (

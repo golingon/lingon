@@ -11,7 +11,7 @@ import (
 
 	"github.com/golingon/lingon/pkg/terra"
 	tu "github.com/golingon/lingon/pkg/testutil"
-	aws "github.com/golingon/terraproviders/aws/5.13.1"
+	"github.com/golingon/lingoneks/out/aws"
 	"github.com/hashicorp/terraform-exec/tfexec"
 )
 
@@ -84,7 +84,7 @@ func TestEKS(t *testing.T) {
 		},
 	)
 	stack := awsStack{
-		Provider: aws.NewProvider(aws.ProviderArgs{}),
+		Provider: &aws.Provider{},
 		Cluster:  *eks,
 	}
 	ctx := context.Background()

@@ -4,38 +4,21 @@
 package terrajen
 
 import (
+	"fmt"
+
 	"github.com/dave/jennifer/jen"
 )
 
-// ProviderFile generates a Go file for a Terraform provider configuration based on the given Schema
+// ProviderFile generates a Go file for a Terraform provider configuration based
+// on the given Schema
 func ProviderFile(s *Schema) *jen.File {
 	f := jen.NewFile(s.ProviderName)
 	f.ImportName(pkgTerra, pkgTerraAlias)
 	f.HeaderComment(HeaderComment)
-	f.Add(providerNewFunc(s))
 	f.Add(providerStructCompileCheck(s))
 	f.Add(providerStruct(s))
-	f.Add(argsStruct(s))
 
 	return f
-}
-
-func providerNewFunc(s *Schema) *jen.Statement {
-	return jen.Func().Id(s.NewFuncName).Params(
-		jen.Id("args").Id(s.ArgumentStructName),
-	).
-		// Return
-		Op("*").Id(s.StructName).
-		// Block
-		Block(
-			jen.Return(
-				jen.Op("&").Id(s.StructName).Values(
-					jen.Dict{
-						jen.Id(idFieldArgs): jen.Id("args"),
-					},
-				),
-			),
-		)
 }
 
 func providerStructCompileCheck(s *Schema) *jen.Statement {
@@ -48,10 +31,16 @@ func providerStructCompileCheck(s *Schema) *jen.Statement {
 }
 
 func providerStruct(s *Schema) *jen.Statement {
-	stmt := jen.Type().Id(s.StructName).Struct(
-		jen.Id(idFieldArgs).Id(s.ArgumentStructName),
-		jen.Line(),
-	)
+	// stmt := jen.Type().Id(s.StructName).Struct(
+	// 	jen.Id(idFieldArgs).Id(s.ArgumentStructName),
+	// 	jen.Line(),
+	// )
+	// stmt.Line()
+	// stmt.Line()
+
+	// Use the args struct as the main struct, because there is nothing else to
+	// go in the provider.
+	stmt := argsStruct(s)
 	stmt.Line()
 	stmt.Line()
 
@@ -68,9 +57,33 @@ func providerStruct(s *Schema) *jen.Statement {
 	stmt.Line()
 	stmt.Line()
 	// Configuration
-	stmt.Add(funcConfiguration(s))
+	stmt.Add(funcProviderConfiguration(s))
 	stmt.Line()
 	stmt.Line()
 
 	return stmt
+}
+
+func funcProviderConfiguration(s *Schema) *jen.Statement {
+	return jen.Comment(
+		fmt.Sprintf(
+			"%s returns the provider configuration for [%s].",
+			idFuncConfiguration,
+			s.StructName,
+		),
+	).
+		Line().
+		Func().
+		// Receiver
+		Params(jen.Id(s.Receiver).Op("*").Id(s.StructName)).
+		// Name
+		Id(idFuncConfiguration).Call().
+		// Return type
+		Interface().
+		// Body
+		Block(
+			jen.Return(
+				jen.Id(s.Receiver),
+			),
+		)
 }

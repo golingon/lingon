@@ -188,7 +188,7 @@ func funcAttributes(s *Schema) *jen.Statement {
 }
 
 func funcResourceImportState(s *Schema) *jen.Statement {
-	attributesArgs := jen.Id("av").Clone
+	attributesArgs := jen.Id("state").Clone
 	return jen.Comment(
 		fmt.Sprintf(
 			"%s imports the given attribute values into [%s]'s state.",
@@ -207,7 +207,12 @@ func funcResourceImportState(s *Schema) *jen.Statement {
 		// Body
 		Block(
 			// Initialise the state
-			jen.Id(s.Receiver).Dot(idFieldState).Op("=").Op("&").Id(s.StateStructName).Block(),
+			jen.Id(s.Receiver).
+				Dot(idFieldState).
+				Op("=").
+				Op("&").
+				Id(s.StateStructName).
+				Block(),
 			jen.If(
 				jen.Id("err").Op(":=").Qual(
 					"encoding/json",

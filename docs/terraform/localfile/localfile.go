@@ -4,11 +4,13 @@
 package localfile
 
 //go:generate echo "\n>>>> LOCALFILE: generating hashicorp/local terra provider\n"
-//go:generate go run -mod=readonly github.com/golingon/lingon/cmd/terragen -out ./out/local -pkg github.com/golingon/lingon/examples/localfile/out/local -force -provider local=hashicorp/local:2.4.0
+//go:generate go run -mod=readonly github.com/golingon/lingon/cmd/terragen -out ./out/local -pkg github.com/golingon/lingon/examples/localfile/out/local -clean -provider local=hashicorp/local:2.4.0
 
 import (
 	"github.com/golingon/lingon/docs/terraform/localfile/out/local"
+	"github.com/golingon/lingon/docs/terraform/localfile/out/local/local_file"
 	"github.com/golingon/lingon/pkg/terra"
+	_ "github.com/golingon/lingon/pkg/terragen"
 )
 
 // NewLocalFileStack returns a new LocalFileStack which implements the
@@ -19,9 +21,9 @@ func NewLocalFileStack(filename string) *LocalFileStack {
 		Backend: LocalBackend{
 			Path: "terraform.tfstate",
 		},
-		Provider: local.NewProvider(local.ProviderArgs{}),
-		File: local.NewFile(
-			"file", local.FileArgs{
+		Provider: &local.Provider{},
+		File: local_file.New(
+			"file", local_file.Args{
 				Filename: terra.String(filename),
 				Content:  terra.String("contents"),
 			},
@@ -32,9 +34,9 @@ func NewLocalFileStack(filename string) *LocalFileStack {
 type LocalFileStack struct {
 	terra.Stack
 
-	Backend  LocalBackend    `validate:"required"`
-	Provider *local.Provider `validate:"required"`
-	File     *local.File     `validate:"required"`
+	Backend  LocalBackend         `validate:"required"`
+	Provider *local.Provider      `validate:"required"`
+	File     *local_file.Resource `validate:"required"`
 }
 
 var _ terra.Backend = (*LocalBackend)(nil)

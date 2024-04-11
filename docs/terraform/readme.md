@@ -176,11 +176,9 @@ type AWSStack struct {
 
 // Initialise a stack with the AWS provider configuration
 _ = AWSStack{
-	Provider: aws.NewProvider(
-		aws.ProviderArgs{
-			Region: terra.String("eu-north-1"),
-		},
-	),
+	Provider: &aws.Provider{
+		Region: terra.String("eu-north-1"),
+	},
 }
 ```
 
@@ -189,19 +187,17 @@ Let's add an example AWS VPC to this stack.
 ```go
 type AWSStack struct {
 	terra.Stack
-	Provider	*aws.Provider	`validate:"required"`
-	VPC		*aws.Vpc	`validate:"required"`
+	Provider	*aws.Provider		`validate:"required"`
+	VPC		*aws_vpc.Resource	`validate:"required"`
 }
 
 // Initialise a stack with the AWS provider configuration
 stack := AWSStack{
-	Provider: aws.NewProvider(
-		aws.ProviderArgs{
-			Region: terra.String("eu-north-1"),
-		},
-	),
-	VPC: aws.NewVpc(
-		"vpc", aws.VpcArgs{
+	Provider: &aws.Provider{
+		Region: terra.String("eu-north-1"),
+	},
+	VPC: aws_vpc.New(
+		"vpc", aws_vpc.Args{
 			CidrBlock:		terra.String("10.0.0.0/16"),
 			EnableDnsSupport:	terra.Bool(true),
 		},
@@ -220,7 +216,7 @@ fmt.Println(b.String())
 //   required_providers {
 //     aws = {
 //       source  = "hashicorp/aws"
-//       version = "4.60.0"
+//       version = "5.44.0"
 //     }
 //   }
 // }
@@ -248,19 +244,19 @@ Let's add a subnet to our VPC we created earlier, which requires us to use the V
 ```go
 type AWSStack struct {
 	terra.Stack
-	Provider	*aws.Provider	`validate:"required"`
-	VPC		*aws.Vpc	`validate:"required"`
-	Subnet		*aws.Subnet	`validate:"required"`
+	Provider	*aws.Provider		`validate:"required"`
+	VPC		*aws_vpc.Resource	`validate:"required"`
+	Subnet		*aws_subnet.Resource	`validate:"required"`
 }
 
-vpc := aws.NewVpc(
-	"vpc", aws.VpcArgs{
+vpc := aws_vpc.New(
+	"vpc", aws_vpc.Args{
 		CidrBlock:		terra.String("10.0.0.0/16"),
 		EnableDnsSupport:	terra.Bool(true),
 	},
 )
-subnet := aws.NewSubnet(
-	"subnet", aws.SubnetArgs{
+subnet := aws_subnet.New(
+	"subnet", aws_subnet.Args{
 		// Reference the VPC's ID, which will translate into a reference
 		// in the Terraform configuration
 		VpcId: vpc.Attributes().Id(),
@@ -269,11 +265,9 @@ subnet := aws.NewSubnet(
 
 // Initialise a stack with the AWS provider configuration
 stack := AWSStack{
-	Provider: aws.NewProvider(
-		aws.ProviderArgs{
-			Region: terra.String("eu-north-1"),
-		},
-	),
+	Provider: &aws.Provider{
+		Region: terra.String("eu-north-1"),
+	},
 	VPC:	vpc,
 	Subnet:	subnet,
 }
@@ -290,7 +284,7 @@ fmt.Println(b.String())
 //   required_providers {
 //     aws = {
 //       source  = "hashicorp/aws"
-//       version = "4.60.0"
+//       version = "5.44.0"
 //     }
 //   }
 // }
@@ -325,19 +319,17 @@ Here is an example using the AWS VPC.
 ```go
 type AWSStack struct {
 	terra.Stack
-	Provider	*aws.Provider	`validate:"required"`
-	VPC		*aws.Vpc	`validate:"required"`
+	Provider	*aws.Provider		`validate:"required"`
+	VPC		*aws_vpc.Resource	`validate:"required"`
 }
 
 // Initialise a stack with the AWS provider configuration
 stack := AWSStack{
-	Provider: aws.NewProvider(
-		aws.ProviderArgs{
-			Region: terra.String("eu-north-1"),
-		},
-	),
-	VPC: aws.NewVpc(
-		"vpc", aws.VpcArgs{
+	Provider: &aws.Provider{
+		Region: terra.String("eu-north-1"),
+	},
+	VPC: aws_vpc.New(
+		"vpc", aws_vpc.Args{
 			CidrBlock:		terra.String("10.0.0.0/16"),
 			EnableDnsSupport:	terra.Bool(true),
 		},
@@ -403,8 +395,8 @@ var (
 	B	= terra.Bool
 )
 
-_ = aws.NewVpc(
-	"vpc", aws.VpcArgs{
+_ = aws_vpc.New(
+	"vpc", aws_vpc.Args{
 		CidrBlock:		S("10.0.0.0/16"),
 		EnableDnsSupport:	B(true),
 	},

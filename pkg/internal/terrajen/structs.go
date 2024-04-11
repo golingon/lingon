@@ -10,8 +10,9 @@ import (
 	"github.com/veggiemonk/strcase"
 )
 
-// argsStruct takes a schema and generates the Args struct that is used by the user to specify the arguments
-// for the object that the schema represents (e.g. provider, resource, data resource)
+// argsStruct takes a schema and generates the Args struct that is used by the
+// user to specify the arguments for the object that the schema represents (e.g.
+// provider, resource, data resource)
 func argsStruct(s *Schema) *jen.Statement {
 	fields := make([]jen.Code, 0)
 	for _, attr := range s.graph.attributes {
@@ -34,6 +35,9 @@ func argsStruct(s *Schema) *jen.Statement {
 	}
 
 	for _, child := range s.graph.children {
+		if !child.isArg {
+			continue
+		}
 		tags := map[string]string{
 			tagHCL: child.uniqueName + ",block",
 		}
@@ -50,7 +54,8 @@ func argsStruct(s *Schema) *jen.Statement {
 			}
 			tags[tagValidate] = nodeBlockListValidateTags(child)
 		}
-		stmt.Qual(s.SubPkgQualPath(), strcase.Pascal(child.uniqueName))
+
+		stmt.Id(subPkgArgStructName(child, s.SchemaType))
 		stmt.Tag(tags)
 		fields = append(fields, stmt)
 	}
@@ -65,11 +70,14 @@ func argsStruct(s *Schema) *jen.Statement {
 		Line().
 		Type().
 		Id(s.ArgumentStructName).
-		Struct(fields...)
+		Struct(fields...).
+		Line().
+		Line()
 }
 
-// attributesStruct takes a schema and generates the Attributes struct that is used by the user to creates references to
-// attributes for the object that the schema represents (e.g. provider, resource, data resource)
+// attributesStruct takes a schema and generates the Attributes struct that is
+// used by the user to creates references to attributes for the object that the
+// schema represents (e.g. provider, resource, data resource)
 func attributesStruct(s *Schema) *jen.Statement {
 	var stmt jen.Statement
 
@@ -124,8 +132,10 @@ func attributesStruct(s *Schema) *jen.Statement {
 	}
 
 	for _, child := range s.graph.children {
-		structName := strcase.Pascal(child.uniqueName) + suffixAttributes
-		qualStruct := jen.Qual(s.SubPkgQualPath(), structName).Clone
+		structName := subPkgAttributeStructName(child, s.SchemaType)
+		// structName := strcase.Pascal(child.uniqueName) + suffixAttributes
+		qualStruct := jen.Id(structName).Clone
+		// qualStruct := jen.Qual(s.SubPkgQualPath(), structName).Clone
 		stmt.Add(
 			jen.Func().
 				// Receiver

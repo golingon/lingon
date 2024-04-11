@@ -5,23 +5,24 @@ package infra
 
 import (
 	"github.com/golingon/lingon/pkg/terra"
-	aws "github.com/golingon/terraproviders/aws/5.13.1"
-	"github.com/golingon/terraproviders/aws/5.13.1/s3bucketserversideencryptionconfiguration"
-	"github.com/golingon/terraproviders/aws/5.13.1/s3bucketversioning"
+	"github.com/golingon/lingoneks/out/aws/aws_s3_bucket"
+	"github.com/golingon/lingoneks/out/aws/aws_s3_bucket_public_access_block"
+	"github.com/golingon/lingoneks/out/aws/aws_s3_bucket_server_side_encryption_configuration"
+	"github.com/golingon/lingoneks/out/aws/aws_s3_bucket_versioning"
 )
 
 type Bucket struct {
-	S3 *aws.S3Bucket `validate:"required"`
+	S3 *aws_s3_bucket.Resource `validate:"required"`
 	// ACL          *aws.S3BucketAcl
 	// `validate:"required"`
-	Versioning   *aws.S3BucketVersioning                        `validate:"required"`
-	PublicAccess *aws.S3BucketPublicAccessBlock                 `validate:"required"`
-	SSE          *aws.S3BucketServerSideEncryptionConfiguration `validate:"required"`
+	Versioning   *aws_s3_bucket_versioning.Resource                           `validate:"required"`
+	PublicAccess *aws_s3_bucket_public_access_block.Resource                  `validate:"required"`
+	SSE          *aws_s3_bucket_server_side_encryption_configuration.Resource `validate:"required"`
 }
 
 func NewBucket(bucketName string) *Bucket {
-	b := aws.NewS3Bucket(
-		"s3", aws.S3BucketArgs{
+	b := aws_s3_bucket.New(
+		"s3", aws_s3_bucket.Args{
 			Bucket: S(bucketName),
 			Tags:   Stags("Name", "Lingon Experiment"),
 		},
@@ -40,17 +41,17 @@ func NewBucket(bucketName string) *Bucket {
 	// 	},
 	// )
 
-	vv := aws.NewS3BucketVersioning(
-		"s3", aws.S3BucketVersioningArgs{
+	vv := aws_s3_bucket_versioning.New(
+		"s3", aws_s3_bucket_versioning.Args{
 			Bucket: bucketID,
-			VersioningConfiguration: &s3bucketversioning.VersioningConfiguration{
+			VersioningConfiguration: &aws_s3_bucket_versioning.VersioningConfiguration{
 				Status: S("Enabled"),
 			},
 		},
 	)
 
-	pab := aws.NewS3BucketPublicAccessBlock(
-		"s3", aws.S3BucketPublicAccessBlockArgs{
+	pab := aws_s3_bucket_public_access_block.New(
+		"s3", aws_s3_bucket_public_access_block.Args{
 			Bucket:                bucketID,
 			BlockPublicAcls:       terra.Bool(true),
 			BlockPublicPolicy:     terra.Bool(true),
@@ -59,8 +60,8 @@ func NewBucket(bucketName string) *Bucket {
 		},
 	)
 
-	enc := aws.NewS3BucketServerSideEncryptionConfiguration(
-		"s3", aws.S3BucketServerSideEncryptionConfigurationArgs{
+	enc := aws_s3_bucket_server_side_encryption_configuration.New(
+		"s3", aws_s3_bucket_server_side_encryption_configuration.Args{
 			Bucket: bucketID,
 			Rule:   RuleEncryptKMS(),
 		},
@@ -75,10 +76,10 @@ func NewBucket(bucketName string) *Bucket {
 	}
 }
 
-func RuleEncryptKMS() []s3bucketserversideencryptionconfiguration.Rule {
-	return []s3bucketserversideencryptionconfiguration.Rule{
+func RuleEncryptKMS() []aws_s3_bucket_server_side_encryption_configuration.Rule {
+	return []aws_s3_bucket_server_side_encryption_configuration.Rule{
 		{
-			ApplyServerSideEncryptionByDefault: &s3bucketserversideencryptionconfiguration.ApplyServerSideEncryptionByDefault{
+			ApplyServerSideEncryptionByDefault: &aws_s3_bucket_server_side_encryption_configuration.RuleApplyServerSideEncryptionByDefault{
 				SseAlgorithm: S("aws:kms"),
 			},
 		},

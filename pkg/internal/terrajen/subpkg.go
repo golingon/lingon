@@ -22,27 +22,29 @@ func SubPkgFile(s *Schema) (*jen.File, bool) {
 	if s.graph.isEmpty() {
 		return nil, false
 	}
-	f := jen.NewFile(s.SubPackageName)
+	f := jen.NewFile(s.SubPkgName)
 	f.ImportAlias(pkgHCL, "hcl")
 	f.HeaderComment(HeaderComment)
 	for _, n := range s.graph.nodes {
-		f.Add(subPkgArgStruct(n))
+		if n.isArg {
+			f.Add(subPkgArgStruct(n, s.SchemaType))
+		}
 	}
 	for _, n := range s.graph.nodes {
-		f.Add(subPkgAttributeStruct(n))
+		f.Add(subPkgAttributeStruct(n, s.SchemaType))
 	}
 	for _, n := range s.graph.nodes {
-		f.Add(subPkgStateStruct(n))
+		f.Add(subPkgStateStruct(n, s.SchemaType))
 	}
 
 	return f, true
 }
 
-func subPkgArgStruct(n *node) *jen.Statement {
+func subPkgArgStruct(n *node, schemaType SchemaType) *jen.Statement {
 	fields := make([]jen.Code, 0)
 
 	for _, attr := range n.attributes {
-		// Skip attributes that are not arguments
+		// Skip attributes that are not arguments.
 		if !attr.isArg {
 			continue
 		}
@@ -61,6 +63,10 @@ func subPkgArgStruct(n *node) *jen.Statement {
 	}
 
 	for _, child := range n.children {
+		// Skip attributes that are not arguments.
+		if !child.isArg {
+			continue
+		}
 		stmt := jen.Comment(child.comment()).Line()
 		stmt.Add(jen.Id(strcase.Pascal(child.name)))
 		tags := map[string]string{
@@ -88,13 +94,13 @@ func subPkgArgStruct(n *node) *jen.Statement {
 			}
 			tags[tagValidate] = nodeBlockListValidateTags(child)
 		}
-		stmt.Id(strcase.Pascal(child.uniqueName))
+		stmt.Id(subPkgArgStructName(child, schemaType))
 		stmt.Tag(tags)
 		fields = append(fields, stmt)
 	}
 
 	stmt := jen.
-		Type().Id(n.argsStructName()).
+		Type().Id(subPkgArgStructName(n, schemaType)).
 		Struct(fields...)
 	stmt.Line()
 	stmt.Line()
@@ -102,8 +108,15 @@ func subPkgArgStruct(n *node) *jen.Statement {
 	return stmt
 }
 
-func subPkgAttributeStruct(n *node) *jen.Statement {
-	structName := n.attributesStructName()
+func subPkgArgStructName(n *node, schemaType SchemaType) string {
+	if schemaType == SchemaTypeDataSource {
+		return prefixStructDataSource + strcase.Pascal(n.uniqueName)
+	}
+	return strcase.Pascal(n.uniqueName)
+}
+
+func subPkgAttributeStruct(n *node, schemaType SchemaType) *jen.Statement {
+	structName := subPkgAttributeStructName(n, schemaType)
 
 	structFieldRef := "ref"
 	refArg := "ref"
@@ -217,7 +230,7 @@ func subPkgAttributeStruct(n *node) *jen.Statement {
 	}
 
 	for _, child := range n.children {
-		childStructName := child.attributesStructName()
+		childStructName := subPkgAttributeStructName(child, schemaType)
 		appendRef := jen.Id(n.receiver).
 			Dot(refArg).
 			Dot("Append").
@@ -249,7 +262,15 @@ func subPkgAttributeStruct(n *node) *jen.Statement {
 	return stmt
 }
 
-func subPkgStateStruct(n *node) *jen.Statement {
+func subPkgAttributeStructName(n *node, schemaType SchemaType) string {
+	structName := strcase.Pascal(n.uniqueName) + suffixAttributes
+	if schemaType == SchemaTypeDataSource {
+		return prefixStructDataSource + structName
+	}
+	return structName
+}
+
+func subPkgStateStruct(n *node, schemaType SchemaType) *jen.Statement {
 	fields := make([]jen.Code, 0)
 
 	for _, attr := range n.attributes {
@@ -272,7 +293,7 @@ func subPkgStateStruct(n *node) *jen.Statement {
 		} else {
 			stmt.Index()
 		}
-		stmt.Id(child.stateStructName())
+		stmt.Id(subPkgStateStructName(child, schemaType))
 		stmt.Tag(
 			map[string]string{
 				tagJSON: child.name,
@@ -282,10 +303,18 @@ func subPkgStateStruct(n *node) *jen.Statement {
 	}
 
 	stmt := jen.
-		Type().Id(n.stateStructName()).
+		Type().Id(subPkgStateStructName(n, schemaType)).
 		Struct(fields...)
 	stmt.Line()
 	stmt.Line()
 
 	return stmt
+}
+
+func subPkgStateStructName(n *node, schemaType SchemaType) string {
+	structName := strcase.Pascal(n.uniqueName) + suffixState
+	if schemaType == SchemaTypeDataSource {
+		return prefixStructDataSource + structName
+	}
+	return structName
 }
