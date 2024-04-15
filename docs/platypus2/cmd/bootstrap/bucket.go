@@ -12,9 +12,8 @@ import (
 
 	"github.com/golingon/lingon/pkg/terra"
 	"github.com/golingon/lingoneks/infra"
+	"github.com/golingon/lingoneks/out/aws"
 	"github.com/golingon/lingoneks/terraclient"
-	aws "github.com/golingon/terraproviders/aws/5.13.1"
-	"github.com/golingon/terraproviders/aws/5.13.1/provider"
 )
 
 const (
@@ -125,17 +124,15 @@ func run(p runParams) error {
 	s3 := s3Stack{
 		StackConfig: StackConfig{
 			Stack: terraclient.Stack{Name: bucketName},
-			Provider: aws.NewProvider(
-				aws.ProviderArgs{
-					Profile: S(p.AWSParams.Profile),
-					Region:  S(p.AWSParams.Region),
-					DefaultTags: []provider.DefaultTags{
-						{
-							Tags: infra.Ttags(p.TFLabels),
-						},
+			Provider: &aws.Provider{
+				Profile: S(p.AWSParams.Profile),
+				Region:  S(p.AWSParams.Region),
+				DefaultTags: []aws.DefaultTags{
+					{
+						Tags: infra.Ttags(p.TFLabels),
 					},
 				},
-			),
+			},
 		},
 		Bucket: *infra.NewBucket(bucketName),
 	}

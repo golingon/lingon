@@ -6,8 +6,10 @@ package karpenter
 import (
 	"fmt"
 
-	aws "github.com/golingon/terraproviders/aws/5.13.1"
-	"github.com/golingon/terraproviders/aws/5.13.1/dataiampolicydocument"
+	"github.com/golingon/lingoneks/out/aws/aws_iam_instance_profile"
+	"github.com/golingon/lingoneks/out/aws/aws_iam_policy_document"
+	"github.com/golingon/lingoneks/out/aws/aws_iam_role"
+	"github.com/golingon/lingoneks/out/aws/aws_iam_role_policy_attachment"
 
 	"github.com/golingon/lingon/pkg/terra"
 )
@@ -15,21 +17,21 @@ import (
 // InstanceProfile is the AWS EC2 Instance Profile for the nodes provisioned by
 // Karpenter to use.
 type InstanceProfile struct {
-	InstanceProfile   *aws.IamInstanceProfile        `validate:"required"`
-	IAMRole           *aws.IamRole                   `validate:"required"`
-	AssumeRole        *aws.DataIamPolicyDocument     `validate:"required"`
-	PolicyAttachments []*aws.IamRolePolicyAttachment `validate:"required,dive,required"`
+	InstanceProfile   *aws_iam_instance_profile.Resource         `validate:"required"`
+	IAMRole           *aws_iam_role.Resource                     `validate:"required"`
+	AssumeRole        *aws_iam_policy_document.DataSource        `validate:"required"`
+	PolicyAttachments []*aws_iam_role_policy_attachment.Resource `validate:"required,dive,required"`
 }
 
 func newInstanceProfile() InstanceProfile {
-	arPolicy := aws.NewDataIamPolicyDocument(
-		"eks_node", aws.DataIamPolicyDocumentArgs{
-			Statement: []dataiampolicydocument.Statement{
+	arPolicy := aws_iam_policy_document.Data(
+		"eks_node", aws_iam_policy_document.DataArgs{
+			Statement: []aws_iam_policy_document.DataStatement{
 				{
 					Sid:     S("EKSNodeAssumeRole"),
 					Effect:  S("Allow"),
 					Actions: terra.SetString("sts:AssumeRole"),
-					Principals: []dataiampolicydocument.Principals{
+					Principals: []aws_iam_policy_document.DataStatementPrincipals{
 						{
 							Type: S("Service"),
 							Identifiers: terra.SetString(
@@ -42,8 +44,8 @@ func newInstanceProfile() InstanceProfile {
 		},
 	)
 
-	iamRole := aws.NewIamRole(
-		"eks_node", aws.IamRoleArgs{
+	iamRole := aws_iam_role.New(
+		"eks_node", aws_iam_role.Args{
 			Name: S("platypus-karpenter-node"),
 			Description: S(
 				"IAM Role for Karpenter's InstanceProfile to use when launching nodes",
@@ -59,19 +61,22 @@ func newInstanceProfile() InstanceProfile {
 		awsSSMManagedInstanceCore,
 	}
 
-	policyAttachments := make([]*aws.IamRolePolicyAttachment, len(policies))
+	policyAttachments := make(
+		[]*aws_iam_role_policy_attachment.Resource,
+		len(policies),
+	)
 	for i, policy := range policies {
-		policyAttachments[i] = aws.NewIamRolePolicyAttachment(
+		policyAttachments[i] = aws_iam_role_policy_attachment.New(
 			fmt.Sprintf("eks_node_attach_%s", policy),
-			aws.IamRolePolicyAttachmentArgs{
+			aws_iam_role_policy_attachment.Args{
 				PolicyArn: S(awsPolicyARNPrefix + policy),
 				Role:      iamRole.Attributes().Name(),
 			},
 		)
 	}
 
-	instanceProfile := aws.NewIamInstanceProfile(
-		KA.Name, aws.IamInstanceProfileArgs{
+	instanceProfile := aws_iam_instance_profile.New(
+		KA.Name, aws_iam_instance_profile.Args{
 			Name: S("platypus-karpenter-instance-profile"),
 			Role: iamRole.Attributes().Name(),
 		},

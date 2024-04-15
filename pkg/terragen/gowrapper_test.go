@@ -60,6 +60,15 @@ func TestGenerateProvider(t *testing.T) {
 			FilterResources:   []string{"aws_iam_role"},
 			FilterDataSources: []string{"aws_iam_role"},
 		},
+		{
+			Name:            "aws_securitylake_subscriber",
+			ProviderName:    "aws",
+			ProviderSource:  "hashicorp/aws",
+			ProviderVersion: "5.44.0",
+
+			FilterResources:   []string{"aws_securitylake_subscriber"},
+			FilterDataSources: []string{"aws_securitylake_subscriber"},
+		},
 	}
 	if *update {
 		t.Log("running update")

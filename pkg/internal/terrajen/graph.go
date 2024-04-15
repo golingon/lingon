@@ -4,8 +4,11 @@
 package terrajen
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"fmt"
 	"sort"
+	"strings"
 
 	"github.com/veggiemonk/strcase"
 
@@ -50,12 +53,13 @@ func newGraph(schema *tfjson.SchemaBlock) *graph {
 		)
 	}
 
-	g.calculateUniqueNames()
+	g.calculateUniqueTypeNames()
 
 	return &g
 }
 
-// graph is used to decouple the tfjson.SchemaBlock type from the code generator.
+// graph is used to decouple the tfjson.SchemaBlock type from the code
+// generator.
 // A graph is created by supplying a tfjson.SchemaBlock.
 type graph struct {
 	// attributes are the top-level attributes for a terraform configuration
@@ -80,9 +84,8 @@ type node struct {
 	// If the name is already unique, then the uniqueName is the name.
 	// If the name is not unique, take the last element from the path (if any)
 	// and prefix is to the name until the name is unique
-	uniqueName  string
-	uniqueDepth int
-	attributes  []*attribute
+	uniqueName string
+	attributes []*attribute
 
 	// block values
 	isArg bool
@@ -107,18 +110,6 @@ type node struct {
 	children []*node
 
 	receiver string
-}
-
-func (n *node) argsStructName() string {
-	return strcase.Pascal(n.uniqueName)
-}
-
-func (n *node) attributesStructName() string {
-	return strcase.Pascal(n.uniqueName) + suffixAttributes
-}
-
-func (n *node) stateStructName() string {
-	return strcase.Pascal(n.uniqueName) + suffixState
 }
 
 func (n *node) isSingularArg() bool {
@@ -255,7 +246,8 @@ func (g *graph) traverseCtyType(
 	obj, _ := ctyTypeElementObject(ct)
 	for _, atName := range sortMapKeys(obj.AttributeTypes()) {
 		at := obj.AttributeType(atName)
-		// If there are objects within the attributes of this object, traverse those objects
+		// If there are objects within the attributes of this object, traverse
+		// those objects
 		// and make them children of this object
 		if _, ok := ctyTypeElementObject(at); ok {
 			n.children = append(
@@ -276,31 +268,46 @@ func (g *graph) traverseCtyType(
 	return &n
 }
 
-func (g *graph) calculateUniqueNames() {
-	// We hate this function
-	uniq := false
-	for !uniq {
-		uniq = true
-		dict := make(map[string][]*node)
-		for _, n := range g.nodes {
-			dict[n.uniqueName] = append(dict[n.uniqueName], n)
-		}
+// calculateUniqueTypeNames iterates over all nodes in the graph and calculates
+// unique type names for each node.
+// For most cases, this will be the path to the node with the node name itself
+// appended on the end.
+//
+// To avoid generating incredibly long type names, if the node path is
+// longer than 5 take the first 2 elements and generate a short hash of
+// the rest as a suffix.
+//
+// This will provide strong uniqueness guarantees and should not affect
+// the developer experience because Go's auto-complete type suggestions
+// will find the right type for you.
+// And if you accidently use the wrong type you will get a compile
+// error.
+//
+// This was the lesser evil compared with struct names that are 50+ characters
+// of words in PascalCase.
+func (g *graph) calculateUniqueTypeNames() {
+	for _, node := range g.nodes {
+		nodePath := make([]string, len(node.path)+1)
+		copy(nodePath, node.path)
+		nodePath[len(node.path)] = node.name
 
-		for _, nodes := range dict {
-			if len(nodes) == 1 {
-				continue
-			}
-			uniq = false
+		if len(nodePath) >= 5 {
+			prefix := strings.Join(nodePath[:2], ".")
+			suffix := strings.Join(nodePath[2:], ".")
 
-			for _, n := range nodes {
-				if len(n.path) > n.uniqueDepth {
-					pathIndex := len(n.path) - n.uniqueDepth - 1
-					n.uniqueName = n.path[pathIndex] + "." + n.uniqueName
-					n.uniqueDepth += 1
-				}
-			}
+			hash := shortHash(suffix)
+			node.uniqueName = fmt.Sprintf("%s.%s", prefix, hash)
+			continue
+
 		}
+		node.uniqueName = strings.Join(nodePath, ".")
 	}
+}
+
+func shortHash(s string) string {
+	hash := sha256.New()
+	hash.Write([]byte(s))
+	return hex.EncodeToString(hash.Sum(nil))[0:8]
 }
 
 func appendPath(path []string, name string) []string {
@@ -326,7 +333,8 @@ func blockNodeNestingMode(block *tfjson.SchemaBlockType) []nodeNestingMode {
 	case tfjson.SchemaNestingModeSingle, tfjson.SchemaNestingModeGroup:
 		return nil
 	case tfjson.SchemaNestingModeList, tfjson.SchemaNestingModeMap:
-		// Unintuitively, tfjson.SchemaNestingModeMap is not actually a map, just a list,
+		// Unintuitively, tfjson.SchemaNestingModeMap is not actually a map,
+		// just a list,
 		// but they get keyed by the block labels into a Map.
 		// For our use case, we therefore treat it like a list.
 		return []nodeNestingMode{nodeNestingModeList}

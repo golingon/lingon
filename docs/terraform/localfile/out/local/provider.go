@@ -4,15 +4,10 @@ package local
 
 import "github.com/golingon/lingon/pkg/terra"
 
-func NewProvider(args ProviderArgs) *Provider {
-	return &Provider{Args: args}
-}
-
 var _ terra.Provider = (*Provider)(nil)
 
-type Provider struct {
-	Args ProviderArgs
-}
+// Provider contains the configurations for provider.
+type Provider struct{}
 
 // LocalName returns the provider local name for [Provider].
 func (p *Provider) LocalName() string {
@@ -29,10 +24,7 @@ func (p *Provider) Version() string {
 	return "2.4.0"
 }
 
-// Configuration returns the configuration (args) for [Provider].
+// Configuration returns the provider configuration for [Provider].
 func (p *Provider) Configuration() interface{} {
-	return p.Args
+	return p
 }
-
-// ProviderArgs contains the configurations for provider.
-type ProviderArgs struct{}

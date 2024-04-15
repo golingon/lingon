@@ -10,9 +10,8 @@ import (
 
 	"github.com/golingon/lingoneks/infra"
 	"github.com/golingon/lingoneks/karpenter"
+	"github.com/golingon/lingoneks/out/aws"
 	"github.com/golingon/lingoneks/terraclient"
-	aws "github.com/golingon/terraproviders/aws/5.13.1"
-	"github.com/golingon/terraproviders/aws/5.13.1/provider"
 
 	"github.com/golingon/lingon/pkg/terra"
 )
@@ -80,17 +79,15 @@ func newProv(p AWSParams, labels map[string]string) *aws.Provider {
 		l[k] = S(v)
 	}
 
-	return aws.NewProvider(
-		aws.ProviderArgs{
-			Profile: S(p.Profile),
-			Region:  S(p.Region),
-			DefaultTags: []provider.DefaultTags{
-				{
-					Tags: terra.Map(l),
-				},
+	return &aws.Provider{
+		Profile: S(p.Profile),
+		Region:  S(p.Region),
+		DefaultTags: []aws.DefaultTags{
+			{
+				Tags: terra.Map(l),
 			},
 		},
-	)
+	}
 }
 
 func kubeconfigFromAWSCmd(

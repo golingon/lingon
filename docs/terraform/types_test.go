@@ -4,8 +4,8 @@
 package terraform
 
 import (
+	"github.com/golingon/lingon/docs/terraform/out/aws/aws_vpc"
 	"github.com/golingon/lingon/pkg/terra"
-	aws "github.com/golingon/terraproviders/aws/4.60.0"
 )
 
 func Example_typesVars() {
@@ -14,8 +14,8 @@ func Example_typesVars() {
 		B = terra.Bool
 	)
 
-	_ = aws.NewVpc(
-		"vpc", aws.VpcArgs{
+	_ = aws_vpc.New(
+		"vpc", aws_vpc.Args{
 			CidrBlock:        S("10.0.0.0/16"),
 			EnableDnsSupport: B(true),
 		},
