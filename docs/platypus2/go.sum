@@ -321,12 +321,6 @@ github.com/golang/protobuf v1.5.3/go.mod h1:XVQd3VNwM+JqD3oG2Ue2ip4fOMUkwXdXDdiu
 github.com/golang/snappy v0.0.3/go.mod h1:/XxbfmMg8lxefKM7IXC3fBNl/7bRcc72aCRzEWrmP2Q=
 github.com/golang/snappy v0.0.4 h1:yAGX7huGHXlcLOEtBnF4w7FQwA26wojNCwOYAEhLjQM=
 github.com/golang/snappy v0.0.4/go.mod h1:/XxbfmMg8lxefKM7IXC3fBNl/7bRcc72aCRzEWrmP2Q=
-github.com/golingon/terra-aws v0.0.0-20240411092819-1b44e89cb239 h1:vqnH3XOdT1FTebLSz2vDe+BB1q6c2CQOvly1WG5g1aM=
-github.com/golingon/terra-aws v0.0.0-20240411092819-1b44e89cb239/go.mod h1:QoUmwquPXMpAMAp36k0TYAwMmyKKj1xr4FltzHD75kY=
-github.com/golingon/terra-aws v0.0.0-20240412061705-12f221c7f462 h1:fZEzgoxPn+VEdefCUJ3xcEKA/fXigq2/0QOM1bE44oo=
-github.com/golingon/terra-aws v0.0.0-20240412061705-12f221c7f462/go.mod h1:QoUmwquPXMpAMAp36k0TYAwMmyKKj1xr4FltzHD75kY=
-github.com/golingon/terra_tls v0.0.0-20240411093921-49711ab41872 h1:9H3VZ/Eq51t2W3Aycfk7wvgLTM7fokuo4jqq0wmBcis=
-github.com/golingon/terra_tls v0.0.0-20240411093921-49711ab41872/go.mod h1:IPr5Pavvt7gG2WDKK7E/v0nNe+0fu5k+b3q0i/Vr6AA=
 github.com/golingon/terra_tls v0.0.0-20240412065029-004d8973b97c h1:9HhF/oFSptpg9lmXsJGXE3PBe8CAnWGcYkdY1vAXV3A=
 github.com/golingon/terra_tls v0.0.0-20240412065029-004d8973b97c/go.mod h1:IPr5Pavvt7gG2WDKK7E/v0nNe+0fu5k+b3q0i/Vr6AA=
 github.com/google/btree v0.0.0-20180813153112-4030bb1f1f0c/go.mod h1:lNA+9X1NB3Zf8V7Ke586lFgjr2dZNuvo3lPJSGZ5JPQ=

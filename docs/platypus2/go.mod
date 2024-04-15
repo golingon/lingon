@@ -13,6 +13,7 @@ require (
 	github.com/golingon/lingon v0.0.0-20240410151041-d6e1fef1f2a8
 	github.com/golingon/terra_tls v0.0.0-20240412065029-004d8973b97c
 	github.com/grafana/dashboard-linter v0.0.0-20230622143601-02e2cd156626
+	github.com/hashicorp/hcl/v2 v2.20.1
 	github.com/hashicorp/terraform-exec v0.20.0
 	github.com/hashicorp/terraform-json v0.21.0
 	github.com/nats-io/nats.go v1.28.0
@@ -90,7 +91,6 @@ require (
 	github.com/googleapis/gax-go/v2 v2.12.0 // indirect
 	github.com/grafana/regexp v0.0.0-20221122212121-6b5c0a4cb7fd // indirect
 	github.com/hashicorp/go-version v1.6.0 // indirect
-	github.com/hashicorp/hcl/v2 v2.20.1 // indirect
 	github.com/imdario/mergo v0.3.16 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
