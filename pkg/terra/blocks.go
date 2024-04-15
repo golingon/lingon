@@ -34,9 +34,9 @@ type Resource interface {
 	ImportState(attributes io.Reader) error
 }
 
-// DataResource represents a Terraform DataResource.
+// DataSource represents a Terraform DataSource.
 // The generated Go structs from a Terraform provider data resource will implement this interface
-type DataResource interface {
+type DataSource interface {
 	DataSource() string
 	LocalName() string
 	Configuration() interface{}
@@ -59,10 +59,10 @@ type Backend interface {
 
 // stackObjects contains all the blocks that are extracted from a user-defined stack
 type stackObjects struct {
-	Backend       Backend
-	Providers     []Provider
-	Resources     []Resource
-	DataResources []DataResource
+	Backend     Backend
+	Providers   []Provider
+	Resources   []Resource
+	DataSources []DataSource
 }
 
 const (
@@ -196,8 +196,8 @@ func parseStackStructFields(rv reflect.Value, sb *stackObjects) error {
 			switch v := obj.(type) {
 			case Resource:
 				sb.Resources = append(sb.Resources, v)
-			case DataResource:
-				sb.DataResources = append(sb.DataResources, v)
+			case DataSource:
+				sb.DataSources = append(sb.DataSources, v)
 			case Provider:
 				sb.Providers = append(sb.Providers, v)
 			case Backend:

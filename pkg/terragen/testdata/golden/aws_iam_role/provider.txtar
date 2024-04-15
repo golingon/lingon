@@ -2573,7 +2573,7 @@ func NewDataIamRole(name string, args DataIamRoleArgs) *DataIamRole {
 	}
 }
 
-var _ terra.DataResource = (*DataIamRole)(nil)
+var _ terra.DataSource = (*DataIamRole)(nil)
 
 // DataIamRole represents the Terraform data resource aws_iam_role.
 type DataIamRole struct {
@@ -2598,7 +2598,7 @@ func (ir *DataIamRole) Configuration() interface{} {
 
 // Attributes returns the attributes for [DataIamRole].
 func (ir *DataIamRole) Attributes() dataIamRoleAttributes {
-	return dataIamRoleAttributes{ref: terra.ReferenceDataResource(ir)}
+	return dataIamRoleAttributes{ref: terra.ReferenceDataSource(ir)}
 }
 
 // DataIamRoleArgs contains the configurations for aws_iam_role.

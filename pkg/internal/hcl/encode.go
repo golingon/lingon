@@ -19,10 +19,10 @@ const (
 )
 
 type EncodeArgs struct {
-	Backend       *Backend
-	Providers     []Provider
-	DataResources []DataResource
-	Resources     []Resource
+	Backend     *Backend
+	Providers   []Provider
+	DataSources []DataSource
+	Resources   []Resource
 }
 
 type Backend struct {
@@ -37,7 +37,7 @@ type Provider struct {
 	Configuration interface{}
 }
 
-type DataResource struct {
+type DataSource struct {
 	DataSource    string
 	LocalName     string
 	Configuration interface{}
@@ -99,11 +99,11 @@ func Encode(wr io.Writer, args EncodeArgs) error {
 		fileBody.AppendNewline()
 	}
 	// Encode data blocks
-	if len(args.DataResources) > 0 {
+	if len(args.DataSources) > 0 {
 		fileBody.AppendUnstructuredTokens(hclwrite.TokensForIdentifier("// Data blocks"))
 		fileBody.AppendNewline()
 	}
-	for _, data := range args.DataResources {
+	for _, data := range args.DataSources {
 		dataBlock := fileBody.AppendNewBlock(
 			"data",
 			[]string{data.DataSource, data.LocalName},

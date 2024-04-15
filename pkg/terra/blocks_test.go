@@ -13,11 +13,11 @@ import (
 func TestExtractBlocks_Simple(t *testing.T) {
 	type simpleStack struct {
 		DummyStack
-		DummyRes  *dummyResource     `validate:"required"`
-		DummyData *dummyDataResource `validate:"required"`
+		DummyRes  *dummyResource   `validate:"required"`
+		DummyData *dummyDataSource `validate:"required"`
 	}
 	dr := &dummyResource{}
-	ddr := &dummyDataResource{}
+	ddr := &dummyDataSource{}
 	st := simpleStack{
 		DummyStack: newDummyBaseStack(),
 		DummyRes:   dr,
@@ -27,24 +27,24 @@ func TestExtractBlocks_Simple(t *testing.T) {
 	tu.AssertNoError(t, err)
 	tu.IsEqual(t, len(sb.Resources), 1)
 	tu.IsEqual[Resource](t, dr, sb.Resources[0])
-	tu.IsEqual(t, len(sb.DataResources), 1)
-	tu.IsEqual[DataResource](t, ddr, sb.DataResources[0])
+	tu.IsEqual(t, len(sb.DataSources), 1)
+	tu.IsEqual[DataSource](t, ddr, sb.DataSources[0])
 }
 
 func TestExtractBlocks_Complex(t *testing.T) {
 	type DummyModule struct {
-		Resource *dummyResource     `validate:"required"`
-		Data     *dummyDataResource `validate:"required"`
+		Resource *dummyResource   `validate:"required"`
+		Data     *dummyDataSource `validate:"required"`
 	}
 	type complexStack struct {
 		DummyStack
 		DummyModule
-		SliceRes []*dummyResource      `validate:"required,dive,required"`
-		OneRes   [1]*dummyResource     `validate:"required,dive,required"`
-		OneData  [1]*dummyDataResource `validate:"required,dive,required"`
+		SliceRes []*dummyResource    `validate:"required,dive,required"`
+		OneRes   [1]*dummyResource   `validate:"required,dive,required"`
+		OneData  [1]*dummyDataSource `validate:"required,dive,required"`
 	}
 	dr := &dummyResource{}
-	ddr := &dummyDataResource{}
+	ddr := &dummyDataSource{}
 	st := complexStack{
 		DummyStack: newDummyBaseStack(),
 		DummyModule: DummyModule{
@@ -53,12 +53,12 @@ func TestExtractBlocks_Complex(t *testing.T) {
 		},
 		SliceRes: []*dummyResource{dr, dr},
 		OneRes:   [1]*dummyResource{dr},
-		OneData:  [1]*dummyDataResource{ddr},
+		OneData:  [1]*dummyDataSource{ddr},
 	}
 	sb, err := objectsFromStack(&st)
 	tu.AssertNoError(t, err)
 	tu.IsEqual(t, len(sb.Resources), 4)
-	tu.IsEqual(t, len(sb.DataResources), 2)
+	tu.IsEqual(t, len(sb.DataSources), 2)
 }
 
 func TestExtractBlocks_UnknownField(t *testing.T) {
@@ -182,19 +182,19 @@ func (r *dummyResource) LifecycleManagement() *Lifecycle {
 // Dummy Data Resources
 //
 
-var _ DataResource = (*dummyDataResource)(nil)
+var _ DataSource = (*dummyDataSource)(nil)
 
-type dummyDataResource struct{}
+type dummyDataSource struct{}
 
-func (d *dummyDataResource) DataSource() string {
+func (d *dummyDataSource) DataSource() string {
 	return "dummy"
 }
 
-func (d *dummyDataResource) LocalName() string {
+func (d *dummyDataSource) LocalName() string {
 	return "dummy"
 }
 
-func (d *dummyDataResource) Configuration() interface{} {
+func (d *dummyDataSource) Configuration() interface{} {
 	return dummyConfig
 }
 

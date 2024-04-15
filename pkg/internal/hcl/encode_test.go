@@ -37,7 +37,7 @@ type ProviderBlock struct {
 	CommonBlockConfig `hcl:",remain"`
 }
 
-type DataResourceBlock struct {
+type DataSourceBlock struct {
 	DataSource string `hcl:",label"`
 	LocalName  string `hcl:",label"`
 
@@ -60,10 +60,10 @@ type CommonBlockConfig struct {
 // the resulting HCL
 // into
 type HCLFile struct {
-	Terraform     TerraformBlock      `hcl:"terraform,block"`
-	Providers     []ProviderBlock     `hcl:"provider,block"`
-	DataResources []DataResourceBlock `hcl:"data,block"`
-	Resources     []ResourceBlock     `hcl:"resource,block"`
+	Terraform   TerraformBlock    `hcl:"terraform,block"`
+	Providers   []ProviderBlock   `hcl:"provider,block"`
+	DataSources []DataSourceBlock `hcl:"data,block"`
+	Resources   []ResourceBlock   `hcl:"resource,block"`
 }
 
 // Create a common config which we reuse. We might want to make this a bit more
@@ -109,7 +109,7 @@ func TestEncode(t *testing.T) {
 				CommonBlockConfig: cbcfg,
 			},
 		},
-		DataResources: []DataResourceBlock{
+		DataSources: []DataSourceBlock{
 			{
 				DataSource:        "test_data_source",
 				LocalName:         "test",
@@ -142,9 +142,9 @@ func TestEncode(t *testing.T) {
 			},
 		)
 	}
-	for _, data := range expectedHCL.DataResources {
-		args.DataResources = append(
-			args.DataResources, DataResource{
+	for _, data := range expectedHCL.DataSources {
+		args.DataSources = append(
+			args.DataSources, DataSource{
 				DataSource:    data.DataSource,
 				LocalName:     data.LocalName,
 				Configuration: data.CommonBlockConfig,
@@ -201,7 +201,7 @@ func TestEncodeRaw(t *testing.T) {
 				CommonBlockConfig: cbcfg,
 			},
 		},
-		DataResources: []DataResourceBlock{
+		DataSources: []DataSourceBlock{
 			{
 				DataSource:        "some_data_source",
 				LocalName:         "localname",

@@ -8,9 +8,9 @@ import (
 )
 
 const (
-	idStructReference           = "Reference"
-	idFuncReferenceResource     = "ReferenceResource"
-	idFuncReferenceDataResource = "ReferenceDataResource"
+	idStructReference         = "Reference"
+	idFuncReferenceResource   = "ReferenceResource"
+	idFuncReferenceDataSource = "ReferenceDataSource"
 )
 
 var (
@@ -26,9 +26,9 @@ var (
 		pkgTerra,
 		idFuncReferenceResource,
 	).Clone
-	qualReferenceDataResource = jen.Qual(
+	qualReferenceDataSource = jen.Qual(
 		pkgTerra,
-		idFuncReferenceDataResource,
+		idFuncReferenceDataSource,
 	).Clone
 
 	qualReferenceAsString = jen.Qual(pkgTerra, "ReferenceAsString").Clone
