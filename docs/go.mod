@@ -5,13 +5,10 @@ go 1.21.7
 replace github.com/golingon/lingon => ../
 
 require (
-	github.com/eidolon/wordwrap v0.0.0-20161011182207-e0f54129b8bb
-	github.com/fatih/color v1.15.0
 	github.com/golingon/lingon v0.0.0-20240410151041-d6e1fef1f2a8
 	github.com/hashicorp/hcl/v2 v2.20.1
 	github.com/hashicorp/terraform-json v0.19.0
 	github.com/rogpeppe/go-internal v1.12.0
-	github.com/zegl/kube-score v1.17.0
 	istio.io/api v1.19.0-beta.1
 	istio.io/client-go v1.18.1
 	k8s.io/api v0.29.3
@@ -38,8 +35,6 @@ require (
 	github.com/hashicorp/terraform-exec v0.20.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
-	github.com/mattn/go-colorable v0.1.13 // indirect
-	github.com/mattn/go-isatty v0.0.19 // indirect
 	github.com/mitchellh/go-wordwrap v1.0.1 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
