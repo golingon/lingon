@@ -18,7 +18,7 @@ import (
 const (
 	// OSVScanner is the OSV Scanner to find vulnerabilities
 	osvScannerRepo    = "github.com/google/osv-scanner/cmd/osv-scanner"
-	osvScannerVersion = "@v1.3.2"
+	osvScannerVersion = "@v1.7.0"
 
 	// goVuln to find vulnerabilities
 	vulnRepo    = "golang.org/x/vuln/cmd/govulncheck"
@@ -27,7 +27,7 @@ const (
 
 	// syft is for generating SBOM
 	syftRepo    = "github.com/anchore/syft/cmd/syft"
-	syftVersion = "@v0.85.0"
+	syftVersion = "@v1.2.0"
 
 	// goLicenses is Google's go-licenses to export all licenses
 	goLicensesRepo    = "github.com/google/go-licenses"
@@ -36,12 +36,12 @@ const (
 
 	// goCILint is for linting code
 	goCILintRepo    = "github.com/golangci/golangci-lint/cmd/golangci-lint"
-	goCILintVersion = "@v1.53.3"
+	goCILintVersion = "@v1.57.2"
 	goCILint        = goCILintRepo + goCILintVersion
 
 	// goFumpt is mvdan.cc/gofumpt to format code
 	goFumptRepo    = "mvdan.cc/gofumpt"
-	goFumptVersion = "@v0.5.0"
+	goFumptVersion = "@v0.6.0"
 	goFumpt        = goFumptRepo + goFumptVersion
 )
 
