@@ -1,6 +1,6 @@
 module github.com/golingon/lingoneks
 
-go 1.21.7
+go 1.22.2
 
 replace github.com/golingon/lingon => ../../
 
