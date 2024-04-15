@@ -51,11 +51,11 @@ func ReferenceResource(res Resource) Reference {
 	}
 }
 
-// ReferenceDataResource takes a data resource and returns a Reference which
+// ReferenceDataSource takes a data resource and returns a Reference which
 // is the address to that data resource in the Terraform configuration.
-func ReferenceDataResource(data DataResource) Reference {
+func ReferenceDataSource(data DataSource) Reference {
 	return Reference{
-		underlyingType: referenceDataResource,
+		underlyingType: referenceDataSource,
 		data:           data,
 	}
 }
@@ -71,8 +71,8 @@ func ReferenceAsSingle[T Value[T]](ref Reference) T {
 type referenceUnderlyingType int
 
 const (
-	referenceResource     referenceUnderlyingType = 1
-	referenceDataResource referenceUnderlyingType = 2
+	referenceResource   referenceUnderlyingType = 1
+	referenceDataSource referenceUnderlyingType = 2
 )
 
 var _ tkihcl.Tokenizer = (*Reference)(nil)
@@ -82,12 +82,12 @@ var _ tkihcl.Tokenizer = (*Reference)(nil)
 // nested objects or even the splat operator (i.e. [*]).
 //
 // A reference can be created by passing a [Resource] to
-// [ReferenceResource] or passing a [DataResource] to
-// [ReferenceDataResource].
+// [ReferenceResource] or passing a [DataSource] to
+// [ReferenceDataSource].
 type Reference struct {
 	underlyingType referenceUnderlyingType
 	res            Resource
-	data           DataResource
+	data           DataSource
 
 	steps []referenceStep
 }
@@ -128,7 +128,7 @@ func (r Reference) InternalTokens() (hclwrite.Tokens, error) {
 				attribute: r.res.LocalName(),
 			},
 		}
-	case referenceDataResource:
+	case referenceDataSource:
 		fullSteps = []referenceStep{
 			{
 				stepType:  referenceStepAttribute,

@@ -40,7 +40,7 @@ func ExampleSet_bool() {
 func ExampleSet_ref() {
 	s := Set(
 		ReferenceAsString(ReferenceResource(&dummyResource{})),
-		ReferenceAsString(ReferenceDataResource(&dummyDataResource{})),
+		ReferenceAsString(ReferenceDataSource(&dummyDataSource{})),
 	)
 
 	fmt.Println(exampleTokensOrError(s))

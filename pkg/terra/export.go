@@ -98,9 +98,9 @@ func encodeStack(stack Exporter, w io.Writer) error {
 	}
 
 	args := hcl.EncodeArgs{
-		Providers:     make([]hcl.Provider, len(blocks.Providers)),
-		DataResources: make([]hcl.DataResource, len(blocks.DataResources)),
-		Resources:     make([]hcl.Resource, len(blocks.Resources)),
+		Providers:   make([]hcl.Provider, len(blocks.Providers)),
+		DataSources: make([]hcl.DataSource, len(blocks.DataSources)),
+		Resources:   make([]hcl.Resource, len(blocks.Resources)),
 	}
 	if blocks.Backend != nil {
 		args.Backend = &hcl.Backend{
@@ -116,8 +116,8 @@ func encodeStack(stack Exporter, w io.Writer) error {
 			Configuration: prov.Configuration(),
 		}
 	}
-	for i, data := range blocks.DataResources {
-		args.DataResources[i] = hcl.DataResource{
+	for i, data := range blocks.DataSources {
+		args.DataSources[i] = hcl.DataSource{
 			DataSource:    data.DataSource(),
 			LocalName:     data.LocalName(),
 			Configuration: data.Configuration(),
@@ -147,7 +147,7 @@ func encodeStack(stack Exporter, w io.Writer) error {
 // Future things to check for (TODO):
 // 1. Each resource/data block's specific provider exists
 func validateStack(sb *stackObjects) error {
-	if (len(sb.Resources)+len(sb.DataResources)) > 0 && len(sb.Providers) == 0 {
+	if (len(sb.Resources)+len(sb.DataSources)) > 0 && len(sb.Providers) == 0 {
 		return ErrNoProviderBlock
 	}
 	return nil

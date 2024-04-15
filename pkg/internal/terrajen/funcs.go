@@ -158,7 +158,7 @@ func funcAttributes(s *Schema) *jen.Statement {
 	if s.SchemaType == SchemaTypeResource {
 		createRefFunc = qualReferenceResource()
 	} else {
-		createRefFunc = qualReferenceDataResource()
+		createRefFunc = qualReferenceDataSource()
 	}
 	return jen.Comment(
 		fmt.Sprintf(

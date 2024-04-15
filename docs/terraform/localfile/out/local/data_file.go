@@ -12,7 +12,7 @@ func NewDataFile(name string, args DataFileArgs) *DataFile {
 	}
 }
 
-var _ terra.DataResource = (*DataFile)(nil)
+var _ terra.DataSource = (*DataFile)(nil)
 
 // DataFile represents the Terraform data resource local_file.
 type DataFile struct {
@@ -37,7 +37,7 @@ func (f *DataFile) Configuration() interface{} {
 
 // Attributes returns the attributes for [DataFile].
 func (f *DataFile) Attributes() dataFileAttributes {
-	return dataFileAttributes{ref: terra.ReferenceDataResource(f)}
+	return dataFileAttributes{ref: terra.ReferenceDataSource(f)}
 }
 
 // DataFileArgs contains the configurations for local_file.

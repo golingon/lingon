@@ -54,7 +54,7 @@ func dataNewFunc(s *Schema) *jen.Statement {
 }
 
 func dataStructCompileCheck(s *Schema) *jen.Statement {
-	return jen.Var().Op("_").Qual(pkgTerra, "DataResource").Op("=").
+	return jen.Var().Op("_").Qual(pkgTerra, "DataSource").Op("=").
 		Params(
 			jen.Op("*").Id(s.StructName),
 		).

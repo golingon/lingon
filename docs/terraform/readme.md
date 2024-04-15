@@ -42,7 +42,7 @@ Additionally, you need to provide an `out` location and the path to the `pkg` fo
 We recommend creating a Go file with a `go:generate` directive to invoke the `terragen` command. E.g.
 
 ```go
-//go:generate go run -mod=readonly github.com/golingon/lingon/cmd/terragen -out ./gen/aws -pkg mypkg/gen/aws -provider local=hashicorp/aws:4.60.0 -force 
+//go:generate go run -mod=readonly github.com/golingon/lingon/cmd/terragen -out ./gen/aws -pkg mypkg/gen/aws -provider local=hashicorp/aws:4.60.0 -force
 ```
 
 ## Creating and Exporting Terraform Stacks
@@ -88,7 +88,7 @@ func Example_minimalStack() {
 Lingon uses Go reflection on the struct to identify all fields of a stack struct.
 All fields need to be one of:
 
-1. An exported (public) field implementing one of the Terraform object interfaces (such as `terra.Backend`, `terra.Provider`, `terra.Resource` or `terra.DataResource`)
+1. An exported (public) field implementing one of the Terraform object interfaces (such as `terra.Backend`, `terra.Provider`, `terra.Resource` or `terra.DataSource`)
 2. A field with a struct tag `lingon:"-"` telling the encoder to ignore the field
 3. An embedded struct, whose fields follow these same rules
 

@@ -13,11 +13,11 @@ import (
 func TestExport(t *testing.T) {
 	type simpleStack struct {
 		DummyStack
-		DummyRes  *dummyResource     `validate:"required"`
-		DummyData *dummyDataResource `validate:"required"`
+		DummyRes  *dummyResource   `validate:"required"`
+		DummyData *dummyDataSource `validate:"required"`
 	}
 	dr := &dummyResource{}
-	ddr := &dummyDataResource{}
+	ddr := &dummyDataSource{}
 	st := simpleStack{
 		DummyStack: newDummyBaseStack(),
 		DummyRes:   dr,

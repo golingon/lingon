@@ -12,7 +12,7 @@ func NewDataSensitiveFile(name string, args DataSensitiveFileArgs) *DataSensitiv
 	}
 }
 
-var _ terra.DataResource = (*DataSensitiveFile)(nil)
+var _ terra.DataSource = (*DataSensitiveFile)(nil)
 
 // DataSensitiveFile represents the Terraform data resource local_sensitive_file.
 type DataSensitiveFile struct {
@@ -37,7 +37,7 @@ func (sf *DataSensitiveFile) Configuration() interface{} {
 
 // Attributes returns the attributes for [DataSensitiveFile].
 func (sf *DataSensitiveFile) Attributes() dataSensitiveFileAttributes {
-	return dataSensitiveFileAttributes{ref: terra.ReferenceDataResource(sf)}
+	return dataSensitiveFileAttributes{ref: terra.ReferenceDataSource(sf)}
 }
 
 // DataSensitiveFileArgs contains the configurations for local_sensitive_file.

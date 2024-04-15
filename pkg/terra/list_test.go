@@ -42,7 +42,7 @@ func ExampleList_bool() {
 func ExampleList_ref() {
 	// Create some dummy references
 	refA := ReferenceAsString(ReferenceResource(&dummyResource{}))
-	refB := ReferenceAsString(ReferenceDataResource(&dummyDataResource{}))
+	refB := ReferenceAsString(ReferenceDataSource(&dummyDataSource{}))
 
 	s := List(refA, refB)
 	fmt.Println(exampleTokensOrError(s))
