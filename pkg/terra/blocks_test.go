@@ -85,6 +85,20 @@ func TestExtractBlocks_PrivateField(t *testing.T) {
 	tu.ErrorIs(t, err, ErrNotExportedField)
 }
 
+func TestExtractBlocks_EmbedPointer(t *testing.T) {
+	type Composition struct{}
+	type simpleStack struct {
+		DummyStack
+		*Composition
+	}
+	st := simpleStack{
+		DummyStack:  newDummyBaseStack(),
+		Composition: &Composition{},
+	}
+	_, err := objectsFromStack(&st)
+	tu.AssertNoError(t, err)
+}
+
 func newDummyBaseStack() DummyStack {
 	return DummyStack{
 		Backend:  &dummyBackend{},
