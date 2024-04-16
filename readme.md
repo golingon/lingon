@@ -4,7 +4,6 @@
 [![Go Version](https://img.shields.io/github/go-mod/go-version/golingon/lingon)](go.mod)
 ![Go Test Coverage](.github/coverage.svg)
 
-
 # Lingon 🍒 - Libraries for building platforms with Go  <!-- omit in toc -->
 
 - [What is this?](#what-is-this)
@@ -22,12 +21,6 @@
 - [Why Go?](#why-go)
 - [Similar projects](#similar-projects)
 - [License](#license)
-
-## Project Status
-
-This was a proof-of-concept at [volvo-cars](https://github.com/volvo-cars/lingon). 
-Management decided to go another route but we ([jacob](https://github.com/jlarfors) and [julien](https://github.com/veggiemonk)) believe in the concept 
-and the knowledge acquired throughout the process. We are maintainers of the project and will make sure that the project is healthy and keep receiving updates.
 
 ## What is this?
 
@@ -60,6 +53,11 @@ and have suffered the pain of configuration languages and complexity of gluing t
 This project is in beta.
 The APIs are stable, but we do not promise backward compatibility at this point.
 We will eventually promise backward compatibility when the project is more battle tested.
+
+This was a proof-of-concept at [volvo-cars](https://github.com/volvo-cars/lingon).
+Unfortunately the project for which Lingon was being developed ended.
+The original authors ([jacob](https://github.com/jlarfors) and [julien](https://github.com/veggiemonk)) believe in the concept and are
+now maintainers of this project and will make sure it is healthy and receives updates.
 
 See [FAQ](./docs/faq.md) for more details.
 
@@ -110,7 +108,7 @@ Or simply download the binaries from the [releases](https://github.com/golingon/
 ```bash
 go install github.com/golingon/lingon/cmd/explode@latest
 go install github.com/golingon/lingon/cmd/kygo@latest
-go install github.com/golingon/lingon/cmd/terragen@latest 
+go install github.com/golingon/lingon/cmd/terragen@latest
 
 ```
 
