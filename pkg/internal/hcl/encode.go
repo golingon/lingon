@@ -76,7 +76,9 @@ func Encode(wr io.Writer, args EncodeArgs) error {
 
 	// Encode provider blocks
 	if len(args.Providers) > 0 {
-		fileBody.AppendUnstructuredTokens(hclwrite.TokensForIdentifier("// Provider blocks"))
+		fileBody.AppendUnstructuredTokens(
+			hclwrite.TokensForIdentifier("// Provider blocks"),
+		)
 		fileBody.AppendNewline()
 	}
 	for _, provider := range args.Providers {
@@ -100,7 +102,9 @@ func Encode(wr io.Writer, args EncodeArgs) error {
 	}
 	// Encode data blocks
 	if len(args.DataSources) > 0 {
-		fileBody.AppendUnstructuredTokens(hclwrite.TokensForIdentifier("// Data blocks"))
+		fileBody.AppendUnstructuredTokens(
+			hclwrite.TokensForIdentifier("// Data blocks"),
+		)
 		fileBody.AppendNewline()
 	}
 	for _, data := range args.DataSources {
@@ -125,7 +129,9 @@ func Encode(wr io.Writer, args EncodeArgs) error {
 	}
 	// Encode resource blocks
 	if len(args.Resources) > 0 {
-		fileBody.AppendUnstructuredTokens(hclwrite.TokensForIdentifier("// Resource blocks"))
+		fileBody.AppendUnstructuredTokens(
+			hclwrite.TokensForIdentifier("// Resource blocks"),
+		)
 		fileBody.AppendNewline()
 	}
 	for _, resource := range args.Resources {
@@ -252,6 +258,10 @@ func encodeStruct(
 					body.SetAttributeRaw(tagName, tokens)
 				}
 			default:
+				// If the field is a nil pointer, we do not want to render it.
+				if fv.Kind() == reflect.Ptr && fv.IsNil() {
+					continue
+				}
 				if fv.CanInterface() && fv.Interface() != nil {
 					ctyVal, err := impliedCtyValue(fv)
 					if err != nil {
@@ -293,11 +303,13 @@ func encodeStruct(
 	}
 
 	if len(labels) > 0 {
-		// When working against the top-level Go struct, no HCL block exists, so `hcl:",label"` tags
-		// are not allowed here.
+		// When working against the top-level Go struct, no HCL block exists, so
+		// `hcl:",label"` tags are not allowed here.
 		// Only on the root Go struct is the block nil.
 		if block == nil {
-			return fmt.Errorf("cannot set hcl label tag on struct without a block")
+			return fmt.Errorf(
+				"cannot set hcl label tag on struct without a block",
+			)
 		}
 		block.SetLabels(labels)
 	}

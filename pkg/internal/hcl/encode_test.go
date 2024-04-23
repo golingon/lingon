@@ -5,10 +5,12 @@ package hcl
 
 import (
 	"bytes"
+	"reflect"
 	"testing"
 
 	tu "github.com/golingon/lingon/pkg/testutil"
 	"github.com/hashicorp/hcl/v2/hclsimple"
+	"github.com/hashicorp/hcl/v2/hclwrite"
 )
 
 type TerraformBlock struct {
@@ -227,4 +229,15 @@ func TestEncodeRaw(t *testing.T) {
 	if diff := tu.Diff(actualHCL, expectedHCL); diff != "" {
 		t.Error(tu.Callers(), diff)
 	}
+}
+
+func TestEncode_StructWithNil(t *testing.T) {
+	type StructWithNil struct {
+		ShouldBeNil *string `hcl:"should_be_nil"`
+	}
+	block := hclwrite.NewBlock("block", nil)
+	err := encodeStruct(reflect.ValueOf(StructWithNil{}), block, block.Body())
+	tu.AssertNoError(t, err)
+
+	tu.AssertEqual(t, len(block.Body().Attributes()), 0)
 }
