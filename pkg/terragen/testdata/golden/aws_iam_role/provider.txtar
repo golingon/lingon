@@ -2292,14 +2292,6 @@ import (
 	"io"
 )
 
-// New creates a new instance of [Resource].
-func New(name string, args Args) *Resource {
-	return &Resource{
-		Args: args,
-		Name: name,
-	}
-}
-
 var _ terra.Resource = (*Resource)(nil)
 
 // Resource represents the Terraform resource aws_iam_role.
@@ -2550,14 +2542,6 @@ type InlinePolicyState struct {
 package aws_iam_role
 
 import "github.com/golingon/lingon/pkg/terra"
-
-// Data creates a new instance of [DataSource].
-func Data(name string, args DataArgs) *DataSource {
-	return &DataSource{
-		Args: args,
-		Name: name,
-	}
-}
 
 var _ terra.DataSource = (*DataSource)(nil)
 

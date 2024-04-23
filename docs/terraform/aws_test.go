@@ -42,12 +42,13 @@ func Example_awsVPC() {
 		Provider: &aws.Provider{
 			Region: terra.String("eu-north-1"),
 		},
-		VPC: aws_vpc.New(
-			"vpc", aws_vpc.Args{
+		VPC: &aws_vpc.Resource{
+			Name: "vpc",
+			Args: aws_vpc.Args{
 				CidrBlock:        terra.String("10.0.0.0/16"),
 				EnableDnsSupport: terra.Bool(true),
 			},
-		),
+		},
 	}
 	// Export the stack to Terraform HCL
 	var b bytes.Buffer
@@ -87,27 +88,29 @@ func Example_awsVPCWithSubnet() {
 		Subnet   *aws_subnet.Resource `validate:"required"`
 	}
 
-	vpc := aws_vpc.New(
-		"vpc", aws_vpc.Args{
+	vpc := aws_vpc.Resource{
+		Name: "vpc",
+		Args: aws_vpc.Args{
 			CidrBlock:        terra.String("10.0.0.0/16"),
 			EnableDnsSupport: terra.Bool(true),
 		},
-	)
-	subnet := aws_subnet.New(
-		"subnet", aws_subnet.Args{
+	}
+	subnet := aws_subnet.Resource{
+		Name: "subnet",
+		Args: aws_subnet.Args{
 			// Reference the VPC's ID, which will translate into a reference
 			// in the Terraform configuration
 			VpcId: vpc.Attributes().Id(),
 		},
-	)
+	}
 
 	// Initialise a stack with the AWS provider configuration
 	stack := AWSStack{
 		Provider: &aws.Provider{
 			Region: terra.String("eu-north-1"),
 		},
-		VPC:    vpc,
-		Subnet: subnet,
+		VPC:    &vpc,
+		Subnet: &subnet,
 	}
 	// Export the stack to Terraform HCL
 	var b bytes.Buffer
@@ -155,12 +158,13 @@ func Example_awsVPCImportState() {
 		Provider: &aws.Provider{
 			Region: terra.String("eu-north-1"),
 		},
-		VPC: aws_vpc.New(
-			"vpc", aws_vpc.Args{
+		VPC: &aws_vpc.Resource{
+			Name: "vpc",
+			Args: aws_vpc.Args{
 				CidrBlock:        terra.String("10.0.0.0/16"),
 				EnableDnsSupport: terra.Bool(true),
 			},
-		),
+		},
 	}
 
 	// At this point, you would invoke the Terraform CLI, and at a minimum

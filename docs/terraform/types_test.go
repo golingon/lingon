@@ -14,10 +14,11 @@ func Example_typesVars() {
 		B = terra.Bool
 	)
 
-	_ = aws_vpc.New(
-		"vpc", aws_vpc.Args{
+	_ = aws_vpc.Resource{
+		Name: "vpc",
+		Args: aws_vpc.Args{
 			CidrBlock:        S("10.0.0.0/16"),
 			EnableDnsSupport: B(true),
 		},
-	)
+	}
 }

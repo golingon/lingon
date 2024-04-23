@@ -17,7 +17,6 @@ func ResourceFile(s *Schema) *jen.File {
 	f.ImportAlias(pkgHCL, pkgHCLAlias)
 	f.ImportName(pkgTerra, pkgTerraAlias)
 	f.HeaderComment(HeaderComment)
-	f.Add(resourceNewFunc(s))
 	f.Add(resourceStructCompileCheck(s))
 	f.Add(resourceStruct(s))
 	f.Add(argsStruct(s))
@@ -25,36 +24,6 @@ func ResourceFile(s *Schema) *jen.File {
 	f.Add(resourceStateStruct(s))
 
 	return f
-}
-
-func resourceNewFunc(s *Schema) *jen.Statement {
-	return jen.Comment(
-		fmt.Sprintf(
-			"%s creates a new instance of [%s].",
-			s.NewFuncName,
-			s.StructName,
-		),
-	).
-		Line().
-		Func().
-		// Name
-		Id(s.NewFuncName).Params(
-		jen.Id("name").String(),
-		jen.Id("args").Id(s.ArgumentStructName),
-	).
-		// Return
-		Op("*").Id(s.StructName).
-		// Block
-		Block(
-			jen.Return(
-				jen.Op("&").Id(s.StructName).Values(
-					jen.Dict{
-						jen.Id(idFieldName): jen.Id("name"),
-						jen.Id(idFieldArgs): jen.Id("args"),
-					},
-				),
-			),
-		)
 }
 
 func resourceStructCompileCheck(s *Schema) *jen.Statement {

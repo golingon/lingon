@@ -4,14 +4,6 @@ package local_sensitive_file
 
 import "github.com/golingon/lingon/pkg/terra"
 
-// Data creates a new instance of [DataSource].
-func Data(name string, args DataArgs) *DataSource {
-	return &DataSource{
-		Args: args,
-		Name: name,
-	}
-}
-
 var _ terra.DataSource = (*DataSource)(nil)
 
 // DataSource represents the Terraform data resource local_sensitive_file.
