@@ -17,41 +17,12 @@ func DataSourceFile(s *Schema) *jen.File {
 	f.ImportAlias(pkgHCL, "hcl")
 	f.ImportName(pkgTerra, pkgTerraAlias)
 	f.HeaderComment(HeaderComment)
-	f.Add(dataNewFunc(s))
 	f.Add(dataStructCompileCheck(s))
 	f.Add(dataStruct(s))
 	f.Add(argsStruct(s))
 	f.Add(attributesStruct(s))
 
 	return f
-}
-
-func dataNewFunc(s *Schema) *jen.Statement {
-	return jen.Comment(
-		fmt.Sprintf(
-			"%s creates a new instance of [%s].",
-			s.NewFuncName,
-			s.StructName,
-		),
-	).
-		Line().
-		Func().Id(s.NewFuncName).Params(
-		jen.Id("name").String(),
-		jen.Id("args").Id(s.ArgumentStructName),
-	).
-		// Return
-		Op("*").Id(s.StructName).
-		// Block
-		Block(
-			jen.Return(
-				jen.Op("&").Id(s.StructName).Values(
-					jen.Dict{
-						jen.Id(idFieldName): jen.Id("name"),
-						jen.Id(idFieldArgs): jen.Id("args"),
-					},
-				),
-			),
-		)
 }
 
 func dataStructCompileCheck(s *Schema) *jen.Statement {

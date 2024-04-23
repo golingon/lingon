@@ -71,8 +71,7 @@ func (a *ProviderGenerator) SchemaProvider(sb *tfjson.SchemaBlock) *Schema {
 		StateStructName:      "n/a",      // Providers do not have a state.
 		Receiver:             structReceiverFromName("provider"),
 
-		NewFuncName: "n/a", // Not used.
-		SubPkgName:  a.ProviderName,
+		SubPkgName: a.ProviderName,
 		SubPkgPath: filepath.Join(
 			a.GeneratedPackageLocation,
 			"provider_types"+fileExtension,
@@ -113,8 +112,7 @@ func (a *ProviderGenerator) SchemaResource(
 			name,
 		), // iam_role => ir
 
-		NewFuncName: "New",
-		SubPkgName:  name, // aws_iam_role => aws_iam_role
+		SubPkgName: name, // aws_iam_role => aws_iam_role
 		SubPkgPath: filepath.Join(
 			a.GeneratedPackageLocation,
 			name,
@@ -157,8 +155,7 @@ func (a *ProviderGenerator) SchemaData(
 			name,
 		), // iam_role => ir
 
-		NewFuncName: "Data",
-		SubPkgName:  name, // aws_iam_role => aws_iam_role
+		SubPkgName: name, // aws_iam_role => aws_iam_role
 		SubPkgPath: filepath.Join(
 			a.GeneratedPackageLocation,
 			name,
@@ -214,8 +211,7 @@ type Schema struct {
 
 	Receiver string // iam_role => ir
 
-	NewFuncName string // iam_role => NewIamRole
-	SubPkgName  string // iam_role => iamrole
+	SubPkgName string // iam_role => iamrole
 	// SubPkgPath is the filepath for the schema entities types (args,
 	// attributes, state).
 	SubPkgPath string

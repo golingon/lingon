@@ -10,14 +10,6 @@ import (
 	"github.com/golingon/lingon/pkg/terra"
 )
 
-// New creates a new instance of [Resource].
-func New(name string, args Args) *Resource {
-	return &Resource{
-		Args: args,
-		Name: name,
-	}
-}
-
 var _ terra.Resource = (*Resource)(nil)
 
 // Resource represents the Terraform resource local_sensitive_file.

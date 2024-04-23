@@ -22,12 +22,13 @@ func NewLocalFileStack(filename string) *LocalFileStack {
 			Path: "terraform.tfstate",
 		},
 		Provider: &local.Provider{},
-		File: local_file.New(
-			"file", local_file.Args{
+		File: &local_file.Resource{
+			Name: "file",
+			Args: local_file.Args{
 				Filename: terra.String(filename),
 				Content:  terra.String("contents"),
 			},
-		),
+		},
 	}
 }
 
