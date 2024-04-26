@@ -20,14 +20,24 @@ require (
 	k8s.io/api v0.30.0
 	k8s.io/apiextensions-apiserver v0.30.0
 	k8s.io/apimachinery v0.30.0
-	k8s.io/client-go v0.30.0
+	k8s.io/client-go v12.0.0+incompatible
 	mvdan.cc/gofumpt v0.6.0
 	sigs.k8s.io/yaml v1.4.0
+)
+
+replace (
+	k8s.io/api => k8s.io/api v0.30.0
+	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.30.0
+	k8s.io/apimachinery => k8s.io/apimachinery v0.30.0
+	k8s.io/client-go => k8s.io/client-go v0.30.0
+	k8s.io/kube-aggregator => k8s.io/kube-aggregator v0.30.0
+	sigs.k8s.io/controller-runtime => sigs.k8s.io/controller-runtime v0.18.0
 )
 
 require (
 	github.com/agext/levenshtein v1.2.3 // indirect
 	github.com/apparentlymart/go-textseg/v15 v15.0.0 // indirect
+	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/gabriel-vasile/mimetype v1.4.3 // indirect
 	github.com/go-logr/logr v1.4.1 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
@@ -40,6 +50,8 @@ require (
 	github.com/mitchellh/go-wordwrap v1.0.1 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
+	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
+	github.com/stretchr/testify v1.9.0 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.1 // indirect
 	golang.org/x/crypto v0.22.0 // indirect

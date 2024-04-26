@@ -123,27 +123,28 @@ func Core() Meta {
 type Meta struct {
 	meta.Metadata
 
-	Config     ku.ConfigAndMount
-	ConfigFile string
-	ConfigPath string
+	pidVM corev1.VolumeMount
+
+	PromExporter   meta.ContainerImg
+	ConfigReloader meta.ContainerImg
+
+	pidPath      string
+	ConfigFile   string
+	ConfigPath   string
+	PvcName      string
+	StorageClass string
+	storageDir   string
+
+	Config ku.ConfigAndMount
 
 	Client  meta.NetPort
-	Cluster meta.NetPort
-	Monitor meta.NetPort
-	Metrics meta.NetPort
-	Leaf    meta.NetPort
 	Gw      meta.NetPort
-
-	pidVM        corev1.VolumeMount
-	pidPath      string
-	storageDir   string
-	StorageClass string
-	PvcName      string
+	Leaf    meta.NetPort
+	Metrics meta.NetPort
+	Monitor meta.NetPort
+	Cluster meta.NetPort
 
 	replicas int
-
-	ConfigReloader meta.ContainerImg
-	PromExporter   meta.ContainerImg
 }
 
 var (
@@ -314,7 +315,7 @@ var STS = &appsv1.StatefulSet{
 				ObjectMeta: metav1.ObjectMeta{Name: N.PvcName},
 				Spec: corev1.PersistentVolumeClaimSpec{
 					AccessModes: []corev1.PersistentVolumeAccessMode{corev1.ReadWriteOnce},
-					Resources: corev1.ResourceRequirements{
+					Resources: corev1.VolumeResourceRequirements{
 						Requests: map[corev1.ResourceName]resource.Quantity{
 							corev1.ResourceName("storage"): resource.MustParse(ResourceStorage),
 						},

@@ -161,11 +161,7 @@ func run(p runParams) error {
 		},
 		KarpenterDiscovery: p.ClusterParams.Name,
 	}
-	slog.Info(
-		"vpc stack",
-		slog.String("name", vpcName),
-		slog.Any("opts", vpcOpts),
-	)
+	slog.Info("vpc stack", "name", vpcName, "opts", vpcOpts)
 
 	vpc := vpcStack{
 		AWSStackConfig: newAWSStackConfig(vpcName, p),

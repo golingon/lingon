@@ -5,17 +5,26 @@ go 1.22.2
 replace github.com/golingon/lingon => ../
 
 require (
-	github.com/golingon/lingon v0.0.0-20240415181906-fb5261d4fb3b
+	github.com/golingon/lingon v0.0.0-00010101000000-000000000000
 	github.com/hashicorp/hcl/v2 v2.20.1
 	github.com/hashicorp/terraform-json v0.21.0
 	github.com/rogpeppe/go-internal v1.12.0
 	istio.io/api v1.21.1
 	istio.io/client-go v1.21.1
-	k8s.io/api v0.29.3
-	k8s.io/apiextensions-apiserver v0.29.3
-	k8s.io/apimachinery v0.29.3
-	k8s.io/client-go v0.29.3
+	k8s.io/api v0.30.0
+	k8s.io/apiextensions-apiserver v0.30.0
+	k8s.io/apimachinery v0.30.0
+	k8s.io/client-go v12.0.0+incompatible
 	sigs.k8s.io/secrets-store-csi-driver v1.4.2
+)
+
+replace (
+	k8s.io/api => k8s.io/api v0.30.0
+	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.30.0
+	k8s.io/apimachinery => k8s.io/apimachinery v0.30.0
+	k8s.io/client-go => k8s.io/client-go v0.30.0
+	k8s.io/kube-aggregator => k8s.io/kube-aggregator v0.30.0
+	sigs.k8s.io/controller-runtime => sigs.k8s.io/controller-runtime v0.18.0
 )
 
 require (
