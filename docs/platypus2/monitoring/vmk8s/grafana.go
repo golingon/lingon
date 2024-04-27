@@ -166,7 +166,7 @@ var SideCarDataSource = corev1.Container{
 		{
 			Name: "FOLDER",
 			// Value: "/etc/grafana/provisioning/datasources",
-			Value: VolumeDataSource.VolumeMount.MountPath,
+			Value: VolumeDataSource.MountPath,
 		},
 		{
 			Name: "REQ_URL",
@@ -497,16 +497,16 @@ providers:
 }
 
 type GrafDSConfigFile struct {
-	APIVersion  int              `json:"apiVersion"`
 	DataSources []GrafDataSource `json:"datasources"`
+	APIVersion  int              `json:"apiVersion"`
 }
 
 type GrafDataSource struct {
 	Access    string `json:"access"`
-	IsDefault bool   `json:"isDefault"`
 	Name      string `json:"name"`
 	Type      string `json:"type"`
 	URL       string `json:"url"`
+	IsDefault bool   `json:"isDefault"`
 }
 
 var GrafDSConfig = GrafDSConfigFile{

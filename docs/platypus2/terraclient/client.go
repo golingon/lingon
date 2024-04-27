@@ -61,11 +61,10 @@ type clientOpts struct {
 }
 
 // Client runs Terraform stacks and keeps a record of the runs in order to
-// provide a summary of
-// the changes
+// provide a summary of the changes.
 type Client struct {
-	mu     sync.Mutex
 	stacks []Stacker
+	mu     sync.Mutex
 	opts   clientOpts
 }
 

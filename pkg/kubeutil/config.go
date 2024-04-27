@@ -34,9 +34,9 @@ func DataConfigMap(
 
 // ConfigAndMount is a helper struct to create a ConfigMap and a VolumeMount
 type ConfigAndMount struct {
-	metav1.ObjectMeta
-	VolumeMount corev1.VolumeMount
 	Data        map[string]string
+	VolumeMount corev1.VolumeMount
+	metav1.ObjectMeta
 }
 
 // ConfigMap creates a ConfigMap from the ConfigAndMount
@@ -128,11 +128,11 @@ func HashConfig(c *corev1.ConfigMap) string {
 
 // VolumeAndMount is a helper struct to create a Volume and a VolumeSource
 type VolumeAndMount struct {
-	corev1.VolumeMount
 	// corev1.Volume has just Name and VolumeSource.
 	// A name field is already present in the VolumeMount,
 	// so we just add the VolumeSource field here directly.
 	VolumeSource corev1.VolumeSource
+	corev1.VolumeMount
 }
 
 // Volume creates a Volume from the VolumeAndMount
