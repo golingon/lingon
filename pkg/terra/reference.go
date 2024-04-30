@@ -100,6 +100,9 @@ const (
 	referenceStepIndex     = 2
 	referenceStepKey       = 3
 	referenceStepSplat     = 4
+	// referenceStepToList is a special step that is used to convert a reference
+	// to a list. It uses the builtin function `tolist()`.
+	referenceStepToList = 5
 )
 
 // referenceStep is a part of a reference to some value in a Terraform
@@ -204,6 +207,17 @@ func (r Reference) splat() Reference {
 	return cp
 }
 
+// tolist wraps the reference in the Terraform tolist builtin function.
+func (r Reference) tolist() Reference {
+	cp := r.copy()
+	cp.steps = append(
+		cp.steps, referenceStep{
+			stepType: referenceStepToList,
+		},
+	)
+	return cp
+}
+
 // copy makes a copy of the reference so that any slices can be safely passed
 // around with modifying the original
 func (r Reference) copy() Reference {
@@ -293,6 +307,8 @@ func tokensForSteps(steps []referenceStep) (hclwrite.Tokens, error) {
 					Bytes: []byte{']'},
 				},
 			)
+		case referenceStepToList:
+			tokens = hclwrite.TokensForFunctionCall("tolist", tokens)
 		default:
 			return nil, fmt.Errorf(
 				"unknown reference step type: %d",

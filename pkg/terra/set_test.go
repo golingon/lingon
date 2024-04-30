@@ -62,9 +62,9 @@ func ExampleSet_index() {
 	l := ReferenceAsSet[StringValue](
 		ReferenceResource(&dummyResource{}),
 	)
-	index := l.Index(0)
+	index := l.ToList().Index(0)
 	fmt.Println(exampleTokensOrError(index))
-	// Output: dummy.dummy[0]
+	// Output: tolist(dummy.dummy)[0]
 }
 
 func ExampleSet_splat() {
