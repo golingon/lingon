@@ -61,12 +61,11 @@ type SetValue[T Value[T]] struct {
 	values []T
 }
 
-func (v SetValue[T]) Index(i int) T {
+func (v SetValue[T]) ToList() ListValue[T] {
 	if !v.isRef {
-		panic("SetValue: cannot use Index on value")
+		panic("SetValue: cannot use ToList on value")
 	}
-	var t T
-	return t.InternalWithRef(v.ref.index(i))
+	return ReferenceAsList[T](v.ref.tolist())
 }
 
 func (v SetValue[T]) Splat() T {
