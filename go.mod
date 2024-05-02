@@ -20,18 +20,9 @@ require (
 	k8s.io/api v0.30.0
 	k8s.io/apiextensions-apiserver v0.30.0
 	k8s.io/apimachinery v0.30.0
-	k8s.io/client-go v12.0.0+incompatible
+	k8s.io/client-go v0.30.0
 	mvdan.cc/gofumpt v0.6.0
 	sigs.k8s.io/yaml v1.4.0
-)
-
-replace (
-	k8s.io/api => k8s.io/api v0.30.0
-	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.30.0
-	k8s.io/apimachinery => k8s.io/apimachinery v0.30.0
-	k8s.io/client-go => k8s.io/client-go v0.30.0
-	k8s.io/kube-aggregator => k8s.io/kube-aggregator v0.30.0
-	sigs.k8s.io/controller-runtime => sigs.k8s.io/controller-runtime v0.18.0
 )
 
 require (
