@@ -43,6 +43,8 @@ func TestFolder2Txtar(t *testing.T) {
 		"../kube/testdata/golden/configmap.yaml",
 		"../kube/testdata/golden/deployment.golden",
 		"../kube/testdata/golden/deployment.yaml",
+		"../kube/testdata/golden/crd-subresources.golden",
+		"../kube/testdata/golden/crd-subresources.yaml",
 		"../kube/testdata/golden/dirty.txt",
 		"../kube/testdata/golden/dirty.yaml",
 		"../kube/testdata/golden/export_embedded_struct.txt",

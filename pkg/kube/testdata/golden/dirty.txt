@@ -133,6 +133,7 @@ var MetadataGrpcDeploy = &appsv1.Deployment{
 				DeprecatedServiceAccount:      "metadata-grpc-server",
 				RestartPolicy:                 corev1.RestartPolicy("Always"),
 				SchedulerName:                 "default-scheduler",
+				SecurityContext:               &corev1.PodSecurityContext{},
 				ServiceAccountName:            "metadata-grpc-server",
 				TerminationGracePeriodSeconds: P(int64(30)),
 			},

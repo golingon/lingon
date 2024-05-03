@@ -485,9 +485,7 @@ KeyUsage specifies valid usage contexts for keys. See: https://tools.ietf.org/ht
 			}},
 			Served:       true,
 			Storage:      true,
-			Subresources: &v1.CustomResourceSubresources{
-                Status: &apiextensionsv1.CustomResourceSubresourceStatus{},
-            },
+			Subresources: &v1.CustomResourceSubresources{Status: &v1.CustomResourceSubresourceStatus{}},
 		}},
 	},
 	TypeMeta: v11.TypeMeta{

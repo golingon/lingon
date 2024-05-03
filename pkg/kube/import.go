@@ -374,7 +374,7 @@ func (j *jamel) yaml2GoJen(data []byte, m *kubeutil.Metadata) (
 		if decoded == nil {
 			return jen.Empty(), nil
 		}
-		jenCode = j.convertValue(reflect.ValueOf(decoded))
+		jenCode = j.convertValue(reflect.ValueOf(decoded), false)
 	}
 	return jenCode, nil
 }

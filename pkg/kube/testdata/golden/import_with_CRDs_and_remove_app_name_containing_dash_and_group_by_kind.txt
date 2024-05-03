@@ -383,7 +383,7 @@ Define the scope for the access token, e.g. pull/push access for a repository. i
 			}},
 			Served:       true,
 			Storage:      true,
-			Subresources: &apiextensionsv1.CustomResourceSubresources{},
+			Subresources: &apiextensionsv1.CustomResourceSubresources{Status: &apiextensionsv1.CustomResourceSubresourceStatus{}},
 		}},
 	},
 	TypeMeta: metav1.TypeMeta{
@@ -929,7 +929,7 @@ var ClusterexternalsecretsIoCRD = &apiextensionsv1.CustomResourceDefinition{
 			}},
 			Served:       true,
 			Storage:      true,
-			Subresources: &apiextensionsv1.CustomResourceSubresources{},
+			Subresources: &apiextensionsv1.CustomResourceSubresources{Status: &apiextensionsv1.CustomResourceSubresourceStatus{}},
 		}},
 	},
 	TypeMeta: metav1.TypeMeta{
@@ -2278,7 +2278,7 @@ var ClustersecretstoresIoCRD = &apiextensionsv1.CustomResourceDefinition{
 				Type: "object",
 			}},
 			Served:       true,
-			Subresources: &apiextensionsv1.CustomResourceSubresources{},
+			Subresources: &apiextensionsv1.CustomResourceSubresources{Status: &apiextensionsv1.CustomResourceSubresourceStatus{}},
 		}, apiextensionsv1.CustomResourceDefinitionVersion{
 			AdditionalPrinterColumns: []apiextensionsv1.CustomResourceColumnDefinition{apiextensionsv1.CustomResourceColumnDefinition{
 				JSONPath: ".metadata.creationTimestamp",
@@ -3921,7 +3921,7 @@ var ClustersecretstoresIoCRD = &apiextensionsv1.CustomResourceDefinition{
 			}},
 			Served:       true,
 			Storage:      true,
-			Subresources: &apiextensionsv1.CustomResourceSubresources{},
+			Subresources: &apiextensionsv1.CustomResourceSubresources{Status: &apiextensionsv1.CustomResourceSubresourceStatus{}},
 		}},
 	},
 	TypeMeta: metav1.TypeMeta{
@@ -4080,7 +4080,7 @@ var EcrauthorizationtokensGeneratorsIoCRD = &apiextensionsv1.CustomResourceDefin
 			}},
 			Served:       true,
 			Storage:      true,
-			Subresources: &apiextensionsv1.CustomResourceSubresources{},
+			Subresources: &apiextensionsv1.CustomResourceSubresources{Status: &apiextensionsv1.CustomResourceSubresourceStatus{}},
 		}},
 	},
 	TypeMeta: metav1.TypeMeta{
@@ -4369,7 +4369,7 @@ var ExternalsecretsIoCRD = &apiextensionsv1.CustomResourceDefinition{
 				Type: "object",
 			}},
 			Served:       true,
-			Subresources: &apiextensionsv1.CustomResourceSubresources{},
+			Subresources: &apiextensionsv1.CustomResourceSubresources{Status: &apiextensionsv1.CustomResourceSubresourceStatus{}},
 		}, apiextensionsv1.CustomResourceDefinitionVersion{
 			AdditionalPrinterColumns: []apiextensionsv1.CustomResourceColumnDefinition{apiextensionsv1.CustomResourceColumnDefinition{
 				JSONPath: ".spec.secretStoreRef.name",
@@ -4816,7 +4816,7 @@ var ExternalsecretsIoCRD = &apiextensionsv1.CustomResourceDefinition{
 			}},
 			Served:       true,
 			Storage:      true,
-			Subresources: &apiextensionsv1.CustomResourceSubresources{},
+			Subresources: &apiextensionsv1.CustomResourceSubresources{Status: &apiextensionsv1.CustomResourceSubresourceStatus{}},
 		}},
 	},
 	TypeMeta: metav1.TypeMeta{
@@ -4883,7 +4883,7 @@ var FakesGeneratorsIoCRD = &apiextensionsv1.CustomResourceDefinition{
 			}},
 			Served:       true,
 			Storage:      true,
-			Subresources: &apiextensionsv1.CustomResourceSubresources{},
+			Subresources: &apiextensionsv1.CustomResourceSubresources{Status: &apiextensionsv1.CustomResourceSubresourceStatus{}},
 		}},
 	},
 	TypeMeta: metav1.TypeMeta{
@@ -5004,7 +5004,7 @@ var GcraccesstokensGeneratorsIoCRD = &apiextensionsv1.CustomResourceDefinition{
 			}},
 			Served:       true,
 			Storage:      true,
-			Subresources: &apiextensionsv1.CustomResourceSubresources{},
+			Subresources: &apiextensionsv1.CustomResourceSubresources{Status: &apiextensionsv1.CustomResourceSubresourceStatus{}},
 		}},
 	},
 	TypeMeta: metav1.TypeMeta{
@@ -5093,7 +5093,7 @@ var PasswordsGeneratorsIoCRD = &apiextensionsv1.CustomResourceDefinition{
 			}},
 			Served:       true,
 			Storage:      true,
-			Subresources: &apiextensionsv1.CustomResourceSubresources{},
+			Subresources: &apiextensionsv1.CustomResourceSubresources{Status: &apiextensionsv1.CustomResourceSubresourceStatus{}},
 		}},
 	},
 	TypeMeta: metav1.TypeMeta{
@@ -5343,7 +5343,7 @@ var PushsecretsIoCRD = &apiextensionsv1.CustomResourceDefinition{
 			}},
 			Served:       true,
 			Storage:      true,
-			Subresources: &apiextensionsv1.CustomResourceSubresources{},
+			Subresources: &apiextensionsv1.CustomResourceSubresources{Status: &apiextensionsv1.CustomResourceSubresourceStatus{}},
 		}},
 	},
 	TypeMeta: metav1.TypeMeta{
@@ -6692,7 +6692,7 @@ var SecretstoresIoCRD = &apiextensionsv1.CustomResourceDefinition{
 				Type: "object",
 			}},
 			Served:       true,
-			Subresources: &apiextensionsv1.CustomResourceSubresources{},
+			Subresources: &apiextensionsv1.CustomResourceSubresources{Status: &apiextensionsv1.CustomResourceSubresourceStatus{}},
 		}, apiextensionsv1.CustomResourceDefinitionVersion{
 			AdditionalPrinterColumns: []apiextensionsv1.CustomResourceColumnDefinition{apiextensionsv1.CustomResourceColumnDefinition{
 				JSONPath: ".metadata.creationTimestamp",
@@ -8335,7 +8335,7 @@ var SecretstoresIoCRD = &apiextensionsv1.CustomResourceDefinition{
 			}},
 			Served:       true,
 			Storage:      true,
-			Subresources: &apiextensionsv1.CustomResourceSubresources{},
+			Subresources: &apiextensionsv1.CustomResourceSubresources{Status: &apiextensionsv1.CustomResourceSubresourceStatus{}},
 		}},
 	},
 	TypeMeta: metav1.TypeMeta{

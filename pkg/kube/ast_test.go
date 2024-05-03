@@ -342,7 +342,7 @@ func TestConvertValue(t *testing.T) {
 					crdPkgAlias: make(map[string]string, 0),
 					o:           importOption{},
 				}
-				got := j.convertValue(reflect.ValueOf(tt.in))
+				got := j.convertValue(reflect.ValueOf(tt.in), false)
 				tu.AssertEqual(t, tt.want, fmt.Sprintf("%#v", got))
 			},
 		)
@@ -376,7 +376,7 @@ func Test_convertPolicyRule(t *testing.T) {
 					crdPkgAlias: make(map[string]string, 0),
 					o:           importOption{},
 				}
-				got := j.convertValue(reflect.ValueOf(tt.in))
+				got := j.convertValue(reflect.ValueOf(tt.in), false)
 				tu.AssertEqual(t, tt.want, fmt.Sprintf("%#v", got))
 			},
 		)

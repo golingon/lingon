@@ -5,6 +5,7 @@ package kube_test
 
 import (
 	"bytes"
+	"flag"
 	"fmt"
 	"go/parser"
 	"go/token"
@@ -25,6 +26,8 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/kubernetes/scheme"
 )
+
+var updateGolden = flag.Bool("update-golden", false, "update golden files")
 
 const defaultImportOutputDir = "out/import"
 
@@ -245,6 +248,7 @@ func TestImport(t *testing.T) {
 		t.Run(
 			tt.Name, func(t *testing.T) {
 				t.Parallel()
+
 				var buf bytes.Buffer
 				tc.Opts = append(
 					tc.Opts,
@@ -262,13 +266,22 @@ func TestImport(t *testing.T) {
 				tu.AssertEqualSlice(t, want, got)
 				tu.AssertNoError(t, tu.VerifyGo(ar))
 
-				// compare content
-				golden, err := txtar.ParseFile(
-					filepath.Join(
-						"testdata", "golden",
-						strings.ReplaceAll(tc.Name, " ", "_")+".txt",
-					),
+				goldenFile := filepath.Join(
+					"testdata", "golden",
+					strings.ReplaceAll(tc.Name, " ", "_")+".txt",
 				)
+				if *updateGolden {
+					err := os.WriteFile(
+						goldenFile,
+						txtar.Format(ar),
+						os.ModePerm,
+					)
+					tu.AssertNoError(t, err, "writing golden file")
+					t.Skip("update golden files")
+				}
+
+				// compare content
+				golden, err := txtar.ParseFile(goldenFile)
 				tu.AssertNoError(t, err, "reading golden file")
 				if diff := tu.DiffTxtarSort(ar, golden); diff != "" {
 					t.Fatal(tu.Callers(), diff)
