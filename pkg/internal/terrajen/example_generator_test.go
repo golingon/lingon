@@ -72,7 +72,7 @@ func Example() {
 	// In this case we will write it to a buffer and print to stdout
 	var pb bytes.Buffer
 	if err := provFile.Render(&pb); err != nil {
-		slog.Error("rendering provider file", err)
+		slog.Error("rendering provider file", "error", err)
 		return
 	}
 	fmt.Println(pb.String())
