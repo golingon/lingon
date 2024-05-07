@@ -36,7 +36,7 @@ const (
 
 	// goCILint is for linting code
 	goCILintRepo    = "github.com/golangci/golangci-lint/cmd/golangci-lint"
-	goCILintVersion = "@v1.57.2"
+	goCILintVersion = "@v1.58.0"
 	goCILint        = goCILintRepo + goCILintVersion
 
 	// goFumpt is mvdan.cc/gofumpt to format code

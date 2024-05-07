@@ -161,7 +161,7 @@ func run(
 	// directory
 	files, err := kubeutil.ListYAMLFiles(in)
 	if err != nil {
-		slog.Error("list yaml files", err)
+		slog.Error("list yaml files", "error", err)
 	}
 
 	fmt.Printf("files:\n- %s\n", strings.Join(files, "\n- "))

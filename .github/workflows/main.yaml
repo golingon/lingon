@@ -31,14 +31,6 @@ jobs:
           check-latest: true
           cache-dependency-path: ./go.mod
 
-      - name: go test
-        run: go test -v ./pkg/...
-
-      - name: git diff
-        run: git --no-pager diff HEAD --exit-code
-
-      - name: golangci-lint
-        uses: golangci/golangci-lint-action@9d1e0624a798bb64f6c3cea93db47765312263dc # v5.1.0
-        with:
-          args: -v --timeout 1m
+      - name: run CI
+        run: go run cmd/tools/ci/*.go -pr -doc -nodiff
 
