@@ -898,7 +898,7 @@ var ClustertasksDevCRD = &apiextensionsv1.CustomResourceDefinition{
 			}},
 			Served:       true,
 			Storage:      true,
-			Subresources: &apiextensionsv1.CustomResourceSubresources{},
+			Subresources: &apiextensionsv1.CustomResourceSubresources{Status: &apiextensionsv1.CustomResourceSubresourceStatus{}},
 		}},
 	},
 	TypeMeta: metav1.TypeMeta{
@@ -951,7 +951,7 @@ var CustomrunsDevCRD = &apiextensionsv1.CustomResourceDefinition{
 			}},
 			Served:       true,
 			Storage:      true,
-			Subresources: &apiextensionsv1.CustomResourceSubresources{},
+			Subresources: &apiextensionsv1.CustomResourceSubresources{Status: &apiextensionsv1.CustomResourceSubresourceStatus{}},
 		}},
 	},
 	TypeMeta: metav1.TypeMeta{
@@ -987,7 +987,7 @@ var PipelineresourcesDevCRD = &apiextensionsv1.CustomResourceDefinition{
 			}},
 			Served:       true,
 			Storage:      true,
-			Subresources: &apiextensionsv1.CustomResourceSubresources{},
+			Subresources: &apiextensionsv1.CustomResourceSubresources{Status: &apiextensionsv1.CustomResourceSubresourceStatus{}},
 		}},
 	},
 	TypeMeta: metav1.TypeMeta{
@@ -1051,7 +1051,7 @@ var PipelinerunsDevCRD = &apiextensionsv1.CustomResourceDefinition{
 			}},
 			Served:       true,
 			Storage:      true,
-			Subresources: &apiextensionsv1.CustomResourceSubresources{},
+			Subresources: &apiextensionsv1.CustomResourceSubresources{Status: &apiextensionsv1.CustomResourceSubresourceStatus{}},
 		}, apiextensionsv1.CustomResourceDefinitionVersion{
 			AdditionalPrinterColumns: []apiextensionsv1.CustomResourceColumnDefinition{apiextensionsv1.CustomResourceColumnDefinition{
 				JSONPath: `.status.conditions[?(@.type=="Succeeded")].status`,
@@ -1076,7 +1076,7 @@ var PipelinerunsDevCRD = &apiextensionsv1.CustomResourceDefinition{
 				XPreserveUnknownFields: P(true),
 			}},
 			Served:       true,
-			Subresources: &apiextensionsv1.CustomResourceSubresources{},
+			Subresources: &apiextensionsv1.CustomResourceSubresources{Status: &apiextensionsv1.CustomResourceSubresourceStatus{}},
 		}},
 	},
 	TypeMeta: metav1.TypeMeta{
@@ -1122,7 +1122,7 @@ var PipelinesDevCRD = &apiextensionsv1.CustomResourceDefinition{
 			}},
 			Served:       true,
 			Storage:      true,
-			Subresources: &apiextensionsv1.CustomResourceSubresources{},
+			Subresources: &apiextensionsv1.CustomResourceSubresources{Status: &apiextensionsv1.CustomResourceSubresourceStatus{}},
 		}, apiextensionsv1.CustomResourceDefinitionVersion{
 			Name: "v1",
 			Schema: &apiextensionsv1.CustomResourceValidation{OpenAPIV3Schema: &apiextensionsv1.JSONSchemaProps{
@@ -1130,7 +1130,7 @@ var PipelinesDevCRD = &apiextensionsv1.CustomResourceDefinition{
 				XPreserveUnknownFields: P(true),
 			}},
 			Served:       true,
-			Subresources: &apiextensionsv1.CustomResourceSubresources{},
+			Subresources: &apiextensionsv1.CustomResourceSubresources{Status: &apiextensionsv1.CustomResourceSubresourceStatus{}},
 		}},
 	},
 	TypeMeta: metav1.TypeMeta{
@@ -1181,7 +1181,7 @@ var ResolutionrequestsResolutionDevCRD = &apiextensionsv1.CustomResourceDefiniti
 				XPreserveUnknownFields: P(true),
 			}},
 			Served:       true,
-			Subresources: &apiextensionsv1.CustomResourceSubresources{},
+			Subresources: &apiextensionsv1.CustomResourceSubresources{Status: &apiextensionsv1.CustomResourceSubresourceStatus{}},
 		}, apiextensionsv1.CustomResourceDefinitionVersion{
 			AdditionalPrinterColumns: []apiextensionsv1.CustomResourceColumnDefinition{apiextensionsv1.CustomResourceColumnDefinition{
 				JSONPath: ".metadata.ownerReferences[0].kind",
@@ -1215,7 +1215,7 @@ var ResolutionrequestsResolutionDevCRD = &apiextensionsv1.CustomResourceDefiniti
 			}},
 			Served:       true,
 			Storage:      true,
-			Subresources: &apiextensionsv1.CustomResourceSubresources{},
+			Subresources: &apiextensionsv1.CustomResourceSubresources{Status: &apiextensionsv1.CustomResourceSubresourceStatus{}},
 		}},
 	},
 	TypeMeta: metav1.TypeMeta{
@@ -1268,7 +1268,7 @@ var RunsDevCRD = &apiextensionsv1.CustomResourceDefinition{
 			}},
 			Served:       true,
 			Storage:      true,
-			Subresources: &apiextensionsv1.CustomResourceSubresources{},
+			Subresources: &apiextensionsv1.CustomResourceSubresources{Status: &apiextensionsv1.CustomResourceSubresourceStatus{}},
 		}},
 	},
 	TypeMeta: metav1.TypeMeta{
@@ -1332,7 +1332,7 @@ var TaskrunsDevCRD = &apiextensionsv1.CustomResourceDefinition{
 			}},
 			Served:       true,
 			Storage:      true,
-			Subresources: &apiextensionsv1.CustomResourceSubresources{},
+			Subresources: &apiextensionsv1.CustomResourceSubresources{Status: &apiextensionsv1.CustomResourceSubresourceStatus{}},
 		}, apiextensionsv1.CustomResourceDefinitionVersion{
 			AdditionalPrinterColumns: []apiextensionsv1.CustomResourceColumnDefinition{apiextensionsv1.CustomResourceColumnDefinition{
 				JSONPath: `.status.conditions[?(@.type=="Succeeded")].status`,
@@ -1357,7 +1357,7 @@ var TaskrunsDevCRD = &apiextensionsv1.CustomResourceDefinition{
 				XPreserveUnknownFields: P(true),
 			}},
 			Served:       true,
-			Subresources: &apiextensionsv1.CustomResourceSubresources{},
+			Subresources: &apiextensionsv1.CustomResourceSubresources{Status: &apiextensionsv1.CustomResourceSubresourceStatus{}},
 		}},
 	},
 	TypeMeta: metav1.TypeMeta{
@@ -1403,7 +1403,7 @@ var TasksDevCRD = &apiextensionsv1.CustomResourceDefinition{
 			}},
 			Served:       true,
 			Storage:      true,
-			Subresources: &apiextensionsv1.CustomResourceSubresources{},
+			Subresources: &apiextensionsv1.CustomResourceSubresources{Status: &apiextensionsv1.CustomResourceSubresourceStatus{}},
 		}, apiextensionsv1.CustomResourceDefinitionVersion{
 			Name: "v1",
 			Schema: &apiextensionsv1.CustomResourceValidation{OpenAPIV3Schema: &apiextensionsv1.JSONSchemaProps{
@@ -1411,7 +1411,7 @@ var TasksDevCRD = &apiextensionsv1.CustomResourceDefinition{
 				XPreserveUnknownFields: P(true),
 			}},
 			Served:       true,
-			Subresources: &apiextensionsv1.CustomResourceSubresources{},
+			Subresources: &apiextensionsv1.CustomResourceSubresources{Status: &apiextensionsv1.CustomResourceSubresourceStatus{}},
 		}},
 	},
 	TypeMeta: metav1.TypeMeta{
@@ -1587,11 +1587,12 @@ var PipelinesControllerDeploy = &appsv1.Deployment{
 						TimeoutSeconds: int32(5),
 					},
 					SecurityContext: &corev1.SecurityContext{
-						Capabilities:   &corev1.Capabilities{Drop: []corev1.Capability{corev1.Capability("ALL")}},
-						RunAsGroup:     P(int64(65532)),
-						RunAsNonRoot:   P(true),
-						RunAsUser:      P(int64(65532)),
-						SeccompProfile: &corev1.SeccompProfile{Type: corev1.SeccompProfileType("RuntimeDefault")},
+						AllowPrivilegeEscalation: P(false),
+						Capabilities:             &corev1.Capabilities{Drop: []corev1.Capability{corev1.Capability("ALL")}},
+						RunAsGroup:               P(int64(65532)),
+						RunAsNonRoot:             P(true),
+						RunAsUser:                P(int64(65532)),
+						SeccompProfile:           &corev1.SeccompProfile{Type: corev1.SeccompProfileType("RuntimeDefault")},
 					},
 					VolumeMounts: []corev1.VolumeMount{corev1.VolumeMount{
 						MountPath: "/etc/config-logging",
@@ -1714,10 +1715,11 @@ var PipelinesRemoteResolversDeploy = &appsv1.Deployment{
 						},
 					},
 					SecurityContext: &corev1.SecurityContext{
-						Capabilities:           &corev1.Capabilities{Drop: []corev1.Capability{corev1.Capability("ALL")}},
-						ReadOnlyRootFilesystem: P(true),
-						RunAsNonRoot:           P(true),
-						SeccompProfile:         &corev1.SeccompProfile{Type: corev1.SeccompProfileType("RuntimeDefault")},
+						AllowPrivilegeEscalation: P(false),
+						Capabilities:             &corev1.Capabilities{Drop: []corev1.Capability{corev1.Capability("ALL")}},
+						ReadOnlyRootFilesystem:   P(true),
+						RunAsNonRoot:             P(true),
+						SeccompProfile:           &corev1.SeccompProfile{Type: corev1.SeccompProfileType("RuntimeDefault")},
 					},
 				}},
 				ServiceAccountName: "tekton-pipelines-resolvers",
@@ -1866,11 +1868,12 @@ var PipelinesWebhookDeploy = &appsv1.Deployment{
 						},
 					},
 					SecurityContext: &corev1.SecurityContext{
-						Capabilities:   &corev1.Capabilities{Drop: []corev1.Capability{corev1.Capability("ALL")}},
-						RunAsGroup:     P(int64(65532)),
-						RunAsNonRoot:   P(true),
-						RunAsUser:      P(int64(65532)),
-						SeccompProfile: &corev1.SeccompProfile{Type: corev1.SeccompProfileType("RuntimeDefault")},
+						AllowPrivilegeEscalation: P(false),
+						Capabilities:             &corev1.Capabilities{Drop: []corev1.Capability{corev1.Capability("ALL")}},
+						RunAsGroup:               P(int64(65532)),
+						RunAsNonRoot:             P(true),
+						RunAsUser:                P(int64(65532)),
+						SeccompProfile:           &corev1.SeccompProfile{Type: corev1.SeccompProfileType("RuntimeDefault")},
 					},
 				}},
 				ServiceAccountName: "tekton-pipelines-webhook",

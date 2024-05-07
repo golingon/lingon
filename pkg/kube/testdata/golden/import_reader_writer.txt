@@ -329,7 +329,7 @@ var GrafanaDeploy = &appsv1.Deployment{
 					VolumeSource: corev1.VolumeSource{ConfigMap: &corev1.ConfigMapVolumeSource{LocalObjectReference: corev1.LocalObjectReference{Name: "grafana-dashboards-default"}}},
 				}, corev1.Volume{
 					Name:         "storage",
-					VolumeSource: corev1.VolumeSource{},
+					VolumeSource: corev1.VolumeSource{EmptyDir: &corev1.EmptyDirVolumeSource{}},
 				}},
 			},
 		},

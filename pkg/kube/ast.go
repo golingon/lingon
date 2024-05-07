@@ -35,8 +35,15 @@ func returnTypeAlias(
 	return stmt
 }
 
-func (j *jamel) convertValue(v reflect.Value) *jen.Statement {
-	if v.IsZero() {
+// convertValue converts a reflect.Value to a jen.Statement (Go code).
+//
+// Parameter isFromPtr is used to inform that the value came from a pointer.
+// This is used to avoid skipping pointers to zero values, as we want the
+// generated Go code to reflect the input YAML exactly.
+// When calling this method, isFromPtr should be set to false. It is only set
+// to true by the function itself, when processing a non-nil pointer.
+func (j *jamel) convertValue(v reflect.Value, isFromPtr bool) *jen.Statement {
+	if v.IsZero() && !isFromPtr {
 		return nil
 	}
 	switch v.Type().Kind() {
@@ -126,8 +133,8 @@ func (j *jamel) convertValue(v reflect.Value) *jen.Statement {
 		vf := jen.DictFunc(
 			func(d jen.Dict) {
 				for _, key := range v.MapKeys() {
-					k := j.convertValue(key)
-					d[k] = j.convertValue(v.MapIndex(key))
+					k := j.convertValue(key, false)
+					d[k] = j.convertValue(v.MapIndex(key), false)
 				}
 			},
 		)
@@ -165,7 +172,7 @@ func (j *jamel) convertValue(v reflect.Value) *jen.Statement {
 		vf := pk.ValuesFunc(
 			func(g *jen.Group) {
 				for i := 0; i < v.Len(); i++ {
-					g.Add(j.convertValue(v.Index(i)))
+					g.Add(j.convertValue(v.Index(i), false))
 				}
 			},
 		)
@@ -198,8 +205,7 @@ func (j *jamel) convertValue(v reflect.Value) *jen.Statement {
 						// Ignore unexported fields.
 						continue
 					}
-
-					d[jen.Id(vtf.Name)] = j.convertValue(v.Field(i))
+					d[jen.Id(vtf.Name)] = j.convertValue(v.Field(i), false)
 				}
 			},
 		)
@@ -209,10 +215,9 @@ func (j *jamel) convertValue(v reflect.Value) *jen.Statement {
 	// Pointer types
 	//
 	case reflect.Ptr:
-		if v.Elem().IsZero() {
+		if v.IsNil() {
 			return nil
 		}
-
 		//
 		// we cannot use a point of basic types
 		// therefore we need to use a function to return the pointer
@@ -224,16 +229,16 @@ func (j *jamel) convertValue(v reflect.Value) *jen.Statement {
 			reflect.Int8, reflect.Uint, reflect.Uint64, reflect.Uint32,
 			reflect.Uint16, reflect.Uint8, reflect.Float32, reflect.Float64,
 			reflect.Bool, reflect.String:
-			return jen.Id("P").Call(j.convertValue(v.Elem()))
+			return jen.Id("P").Call(j.convertValue(v.Elem(), true))
 		default:
-			return jen.Op("&").Add(j.convertValue(v.Elem()))
+			return jen.Op("&").Add(j.convertValue(v.Elem(), true))
 		}
 
 	case reflect.Interface:
 		if isEmptyValue(v) {
 			return jen.Nil()
 		}
-		return jen.Interface(j.convertValue(v.Elem()))
+		return jen.Interface(j.convertValue(v.Elem(), false))
 
 	default:
 		slog.Error(
@@ -330,7 +335,10 @@ func (j *jamel) convertConfigMap(
 						comment,
 					)
 				default:
-					d[jen.Id(v.Type().Field(i).Name)] = j.convertValue(v.Field(i))
+					d[jen.Id(v.Type().Field(i).Name)] = j.convertValue(
+						v.Field(i),
+						false,
+					)
 				}
 			}
 		},
@@ -427,10 +435,15 @@ func (j *jamel) convertSecret(v reflect.Value) *jen.Statement {
 			for i := 0; i < v.NumField(); i++ {
 				switch v.Type().Field(i).Name {
 				case "Data":
-					d[jen.Id(v.Type().Field(i).Name)] = j.replaceSecretData(v.Field(i))
+					d[jen.Id(v.Type().Field(i).Name)] = j.replaceSecretData(
+						v.Field(i),
+					)
 				// TODO: TLS cert ?
 				default:
-					d[jen.Id(v.Type().Field(i).Name)] = j.convertValue(v.Field(i))
+					d[jen.Id(v.Type().Field(i).Name)] = j.convertValue(
+						v.Field(i),
+						false,
+					)
 				}
 			}
 		},
