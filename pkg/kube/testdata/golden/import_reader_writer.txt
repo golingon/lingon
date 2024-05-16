@@ -10,65 +10,10 @@ import (
 
 var GrafanaCM = &corev1.ConfigMap{
 	Data: map[string]string{
-		"dashboardproviders.yaml": `
-apiVersion: 1
-providers:
-- disableDeletion: false
-  editable: true
-  folder: ""
-  name: default
-  options:
-    path: /var/lib/grafana/dashboards/default
-  orgId: 1
-  type: file
-
-`,
-		"datasources.yaml": `
-apiVersion: 1
-datasources:
-- access: proxy
-  name: Prometheus
-  type: prometheus
-  url: http://prometheus-server:80
-  version: 1
-
-`,
-		"download_dashboards.sh": `
-#!/usr/bin/env sh
-set -euf
-mkdir -p /var/lib/grafana/dashboards/default
-curl -skf \
---connect-timeout 60 \
---max-time 60 \
--H "Accept: application/json" \
--H "Content-Type: application/json;charset=UTF-8" \
-  "https://karpenter.sh/v0.24.0/getting-started/getting-started-with-eksctl/karpenter-capacity-dashboard.json" \
-> "/var/lib/grafana/dashboards/default/capacity-dashboard.json"
-curl -skf \
---connect-timeout 60 \
---max-time 60 \
--H "Accept: application/json" \
--H "Content-Type: application/json;charset=UTF-8" \
-  "https://karpenter.sh/v0.24.0/getting-started/getting-started-with-eksctl/karpenter-performance-dashboard.json" \
-> "/var/lib/grafana/dashboards/default/performance-dashboard.json"
-
-`,
-		"grafana.ini": `
-[analytics]
-check_for_updates = true
-[grafana_net]
-url = https://grafana.net
-[log]
-mode = console
-[paths]
-data = /var/lib/grafana/
-logs = /var/log/grafana
-plugins = /var/lib/grafana/plugins
-provisioning = /etc/grafana/provisioning
-[server]
-domain = ''
-
-`},
+		"dashboardproviders.yaml": "apiVersion: 1\nproviders:\n- disableDeletion: false\n  editable: true\n  folder: \"\"\n  name: default\n  options:\n    path: /var/lib/grafana/dashboards/default\n  orgId: 1\n  type: file\n",
+		"datasources.yaml":        "apiVersion: 1\ndatasources:\n- access: proxy\n  name: Prometheus\n  type: prometheus\n  url: http://prometheus-server:80\n  version: 1\n",
+		"download_dashboards.sh":  "#!/usr/bin/env sh\nset -euf\nmkdir -p /var/lib/grafana/dashboards/default\ncurl -skf \\\n--connect-timeout 60 \\\n--max-time 60 \\\n-H \"Accept: application/json\" \\\n-H \"Content-Type: application/json;charset=UTF-8\" \\\n  \"https://karpenter.sh/v0.24.0/getting-started/getting-started-with-eksctl/karpenter-capacity-dashboard.json\" \\\n> \"/var/lib/grafana/dashboards/default/capacity-dashboard.json\"\ncurl -skf \\\n--connect-timeout 60 \\\n--max-time 60 \\\n-H \"Accept: application/json\" \\\n-H \"Content-Type: application/json;charset=UTF-8\" \\\n  \"https://karpenter.sh/v0.24.0/getting-started/getting-started-with-eksctl/karpenter-performance-dashboard.json\" \\\n> \"/var/lib/grafana/dashboards/default/performance-dashboard.json\"\n",
+		"grafana.ini":             "[analytics]\ncheck_for_updates = true\n[grafana_net]\nurl = https://grafana.net\n[log]\nmode = console\n[paths]\ndata = /var/lib/grafana/\nlogs = /var/log/grafana\nplugins = /var/lib/grafana/plugins\nprovisioning = /etc/grafana/provisioning\n[server]\ndomain = ''\n"},
 	ObjectMeta: metav1.ObjectMeta{
 		Labels: map[string]string{
 			"app.kubernetes.io/instance":   "grafana",
@@ -518,13 +463,7 @@ import (
 
 var GrafanaTestCM = &corev1.ConfigMap{
 	Data: map[string]string{
-		"run.sh": `
-@test "Test Health" {
-  url="http://grafana/api/health"
-  code=$(wget --server-response --spider --timeout 90 --tries 10 ${url} 2>&1 | awk '/^  HTTP/{print $2}')
-  [ "$code" == "200" ]
-}
-`},
+		"run.sh": "@test \"Test Health\" {\n  url=\"http://grafana/api/health\"\n  code=$(wget --server-response --spider --timeout 90 --tries 10 ${url} 2>&1 | awk '/^  HTTP/{print $2}')\n  [ \"$code\" == \"200\" ]\n}"},
 	ObjectMeta: metav1.ObjectMeta{
 		Annotations: map[string]string{
 			"helm.sh/hook":               "test-success",

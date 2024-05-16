@@ -157,32 +157,7 @@ var ConfigLoggingCM = &corev1.ConfigMap{
 	Data: map[string]string{
 		"loglevel.webhook": "error",
 		// https://github.com/uber-go/zap/blob/aa3e73ec0896f8b066ddf668597a02f89628ee50/config.go
-		"zap-logger-config": `
-{
-  "level": "debug",
-  "development": false,
-  "disableStacktrace": true,
-  "disableCaller": true,
-  "sampling": {
-    "initial": 100,
-    "thereafter": 100
-  },
-  "outputPaths": ["stdout"],
-  "errorOutputPaths": ["stderr"],
-  "encoding": "console",
-  "encoderConfig": {
-    "timeKey": "time",
-    "levelKey": "level",
-    "nameKey": "logger",
-    "callerKey": "caller",
-    "messageKey": "message",
-    "stacktraceKey": "stacktrace",
-    "levelEncoder": "capital",
-    "timeEncoder": "iso8601"
-  }
-}
-
-`},
+		"zap-logger-config": "{\n  \"level\": \"debug\",\n  \"development\": false,\n  \"disableStacktrace\": true,\n  \"disableCaller\": true,\n  \"sampling\": {\n    \"initial\": 100,\n    \"thereafter\": 100\n  },\n  \"outputPaths\": [\"stdout\"],\n  \"errorOutputPaths\": [\"stderr\"],\n  \"encoding\": \"console\",\n  \"encoderConfig\": {\n    \"timeKey\": \"time\",\n    \"levelKey\": \"level\",\n    \"nameKey\": \"logger\",\n    \"callerKey\": \"caller\",\n    \"messageKey\": \"message\",\n    \"stacktraceKey\": \"stacktrace\",\n    \"levelEncoder\": \"capital\",\n    \"timeEncoder\": \"iso8601\"\n  }\n}\n"},
 	ObjectMeta: metav1.ObjectMeta{
 		Labels: map[string]string{
 			"app.kubernetes.io/instance":   "karpenter",

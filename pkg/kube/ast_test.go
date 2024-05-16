@@ -4,6 +4,7 @@
 package kube
 
 import (
+	"flag"
 	"fmt"
 	"os"
 	"reflect"
@@ -14,6 +15,8 @@ import (
 	tu "github.com/golingon/lingon/pkg/testutil"
 	rbacv1 "k8s.io/api/rbac/v1"
 )
+
+var UpdateGolden = flag.Bool("update-golden", false, "update golden files")
 
 func TestKube2GoJen(t *testing.T) {
 	type TT struct {
@@ -64,6 +67,15 @@ func TestKube2GoJen(t *testing.T) {
 		t.Run(
 			tt.name, func(t *testing.T) {
 				got := convert(t, tt.manifest, tt.redact)
+				if *UpdateGolden {
+					err := os.WriteFile(
+						tt.golden,
+						[]byte(got),
+						os.ModePerm,
+					)
+					tu.AssertNoError(t, err, "writing golden file")
+					t.Skip("update golden")
+				}
 				want := tu.ReadGolden(t, tt.golden)
 				tu.AssertEqual(t, want, got)
 			},
@@ -187,7 +199,7 @@ func TestConvertValue(t *testing.T) {
 				"key1": "value1",
 				"key2": `value2 and "quote"`,
 			},
-			want: "map[string]string{\n\t" + `"key1": "value1"` + ",\n\t\"key2\": `value2 and \"quote\"`,\n" + "}",
+			want: "map[string]string{\n\t" + `"key1": "value1"` + ",\n\t\"key2\": \"value2 and \\\"quote\\\"\",\n" + "}",
 		},
 		{
 			name: "map of map string",
@@ -377,67 +389,6 @@ func Test_convertPolicyRule(t *testing.T) {
 					o:           importOption{},
 				}
 				got := j.convertValue(reflect.ValueOf(tt.in), false)
-				tu.AssertEqual(t, tt.want, fmt.Sprintf("%#v", got))
-			},
-		)
-	}
-}
-
-func Test_rawString(t *testing.T) {
-	tests := []struct {
-		name string
-		s    string
-		want string
-	}{
-		{
-			name: "simple",
-			s:    "simple",
-			want: `"simple"`,
-		},
-		{
-			name: "empty",
-			s:    "",
-			want: `""`,
-		},
-		{
-			name: "with double quote",
-			s:    `this "double quote" in a string`,
-			want: "`" + `this "double quote" in a string` + "`",
-		},
-		{
-			name: "escaped quote",
-			s:    "hello \" mess",
-			want: "`hello \" mess`",
-		},
-		{
-			name: "backtick in quotes in backticks",
-			s:    "`" + `hello " mess` + "`",
-			want: "\"`hello \\\" mess`\"",
-		},
-		{
-			name: "with new line",
-			s:    "this line \n and this line",
-			want: "`" + `
-this line 
- and this line
-` + "`",
-		},
-		{
-			name: "with backtick",
-			s:    "this ` is a backtick",
-			want: "\"this ` is a backtick\"",
-		},
-		{
-			name: "backticks with new line",
-			s: `fun 
-stuff` + "`\"with backticks`\" and new lines",
-			want: "\"fun \\nstuff`\\\"with backticks`\\\" and new lines\"",
-		},
-	}
-	for _, tt := range tests {
-		t.Run(
-			tt.name, func(t *testing.T) {
-				got := rawString(tt.s)
 				tu.AssertEqual(t, tt.want, fmt.Sprintf("%#v", got))
 			},
 		)

@@ -5,7 +5,6 @@ package kube_test
 
 import (
 	"bytes"
-	"flag"
 	"fmt"
 	"go/parser"
 	"go/token"
@@ -26,8 +25,6 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/kubernetes/scheme"
 )
-
-var updateGolden = flag.Bool("update-golden", false, "update golden files")
 
 const defaultImportOutputDir = "out/import"
 
@@ -270,7 +267,7 @@ func TestImport(t *testing.T) {
 					"testdata", "golden",
 					strings.ReplaceAll(tc.Name, " ", "_")+".txt",
 				)
-				if *updateGolden {
+				if *kube.UpdateGolden {
 					err := os.WriteFile(
 						goldenFile,
 						txtar.Format(ar),
@@ -371,10 +368,18 @@ func TestImport_SaveFromReader(t *testing.T) {
 	sort.Strings(got)
 	tu.AssertEqualSlice(t, want, got)
 
+	goldenFile := filepath.Join("testdata", "golden", "import_save_from_reader.txt")
+	if *kube.UpdateGolden {
+		err := os.WriteFile(
+			goldenFile,
+			txtar.Format(ar),
+			os.ModePerm,
+		)
+		tu.AssertNoError(t, err, "writing golden file")
+		t.Skip("update golden files")
+	}
 	// compare content
-	golden, err := txtar.ParseFile(
-		filepath.Join("testdata", "golden", "import_save_from_reader.txt"),
-	)
+	golden, err := txtar.ParseFile(goldenFile)
 	tu.AssertNoError(t, err, "reading golden file")
 	if diff := tu.DiffTxtarSort(ar, golden); diff != "" {
 		t.Fatal(tu.Callers(), diff)
@@ -460,14 +465,23 @@ func TestImport_ReaderWriter(t *testing.T) {
 	sort.Strings(got)
 	tu.AssertEqualSlice(t, want, got)
 
-	// compare content
-	golden, err := txtar.ParseFile(
-		filepath.Join(
-			"testdata",
-			"golden",
-			"import_reader_writer.txt",
-		),
+	goldenFile := filepath.Join(
+		"testdata",
+		"golden",
+		"import_reader_writer.txt",
 	)
+	if *kube.UpdateGolden {
+		err := os.WriteFile(
+			goldenFile,
+			txtar.Format(ar),
+			os.ModePerm,
+		)
+		tu.AssertNoError(t, err, "writing golden file")
+		t.Skip("update golden files")
+	}
+
+	// compare content
+	golden, err := txtar.ParseFile(goldenFile)
 	tu.AssertNoError(t, err, "reading golden file")
 	if diff := tu.DiffTxtarSort(ar, golden); diff != "" {
 		t.Fatal(tu.Callers(), diff)

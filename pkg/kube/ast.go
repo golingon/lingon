@@ -49,7 +49,7 @@ func (j *jamel) convertValue(v reflect.Value, isFromPtr bool) *jen.Statement {
 	switch v.Type().Kind() {
 	case reflect.String:
 		return returnTypeAlias(
-			v, reflect.String.String(), rawString(v.String()),
+			v, reflect.String.String(), jen.Lit(v.String()),
 		)
 	case reflect.Bool:
 		return returnTypeAlias(
@@ -378,13 +378,13 @@ func convertConfigMapData(
 									jen.Comment(c).Line(),
 									jen.Lit(k.String()),
 									jen.Op(":"),
-									rawString(field.MapIndex(k).String()),
+									jen.Lit(field.MapIndex(k).String()),
 								)
 							} else {
 								g.Add(
 									jen.Lit(k.String()),
 									jen.Op(":"),
-									rawString(field.MapIndex(k).String()),
+									jen.Lit(field.MapIndex(k).String()),
 								)
 							}
 						},
@@ -393,35 +393,6 @@ func convertConfigMapData(
 			}
 		},
 	)
-}
-
-func rawString(s string) *jen.Statement {
-	if len(s) == 0 {
-		return jen.Lit("")
-	}
-	hasQuote := strings.Contains(s, `"`)
-	hasBacktick := strings.Contains(s, "`")
-	hasNewLine := strings.Contains(s, "\n")
-
-	if hasNewLine {
-		if hasBacktick {
-			return jen.Lit(s)
-		}
-		return jen.Custom(
-			jen.Options{Open: "`", Close: "`", Multi: true},
-			jen.Op(s),
-		)
-	}
-	if hasQuote && hasBacktick {
-		return jen.Lit(s)
-	}
-	if hasQuote {
-		return jen.Custom(
-			jen.Options{Open: "`", Close: "`", Multi: false},
-			jen.Op(s),
-		)
-	}
-	return jen.Lit(s)
 }
 
 // convertSecret converts a Secret to a jen statement.

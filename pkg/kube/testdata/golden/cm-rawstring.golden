@@ -1,53 +1,6 @@
 &v1.ConfigMap{
 	Data: map[string]string{
-		"nats.conf": `
-
-# NATS Clients Port
-port: 4222
-# PID file shared with configuration reloader.
-pid_file: "/var/run/nats/nats.pid"
-###############
-#             #
-# Monitoring  #
-#             #
-###############
-http: 8222
-server_name:$POD_NAME
-server_tags: [
-    "mem:4Gi",
-]
-###################################
-#                                 #
-# NATS JetStream                  #
-#                                 #
-###################################
-jetstream {
-  max_mem:2G
-  store_dir: "/data"
-  max_file:10Gi
-  unique_tag: "natsuniquetag"
-}
-###################################
-#                                 #
-# NATS Full Mesh Clustering Setup #
-#                                 #
-###################################
-cluster {
-  name: natscluster
-  port: 6222
-  routes = [
-    nats://nats-0.nats.nats.svc.cluster.local:6222
-    nats://nats-1.nats.nats.svc.cluster.local:6222
-    nats://nats-2.nats.nats.svc.cluster.local:6222
-
-  ]
-  cluster_advertise: $CLUSTER_ADVERTISE
-  connect_retries: 120
-}
-lame_duck_grace_period: 10s
-lame_duck_duration: 30s
-
-`},
+		"nats.conf": "\n# NATS Clients Port\nport: 4222\n# PID file shared with configuration reloader.\npid_file: \"/var/run/nats/nats.pid\"\n###############\n#             #\n# Monitoring  #\n#             #\n###############\nhttp: 8222\nserver_name:$POD_NAME\nserver_tags: [\n    \"mem:4Gi\",\n]\n###################################\n#                                 #\n# NATS JetStream                  #\n#                                 #\n###################################\njetstream {\n  max_mem:2G\n  store_dir: \"/data\"\n  max_file:10Gi\n  unique_tag: \"natsuniquetag\"\n}\n###################################\n#                                 #\n# NATS Full Mesh Clustering Setup #\n#                                 #\n###################################\ncluster {\n  name: natscluster\n  port: 6222\n  routes = [\n    nats://nats-0.nats.nats.svc.cluster.local:6222\n    nats://nats-1.nats.nats.svc.cluster.local:6222\n    nats://nats-2.nats.nats.svc.cluster.local:6222\n\n  ]\n  cluster_advertise: $CLUSTER_ADVERTISE\n  connect_retries: 120\n}\nlame_duck_grace_period: 10s\nlame_duck_duration: 30s\n"},
 	ObjectMeta: v11.ObjectMeta{Name: "webapp-config"},
 	TypeMeta: v11.TypeMeta{
 		APIVersion: "v1",
