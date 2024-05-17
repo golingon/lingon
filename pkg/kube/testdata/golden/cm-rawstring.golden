@@ -1,7 +1,6 @@
 &v1.ConfigMap{
 	Data: map[string]string{
 		"nats.conf": `
-
 # NATS Clients Port
 port: 4222
 # PID file shared with configuration reloader.
@@ -46,7 +45,6 @@ cluster {
 }
 lame_duck_grace_period: 10s
 lame_duck_duration: 30s
-
 `},
 	ObjectMeta: v11.ObjectMeta{Name: "webapp-config"},
 	TypeMeta: v11.TypeMeta{

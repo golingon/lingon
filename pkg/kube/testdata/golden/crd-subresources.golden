@@ -84,10 +84,8 @@
 								Type:        "array",
 							},
 							"duration": v1.JSONSchemaProps{
-								Description: `
-Requested 'duration' (i.e. lifetime) of the Certificate. Note that the issuer may choose to ignore the requested duration, just like any other requested attribute. 
- If unset, this defaults to 90 days. Minimum accepted duration is 1 hour. Value must be in units accepted by Go time.ParseDuration https://golang.org/pkg/time/#ParseDuration.
-`,
+								Description: `Requested 'duration' (i.e. lifetime) of the Certificate. Note that the issuer may choose to ignore the requested duration, just like any other requested attribute. 
+ If unset, this defaults to 90 days. Minimum accepted duration is 1 hour. Value must be in units accepted by Go time.ParseDuration https://golang.org/pkg/time/#ParseDuration.`,
 								Type: "string",
 							},
 							"emailAddresses": v1.JSONSchemaProps{
@@ -96,10 +94,8 @@ Requested 'duration' (i.e. lifetime) of the Certificate. Note that the issuer ma
 								Type:        "array",
 							},
 							"encodeUsagesInRequest": v1.JSONSchemaProps{
-								Description: `
-Whether the KeyUsage and ExtKeyUsage extensions should be set in the encoded CSR. 
- This option defaults to true, and should only be disabled if the target issuer does not support CSRs with these X509 KeyUsage/ ExtKeyUsage extensions.
-`,
+								Description: `Whether the KeyUsage and ExtKeyUsage extensions should be set in the encoded CSR. 
+ This option defaults to true, and should only be disabled if the target issuer does not support CSRs with these X509 KeyUsage/ ExtKeyUsage extensions.`,
 								Type: "boolean",
 							},
 							"ipAddresses": v1.JSONSchemaProps{
@@ -389,10 +385,8 @@ Whether the KeyUsage and ExtKeyUsage extensions should be set in the encoded CSR
 							"usages": v1.JSONSchemaProps{
 								Description: "Requested key usages and extended key usages. These usages are used to set the `usages` field on the created CertificateRequest resources. If `encodeUsagesInRequest` is unset or set to `true`, the usages will additionally be encoded in the `request` field which contains the CSR blob. \n If unset, defaults to `digital signature` and `key encipherment`.",
 								Items: &v1.JSONSchemaPropsOrArray{Schema: &v1.JSONSchemaProps{
-									Description: `
-KeyUsage specifies valid usage contexts for keys. See: https://tools.ietf.org/html/rfc5280#section-4.2.1.3 https://tools.ietf.org/html/rfc5280#section-4.2.1.12 
- Valid KeyUsage values are as follows: "signing", "digital signature", "content commitment", "key encipherment", "key agreement", "data encipherment", "cert sign", "crl sign", "encipher only", "decipher only", "any", "server auth", "client auth", "code signing", "email protection", "s/mime", "ipsec end system", "ipsec tunnel", "ipsec user", "timestamping", "ocsp signing", "microsoft sgc", "netscape sgc"
-`,
+									Description: `KeyUsage specifies valid usage contexts for keys. See: https://tools.ietf.org/html/rfc5280#section-4.2.1.3 https://tools.ietf.org/html/rfc5280#section-4.2.1.12 
+ Valid KeyUsage values are as follows: "signing", "digital signature", "content commitment", "key encipherment", "key agreement", "data encipherment", "cert sign", "crl sign", "encipher only", "decipher only", "any", "server auth", "client auth", "code signing", "email protection", "s/mime", "ipsec end system", "ipsec tunnel", "ipsec user", "timestamping", "ocsp signing", "microsoft sgc", "netscape sgc"`,
 									Enum: []v1.JSON{v1.JSON{Raw: []byte("\"signing\"")}, v1.JSON{Raw: []byte("\"digital signature\"")}, v1.JSON{Raw: []byte("\"content commitment\"")}, v1.JSON{Raw: []byte("\"key encipherment\"")}, v1.JSON{Raw: []byte("\"key agreement\"")}, v1.JSON{Raw: []byte("\"data encipherment\"")}, v1.JSON{Raw: []byte("\"cert sign\"")}, v1.JSON{Raw: []byte("\"crl sign\"")}, v1.JSON{Raw: []byte("\"encipher only\"")}, v1.JSON{Raw: []byte("\"decipher only\"")}, v1.JSON{Raw: []byte("\"any\"")}, v1.JSON{Raw: []byte("\"server auth\"")}, v1.JSON{Raw: []byte("\"client auth\"")}, v1.JSON{Raw: []byte("\"code signing\"")}, v1.JSON{Raw: []byte("\"email protection\"")}, v1.JSON{Raw: []byte("\"s/mime\"")}, v1.JSON{Raw: []byte("\"ipsec end system\"")}, v1.JSON{Raw: []byte("\"ipsec tunnel\"")}, v1.JSON{Raw: []byte("\"ipsec user\"")}, v1.JSON{Raw: []byte("\"timestamping\"")}, v1.JSON{Raw: []byte("\"ocsp signing\"")}, v1.JSON{Raw: []byte("\"microsoft sgc\"")}, v1.JSON{Raw: []byte("\"netscape sgc\"")}},
 									Type: "string",
 								}},

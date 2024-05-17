@@ -10,8 +10,7 @@ import (
 
 var GrafanaCM = &corev1.ConfigMap{
 	Data: map[string]string{
-		"dashboardproviders.yaml": `
-apiVersion: 1
+		"dashboardproviders.yaml": `apiVersion: 1
 providers:
 - disableDeletion: false
   editable: true
@@ -21,20 +20,16 @@ providers:
     path: /var/lib/grafana/dashboards/default
   orgId: 1
   type: file
-
 `,
-		"datasources.yaml": `
-apiVersion: 1
+		"datasources.yaml": `apiVersion: 1
 datasources:
 - access: proxy
   name: Prometheus
   type: prometheus
   url: http://prometheus-server:80
   version: 1
-
 `,
-		"download_dashboards.sh": `
-#!/usr/bin/env sh
+		"download_dashboards.sh": `#!/usr/bin/env sh
 set -euf
 mkdir -p /var/lib/grafana/dashboards/default
 curl -skf \
@@ -51,10 +46,8 @@ curl -skf \
 -H "Content-Type: application/json;charset=UTF-8" \
   "https://karpenter.sh/v0.24.0/getting-started/getting-started-with-eksctl/karpenter-performance-dashboard.json" \
 > "/var/lib/grafana/dashboards/default/performance-dashboard.json"
-
 `,
-		"grafana.ini": `
-[analytics]
+		"grafana.ini": `[analytics]
 check_for_updates = true
 [grafana_net]
 url = https://grafana.net
@@ -67,7 +60,6 @@ plugins = /var/lib/grafana/plugins
 provisioning = /etc/grafana/provisioning
 [server]
 domain = ''
-
 `},
 	ObjectMeta: metav1.ObjectMeta{
 		Labels: map[string]string{
@@ -518,13 +510,11 @@ import (
 
 var GrafanaTestCM = &corev1.ConfigMap{
 	Data: map[string]string{
-		"run.sh": `
-@test "Test Health" {
+		"run.sh": `@test "Test Health" {
   url="http://grafana/api/health"
   code=$(wget --server-response --spider --timeout 90 --tries 10 ${url} 2>&1 | awk '/^  HTTP/{print $2}')
   [ "$code" == "200" ]
-}
-`},
+}`},
 	ObjectMeta: metav1.ObjectMeta{
 		Annotations: map[string]string{
 			"helm.sh/hook":               "test-success",

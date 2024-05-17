@@ -452,8 +452,7 @@ var ConfigLoggingCM = &corev1.ConfigMap{
 		// Log level overrides
 		"loglevel.controller": "info",
 		"loglevel.webhook":    "info",
-		"zap-logger-config": `
-{
+		"zap-logger-config": `{
   "level": "info",
   "development": false,
   "sampling": {
@@ -477,7 +476,6 @@ var ConfigLoggingCM = &corev1.ConfigMap{
     "callerEncoder": ""
   }
 }
-
 `},
 	ObjectMeta: metav1.ObjectMeta{
 		Labels: map[string]string{
@@ -498,8 +496,7 @@ var ConfigLoggingCM2 = &corev1.ConfigMap{
 		// Log level overrides
 		"loglevel.controller": "info",
 		"loglevel.webhook":    "info",
-		"zap-logger-config": `
-{
+		"zap-logger-config": `{
   "level": "info",
   "development": false,
   "sampling": {
@@ -523,7 +520,6 @@ var ConfigLoggingCM2 = &corev1.ConfigMap{
     "callerEncoder": ""
   }
 }
-
 `},
 	ObjectMeta: metav1.ObjectMeta{
 		Labels: map[string]string{
