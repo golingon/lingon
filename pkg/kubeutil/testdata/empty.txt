@@ -54,3 +54,15 @@ metadata:
 ---
 
 ---
+---
+apiVersion: v1
+data:
+  _example: |
+    # Skip line two as whitespace.
+    line one
+
+    line three
+kind: ConfigMap
+metadata:
+  name: config-with-multiline-string-space
+  namespace: thenamespace

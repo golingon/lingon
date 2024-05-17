@@ -95,6 +95,7 @@ datasources:
 		"download_dashboards.sh": `#!/usr/bin/env sh
 set -euf
 mkdir -p /var/lib/grafana/dashboards/default
+
 curl -skf \
 --connect-timeout 60 \
 --max-time 60 \
@@ -102,6 +103,7 @@ curl -skf \
 -H "Content-Type: application/json;charset=UTF-8" \
   "https://karpenter.sh/v0.24.0/getting-started/getting-started-with-eksctl/karpenter-capacity-dashboard.json" \
 > "/var/lib/grafana/dashboards/default/capacity-dashboard.json"
+  
 curl -skf \
 --connect-timeout 60 \
 --max-time 60 \
@@ -165,6 +167,7 @@ var TestCM = &corev1.ConfigMap{
 	Data: map[string]string{
 		"run.sh": `@test "Test Health" {
   url="http://grafana/api/health"
+
   code=$(wget --server-response --spider --timeout 90 --tries 10 ${url} 2>&1 | awk '/^  HTTP/{print $2}')
   [ "$code" == "200" ]
 }`},

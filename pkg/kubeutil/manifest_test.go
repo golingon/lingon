@@ -24,7 +24,7 @@ func TestManifestReadFile(t *testing.T) {
 		{
 			name: "empty",
 			in:   "empty.yaml",
-			want: 2,
+			want: 3,
 		},
 		{
 			name: "broken",
@@ -75,7 +75,7 @@ func TestManifestSplit(t *testing.T) {
 			name:  "empty",
 			in:    "empty.txt",
 			want:  "empty.yaml",
-			wantN: 2,
+			wantN: 3,
 		},
 		{
 			name:  "broken",

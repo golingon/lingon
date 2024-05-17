@@ -47,7 +47,8 @@ func ManifestSplit(r io.Reader) ([]string, error) {
 		tmp := strings.ReplaceAll(txt, " ", "")
 
 		switch {
-		case len(tmp) == 0:
+		// Skip empty lines, but not empty lines in the middle of a manifest.
+		case buf.Len() == 0 && len(tmp) == 0:
 			continue
 
 		// Skip top level comments
