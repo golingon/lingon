@@ -251,10 +251,8 @@ var AcraccesstokensGeneratorsIoCRD = &apiextensionsv1.CustomResourceDefinition{
 		Versions: []apiextensionsv1.CustomResourceDefinitionVersion{apiextensionsv1.CustomResourceDefinitionVersion{
 			Name: "v1alpha1",
 			Schema: &apiextensionsv1.CustomResourceValidation{OpenAPIV3Schema: &apiextensionsv1.JSONSchemaProps{
-				Description: `
-ACRAccessToken returns a Azure Container Registry token that can be used for pushing/pulling images. Note: by default it will return an ACR Refresh Token with full access (depending on the identity). This can be scoped down to the repository level using .spec.scope. In case scope is defined it will return an ACR Access Token. 
- See docs: https://github.com/Azure/acr/blob/main/docs/AAD-OAuth.md
-`,
+				Description: `ACRAccessToken returns a Azure Container Registry token that can be used for pushing/pulling images. Note: by default it will return an ACR Refresh Token with full access (depending on the identity). This can be scoped down to the repository level using .spec.scope. In case scope is defined it will return an ACR Access Token. 
+ See docs: https://github.com/Azure/acr/blob/main/docs/AAD-OAuth.md`,
 				Properties: map[string]apiextensionsv1.JSONSchemaProps{
 					"apiVersion": apiextensionsv1.JSONSchemaProps{
 						Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
@@ -363,11 +361,9 @@ ACRAccessToken returns a Azure Container Registry token that can be used for pus
 								Type:        "string",
 							},
 							"scope": apiextensionsv1.JSONSchemaProps{
-								Description: `
-Define the scope for the access token, e.g. pull/push access for a repository. if not provided it will return a refresh token that has full scope. Note: you need to pin it down to the repository level, there is no wildcard available. 
+								Description: `Define the scope for the access token, e.g. pull/push access for a repository. if not provided it will return a refresh token that has full scope. Note: you need to pin it down to the repository level, there is no wildcard available. 
  examples: repository:my-repository:pull,push repository:my-repository:pull 
- see docs for details: https://docs.docker.com/registry/spec/auth/scope/
-`,
+ see docs for details: https://docs.docker.com/registry/spec/auth/scope/`,
 								Type: "string",
 							},
 							"tenantId": apiextensionsv1.JSONSchemaProps{

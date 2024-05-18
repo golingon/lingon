@@ -11,8 +11,7 @@ var TeamOnboardingAuthSecretProviderClass = &v1.SecretProviderClass{
 	ObjectMeta: metav1.ObjectMeta{Name: "team-onboarding-auth"},
 	Spec: v1.SecretProviderClassSpec{
 		Parameters: map[string]string{
-			"objects": `
-- objectName: "xxx-gh-token"
+			"objects": `- objectName: "xxx-gh-token"
   secretPath: "team-onboarding-kv/data/github-xxx-bot"
   secretKey: "token"
 - objectName: "xxx-gh-username"
@@ -48,7 +47,6 @@ var TeamOnboardingAuthSecretProviderClass = &v1.SecretProviderClass{
 - objectName: "team-az-group-management-qa"
   secretPath: "team-onboarding-kv/data/team-az-group-management-qa"
   secretKey: "client-secret"
-
 `,
 			"roleName":     "team-onboarding-policy-read",
 			"vaultAddress": "https://vault.secretstore.company.com",

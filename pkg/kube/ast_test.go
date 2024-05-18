@@ -4,6 +4,7 @@
 package kube
 
 import (
+	"flag"
 	"fmt"
 	"os"
 	"reflect"
@@ -14,6 +15,8 @@ import (
 	tu "github.com/golingon/lingon/pkg/testutil"
 	rbacv1 "k8s.io/api/rbac/v1"
 )
+
+var UpdateGolden = flag.Bool("update-golden", false, "update golden files")
 
 func TestKube2GoJen(t *testing.T) {
 	type TT struct {
@@ -64,6 +67,15 @@ func TestKube2GoJen(t *testing.T) {
 		t.Run(
 			tt.name, func(t *testing.T) {
 				got := convert(t, tt.manifest, tt.redact)
+				if *UpdateGolden {
+					err := os.WriteFile(
+						tt.golden,
+						[]byte(got),
+						os.ModePerm,
+					)
+					tu.AssertNoError(t, err, "writing golden file")
+					t.Skip("update golden")
+				}
 				want := tu.ReadGolden(t, tt.golden)
 				tu.AssertEqual(t, want, got)
 			},
@@ -417,10 +429,8 @@ func Test_rawString(t *testing.T) {
 		{
 			name: "with new line",
 			s:    "this line \n and this line",
-			want: "`" + `
-this line 
- and this line
-` + "`",
+			want: "`" + `this line 
+ and this line` + "`",
 		},
 		{
 			name: "with backtick",

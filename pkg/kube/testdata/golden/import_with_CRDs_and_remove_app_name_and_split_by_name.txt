@@ -157,8 +157,7 @@ var ConfigLoggingCM = &corev1.ConfigMap{
 	Data: map[string]string{
 		"loglevel.webhook": "error",
 		// https://github.com/uber-go/zap/blob/aa3e73ec0896f8b066ddf668597a02f89628ee50/config.go
-		"zap-logger-config": `
-{
+		"zap-logger-config": `{
   "level": "debug",
   "development": false,
   "disableStacktrace": true,
@@ -181,7 +180,6 @@ var ConfigLoggingCM = &corev1.ConfigMap{
     "timeEncoder": "iso8601"
   }
 }
-
 `},
 	ObjectMeta: metav1.ObjectMeta{
 		Labels: map[string]string{

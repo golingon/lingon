@@ -180,10 +180,8 @@ var BackupsIoCRD = &apiextensionsv1.CustomResourceDefinition{
 								Type:        "boolean",
 							},
 							"defaultVolumesToRestic": apiextensionsv1.JSONSchemaProps{
-								Description: `
-DefaultVolumesToRestic specifies whether restic should be used to take a backup of all pod volumes by default. 
- Deprecated: this field is no longer used and will be removed entirely in future. Use DefaultVolumesToFsBackup instead.
-`,
+								Description: `DefaultVolumesToRestic specifies whether restic should be used to take a backup of all pod volumes by default. 
+ Deprecated: this field is no longer used and will be removed entirely in future. Use DefaultVolumesToFsBackup instead.`,
 								Nullable: true,
 								Type:     "boolean",
 							},
@@ -780,10 +778,8 @@ var BackupstoragelocationsIoCRD = &apiextensionsv1.CustomResourceDefinition{
 						Description: "BackupStorageLocationStatus defines the observed state of BackupStorageLocation",
 						Properties: map[string]apiextensionsv1.JSONSchemaProps{
 							"accessMode": apiextensionsv1.JSONSchemaProps{
-								Description: `
-AccessMode is an unused field. 
- Deprecated: there is now an AccessMode field on the Spec and this field will be removed entirely as of v2.0.
-`,
+								Description: `AccessMode is an unused field. 
+ Deprecated: there is now an AccessMode field on the Spec and this field will be removed entirely as of v2.0.`,
 								Enum: []apiextensionsv1.JSON{apiextensionsv1.JSON{Raw: []byte("\"ReadOnly\"")}, apiextensionsv1.JSON{Raw: []byte("\"ReadWrite\"")}},
 								Type: "string",
 							},
@@ -1883,10 +1879,8 @@ var SchedulesIoCRD = &apiextensionsv1.CustomResourceDefinition{
 										Type:        "boolean",
 									},
 									"defaultVolumesToRestic": apiextensionsv1.JSONSchemaProps{
-										Description: `
-DefaultVolumesToRestic specifies whether restic should be used to take a backup of all pod volumes by default. 
- Deprecated: this field is no longer used and will be removed entirely in future. Use DefaultVolumesToFsBackup instead.
-`,
+										Description: `DefaultVolumesToRestic specifies whether restic should be used to take a backup of all pod volumes by default. 
+ Deprecated: this field is no longer used and will be removed entirely in future. Use DefaultVolumesToFsBackup instead.`,
 										Nullable: true,
 										Type:     "boolean",
 									},

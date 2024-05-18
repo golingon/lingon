@@ -408,7 +408,7 @@ func rawString(s string) *jen.Statement {
 			return jen.Lit(s)
 		}
 		return jen.Custom(
-			jen.Options{Open: "`", Close: "`", Multi: true},
+			jen.Options{Open: "`", Close: "`", Multi: false},
 			jen.Op(s),
 		)
 	}
