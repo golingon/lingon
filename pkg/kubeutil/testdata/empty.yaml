@@ -20,6 +20,7 @@ spec:
     app.kubernetes.io/name: grafana
     app.kubernetes.io/instance: grafana
 
+
 ---
 apiVersion: v1
 data:
@@ -44,4 +45,17 @@ metadata:
     app.kubernetes.io/name: thename
     app.kubernetes.io/version: 1.8.0
   name: config---gc  # Oh you don't want that
+  namespace: thenamespace
+
+---
+apiVersion: v1
+data:
+  _example: |
+    # Skip line two as whitespace.
+    line one
+
+    line three
+kind: ConfigMap
+metadata:
+  name: config-with-multiline-string-space
   namespace: thenamespace
