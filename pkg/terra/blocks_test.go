@@ -99,6 +99,19 @@ func TestExtractBlocks_EmbedPointer(t *testing.T) {
 	tu.AssertNoError(t, err)
 }
 
+func TestExtractBlocks_EmbedPointerNil(t *testing.T) {
+	type Composition struct{}
+	type simpleStack struct {
+		DummyStack
+		*Composition
+	}
+	st := simpleStack{
+		DummyStack: newDummyBaseStack(),
+	}
+	_, err := objectsFromStack(&st)
+	tu.AssertNoError(t, err)
+}
+
 func newDummyBaseStack() DummyStack {
 	return DummyStack{
 		Backend:  &dummyBackend{},

@@ -166,6 +166,10 @@ func parseStackStructFields(rv reflect.Value, sb *stackObjects) error {
 					sf.Type,
 				)
 			}
+			// Skip nil pointers.
+			if fv.Kind() == reflect.Ptr && fv.IsNil() {
+				continue
+			}
 			// Handle embedded structs as pointers.
 			for fv.Kind() == reflect.Ptr {
 				fv = fv.Elem()
