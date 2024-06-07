@@ -5,10 +5,10 @@ package infra
 
 import (
 	"github.com/golingon/lingon/pkg/terra"
-	"github.com/golingon/lingoneks/out/aws/aws_eks_addon"
-	"github.com/golingon/lingoneks/out/aws/aws_iam_policy_document"
-	"github.com/golingon/lingoneks/out/aws/aws_iam_role"
-	"github.com/golingon/lingoneks/out/aws/aws_iam_role_policy_attachment"
+	"github.com/golingon/terraproviders/aws/5.45.0/aws_eks_addon"
+	"github.com/golingon/terraproviders/aws/5.45.0/aws_iam_policy_document"
+	"github.com/golingon/terraproviders/aws/5.45.0/aws_iam_role"
+	"github.com/golingon/terraproviders/aws/5.45.0/aws_iam_role_policy_attachment"
 )
 
 type CSI struct {

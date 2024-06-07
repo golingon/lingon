@@ -7,14 +7,14 @@ import (
 	"fmt"
 
 	"github.com/golingon/lingon/pkg/terra"
-	"github.com/golingon/lingoneks/out/aws/aws_eks_cluster"
-	"github.com/golingon/lingoneks/out/aws/aws_iam_openid_connect_provider"
-	"github.com/golingon/lingoneks/out/aws/aws_iam_policy_document"
-	"github.com/golingon/lingoneks/out/aws/aws_iam_role"
-	"github.com/golingon/lingoneks/out/aws/aws_iam_role_policy_attachment"
-	"github.com/golingon/lingoneks/out/aws/aws_security_group"
-	"github.com/golingon/lingoneks/out/aws/aws_security_group_rule"
-	"github.com/golingon/terra_tls/tls_certificate"
+	"github.com/golingon/terraproviders/aws/5.45.0/aws_eks_cluster"
+	"github.com/golingon/terraproviders/aws/5.45.0/aws_iam_openid_connect_provider"
+	"github.com/golingon/terraproviders/aws/5.45.0/aws_iam_policy_document"
+	"github.com/golingon/terraproviders/aws/5.45.0/aws_iam_role"
+	"github.com/golingon/terraproviders/aws/5.45.0/aws_iam_role_policy_attachment"
+	"github.com/golingon/terraproviders/aws/5.45.0/aws_security_group"
+	"github.com/golingon/terraproviders/aws/5.45.0/aws_security_group_rule"
+	"github.com/golingon/terraproviders/tls/4.0.5/tls_certificate"
 )
 
 var (

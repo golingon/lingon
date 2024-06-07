@@ -5,7 +5,7 @@ go 1.22.2
 replace github.com/golingon/lingon => ../
 
 require (
-	github.com/golingon/lingon v0.0.0-00010101000000-000000000000
+	github.com/golingon/lingon v0.0.0-20240416053339-0bf5a7f001ce
 	github.com/hashicorp/hcl/v2 v2.20.1
 	github.com/hashicorp/terraform-json v0.21.0
 	github.com/rogpeppe/go-internal v1.12.0

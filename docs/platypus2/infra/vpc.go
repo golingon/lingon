@@ -7,14 +7,14 @@ import (
 	"fmt"
 
 	"github.com/golingon/lingon/pkg/terra"
-	"github.com/golingon/lingoneks/out/aws/aws_eip"
-	"github.com/golingon/lingoneks/out/aws/aws_internet_gateway"
-	"github.com/golingon/lingoneks/out/aws/aws_nat_gateway"
-	"github.com/golingon/lingoneks/out/aws/aws_route"
-	"github.com/golingon/lingoneks/out/aws/aws_route_table"
-	"github.com/golingon/lingoneks/out/aws/aws_route_table_association"
-	"github.com/golingon/lingoneks/out/aws/aws_subnet"
-	"github.com/golingon/lingoneks/out/aws/aws_vpc"
+	"github.com/golingon/terraproviders/aws/5.45.0/aws_eip"
+	"github.com/golingon/terraproviders/aws/5.45.0/aws_internet_gateway"
+	"github.com/golingon/terraproviders/aws/5.45.0/aws_nat_gateway"
+	"github.com/golingon/terraproviders/aws/5.45.0/aws_route"
+	"github.com/golingon/terraproviders/aws/5.45.0/aws_route_table"
+	"github.com/golingon/terraproviders/aws/5.45.0/aws_route_table_association"
+	"github.com/golingon/terraproviders/aws/5.45.0/aws_subnet"
+	"github.com/golingon/terraproviders/aws/5.45.0/aws_vpc"
 )
 
 type Opts struct {
