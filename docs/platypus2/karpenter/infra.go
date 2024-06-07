@@ -6,10 +6,10 @@ package karpenter
 import (
 	"fmt"
 
-	"github.com/golingon/lingoneks/out/aws/aws_iam_policy_document"
-	"github.com/golingon/lingoneks/out/aws/aws_iam_role"
-	"github.com/golingon/lingoneks/out/aws/aws_sqs_queue"
-	"github.com/golingon/lingoneks/out/aws/aws_sqs_queue_policy"
+	"github.com/golingon/terraproviders/aws/5.45.0/aws_iam_policy_document"
+	"github.com/golingon/terraproviders/aws/5.45.0/aws_iam_role"
+	"github.com/golingon/terraproviders/aws/5.45.0/aws_sqs_queue"
+	"github.com/golingon/terraproviders/aws/5.45.0/aws_sqs_queue_policy"
 
 	"github.com/golingon/lingon/pkg/terra"
 )

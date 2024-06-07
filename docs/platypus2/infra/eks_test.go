@@ -11,7 +11,7 @@ import (
 
 	"github.com/golingon/lingon/pkg/terra"
 	tu "github.com/golingon/lingon/pkg/testutil"
-	"github.com/golingon/lingoneks/out/aws"
+	aws "github.com/golingon/terraproviders/aws/5.45.0"
 	"github.com/hashicorp/terraform-exec/tfexec"
 )
 

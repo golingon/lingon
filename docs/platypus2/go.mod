@@ -10,10 +10,10 @@ require (
 	github.com/ardanlabs/conf/v3 v3.1.7
 	github.com/aws/karpenter v0.29.2
 	github.com/aws/karpenter-core v0.32.9
-	github.com/golingon/lingon v0.0.0-00010101000000-000000000000
-	github.com/golingon/terra_tls v0.0.0-20240412065029-004d8973b97c
+	github.com/golingon/lingon v0.0.0-20240416053339-0bf5a7f001ce
+	github.com/golingon/terraproviders/aws/5.45.0 v0.0.0-20240416110925-4deecce434a2
+	github.com/golingon/terraproviders/tls/4.0.5 v0.0.0-20240416110925-4deecce434a2
 	github.com/grafana/dashboard-linter v0.0.0-20230622143601-02e2cd156626
-	github.com/hashicorp/hcl/v2 v2.20.1
 	github.com/hashicorp/terraform-exec v0.20.0
 	github.com/hashicorp/terraform-json v0.21.0
 	github.com/nats-io/nats.go v1.34.1
@@ -91,6 +91,7 @@ require (
 	github.com/googleapis/gax-go/v2 v2.12.3 // indirect
 	github.com/grafana/regexp v0.0.0-20221122212121-6b5c0a4cb7fd // indirect
 	github.com/hashicorp/go-version v1.6.0 // indirect
+	github.com/hashicorp/hcl/v2 v2.20.1 // indirect
 	github.com/imdario/mergo v0.3.16 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect

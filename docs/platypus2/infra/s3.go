@@ -5,10 +5,10 @@ package infra
 
 import (
 	"github.com/golingon/lingon/pkg/terra"
-	"github.com/golingon/lingoneks/out/aws/aws_s3_bucket"
-	"github.com/golingon/lingoneks/out/aws/aws_s3_bucket_public_access_block"
-	"github.com/golingon/lingoneks/out/aws/aws_s3_bucket_server_side_encryption_configuration"
-	"github.com/golingon/lingoneks/out/aws/aws_s3_bucket_versioning"
+	"github.com/golingon/terraproviders/aws/5.45.0/aws_s3_bucket"
+	"github.com/golingon/terraproviders/aws/5.45.0/aws_s3_bucket_public_access_block"
+	"github.com/golingon/terraproviders/aws/5.45.0/aws_s3_bucket_server_side_encryption_configuration"
+	"github.com/golingon/terraproviders/aws/5.45.0/aws_s3_bucket_versioning"
 )
 
 type Bucket struct {

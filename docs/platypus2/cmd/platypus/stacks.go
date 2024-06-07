@@ -10,8 +10,8 @@ import (
 
 	"github.com/golingon/lingoneks/infra"
 	"github.com/golingon/lingoneks/karpenter"
-	"github.com/golingon/lingoneks/out/aws"
 	"github.com/golingon/lingoneks/terraclient"
+	aws "github.com/golingon/terraproviders/aws/5.45.0"
 
 	"github.com/golingon/lingon/pkg/terra"
 )
