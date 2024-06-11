@@ -137,10 +137,6 @@ func objectsFromStack(stack Exporter) (*stackObjects, error) {
 	}
 
 	rv := reflect.ValueOf(stack)
-	// Exporter is a pointer so expect a pointer.
-	if rv.Kind() == reflect.Ptr {
-		rv = rv.Elem()
-	}
 	sb := stackObjects{}
 	if err := parseStackStructFields(rv, &sb); err != nil {
 		return nil, err
@@ -152,6 +148,14 @@ func objectsFromStack(stack Exporter) (*stackObjects, error) {
 // parseStackStructFields takes a struct reflect.Value and appends any Terraform
 // objects that it finds to the provider stackObjects.
 func parseStackStructFields(rv reflect.Value, sb *stackObjects) error {
+	// Skip nil pointers.
+	if rv.Kind() == reflect.Ptr && rv.IsNil() {
+		return nil
+	}
+	// Resolve pointers.
+	for rv.Kind() == reflect.Ptr {
+		rv = rv.Elem()
+	}
 	for i := 0; i < rv.NumField(); i++ {
 		sf := rv.Type().Field(i)
 		fv := rv.Field(i)
@@ -165,14 +169,6 @@ func parseStackStructFields(rv reflect.Value, sb *stackObjects) error {
 					sf.Name,
 					sf.Type,
 				)
-			}
-			// Skip nil pointers.
-			if fv.Kind() == reflect.Ptr && fv.IsNil() {
-				continue
-			}
-			// Handle embedded structs as pointers.
-			for fv.Kind() == reflect.Ptr {
-				fv = fv.Elem()
 			}
 			// Proceed and parse the embedded struct.
 			if err := parseStackStructFields(fv, sb); err != nil {
@@ -223,6 +219,11 @@ func parseStackStructFields(rv reflect.Value, sb *stackObjects) error {
 					return ErrMultipleBackendBlocks
 				}
 				sb.Backend = v
+			case Exporter:
+				// Recursively parse the struct.
+				if err := parseStackStructFields(reflect.ValueOf(v), sb); err != nil {
+					return err
+				}
 			default:
 				// Not sure if this should be an error, but rather be explicit
 				// at this point.
