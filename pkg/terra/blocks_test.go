@@ -119,6 +119,52 @@ func newDummyBaseStack() DummyStack {
 	}
 }
 
+func TestExtractBlocks_SubStack(t *testing.T) {
+	type SubStack struct {
+		Stack
+		Resource *dummyResource
+	}
+	type simpleStack struct {
+		DummyStack
+		Sub *SubStack
+	}
+	subStackResource := &dummyResource{}
+	st := simpleStack{
+		DummyStack: newDummyBaseStack(),
+		Sub: &SubStack{
+			Resource: subStackResource,
+		},
+	}
+	objects, err := objectsFromStack(&st)
+	tu.AssertNoError(t, err)
+	tu.AssertEqual(t, 1, len(objects.Resources))
+	tu.AssertEqual[Resource](t, subStackResource, objects.Resources[0])
+}
+
+func TestExtractBlocks_SubStackSlice(t *testing.T) {
+	type SubStack struct {
+		Stack
+		Resource *dummyResource
+	}
+	type simpleStack struct {
+		DummyStack
+		Sub []*SubStack
+	}
+	subStackResource := &dummyResource{}
+	st := simpleStack{
+		DummyStack: newDummyBaseStack(),
+		Sub: []*SubStack{
+			{
+				Resource: subStackResource,
+			},
+		},
+	}
+	objects, err := objectsFromStack(&st)
+	tu.AssertNoError(t, err)
+	tu.AssertEqual(t, 1, len(objects.Resources))
+	tu.AssertEqual[Resource](t, subStackResource, objects.Resources[0])
+}
+
 func TestExtractBlocks_IgnoredField(t *testing.T) {
 	type simpleStack struct {
 		DummyStack
