@@ -194,7 +194,7 @@ func PullRequest() {
 	fmt.Println("📝 pull request checks")
 	iferr(Go("test", "-v", recDir))
 	DocExamples()
-	Fix()
+	Lint()
 	fmt.Println("✅ pull request checks passed")
 }
 
