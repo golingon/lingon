@@ -29,14 +29,14 @@ updates:
   - package-ecosystem: gomod
     directory: /docs/kubernetes
     schedule:
-      interval: daily
+      interval: monthly
 
   - package-ecosystem: gomod
     directory: /docs/platypus2
     schedule:
-      interval: daily
+      interval: monthly
 
   - package-ecosystem: gomod
     directory: /docs/terraform
     schedule:
-      interval: daily
+      interval: monthly
