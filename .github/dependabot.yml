@@ -8,7 +8,7 @@ updates:
   - package-ecosystem: "gomod"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: weekly
     open-pull-requests-limit: 5
     groups:
       gomod:
@@ -16,10 +16,11 @@ updates:
           - "k8s.io/*"
           - "sigs.k8s.io/*"
           - "*"
+          
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: weekly
     open-pull-requests-limit: 5
     groups:
       gh:
@@ -30,13 +31,31 @@ updates:
     directory: /docs/kubernetes
     schedule:
       interval: monthly
+    groups:
+      gomod:
+        patterns:
+          - "k8s.io/*"
+          - "sigs.k8s.io/*"
+          - "*"
 
   - package-ecosystem: gomod
     directory: /docs/platypus2
     schedule:
       interval: monthly
+    groups:
+      gomod:
+        patterns:
+          - "k8s.io/*"
+          - "sigs.k8s.io/*"
+          - "*"
 
   - package-ecosystem: gomod
     directory: /docs/terraform
     schedule:
       interval: monthly
+    groups:
+      gomod:
+        patterns:
+          - "k8s.io/*"
+          - "sigs.k8s.io/*"
+          - "*"
