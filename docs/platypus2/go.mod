@@ -1,7 +1,6 @@
 module github.com/golingon/lingoneks
 
 go 1.22.2
-
 replace github.com/golingon/lingon => ../../
 
 require (
@@ -14,10 +13,9 @@ require (
 	github.com/golingon/terraproviders/aws/5.45.0 v0.0.0-20240416110925-4deecce434a2
 	github.com/golingon/terraproviders/tls/4.0.5 v0.0.0-20240416110925-4deecce434a2
 	github.com/grafana/dashboard-linter v0.0.0-20230622143601-02e2cd156626
-	github.com/hashicorp/hcl/v2 v2.21.0
 	github.com/hashicorp/terraform-exec v0.21.0
 	github.com/hashicorp/terraform-json v0.22.1
-	github.com/nats-io/nats.go v1.34.1
+	github.com/nats-io/nats.go v1.36.0
 	github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.73.1
 	github.com/prometheus/client_golang v1.19.0
 	github.com/rogpeppe/go-internal v1.12.0
@@ -92,6 +90,7 @@ require (
 	github.com/googleapis/gax-go/v2 v2.12.3 // indirect
 	github.com/grafana/regexp v0.0.0-20221122212121-6b5c0a4cb7fd // indirect
 	github.com/hashicorp/go-version v1.7.0 // indirect
+	github.com/hashicorp/hcl/v2 v2.21.0 // indirect
 	github.com/imdario/mergo v0.3.16 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
