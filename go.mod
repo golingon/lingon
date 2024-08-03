@@ -1,6 +1,6 @@
 module github.com/golingon/lingon
 
-go 1.22.2
+go 1.22.5
 
 require (
 	dario.cat/mergo v1.0.0
@@ -10,17 +10,17 @@ require (
 	github.com/hashicorp/hcl/v2 v2.21.0
 	github.com/hashicorp/terraform-exec v0.21.0
 	github.com/hashicorp/terraform-json v0.22.1
-	github.com/tidwall/gjson v1.17.1
+	github.com/tidwall/gjson v1.17.2
 	github.com/tidwall/sjson v1.2.5
 	github.com/veggiemonk/strcase v0.0.0-20240108101409-9f441287a9a9
-	github.com/zclconf/go-cty v1.14.4
+	github.com/zclconf/go-cty v1.15.0
 	golang.org/x/exp v0.0.0-20240707233637-46b078467d37
 	golang.org/x/tools v0.23.0
 	gopkg.in/yaml.v3 v3.0.1
-	k8s.io/api v0.30.2
-	k8s.io/apiextensions-apiserver v0.30.0
-	k8s.io/apimachinery v0.30.2
-	k8s.io/client-go v0.30.0
+	k8s.io/api v0.30.3
+	k8s.io/apiextensions-apiserver v0.30.3
+	k8s.io/apimachinery v0.30.3
+	k8s.io/client-go v0.30.3
 	mvdan.cc/gofumpt v0.6.0
 	sigs.k8s.io/yaml v1.4.0
 )

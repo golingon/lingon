@@ -4,7 +4,7 @@
 package terraform
 
 import (
-	"github.com/golingon/lingon/docs/terraform/out/aws/aws_vpc"
+	"github.com/golingon/docsterraform/out/aws/aws_vpc"
 	"github.com/golingon/lingon/pkg/terra"
 )
 

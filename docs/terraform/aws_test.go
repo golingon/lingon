@@ -10,9 +10,9 @@ import (
 
 	tfjson "github.com/hashicorp/terraform-json"
 
-	aws "github.com/golingon/lingon/docs/terraform/out/aws"
-	"github.com/golingon/lingon/docs/terraform/out/aws/aws_subnet"
-	"github.com/golingon/lingon/docs/terraform/out/aws/aws_vpc"
+	aws "github.com/golingon/docsterraform/out/aws"
+	"github.com/golingon/docsterraform/out/aws/aws_subnet"
+	"github.com/golingon/docsterraform/out/aws/aws_vpc"
 	"github.com/golingon/lingon/pkg/terra"
 )
 

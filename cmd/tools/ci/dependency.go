@@ -22,8 +22,10 @@ func Update() {
 	iferr(Go("get", "-u", recDir))
 	iferr(Go("mod", "tidy"))
 	fmt.Println("⤴️ update deps docs")
-	docRun("go", "get", "-u", recDir)
-	docRun("go", "mod", "tidy")
+	docRun(DocKubernetes, "go", "get", "-u", recDir)
+	docRun(DocTerraform, "go", "get", "-u", recDir)
+	docRun(DocKubernetes, "go", "mod", "tidy")
+	docRun(DocTerraform, "go", "mod", "tidy")
 	fmt.Println("✅ update deps done")
 }
 
