@@ -25,3 +25,18 @@ updates:
       gh:
         patterns:
           - "*"
+
+  - package-ecosystem: gomod
+    directory: /docs/kubernetes
+    schedule:
+      interval: daily
+
+  - package-ecosystem: gomod
+    directory: /docs/platypus2
+    schedule:
+      interval: daily
+
+  - package-ecosystem: gomod
+    directory: /docs/terraform
+    schedule:
+      interval: daily
