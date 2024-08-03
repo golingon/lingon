@@ -7,8 +7,8 @@ package localfile
 //go:generate go run -mod=readonly github.com/golingon/lingon/cmd/terragen -out ./out/local -pkg github.com/golingon/lingon/examples/localfile/out/local -clean -provider local=hashicorp/local:2.4.0
 
 import (
-	"github.com/golingon/lingon/docs/terraform/localfile/out/local"
-	"github.com/golingon/lingon/docs/terraform/localfile/out/local/local_file"
+	"github.com/golingon/docsterraform/localfile/out/local"
+	"github.com/golingon/docsterraform/localfile/out/local/local_file"
 	"github.com/golingon/lingon/pkg/terra"
 	_ "github.com/golingon/lingon/pkg/terragen"
 )

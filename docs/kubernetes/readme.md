@@ -62,7 +62,7 @@ import (
 	"os"
 	"path/filepath"
 
-	team "github.com/golingon/lingon/docs/kubernetes/crd/out"
+	team "github.com/golingon/docskubernetes/crd/out"
 	"github.com/golingon/lingon/pkg/kube"
 )
 

@@ -1,6 +1,6 @@
 module github.com/golingon/lingon
 
-go 1.22.2
+go 1.22.5
 
 require (
 	dario.cat/mergo v1.0.0
@@ -20,7 +20,7 @@ require (
 	k8s.io/api v0.30.3
 	k8s.io/apiextensions-apiserver v0.30.3
 	k8s.io/apimachinery v0.30.3
-	k8s.io/client-go v12.0.0+incompatible
+	k8s.io/client-go v0.30.3
 	mvdan.cc/gofumpt v0.6.0
 	sigs.k8s.io/yaml v1.4.0
 )

@@ -13,7 +13,6 @@ import (
 	"github.com/golingon/lingon/pkg/kube/testdata/go/tekton"
 	"github.com/rogpeppe/go-internal/txtar"
 
-	// "github.com/golingon/lingon/docs/kubernetes/kube/out/tekton"
 	"github.com/golingon/lingon/pkg/kube"
 )
 

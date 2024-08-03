@@ -4,7 +4,7 @@
 package kube
 
 //go:generate rm -rf out/
-//go:generate go run github.com/dave/rebecca/cmd/becca@v0.9.2  -package=github.com/golingon/lingon/docs/kubernetes/kube -input=readme.md.tpl -output=readme.md
+//go:generate go run github.com/dave/rebecca/cmd/becca@latest  -package=github.com/golingon/docskubernetes/kube -input=readme.md.tpl -output=readme.md
 
 //go:generate echo "\n>>>> KUBE: exploding manifests\n"
 //go:generate go run github.com/golingon/lingon/cmd/explode -in ../../../pkg/kube/testdata/tekton.yaml -out out/explode

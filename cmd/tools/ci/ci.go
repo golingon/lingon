@@ -7,7 +7,6 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
-	"io"
 	"log/slog"
 	"os"
 	"os/exec"
@@ -18,16 +17,12 @@ import (
 const (
 	// OSVScanner is the OSV Scanner to find vulnerabilities
 	osvScannerRepo    = "github.com/google/osv-scanner/cmd/osv-scanner"
-	osvScannerVersion = "@v1.7.0"
+	osvScannerVersion = "@v1.8.2"
 
 	// goVuln to find vulnerabilities
 	vulnRepo    = "golang.org/x/vuln/cmd/govulncheck"
 	vulnVersion = "@latest"
 	goVuln      = vulnRepo + vulnVersion
-
-	// syft is for generating SBOM
-	syftRepo    = "github.com/anchore/syft/cmd/syft"
-	syftVersion = "@v1.2.0"
 
 	// goLicenses is Google's go-licenses to export all licenses
 	goLicensesRepo    = "github.com/google/go-licenses"
@@ -36,7 +31,7 @@ const (
 
 	// goCILint is for linting code
 	goCILintRepo    = "github.com/golangci/golangci-lint/cmd/golangci-lint"
-	goCILintVersion = "@v1.58.0"
+	goCILintVersion = "@v1.59.1"
 	goCILint        = goCILintRepo + goCILintVersion
 
 	// goFumpt is mvdan.cc/gofumpt to format code
@@ -60,33 +55,21 @@ var mod = func() string {
 	}
 }()
 
+var verbose bool
+
 func main() {
 	var cover, lint, doc, examples, fix, nodiff, pr, scan, release, update bool
 	flag.BoolVar(&cover, "cover", false, "tests with coverage")
-	flag.BoolVar(
-		&lint,
-		"lint",
-		false,
-		"linting and formatting code (gofumpt, golangci-lint)",
-	)
+	flag.BoolVar(&lint, "lint", false, "linting and formatting code (gofumpt, golangci-lint)")
 	flag.BoolVar(&doc, "doc", false, "generate all docs and readme")
-	flag.BoolVar(
-		&examples,
-		"examples",
-		false,
-		"tests all docs examples /!\\ slow without build cache",
-	)
-	flag.BoolVar(
-		&fix,
-		"fix",
-		false,
-		"same as -lint + generating notice and licenses headers",
-	)
+	flag.BoolVar(&examples, "examples", false, "generate and tests all docs examples /!\\ slow without build cache")
+	flag.BoolVar(&fix, "fix", false, "same as -lint + generating notice and licenses headers")
 	flag.BoolVar(&nodiff, "nodiff", false, "error if git diff is not empty")
-	flag.BoolVar(&pr, "pr", false, "run pull request checks: -fix + go test")
+	flag.BoolVar(&pr, "pr", false, "run pull request checks: lint + notice + go test + examples /!\\")
 	flag.BoolVar(&scan, "scan", false, "scan for vulnerabilities")
 	flag.BoolVar(&release, "release", false, "create a new release")
 	flag.BoolVar(&update, "update", false, "update dependencies")
+	flag.BoolVar(&verbose, "verbose", false, "verbose logging")
 
 	flag.Parse()
 
@@ -100,7 +83,7 @@ func main() {
 		Lint()
 	}
 	if doc {
-		Doc()
+		DocGen()
 	}
 	if examples {
 		DocExamples()
@@ -201,37 +184,56 @@ func Fix() {
 	fmt.Println("✅ All fixes applied")
 }
 
-func PullRequest() {
-	Fix()
+func MainBranch() {
 	iferr(Go("test", "-v", recDir))
+	DocGen()
+	fmt.Println("✅ main branch checks passed")
+}
+
+func PullRequest() {
+	fmt.Println("📝 pull request checks")
+	iferr(Go("test", "-v", recDir))
+	DocExamples()
+	Fix()
 	fmt.Println("✅ pull request checks passed")
 }
 
 func Scan() {
-	iferr(Sbom())
 	iferr(GoRun(goVuln, recDir))
 	iferr(OSVScanner())
 	fmt.Println("✅ all scans completed")
 }
 
-func Doc() {
+func DocGen() {
 	fmt.Println("📝 generating docs")
-	docRun("go", "generate", mod, recDir)
-	docRun("go", "mod", "tidy")
+	argsGen := []string{"go", "generate"}
+	if verbose {
+		argsGen = append(argsGen, "-v", "-x")
+	}
+	argsGen = append(argsGen, recDir)
+
+	iferr(Go(argsGen[1:]...))
+	docRun(DocKubernetes, argsGen...)
+	docRun(DocKubernetes, "go", "mod", "tidy")
+	docRun(DocTerraform, argsGen...)
+	docRun(DocTerraform, "go", "mod", "tidy")
 	fmt.Println("✅ docs generated")
 }
 
 func DocExamples() {
-	Doc()
+	DocGen()
 	fmt.Println("📝 testing examples")
-	docRun("go", "test", mod, "-v", recDir)
+	docRun(DocKubernetes, "go", "test", mod, "-v", recDir)
+	// no need to recurse the directories
+	// as it uses build tags
+	docRun(DocTerraform, "go", "test", mod, "-v")
 	fmt.Println("✅ docs generated and examples tested")
 }
 
 func Go(args ...string) error {
 	cmd := exec.Command("go", args...)
-	slog.Info("exec", slog.String("cmd", cmd.String()))
-	defer slog.Info("done", slog.String("cmd", cmd.String()))
+	slog.Info("exec go", "cmd", cmd.String())
+	defer slog.Info("done exec go", "cmd", cmd.String())
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	if err := cmd.Run(); err != nil {
@@ -260,14 +262,39 @@ func HasGitDiff() {
 	panic("git diff is not empty")
 }
 
+type DocFolder int
+
+const (
+	DocKubernetes DocFolder = iota + 1
+	DocTerraform
+)
+
+func (d DocFolder) String() string {
+	switch d {
+	case DocKubernetes:
+		return "./docs/kubernetes"
+	case DocTerraform:
+		return "./docs/terraform"
+	default:
+		return fmt.Sprintf("unknown folder: %T", d)
+	}
+}
+
 // docRun runs a command in the docs directory
-func docRun(args ...string) {
+func docRun(df DocFolder, args ...string) {
 	cmd := exec.Command(args[0], args[1:]...) //nolint:gosec
-	slog.Info("exec", slog.String("cmd", cmd.String()))
-	defer slog.Info("exec", slog.String("cmd", args[0]+" done"))
+	slog.Info("docRun", "cmd", cmd.String(), "folder", df)
+	defer slog.Info("docRun", "cmd", args[0]+" done", "folder", df)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
-	cmd.Dir = "./docs"
+	switch df {
+	case DocKubernetes:
+		cmd.Dir = "./docs/kubernetes"
+	case DocTerraform:
+		cmd.Dir = "./docs/terraform"
+	default:
+		panic(fmt.Sprintf("unknown folder: %v", df))
+	}
 	if err := cmd.Run(); err != nil {
 		_ = os.Stderr.Sync()
 		_ = os.Stdout.Sync()
@@ -283,29 +310,6 @@ func OSVScanner() error {
 	// not scanning docs/go.mod because of github.com/aws/aws-sdk-go
 	// and the osvScanner returns an error when a vulnerability is detected
 	return GoRun(osvScannerRepo+osvScannerVersion, curDir)
-}
-
-// Sbom is used to generate SBOM
-func Sbom() error {
-	slog.Info("running syft - generating SBOM")
-	defer slog.Info("DONE syft - generating SBOM")
-	cmd := exec.Command(
-		"go", "run",
-		syftRepo+syftVersion,
-		"packages",
-		"dir:"+curDir,
-		"-o=spdx-json",
-		"--file=bin/sbom.json",
-	)
-	slog.Info("exec", slog.String("cmd", cmd.String()))
-	cmd.Stdout = io.Discard
-	cmd.Stderr = os.Stderr
-	cmd.Env = append(os.Environ(), "SYFT_QUIET=true")
-	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("go: %s", err)
-	}
-
-	return nil
 }
 
 // Notice is used to generate a NOTICE file

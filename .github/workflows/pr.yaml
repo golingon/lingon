@@ -8,26 +8,25 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }} # To only cancel in-progress runs of the same workflow
   cancel-in-progress: true
 
-permissions:  # added using https://github.com/step-security/secure-workflows
+permissions: # added using https://github.com/step-security/secure-workflows
   contents: read
 
 jobs:
   test:
     permissions:
-      contents: read  # for actions/checkout to fetch code
-      pull-requests: read  # for golangci/golangci-lint-action to fetch pull requests
+      contents: read # for actions/checkout to fetch code
+      pull-requests: read # for golangci/golangci-lint-action to fetch pull requests
     runs-on: ubuntu-latest
     steps:
-
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.0.0
         with:
           fetch-depth: 1
 
       - uses: actions/setup-go@0a12ed9d6a96ab950c8f026ed9f722fe0da7ef32 # v5.0.2
         with:
-          go-version-file: './go.mod'
+          go-version-file: "./go.mod"
           check-latest: true
           cache-dependency-path: ./go.mod
 
       - name: run CI
-        run: go run cmd/tools/ci/*.go -pr -doc -nodiff
+        run: go run cmd/tools/ci/*.go -pr -nodiff
