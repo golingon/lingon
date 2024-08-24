@@ -215,13 +215,6 @@ func (j *jamel) generateGo() error {
 	return nil
 }
 
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
-}
-
 func (j *jamel) convertToGo(splitYaml []string) error {
 	vcpt := 1 // variable name counter to avoid name collisions
 	scpt := 1 // struct field name counter to avoid name collisions

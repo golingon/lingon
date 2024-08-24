@@ -227,7 +227,7 @@ func writeTxtar(ar *txtar.Archive) error {
 		// format code with gofumpt extra rules as it is stricter
 		// and will produce more predictable output
 		f.Data, err = format.Source(
-			f.Data, format.Options{LangVersion: "1.20", ExtraRules: true},
+			f.Data, format.Options{LangVersion: "go1.23.0", ExtraRules: true},
 		)
 		if err != nil {
 			return fmt.Errorf("formating generated code: %w", err)
