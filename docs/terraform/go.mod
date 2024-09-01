@@ -4,7 +4,6 @@ go 1.22.5
 
 require (
 	github.com/golingon/lingon v0.0.0-20240803134016-afa2e87dc57d
-	github.com/hashicorp/hcl/v2 v2.21.0
 	github.com/hashicorp/terraform-json v0.22.1
 )
 
@@ -18,6 +17,7 @@ require (
 	github.com/go-playground/validator/v10 v10.22.0 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/hashicorp/go-version v1.7.0 // indirect
+	github.com/hashicorp/hcl/v2 v2.22.0 // indirect
 	github.com/hashicorp/terraform-exec v0.21.0 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
 	github.com/mitchellh/go-wordwrap v1.0.1 // indirect
