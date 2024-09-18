@@ -39,7 +39,7 @@ func argsStruct(s *Schema) *jen.Statement {
 			continue
 		}
 		tags := map[string]string{
-			tagHCL: child.uniqueName + ",block",
+			tagHCL: child.name + ",block",
 		}
 		stmt := jen.Comment(child.comment()).Line()
 		stmt.Add(jen.Id(strcase.Pascal(child.uniqueName)))
@@ -55,7 +55,7 @@ func argsStruct(s *Schema) *jen.Statement {
 			tags[tagValidate] = nodeBlockListValidateTags(child)
 		}
 
-		stmt.Id(subPkgArgStructName(child, s.SchemaType))
+		stmt.Id(subPkgArgFieldStructName(s, child, s.SchemaType))
 		stmt.Tag(tags)
 		fields = append(fields, stmt)
 	}

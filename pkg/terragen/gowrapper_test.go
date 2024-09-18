@@ -69,6 +69,19 @@ func TestGenerateProvider(t *testing.T) {
 			FilterResources:   []string{"aws_securitylake_subscriber"},
 			FilterDataSources: []string{"aws_securitylake_subscriber"},
 		},
+		{
+			Name:            "aws_globalaccelerator_cross_account_attachment",
+			ProviderName:    "aws",
+			ProviderSource:  "hashicorp/aws",
+			ProviderVersion: "5.47.0",
+
+			FilterResources: []string{
+				"aws_globalaccelerator_cross_account_attachment",
+			},
+			FilterDataSources: []string{
+				"aws_globalaccelerator_cross_account_attachment",
+			},
+		},
 	}
 	if *update {
 		t.Log("running update")
@@ -149,9 +162,9 @@ func TestGenerateProvider(t *testing.T) {
 			providerGenerator := terrajen.ProviderGenerator{
 				GoProviderPkgPath:        "test/out",
 				GeneratedPackageLocation: "out",
-				ProviderName:             "aws",
-				ProviderSource:           "hashicorp/aws",
-				ProviderVersion:          "5.44.0",
+				ProviderName:             test.ProviderName,
+				ProviderSource:           test.ProviderSource,
+				ProviderVersion:          test.ProviderVersion,
 			}
 
 			actualAr, err := generateProviderTxtar(providerGenerator, &ps)

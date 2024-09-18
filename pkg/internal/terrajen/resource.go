@@ -114,8 +114,7 @@ func resourceStateStruct(s *Schema) *jen.Statement {
 	}
 
 	for _, child := range s.graph.children {
-		pbn := strcase.Pascal(child.name)
-		stmt := jen.Id(pbn)
+		stmt := jen.Id(strcase.Pascal(child.name))
 		if len(child.nestingPath) == 0 {
 			stmt.Op("*")
 		} else {
