@@ -5,6 +5,8 @@ package terrajen
 
 import (
 	"fmt"
+	"slices"
+	"strings"
 
 	"github.com/dave/jennifer/jen"
 	"github.com/veggiemonk/strcase"
@@ -27,7 +29,7 @@ func SubPkgFile(s *Schema) (*jen.File, bool) {
 	f.HeaderComment(HeaderComment)
 	for _, n := range s.graph.nodes {
 		if n.isArg {
-			f.Add(subPkgArgStruct(n, s.SchemaType))
+			f.Add(subPkgArgStruct(s, n, s.SchemaType))
 		}
 	}
 	for _, n := range s.graph.nodes {
@@ -40,7 +42,7 @@ func SubPkgFile(s *Schema) (*jen.File, bool) {
 	return f, true
 }
 
-func subPkgArgStruct(n *node, schemaType SchemaType) *jen.Statement {
+func subPkgArgStruct(s *Schema, n *node, schemaType SchemaType) *jen.Statement {
 	fields := make([]jen.Code, 0)
 
 	for _, attr := range n.attributes {
@@ -94,13 +96,13 @@ func subPkgArgStruct(n *node, schemaType SchemaType) *jen.Statement {
 			}
 			tags[tagValidate] = nodeBlockListValidateTags(child)
 		}
-		stmt.Id(subPkgArgStructName(child, schemaType))
+		stmt.Id(subPkgArgFieldStructName(s, child, schemaType))
 		stmt.Tag(tags)
 		fields = append(fields, stmt)
 	}
 
 	stmt := jen.
-		Type().Id(subPkgArgStructName(n, schemaType)).
+		Type().Id(subPkgArgFieldStructName(s, n, schemaType)).
 		Struct(fields...)
 	stmt.Line()
 	stmt.Line()
@@ -108,11 +110,41 @@ func subPkgArgStruct(n *node, schemaType SchemaType) *jen.Statement {
 	return stmt
 }
 
-func subPkgArgStructName(n *node, schemaType SchemaType) string {
+var generatedGoKeywords = []string{
+	"Resource",
+	"DataSource",
+	"Args",
+}
+
+// subPkgArgFieldStructName returns the name of a struct for a field in the Args
+// struct.
+// The name is based on the node's unique name and the schema type.
+// Special case when the name conflicts with keywords, like "Resource",
+// "DataSource", "Args".
+func subPkgArgFieldStructName(
+	s *Schema,
+	n *node,
+	schemaType SchemaType,
+) string {
+	name := strcase.Pascal(n.uniqueName)
 	if schemaType == SchemaTypeDataSource {
-		return prefixStructDataSource + strcase.Pascal(n.uniqueName)
+		name = prefixStructDataSource + strcase.Pascal(n.uniqueName)
 	}
-	return strcase.Pascal(n.uniqueName)
+	if slices.Contains(generatedGoKeywords, name) {
+		name = strcase.Pascal(shortName(s.Type)) + name
+	}
+
+	return name
+}
+
+// shortName takes a name like "aws_iam_role" and returns the name
+// without the leading provider prefix, i.e. it returns "iam_role"
+func shortName(name string) string {
+	underscoreIndex := strings.Index(name, "_")
+	if underscoreIndex == -1 {
+		return name
+	}
+	return name[underscoreIndex+1:]
 }
 
 func subPkgAttributeStruct(n *node, schemaType SchemaType) *jen.Statement {

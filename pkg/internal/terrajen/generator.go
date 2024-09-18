@@ -200,21 +200,21 @@ type Schema struct {
 	ProviderName         string     // aws
 	ProviderSource       string     // registry.terraform.io/hashicorp/aws
 	ProviderVersion      string     // 4.49.0
-	PackageName          string     // aws
+	PackageName          string     // aws_iam_role
 	Type                 string     // aws_iam_role
 
 	// Structs
-	StructName           string // iam_role => IamRole
-	ArgumentStructName   string // iam_role => IamRoleArgs
-	AttributesStructName string // iam_role => iamRoleAttributes
-	StateStructName      string // iam_role => iamRoleState
+	StructName           string // Resource / DataSource / Provider
+	ArgumentStructName   string // Args / DataArgs
+	AttributesStructName string // iam_role => awsIamRoleAttributes
+	StateStructName      string // iam_role => awsIamRoleState
 
 	Receiver string // iam_role => ir
 
 	SubPkgName string // iam_role => iamrole
 	// SubPkgPath is the filepath for the schema entities types (args,
 	// attributes, state).
-	SubPkgPath string
+	SubPkgPath string // aws_iam_role
 	FilePath   string // gen/providers/aws/ xxx
 	graph      *graph
 }
