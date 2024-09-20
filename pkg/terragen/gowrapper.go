@@ -33,11 +33,6 @@ type GenerateGoArgs struct {
 	// OutDir is the filesystem location where the generated files will be
 	// created.
 	OutDir string
-	// PkgPath is the Go pkg path to the generated files location, specified by
-	// OutDir. E.g. if OutDir is in a module called "my-module" in a directory
-	// called "gen",
-	// then the PkgPath should be "my-module/gen".
-	PkgPath string
 	// Force enables overriding any existing generated files per-provider.
 	Force bool
 	// Clean enables cleaning the generated files location before generating the
@@ -54,9 +49,6 @@ func GenerateGoCode(
 	if args.OutDir == "" {
 		return errors.New("outDir is empty")
 	}
-	if args.PkgPath == "" {
-		return errors.New("pkgPath is empty")
-	}
 
 	slog.Info(
 		"Generating Go wrapper",
@@ -65,7 +57,6 @@ func GenerateGoCode(
 		slog.String("version", args.ProviderVersion),
 	)
 	providerGenerator := terrajen.ProviderGenerator{
-		GoProviderPkgPath:        args.PkgPath,
 		GeneratedPackageLocation: args.OutDir,
 		ProviderName:             args.ProviderName,
 		ProviderSource:           args.ProviderSource,

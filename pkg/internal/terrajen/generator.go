@@ -19,9 +19,6 @@ import (
 // The schemas are used by the generator to create the Go files and sub
 // packages.
 type ProviderGenerator struct {
-	// GoProviderPkgPath is the Go pkg path to the generated provider directory.
-	// E.g. github.com/golingon/lingon/gen/aws
-	GoProviderPkgPath string
 	// GeneratedPackageLocation is the directory on the filesystem where the
 	// generated Go files will be created.
 	// The GoProviderPkgPath path must match the location of the generated files
@@ -59,7 +56,6 @@ const (
 func (a *ProviderGenerator) SchemaProvider(sb *tfjson.SchemaBlock) *Schema {
 	return &Schema{
 		SchemaType:           SchemaTypeProvider,
-		GoProviderPkgPath:    a.GoProviderPkgPath,        // github.com/golingon/lingon/gen/aws
 		GeneratedPkgLocation: a.GeneratedPackageLocation, // gen/aws
 		ProviderName:         a.ProviderName,             // aws
 		ProviderSource:       a.ProviderSource,           // registry.terraform.io/hashicorp/aws
@@ -92,7 +88,6 @@ func (a *ProviderGenerator) SchemaResource(
 ) *Schema {
 	rs := &Schema{
 		SchemaType:           SchemaTypeResource,
-		GoProviderPkgPath:    a.GoProviderPkgPath,        // github.com/golingon/lingon/gen/aws
 		GeneratedPkgLocation: a.GeneratedPackageLocation, // gen/aws
 		ProviderName:         a.ProviderName,             // aws
 		ProviderSource:       a.ProviderSource,           // hashicorp/aws
@@ -137,7 +132,6 @@ func (a *ProviderGenerator) SchemaData(
 	dataName := "data_" + name
 	ds := &Schema{
 		SchemaType:           SchemaTypeDataSource,
-		GoProviderPkgPath:    a.GoProviderPkgPath,        // github.com/golingon/lingon/gen/aws
 		GeneratedPkgLocation: a.GeneratedPackageLocation, // gen/aws
 		ProviderName:         a.ProviderName,             // aws
 		ProviderSource:       a.ProviderSource,           // hashicorp/aws

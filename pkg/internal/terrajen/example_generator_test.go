@@ -44,12 +44,6 @@ func Example() {
 
 	// Initialise the ProviderGenerator
 	gen := terrajen.ProviderGenerator{
-		// The module we are generating code into is called "mymodule" and the
-		// directory to generate
-		// code into is "gen".
-		// This allows the generated code to refer to itself using this pkg path
-		// as a prefix.
-		GoProviderPkgPath: "mymodule/gen",
 		// Filesystem location where to generate the files. This depends
 		// entirely on *where* you
 		// run the generator from

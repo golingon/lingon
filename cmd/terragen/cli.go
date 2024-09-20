@@ -19,8 +19,6 @@ The flags are:
 		clean the out directory before generating Go files
 	-out string
 		directory to generate Go files in (required)
-	-pkg string
-		Go pkg for the generated Go files (required)
 	-provider value
 		provider to generate Go files for (required),
 		e.g. aws=hashicorp/aws:4.49.0
@@ -46,7 +44,6 @@ func main() {
 	var (
 		outDir      string
 		tfOutDir    string
-		pkgPath     string
 		providerStr string
 		force       bool
 		clean       bool
@@ -60,7 +57,6 @@ func main() {
 		"directory to generate Terraform provider schema",
 	)
 	flag.StringVar(&outDir, "out", "", "directory to generate Go files in")
-	flag.StringVar(&pkgPath, "pkg", "", "Go pkg for the generated Go files")
 	flag.StringVar(
 		&providerStr,
 		"provider",
@@ -91,10 +87,6 @@ func main() {
 		slog.Error("-out flag required")
 		os.Exit(1)
 	}
-	if pkgPath == "" {
-		slog.Error("-pkg flag required")
-		os.Exit(1)
-	}
 
 	if providerStr == "" {
 		slog.Error("-provider flag required")
@@ -122,7 +114,6 @@ func main() {
 		"Generating Terraform Go wrappers",
 		slog.String("provider", providerStr),
 		slog.String("out", outDir),
-		slog.String("pkg", pkgPath),
 	)
 	if err := terragen.GenerateGoCode(
 		terragen.GenerateGoArgs{
@@ -130,7 +121,6 @@ func main() {
 			ProviderSource:  provider.Source,
 			ProviderVersion: provider.Version,
 			OutDir:          outDir,
-			PkgPath:         pkgPath,
 			Force:           force,
 			Clean:           clean,
 		},

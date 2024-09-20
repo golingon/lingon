@@ -37,12 +37,12 @@ the argument to `terragen` for the provider would be `-provider aws=hashicorp/aw
 Invoke `terragen` multiple times to generate multiple providers.
 See the [Terraform documentation](https://developer.hashicorp.com/terraform/language/providers/requirements) for more information on what these values are.
 
-Additionally, you need to provide an `out` location and the path to the `pkg` for the `out` directory.
+Additionally, you need to provide an `out` location.
 
 We recommend creating a Go file with a `go:generate` directive to invoke the `terragen` command. E.g.
 
 ```go
-//go:generate go run -mod=readonly github.com/golingon/lingon/cmd/terragen -out ./gen/aws -pkg mypkg/gen/aws -provider local=hashicorp/aws:4.60.0 -force
+//go:generate go run -mod=readonly github.com/golingon/lingon/cmd/terragen -out ./gen/aws -provider local=hashicorp/aws:4.60.0 -force
 ```
 
 ## Creating and Exporting Terraform Stacks

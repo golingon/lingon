@@ -113,7 +113,6 @@ func TestGenerateProvider(t *testing.T) {
 			}
 
 			providerGenerator := terrajen.ProviderGenerator{
-				GoProviderPkgPath:        "test/out",
 				GeneratedPackageLocation: "out",
 				ProviderName:             test.ProviderName,
 				ProviderSource:           test.ProviderSource,
@@ -160,7 +159,6 @@ func TestGenerateProvider(t *testing.T) {
 			expectedAr := txtar.Parse(txtarContents)
 
 			providerGenerator := terrajen.ProviderGenerator{
-				GoProviderPkgPath:        "test/out",
 				GeneratedPackageLocation: "out",
 				ProviderName:             test.ProviderName,
 				ProviderSource:           test.ProviderSource,

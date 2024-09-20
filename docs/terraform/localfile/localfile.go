@@ -4,7 +4,7 @@
 package localfile
 
 //go:generate echo "\n>>>> LOCALFILE: generating hashicorp/local terra provider\n"
-//go:generate go run -mod=readonly github.com/golingon/lingon/cmd/terragen -out ./out/local -pkg github.com/golingon/lingon/examples/localfile/out/local -clean -provider local=hashicorp/local:2.4.0
+//go:generate go run -mod=readonly github.com/golingon/lingon/cmd/terragen -out ./out/local -clean -provider local=hashicorp/local:2.4.0
 
 import (
 	"github.com/golingon/docsterraform/localfile/out/local"
