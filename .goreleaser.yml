@@ -17,7 +17,6 @@ gomod:
     - GOPROXY=https://proxy.golang.org,direct
 
 builds:
-
   #
   #  EXPLODE
   #
@@ -33,7 +32,7 @@ builds:
       - amd64
       - arm64
     # ensures mod timestamp to be the commit timestamp
-    mod_timestamp: '{{ .CommitTimestamp }}'
+    mod_timestamp: "{{ .CommitTimestamp }}"
     env:
       - CGO_ENABLED=0
       - GO111MODULE=on
@@ -132,7 +131,7 @@ archives:
       - terragen-macos
 
 checksum:
-  name_template: 'checksums.txt'
+  name_template: "checksums.txt"
 
 sboms:
   - artifacts: archive
@@ -146,19 +145,14 @@ changelog:
   sort: asc
   filters:
     exclude:
-      - '^[Dd]ocs:'
-      - '^[Tt]est:'
-      - '^testdata:'
+      - "^[Dd]ocs:"
+      - "^[Tt]est:"
+      - "^testdata:"
 
 brews:
   - name: lingon
     ids:
       - needed-for-homebrew
-    tap:
-      owner: golingon
-      name: homebrew-tap
-      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
-    folder: Formula
     homepage: "https://github.com/golingon/lingon"
     description: |
       Lingon binaries:
@@ -174,3 +168,4 @@ brews:
 # Feel free to remove those if you don't want/use them.
 # yaml-language-server: $schema=https://goreleaser.com/static/schema.json
 # vim: set ts=2 sw=2 tw=0 fo=cnqoj
+

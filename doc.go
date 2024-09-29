@@ -20,9 +20,10 @@
 //
 //   - [kube.App] struct that is embedded to mark kubernetes applications
 //
-// - [kube.Export] converts kubernetes objects defined as Go struct to
-// kubernetes manifests in YAML. - [kube.Explode] kubernetes manifests in YAML
-// to multiple files, organized by namespace.
+//   - [kube.Export] converts kubernetes objects defined as Go struct to
+//     kubernetes manifests in YAML. - [kube.Explode] kubernetes manifests in YAML
+//     to multiple files, organized by namespace.
+//
 //   - [kube.Import] converts kubernetes manifests in YAML to Go structs.
 //
 // # Kubeconfig
