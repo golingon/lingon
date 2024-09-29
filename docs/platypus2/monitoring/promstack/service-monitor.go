@@ -96,7 +96,7 @@ var KubePromtheusStackKubeApiserverServiceMonitor = &v1.ServiceMonitor{
 	Spec: v1.ServiceMonitorSpec{
 		Endpoints: []v1.Endpoint{{
 			BearerTokenFile: "/var/run/secrets/kubernetes.io/serviceaccount/token",
-			MetricRelabelConfigs: []*v1.RelabelConfig{{
+			MetricRelabelConfigs: []v1.RelabelConfig{{
 				Action:       "drop",
 				Regex:        "apiserver_request_duration_seconds_bucket;(0.15|0.2|0.3|0.35|0.4|0.45|0.6|0.7|0.8|0.9|1.25|1.5|1.75|2|3|3.5|4|4.5|6|7|8|9|15|25|40|50)",
 				SourceLabels: []v1.LabelName{v1.LabelName("__name__"), v1.LabelName("le")},
@@ -105,7 +105,7 @@ var KubePromtheusStackKubeApiserverServiceMonitor = &v1.ServiceMonitor{
 			Scheme: "https",
 			TLSConfig: &v1.TLSConfig{
 				CAFile:        "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt",
-				SafeTLSConfig: v1.SafeTLSConfig{ServerName: "kubernetes"},
+				SafeTLSConfig: v1.SafeTLSConfig{ServerName: P("kubernetes")},
 			},
 		}},
 		JobLabel:          "component",
@@ -176,7 +176,7 @@ var KubePromtheusStackKubeKubeControllerManagerServiceMonitor = &v1.ServiceMonit
 			Scheme:          "https",
 			TLSConfig: &v1.TLSConfig{
 				CAFile:        "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt",
-				SafeTLSConfig: v1.SafeTLSConfig{InsecureSkipVerify: true},
+				SafeTLSConfig: v1.SafeTLSConfig{InsecureSkipVerify: P(true)},
 			},
 		}},
 		JobLabel:          "jobLabel",
@@ -280,7 +280,7 @@ var KubePromtheusStackKubeKubeSchedulerServiceMonitor = &v1.ServiceMonitor{
 			Scheme:          "https",
 			TLSConfig: &v1.TLSConfig{
 				CAFile:        "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt",
-				SafeTLSConfig: v1.SafeTLSConfig{InsecureSkipVerify: true},
+				SafeTLSConfig: v1.SafeTLSConfig{InsecureSkipVerify: P(true)},
 			},
 		}},
 		JobLabel:          "jobLabel",
@@ -316,7 +316,7 @@ var KubePromtheusStackKubeKubeletServiceMonitor = &v1.ServiceMonitor{
 			BearerTokenFile: "/var/run/secrets/kubernetes.io/serviceaccount/token",
 			HonorLabels:     true,
 			Port:            "https-metrics",
-			RelabelConfigs: []*v1.RelabelConfig{{
+			RelabelConfigs: []v1.RelabelConfig{{
 				Action:       "replace",
 				SourceLabels: []v1.LabelName{v1.LabelName("__metrics_path__")},
 				TargetLabel:  "metrics_path",
@@ -324,12 +324,12 @@ var KubePromtheusStackKubeKubeletServiceMonitor = &v1.ServiceMonitor{
 			Scheme: "https",
 			TLSConfig: &v1.TLSConfig{
 				CAFile:        "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt",
-				SafeTLSConfig: v1.SafeTLSConfig{InsecureSkipVerify: true},
+				SafeTLSConfig: v1.SafeTLSConfig{InsecureSkipVerify: P(true)},
 			},
 		}, {
 			BearerTokenFile: "/var/run/secrets/kubernetes.io/serviceaccount/token",
 			HonorLabels:     true,
-			MetricRelabelConfigs: []*v1.RelabelConfig{{
+			MetricRelabelConfigs: []v1.RelabelConfig{{
 				Action:       "drop",
 				Regex:        "container_cpu_(cfs_throttled_seconds_total|load_average_10s|system_seconds_total|user_seconds_total)",
 				SourceLabels: []v1.LabelName{v1.LabelName("__name__")},
@@ -356,7 +356,7 @@ var KubePromtheusStackKubeKubeletServiceMonitor = &v1.ServiceMonitor{
 			}},
 			Path: "/metrics/cadvisor",
 			Port: "https-metrics",
-			RelabelConfigs: []*v1.RelabelConfig{{
+			RelabelConfigs: []v1.RelabelConfig{{
 				Action:       "replace",
 				SourceLabels: []v1.LabelName{v1.LabelName("__metrics_path__")},
 				TargetLabel:  "metrics_path",
@@ -364,14 +364,14 @@ var KubePromtheusStackKubeKubeletServiceMonitor = &v1.ServiceMonitor{
 			Scheme: "https",
 			TLSConfig: &v1.TLSConfig{
 				CAFile:        "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt",
-				SafeTLSConfig: v1.SafeTLSConfig{InsecureSkipVerify: true},
+				SafeTLSConfig: v1.SafeTLSConfig{InsecureSkipVerify: P(true)},
 			},
 		}, {
 			BearerTokenFile: "/var/run/secrets/kubernetes.io/serviceaccount/token",
 			HonorLabels:     true,
 			Path:            "/metrics/probes",
 			Port:            "https-metrics",
-			RelabelConfigs: []*v1.RelabelConfig{{
+			RelabelConfigs: []v1.RelabelConfig{{
 				Action:       "replace",
 				SourceLabels: []v1.LabelName{v1.LabelName("__metrics_path__")},
 				TargetLabel:  "metrics_path",
@@ -379,7 +379,7 @@ var KubePromtheusStackKubeKubeletServiceMonitor = &v1.ServiceMonitor{
 			Scheme: "https",
 			TLSConfig: &v1.TLSConfig{
 				CAFile:        "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt",
-				SafeTLSConfig: v1.SafeTLSConfig{InsecureSkipVerify: true},
+				SafeTLSConfig: v1.SafeTLSConfig{InsecureSkipVerify: P(true)},
 			},
 		}},
 		JobLabel:          "k8s-app",
@@ -420,7 +420,7 @@ var KubePromtheusStackKubeOperatorServiceMonitor = &v1.ServiceMonitor{
 					Key:                  "ca",
 					LocalObjectReference: corev1.LocalObjectReference{Name: "kube-promtheus-stack-kube-admission"},
 				}},
-				ServerName: "kube-promtheus-stack-kube-operator",
+				ServerName: P("kube-promtheus-stack-kube-operator"),
 			}},
 		}},
 		NamespaceSelector: v1.NamespaceSelector{MatchNames: []string{"monitoring"}},

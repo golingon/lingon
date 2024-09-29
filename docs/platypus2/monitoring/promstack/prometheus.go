@@ -33,7 +33,7 @@ var KubePromtheusStackKubePrometheusPrometheus = &v1.Prometheus{
 				{
 					APIVersion: "v2",
 					Name:       "kube-promtheus-stack-kube-alertmanager",
-					Namespace:  "monitoring",
+					Namespace:  P("monitoring"),
 					PathPrefix: "/",
 					Port: intstr.IntOrString{
 						StrVal: "http-web",

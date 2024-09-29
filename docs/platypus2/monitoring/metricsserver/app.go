@@ -70,8 +70,8 @@ func Core() Meta {
 
 type Meta struct {
 	meta.Metadata
-	P          meta.NetPort
 	MetricsURL string
+	P          meta.NetPort
 }
 
 // MetricsServer contains kubernetes manifests
@@ -197,7 +197,7 @@ var ServiceMonitor = &promoperator.ServiceMonitor{
 				ScrapeTimeout: promoperator.Duration("10s"),
 				TLSConfig: &promoperator.TLSConfig{
 					SafeTLSConfig: promoperator.SafeTLSConfig{
-						InsecureSkipVerify: true,
+						InsecureSkipVerify: P(true),
 					},
 				},
 			},

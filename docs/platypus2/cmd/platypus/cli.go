@@ -176,9 +176,9 @@ func run(p runParams) error {
 		return finishAndDestroy(ctx, p, tf)
 	}
 
-	vpcState := vpc.AWSVPC.VPC.StateMust()
+	vpcState := vpc.VPC.StateMust()
 	privateSubnetIDs := [3]string{}
-	for i, subnet := range vpc.AWSVPC.PrivateSubnets {
+	for i, subnet := range vpc.PrivateSubnets {
 		privateSubnetIDs[i] = subnet.StateMust().Id
 	}
 
