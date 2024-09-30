@@ -9,9 +9,12 @@ import (
 	"strings"
 
 	"dario.cat/mergo"
-	"github.com/google/uuid"
 	"golang.org/x/sync/errgroup"
 )
+
+type Step interface {
+	Run(ctx context.Context, req *Request) (*Request, error)
+}
 
 type Pipeline struct {
 	Steps []Step
@@ -19,50 +22,26 @@ type Pipeline struct {
 }
 
 func (p *Pipeline) Run(ctx context.Context, req *Request) (*Request, error) {
-	// steps := make([]Step, len(p.Steps))
-	// for i, s := range p.Steps {
-	// 	steps[i] = s
-	// 	for _, m := range slices.Backward(p.Mid) {
-	// 		steps[i] = m(steps[i])
-	// 	}
-	// }
-	//
-	// resp := req
-	// var err error
-	// for _, s := range steps {
-	// 	resp, err = s.Run(ctx, req)
-	// 	if err != nil {
-	// 		return nil, err
-	// 	}
-	// 	req = resp
-	// }
-
 	resp := req
 	var err error
 	for i := range p.Steps {
 		for _, m := range slices.Backward(p.Mid) {
 			p.Steps[i] = m(p.Steps[i])
 		}
-
+		ctx = setStepID(ctx, incuuid())
 		resp, err = p.Steps[i].Run(ctx, req)
 		if err != nil {
 			return nil, err
 		}
 		req = resp
-
 	}
 	return resp, nil
 }
 
 func NewPipeline(mid ...Middleware) *Pipeline {
 	return &Pipeline{
-		Steps: make([]Step, 0),
-		Mid:   append([]Middleware{initStateReq()}, mid...),
+		Mid: mid,
 	}
-}
-
-type Step interface {
-	Run(ctx context.Context, req *Request) (*Request, error)
 }
 
 func Name(s Step) string {
@@ -74,44 +53,32 @@ func Name(s Step) string {
 }
 
 type Request struct {
-	Current *State
-	History []*State
+	State *State
 }
 
 func (r *Request) String() string {
-	sb := strings.Builder{}
-	sb.WriteString("Request{Current:")
-	sb.WriteString(r.Current.String())
-	sb.WriteString(",History:[]State{")
-	for i, h := range r.History {
-		sb.WriteString(strings.TrimPrefix(h.String(), "State"))
-		if i == len(r.History)-2 {
-			sb.WriteString(",")
-		}
-	}
-	sb.WriteString("}}")
-	return sb.String()
+	return fmt.Sprintf("%#v", r.State)
 }
 
 type State struct {
-	ID uuid.UUID
+	Err      error
+	Messages []string
+	Counter  int
 }
 
-func NewState() *State {
-	id := uuid.Must(uuid.NewV7())
-	return &State{ID: id}
-}
-
-func (s *State) String() string {
-	if s == nil {
-		return "nil"
-	}
-	return fmt.Sprintf("State{ID:%q}", s.ID)
-}
+// StepFunc
 
 type StepFunc func(context.Context, *Request) (*Request, error)
 
 func (f StepFunc) Run(ctx context.Context, req *Request) (*Request, error) {
+	return f(setStepID(ctx, incuuid()), req)
+}
+
+// Middleware
+
+type MidFunc func(context.Context, *Request) (*Request, error)
+
+func (f MidFunc) Run(ctx context.Context, req *Request) (*Request, error) {
 	return f(ctx, req)
 }
 
@@ -121,56 +88,44 @@ type Mid []Middleware
 
 func LoggerMiddleware(l *slog.Logger) Middleware {
 	return func(next Step) Step {
-		return StepFunc(func(ctx context.Context, req *Request) (*Request, error) {
-			// before the step
-			var id uuid.UUID
-			if req != nil {
-				id = req.Current.ID
+		return MidFunc(func(ctx context.Context, req *Request) (*Request, error) {
+			name := Name(next)
+			if name != "MidFunc" {
+				l.Info("step start 🏁", "Type", name, "Request", req)
 			}
-			l.Info("step start", "Type", Name(next), "ID", id.String(), "Request", req)
-
 			resp, err := next.Run(ctx, req)
 
-			// after the step
-			l.Info("step done", "Type", Name(next), "ID", id.String(), "Response", resp)
+			if name != "MidFunc" {
+				l.Info("step done  ✅", "Type", name, "Request", req)
+			}
 			return resp, err
 		})
 	}
 }
 
-func initStateReq() Middleware {
-	return func(next Step) Step {
-		return StepFunc(func(ctx context.Context, req *Request) (*Request, error) {
-			id := uuid.Must(uuid.NewV7())
-			if req == nil {
-				req = &Request{Current: &State{ID: id}}
-			}
-			if req != nil && req.Current == nil {
-				req.Current = &State{ID: id}
-			}
-			o, err := next.Run(ctx, req)
-			req.History = append(req.History, req.Current)
-			req.Current = NewState()
-			return o, err
-		})
-	}
-}
-
+// Series
 type series struct {
 	Stages []Step
 	Mid
 }
 
-func Series(steps ...Step) *series {
-	return &series{Stages: steps}
+func (p *Pipeline) Series(steps ...Step) *series {
+	return &series{
+		Stages: steps,
+		Mid:    p.Mid,
+	}
 }
 
 func (s *series) Run(ctx context.Context, req *Request) (*Request, error) {
 	var err error
 	resp := req
 
-	for _, stage := range s.Stages {
-		resp, err = stage.Run(ctx, req)
+	for i := range s.Stages {
+		for _, m := range slices.Backward(s.Mid) {
+			s.Stages[i] = m(s.Stages[i])
+		}
+		ctx = setStepID(ctx, incuuid())
+		resp, err = s.Stages[i].Run(ctx, req)
 		if err != nil {
 			return nil, err
 		}
@@ -179,25 +134,44 @@ func (s *series) Run(ctx context.Context, req *Request) (*Request, error) {
 	return resp, nil
 }
 
+// Parallel
+
 type parallel struct {
+	merge MergeRequest
 	Tasks []Step
+	Mid
 }
 
-func Parallel(steps ...Step) *parallel {
-	return &parallel{Tasks: steps}
+type MergeRequest func(context.Context, *Request, ...*Request) (*Request, error)
+
+// TODO: how to configure the merge
+func (p *Pipeline) Parallel(merge MergeRequest, steps ...Step) *parallel {
+	return &parallel{
+		merge: merge,
+		Tasks: steps,
+		Mid:   p.Mid,
+	}
 }
 
 func (p *parallel) Run(ctx context.Context, req *Request) (*Request, error) {
 	resps := make([]*Request, len(p.Tasks))
 	g, groupCtx := errgroup.WithContext(ctx)
 
-	for i := range p.Tasks {
+	tasks := make([]Step, len(p.Tasks))
+	for i, s := range p.Tasks {
+		tasks[i] = s
+		for _, m := range slices.Backward(p.Mid) {
+			tasks[i] = m(tasks[i])
+		}
+	}
+	for i := range tasks {
 		g.Go(func() error {
 			defer CapturePanic(groupCtx)
 
 			copyReq := &Request{}
 			*copyReq = *req
-			resp, err := p.Tasks[i].Run(groupCtx, copyReq)
+			groupCtx = setStepID(groupCtx, incuuid())
+			resp, err := tasks[i].Run(groupCtx, copyReq)
 			if err != nil {
 				return err
 			}
@@ -211,7 +185,7 @@ func (p *parallel) Run(ctx context.Context, req *Request) (*Request, error) {
 	return p.merge(ctx, req, resps...)
 }
 
-func (p *parallel) merge(ctx context.Context, req *Request, responses ...*Request) (*Request, error) {
+func Merge(ctx context.Context, req *Request, responses ...*Request) (*Request, error) {
 	var err error
 	for _, r := range responses {
 		select {
@@ -222,6 +196,7 @@ func (p *parallel) merge(ctx context.Context, req *Request, responses ...*Reques
 			if err != nil {
 				return nil, err
 			}
+			// TODO: get step ID from ctx
 		}
 	}
 	return req, nil

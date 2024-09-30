@@ -45,17 +45,10 @@ const (
 	recDir = "./..."
 )
 
-var mod = func() string {
-	if isUpdatingGoModOnly() {
-		slog.Info("updating go.mod")
-		return "-mod=mod"
-	} else {
-		slog.Info("readonly go.mod")
-		return "-mod=readonly"
-	}
-}()
-
-var verbose bool
+var (
+	mod     = "-mod=readonly"
+	verbose bool
+)
 
 func main() {
 	var cover, lint, doc, examples, fix, nodiff, pr, scan, release, update bool

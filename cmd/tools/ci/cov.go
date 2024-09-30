@@ -79,8 +79,8 @@ func badgetpl(pct float64) (string, error) {
 	}
 	t := template.Must(template.ParseFS(tplFS, "badge.svg.tpl"))
 	data := struct {
-		Percentage float64
 		Color      string
+		Percentage float64
 	}{Percentage: pct, Color: color}
 
 	var buf bytes.Buffer

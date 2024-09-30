@@ -7,10 +7,7 @@ import (
 	"fmt"
 	"log/slog"
 	"os/exec"
-	"sort"
 	"strings"
-
-	"github.com/google/go-cmp/cmp"
 )
 
 const (
@@ -27,24 +24,6 @@ func Update() {
 	docRun(DocKubernetes, "go", "mod", "tidy")
 	docRun(DocTerraform, "go", "mod", "tidy")
 	fmt.Println("✅ update deps done")
-}
-
-func isUpdatingGoModOnly() bool {
-	ff, err := listModifiedFiles()
-	if err != nil {
-		slog.Error("isUpdatingGoMod", "err", err)
-		panic(err)
-	}
-	sort.Strings(ff)
-	m := []string{"go.mod", "go.sum"}
-	sort.Strings(m)
-	diff := cmp.Diff(ff, m)
-	if diff != "" {
-		fmt.Print(diff)
-		return false
-	}
-	res := diff == "" && isDependabot()
-	return res
 }
 
 func isDependabot() bool {
