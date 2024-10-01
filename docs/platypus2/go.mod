@@ -7,7 +7,7 @@ toolchain go1.23.1
 replace github.com/golingon/lingon => ../../
 
 require (
-	github.com/VictoriaMetrics/metricsql v0.77.0
+	github.com/VictoriaMetrics/metricsql v0.79.0
 	github.com/VictoriaMetrics/operator/api v0.0.0-20240412180039-21ab04581f22
 	github.com/ardanlabs/conf/v3 v3.1.8
 	github.com/aws/karpenter v0.29.2
@@ -19,17 +19,17 @@ require (
 	github.com/hashicorp/terraform-exec v0.21.0
 	github.com/hashicorp/terraform-json v0.22.1
 	github.com/nats-io/nats.go v1.37.0
-	github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.76.0
-	github.com/prometheus/client_golang v1.20.2
-	github.com/rogpeppe/go-internal v1.12.0
+	github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.77.1
+	github.com/prometheus/client_golang v1.20.4
+	github.com/rogpeppe/go-internal v1.13.1
 	github.com/tidwall/gjson v1.17.3
 	github.com/zeitlinger/conflate v0.0.0-20230622100834-279724abda8c
-	go.uber.org/automaxprocs v1.5.3
-	google.golang.org/grpc v1.66.0
+	go.uber.org/automaxprocs v1.6.0
+	google.golang.org/grpc v1.67.1
 	google.golang.org/protobuf v1.34.2
-	k8s.io/api v0.31.0
-	k8s.io/apiextensions-apiserver v0.31.0
-	k8s.io/apimachinery v0.31.0
+	k8s.io/api v0.31.1
+	k8s.io/apiextensions-apiserver v0.31.1
+	k8s.io/apimachinery v0.31.1
 	k8s.io/client-go v12.0.0+incompatible
 	k8s.io/kube-aggregator v0.29.3
 	sigs.k8s.io/kind v0.24.0
@@ -47,7 +47,7 @@ replace (
 
 require (
 	cloud.google.com/go v0.112.2 // indirect
-	cloud.google.com/go/compute/metadata v0.3.0 // indirect
+	cloud.google.com/go/compute/metadata v0.5.0 // indirect
 	cloud.google.com/go/iam v1.1.7 // indirect
 	cloud.google.com/go/storage v1.40.0 // indirect
 	github.com/BurntSushi/toml v1.4.0 // indirect
@@ -145,7 +145,7 @@ require (
 	golang.org/x/exp v0.0.0-20240823005443-9b4947da3948 // indirect
 	golang.org/x/mod v0.21.0 // indirect
 	golang.org/x/net v0.29.0 // indirect
-	golang.org/x/oauth2 v0.21.0 // indirect
+	golang.org/x/oauth2 v0.22.0 // indirect
 	golang.org/x/sync v0.8.0 // indirect
 	golang.org/x/sys v0.25.0 // indirect
 	golang.org/x/term v0.24.0 // indirect
@@ -155,17 +155,17 @@ require (
 	gomodules.xyz/jsonpatch/v2 v2.4.0 // indirect
 	google.golang.org/api v0.172.0 // indirect
 	google.golang.org/genproto v0.0.0-20240401170217-c3f982113cda // indirect
-	google.golang.org/genproto/googleapis/api v0.0.0-20240711142825-46eb208f015d // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20240701130421-f6361c86f094 // indirect
+	google.golang.org/genproto/googleapis/api v0.0.0-20240814211410-ddb44dafa142 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20240814211410-ddb44dafa142 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	k8s.io/klog/v2 v2.130.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20240411171206-dc4e619f62f3 // indirect
-	k8s.io/utils v0.0.0-20240821151609-f90d01438635 // indirect
+	k8s.io/utils v0.0.0-20240902221715-702e33fdd3c3 // indirect
 	knative.dev/pkg v0.0.0-20240415083725-39d72dabe4f2 // indirect
 	mvdan.cc/gofumpt v0.7.0 // indirect
-	sigs.k8s.io/controller-runtime v0.18.5 // indirect
+	sigs.k8s.io/controller-runtime v0.19.0 // indirect
 	sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.4.1 // indirect
 )
