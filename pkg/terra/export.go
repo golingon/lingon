@@ -89,7 +89,7 @@ func Export(stack Exporter, opts ...ExportOption) error {
 }
 
 func encodeStack(stack Exporter, w io.Writer) error {
-	blocks, err := objectsFromStack(stack)
+	blocks, err := ObjectsFromStack(stack)
 	if err != nil {
 		return err
 	}
@@ -146,7 +146,7 @@ func encodeStack(stack Exporter, w io.Writer) error {
 // check for additionally here are things like providers existing for resources.
 // Future things to check for (TODO):
 // 1. Each resource/data block's specific provider exists
-func validateStack(sb *stackObjects) error {
+func validateStack(sb *StackObjects) error {
 	if (len(sb.Resources)+len(sb.DataSources)) > 0 && len(sb.Providers) == 0 {
 		return ErrNoProviderBlock
 	}
