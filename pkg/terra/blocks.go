@@ -4,15 +4,12 @@
 package terra
 
 import (
-	"bytes"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
 	"reflect"
 
 	"github.com/go-playground/validator/v10"
-	tfjson "github.com/hashicorp/terraform-json"
 )
 
 // Resource represents a Terraform Resource.
@@ -61,9 +58,9 @@ type Backend interface {
 	BackendType() string
 }
 
-// stackObjects contains all the blocks that are extracted from a user-defined
+// StackObjects contains all the blocks that are extracted from a user-defined
 // stack.
-type stackObjects struct {
+type StackObjects struct {
 	Backend     Backend
 	Providers   []Provider
 	Resources   []Resource
@@ -86,58 +83,16 @@ var (
 	ErrUnknownPublicField = errors.New("unknown public field")
 )
 
-// StackImportState imports the Terraform state into the Terraform Stack.
-// A bool is returned indicating whether all the resources have state. If the
-// bool is true, every resource in the stack will have some state. If the bool
-// is false, the state is incomplete meaning some resources may have state.
-func StackImportState(stack Exporter, tfState *tfjson.State) (bool, error) {
-	sb, err := objectsFromStack(stack)
-	if err != nil {
-		return false, err
-	}
-	isFullState := true
-	stateResources := tfState.Values.RootModule.Resources
-	// Iterate over the resources in the Stack and try to find the corresponding
-	// resource in the state.
-	// If it exists, import the state into the Stack.
-	for _, res := range sb.Resources {
-		resFound := false
-		for _, sr := range stateResources {
-			// Find the resource in the state. It is the same resource if the
-			// resource type and resource local name match because that is how
-			// Terraform uniquely identifies resources in its state.
-			if res.Type() == sr.Type && res.LocalName() == sr.Name {
-				resFound = true
-				var b bytes.Buffer
-				if err := json.NewEncoder(&b).Encode(sr.AttributeValues); err != nil {
-					return false, fmt.Errorf(
-						"encoding attribute values for resource %s.%s: %w",
-						res.Type(), res.LocalName(), err,
-					)
-				}
-				if err := res.ImportState(&b); err != nil {
-					return false, fmt.Errorf(
-						"importing state into resource %s.%s: %w",
-						res.Type(), res.LocalName(), err,
-					)
-				}
-				break
-			}
-		}
-		if !resFound {
-			isFullState = false
-		}
-	}
-	return isFullState, nil
-}
-
-func objectsFromStack(stack Exporter) (*stackObjects, error) {
+// ObjectsFromStack takes a terra stack and returns all the terra objects
+// (resources, data sources, providers, and backend) that are defined in the
+// stack.
+func ObjectsFromStack(stack Exporter) (*StackObjects, error) {
 	if err := validator.New().Struct(stack); err != nil {
 		return nil, fmt.Errorf("stack validation failed: %w", err)
 	}
 
 	rv := reflect.ValueOf(stack)
-	sb := stackObjects{}
+	sb := StackObjects{}
 	if err := parseStackStructFields(rv, &sb); err != nil {
 		return nil, err
 	}
@@ -147,7 +102,7 @@ func objectsFromStack(stack Exporter) (*stackObjects, error) {
 
 // parseStackStructFields takes a struct reflect.Value and appends any Terraform
 // objects that it finds to the provider stackObjects.
-func parseStackStructFields(rv reflect.Value, sb *stackObjects) error {
+func parseStackStructFields(rv reflect.Value, sb *StackObjects) error {
 	// Skip nil pointers.
 	if rv.Kind() == reflect.Ptr && rv.IsNil() {
 		return nil

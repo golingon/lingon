@@ -23,7 +23,7 @@ func TestExtractBlocks_Simple(t *testing.T) {
 		DummyRes:   dr,
 		DummyData:  ddr,
 	}
-	sb, err := objectsFromStack(&st)
+	sb, err := ObjectsFromStack(&st)
 	tu.AssertNoError(t, err)
 	tu.IsEqual(t, len(sb.Resources), 1)
 	tu.IsEqual[Resource](t, dr, sb.Resources[0])
@@ -55,7 +55,7 @@ func TestExtractBlocks_Complex(t *testing.T) {
 		OneRes:   [1]*dummyResource{dr},
 		OneData:  [1]*dummyDataSource{ddr},
 	}
-	sb, err := objectsFromStack(&st)
+	sb, err := ObjectsFromStack(&st)
 	tu.AssertNoError(t, err)
 	tu.IsEqual(t, len(sb.Resources), 4)
 	tu.IsEqual(t, len(sb.DataSources), 2)
@@ -69,7 +69,7 @@ func TestExtractBlocks_UnknownField(t *testing.T) {
 	st := simpleStack{
 		DummyStack: newDummyBaseStack(),
 	}
-	_, err := objectsFromStack(&st)
+	_, err := ObjectsFromStack(&st)
 	tu.ErrorIs(t, err, ErrUnknownPublicField)
 }
 
@@ -81,7 +81,7 @@ func TestExtractBlocks_PrivateField(t *testing.T) {
 	st := simpleStack{
 		DummyStack: newDummyBaseStack(),
 	}
-	_, err := objectsFromStack(&st)
+	_, err := ObjectsFromStack(&st)
 	tu.ErrorIs(t, err, ErrNotExportedField)
 }
 
@@ -95,7 +95,7 @@ func TestExtractBlocks_EmbedPointer(t *testing.T) {
 		DummyStack:  newDummyBaseStack(),
 		Composition: &Composition{},
 	}
-	_, err := objectsFromStack(&st)
+	_, err := ObjectsFromStack(&st)
 	tu.AssertNoError(t, err)
 }
 
@@ -108,7 +108,7 @@ func TestExtractBlocks_EmbedPointerNil(t *testing.T) {
 	st := simpleStack{
 		DummyStack: newDummyBaseStack(),
 	}
-	_, err := objectsFromStack(&st)
+	_, err := ObjectsFromStack(&st)
 	tu.AssertNoError(t, err)
 }
 
@@ -135,7 +135,7 @@ func TestExtractBlocks_SubStack(t *testing.T) {
 			Resource: subStackResource,
 		},
 	}
-	objects, err := objectsFromStack(&st)
+	objects, err := ObjectsFromStack(&st)
 	tu.AssertNoError(t, err)
 	tu.AssertEqual(t, 1, len(objects.Resources))
 	tu.AssertEqual[Resource](t, subStackResource, objects.Resources[0])
@@ -159,7 +159,7 @@ func TestExtractBlocks_SubStackSlice(t *testing.T) {
 			},
 		},
 	}
-	objects, err := objectsFromStack(&st)
+	objects, err := ObjectsFromStack(&st)
 	tu.AssertNoError(t, err)
 	tu.AssertEqual(t, 1, len(objects.Resources))
 	tu.AssertEqual[Resource](t, subStackResource, objects.Resources[0])
@@ -173,7 +173,7 @@ func TestExtractBlocks_IgnoredField(t *testing.T) {
 	st := simpleStack{
 		DummyStack: newDummyBaseStack(),
 	}
-	_, err := objectsFromStack(&st)
+	_, err := ObjectsFromStack(&st)
 	tu.IsNil(t, err)
 }
 

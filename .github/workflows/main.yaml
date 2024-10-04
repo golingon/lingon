@@ -34,6 +34,13 @@ jobs:
           go-version-file: "./go.mod"
           check-latest: true
           cache-dependency-path: ./go.mod
-
+          
+      # Dependency for terra-related tests.
+      - uses: opentofu/setup-opentofu@v1
+        with:
+          tofu_version: 1.6.2
+          # This is necessary. Otherwise the exitcode when calling tofu will be
+          # "wrapped" and not returned to lingon. *facepalm*
+          tofu_wrapper: false
       - name: run CI
         run: go run ./cmd/tools/ci/ -pr -nodiff
