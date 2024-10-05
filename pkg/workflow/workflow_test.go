@@ -34,12 +34,14 @@ func TestPipeline(t *testing.T) {
 			return r, nil
 		}))
 	}
+
 	var logger *slog.Logger
 	if *lf {
 		logger = slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{}))
 	} else {
 		logger = slog.New(slog.NewTextHandler(io.Discard, &slog.HandlerOptions{}))
 	}
+
 	p := wf.NewPipeline(wf.LoggerMiddleware[Result](logger))
 	p.Steps = []wf.Step[Result]{
 		wf.StepFunc[Result](func(ctx context.Context, r *Result) (*Result, error) {
@@ -50,25 +52,29 @@ func TestPipeline(t *testing.T) {
 			p.Parallel(wf.MergeTransform[Result](mergo.WithTransformers(addInt{})), sf...),
 			wf.StepFunc[Result](func(ctx context.Context, r *Result) (*Result, error) {
 				r.Messages = append(r.Messages, "extra serial step")
+				r.Err = errors.Join(r.Err, errIgnoreMe)
 				return r, nil
 			}),
 		),
+		handleErr{l: logger},
 		wf.StepFunc[Result](func(ctx context.Context, r *Result) (*Result, error) {
 			f := wf.StepFunc[Result](func(ctx context.Context, r *Result) (*Result, error) {
 				r.Messages = append(r.Messages, "extra inner step")
-				r.Err = errors.New("oops")
+				r.Err = errors.Join(r.Err, errors.New("oops"))
 				return r, nil
 			})
 			resp, err := f.Run(ctx, r)
-
+			if err != nil {
+				t.Fatal(err)
+			}
 			sid, err := wf.GetStepID(ctx)
 			if err != nil {
 				t.Fatal(err)
 			}
-			if sid.String() != "00000000-0000-0000-0000-000000000028" {
+			if sid.String() != "00000000-0000-0000-0000-000000000029" {
 				t.Fatalf("got %q, want %q",
 					sid.String(),
-					"00000000-0000-0000-0000-000000000028")
+					"00000000-0000-0000-0000-000000000029")
 			}
 			r.Messages = append(r.Messages, "last step")
 			return resp, err
@@ -81,7 +87,7 @@ func TestPipeline(t *testing.T) {
 		t.Fatal(err)
 	}
 	want := &Result{
-		Err:   errors.New("oops"),
+		Err:   errors.Join(nil, errors.New("oops")),
 		State: struct{ Counter int }{Counter: 10},
 		Messages: []string{
 			"first step",
@@ -93,6 +99,20 @@ func TestPipeline(t *testing.T) {
 	if diff := testutil.Diff(got, want); diff != "" {
 		t.Fatal(diff)
 	}
+}
+
+type handleErr struct{ l *slog.Logger }
+
+var errIgnoreMe = errors.New("ignore me")
+
+func (h handleErr) Run(ctx context.Context, r *Result) (*Result, error) {
+	if errors.Is(r.Err, errIgnoreMe) {
+		h.l.Error("ignoring error", "err", r.Err)
+		r.Err = nil
+		return r, r.Err
+	}
+	h.l.Error("handling error", "err", r.Err)
+	return r, r.Err
 }
 
 type addInt struct{}

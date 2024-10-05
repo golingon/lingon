@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -14,7 +15,7 @@ type ctxKey int
 
 const (
 	stepIDKey ctxKey = iota + 1
-	stepHistory
+	stepStartTime
 )
 
 func setStepID(ctx context.Context, stepID uuid.UUID) context.Context {
@@ -29,13 +30,29 @@ func GetStepID(ctx context.Context) (uuid.UUID, error) {
 	return v, nil
 }
 
+func setStepStartTime(ctx context.Context, t time.Time) context.Context {
+	return context.WithValue(ctx, stepStartTime, t)
+}
+
+func GetStepStartTime(ctx context.Context) (time.Time, error) {
+	v, ok := ctx.Value(stepStartTime).(time.Time)
+	if !ok {
+		return time.Time{}, ErrMissingFromContext
+	}
+	return v, nil
+}
+
 // UUID
 
-var gen IDGenerator = UUIDV7{}
+// IDGenerator generates globally unique ID [uuid.UUID]. It uses UUID version 7 which time-sorted.
+// See https://uuid7.com, for more information on UUIDv7.
+// It means to assign an ID for each [Step] of a [Pipeline].
+// It can be overwritten by [SetIDGenerator].
+var gen IDGenerator = UUIDv7{}
 
-type UUIDV7 struct{}
+type UUIDv7 struct{}
 
-func (_ UUIDV7) ID() uuid.UUID { return uuid.Must(uuid.NewV7()) }
+func (UUIDv7) ID() uuid.UUID { return uuid.Must(uuid.NewV7()) }
 
 // SetIDGenerator allows to set a [StaticID] generator for testing purposes.
 func SetIDGenerator(g IDGenerator) {
@@ -60,7 +77,7 @@ type StaticID struct{}
 // "00000000-0000-0000-0000-000000000001". Each following calls increment by 1.
 //
 // Note: It is meant for debugging and testing.
-func (_ StaticID) ID() uuid.UUID {
+func (StaticID) ID() uuid.UUID {
 	// not efficient, meant for tests
 	cpt++
 	switch {

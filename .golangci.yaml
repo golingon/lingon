@@ -49,6 +49,15 @@ linters-settings:
     # Choose whether to use the extra rules.
     # Default: false
     extra-rules: true
+  gosec:
+    excludes:
+      - G102 # Bind to all interfaces
+      - G115 # Potential integer overflow when converting between integer types
+      - G204 # Audit use of command execution
+      - G306 # Poor file permissions used when writing to a new file
+      - G404 # Insecure random number source (rand)
+    severity: "low"
+    confidence: "low"
   nolintlint:
     # Disable to ensure that all nolint directives actually have an effect.
     # Default: false
@@ -66,25 +75,7 @@ linters-settings:
     rules:
       - name: increment-decrement
         severity: warning
-        disabled: true
-  unparam:
-    # Inspect exported functions, default is false. Set to true if no external program/library imports your code.
-    # XXX: if you enable this setting, unparam will report a lot of false-positives in text editors:
-    # if it's called for subdir of a project it can't find external interfaces. All text editor integrations
-    # with golangci-lint call it on a directory with the changed file.
-    check-exported: false
-  gosec:
-    severity: "low"
-    confidence: "low"
-    excludes:
-      - G102
-      - G112
-      - G115
-      - G306
-      - G401
-      - G402
-      - G404
-      - G501
+        disabled: false
 
 issues:
   # List of regexps of issue texts to exclude, empty list by default.

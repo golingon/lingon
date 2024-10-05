@@ -16,7 +16,8 @@ import (
 	"github.com/golingon/lingon/pkg/kube"
 )
 
-func Example() {
+// Example_kube to shows how to import CRDs from kubernetes manifests files.
+func Example_kube() {
 	tk := tekton.New()
 
 	out := filepath.Join("out", "export")

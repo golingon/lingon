@@ -38,4 +38,4 @@ validating-webhook-configuration.go
 
 ## Example
 
-{{ "Example" | example }}
+{{ "Example_kube" | example }}

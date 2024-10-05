@@ -4,30 +4,40 @@
 package main
 
 import (
+	"bufio"
 	"bytes"
+	"context"
+	"embed"
+	"errors"
 	"flag"
 	"fmt"
+	"html/template"
+	"io"
 	"log/slog"
 	"os"
 	"os/exec"
+	"os/signal"
+	"path/filepath"
+	"slices"
+	"strconv"
 	"strings"
+	"syscall"
 	"time"
+
+	"dario.cat/mergo"
+	wf "github.com/golingon/lingon/pkg/workflow"
 )
 
 const (
 	// OSVScanner is the OSV Scanner to find vulnerabilities
 	osvScannerRepo    = "github.com/google/osv-scanner/cmd/osv-scanner"
 	osvScannerVersion = "@v1.8.2"
+	osvScanner        = osvScannerRepo + osvScannerVersion
 
 	// goVuln to find vulnerabilities
 	vulnRepo    = "golang.org/x/vuln/cmd/govulncheck"
 	vulnVersion = "@latest"
 	goVuln      = vulnRepo + vulnVersion
-
-	// goLicenses is Google's go-licenses to export all licenses
-	goLicensesRepo    = "github.com/google/go-licenses"
-	goLicensesVersion = "@v1.6.0"
-	goLicenses        = goLicensesRepo + goLicensesVersion
 
 	// goCILint is for linting code
 	goCILintRepo    = "github.com/golangci/golangci-lint/cmd/golangci-lint"
@@ -38,304 +48,366 @@ const (
 	goFumptRepo    = "mvdan.cc/gofumpt"
 	goFumptVersion = "@v0.6.0"
 	goFumpt        = goFumptRepo + goFumptVersion
+
+	dirK8s   = "./docs/kubernetes"
+	dirTerra = "./docs/terraform"
 )
 
-const (
-	curDir = "."
-	recDir = "./..."
-)
+type Result struct {
+	Tasks []Task
+}
 
-var (
-	mod     = "-mod=readonly"
-	verbose bool
-)
+func (r Result) Output() string {
+	if len(r.Tasks) > 0 {
+		return r.Tasks[len(r.Tasks)-1].Output
+	}
+	return "none"
+}
+
+func (r Result) String() string {
+	if len(r.Tasks) == 0 {
+		return "none"
+	}
+	return fmt.Sprintf("tasks:[..., %s]", r.Tasks[len(r.Tasks)-1])
+}
+
+type Task struct {
+	Cmd    string
+	Output string
+	Dir    string
+}
+
+func (t Task) String() string {
+	return fmt.Sprintf("[%s] cmd: %q", t.Dir, t.Cmd)
+}
+
+var errUnrecoverable = errors.New("unrecoverable")
 
 func main() {
-	var cover, lint, doc, examples, fix, nodiff, pr, scan, release, update bool
+	logger := slog.Default().With("ci", "lingon")
+	if err := Main(logger); err != nil {
+		logger.Error("main", "err", err)
+		os.Exit(1)
+	}
+}
+
+func Main(logger *slog.Logger) error {
+	var cover, lint, generate, examples, nodiff, pr, scan, release, update, V bool
 	flag.BoolVar(&cover, "cover", false, "tests with coverage")
 	flag.BoolVar(&lint, "lint", false, "linting and formatting code (gofumpt, golangci-lint)")
-	flag.BoolVar(&doc, "doc", false, "generate all docs and readme")
-	flag.BoolVar(&examples, "examples", false, "generate and tests all docs examples /!\\ slow without build cache")
-	flag.BoolVar(&fix, "fix", false, "same as -lint + generating notice and licenses headers")
+	flag.BoolVar(&generate, "generate", false, "generate all docs and readme")
+	flag.BoolVar(&examples, "examples", false, "generate and tests all docs examples")
 	flag.BoolVar(&nodiff, "nodiff", false, "error if git diff is not empty")
-	flag.BoolVar(&pr, "pr", false, "run pull request checks: lint + notice + go test + examples /!\\")
+	flag.BoolVar(&pr, "pr", false, "run pull request checks: lint + go test + examples /!\\")
 	flag.BoolVar(&scan, "scan", false, "scan for vulnerabilities")
 	flag.BoolVar(&release, "release", false, "create a new release")
 	flag.BoolVar(&update, "update", false, "update dependencies")
-	flag.BoolVar(&verbose, "verbose", false, "verbose logging")
+	flag.BoolVar(&V, "verbose", false, "verbose logging")
 
 	flag.Parse()
 
+	genargs := []string{"generate", "./..."}
+	if V {
+		genargs = slices.Insert(genargs, 1, "-v", "-x")
+	}
+
+	mid := []wf.Middleware[Result]{
+		wf.StartTimeInCtxMiddleware[Result](),
+		wf.ErrorMiddleware[Result](func(err error) bool { return errors.Is(err, errUnrecoverable) }),
+		wf.LoggerMiddleware[Result](logger),
+	}
+	p := wf.NewPipeline(mid...)
+
 	if update {
-		Update()
+		p.Steps = append(p.Steps, p.Series(
+			run(V, ".", "go", "get", "-u", "./..."),
+			run(V, ".", "go", "mod", "tidy"),
+			run(V, dirK8s, "go", "get", "-u", "./..."),
+			run(V, dirK8s, "go", "mod", "tidy"),
+			run(V, dirTerra, "go", "get", "-u", "./..."),
+			run(V, dirTerra, "go", "mod", "tidy"),
+		))
 	}
+
 	if cover {
-		CoverP()
+		coverOut := "cover.out"
+		p.Steps = append(p.Steps, p.Series(
+			run(V, ".", "go", "test", "-coverprofile="+coverOut, "-covermode=count", "./pkg/..."),
+			run(V, ".", "go", "tool", "cover", "-func="+coverOut),
+			wf.StepFunc[Result](func(ctx context.Context, r *Result) (*Result, error) {
+				var buf bytes.Buffer
+				if err := coverPct(&buf, coverOut); err != nil {
+					return r, err
+				}
+				pct, err := parseCovPct(&buf)
+				if err != nil {
+					return r, err
+				}
+				s, err := badgetpl(pct)
+				if err != nil {
+					return r, err
+				}
+				if err := writeBadge(".github/coverage.svg", []byte(s)); err != nil {
+					return r, err
+				}
+				return r, nil
+			}),
+		))
 	}
+
 	if lint {
-		Lint()
+		p.Steps = append(p.Steps, p.Series(
+			run(V, ".", "go", "mod", "tidy"),
+			run(V, ".", "go", "run", goFumpt, "-w", "-extra", "."),
+			run(V, ".", "go", "run", goCILint, "-v", "run", "./..."),
+		))
 	}
-	if doc {
-		DocGen()
+
+	if generate {
+		p.Steps = append(p.Steps, p.Parallel(wf.MergeTransform[Result](mergo.WithAppendSlice),
+			p.Series(
+				run(V, ".", "go", genargs...),
+				run(V, ".", "go", "mod", "tidy"),
+			),
+			p.Series(
+				run(V, dirK8s, "go", genargs...),
+				run(V, dirK8s, "go", "mod", "tidy"),
+			),
+			p.Series(
+				run(V, dirTerra, "go", genargs...),
+				run(V, dirTerra, "go", "mod", "tidy"),
+			),
+		))
 	}
+
 	if examples {
-		DocExamples()
+		p.Steps = append(p.Steps, p.Parallel(wf.MergeTransform[Result](mergo.WithAppendSlice),
+			p.Series(
+				run(V, dirK8s, "go", "mod", "tidy"),
+				run(V, dirK8s, "go", genargs...),
+				run(V, dirK8s, "go", "test", "-mod=readonly", "-v", "./..."),
+			),
+			p.Series(
+				run(V, dirTerra, "go", "mod", "tidy"),
+				run(V, dirTerra, "go", genargs...),
+				run(V, dirTerra, "go", "test", "-mod=readonly", "-v", "./..."),
+			),
+		))
 	}
-	if fix {
-		Fix()
-	}
+
 	if pr {
-		PullRequest()
+		p.Steps = append(p.Steps, p.Series(
+			run(V, ".", "go", genargs...),
+			run(V, ".", "go", "test", "-v", "./..."),
+			run(V, ".", "go", "mod", "tidy"),
+			run(V, dirK8s, "go", genargs...),
+			run(V, dirK8s, "go", "mod", "tidy"),
+			run(V, dirTerra, "go", genargs...),
+			run(V, dirTerra, "go", "mod", "tidy"),
+			run(V, ".", "go", "run", goFumpt, "-w", "-extra", "."),
+			run(V, ".", "go", "run", goCILint, "-v", "run", "./..."),
+		))
 	}
+
 	if scan {
-		Scan()
+		p.Steps = append(p.Steps, p.Series(
+			run(V, ".", "go", "run", goVuln, "./..."),
+			run(V, ".", "go", "run", osvScanner, "."),
+		))
 	}
+
 	if release {
-		Release()
+		p.Steps = append(p.Steps, p.Series(
+			run(V, ".", "git", "rev-parse", "--short", "HEAD"),
+			wf.StepFunc[Result](func(ctx context.Context, r *Result) (*Result, error) {
+				prev := r.Tasks[len(r.Tasks)-1]
+				ssha := strings.ReplaceAll(prev.Output, "\n", "")
+				d := time.Now().UTC().Format("2006-01-02")
+				v := d + "-" + ssha
+				r.Tasks = append(r.Tasks, Task{Output: v})
+				return r, nil
+			}),
+			wf.StepFunc[Result](func(ctx context.Context, r *Result) (*Result, error) {
+				prev := r.Tasks[len(r.Tasks)-1]
+				cmd := exec.Command("git", "tag", "-a", prev.Output, "-s", "-m", "Release "+prev.Output)
+				o, err := cmd.CombinedOutput()
+				if err != nil {
+					return r, err
+				}
+				r.Tasks = append(r.Tasks, Task{Cmd: cmd.String(), Output: string(o)})
+				return r, nil
+			}),
+		))
 	}
+
+	// should be last
 	if nodiff {
-		// should be last
-		HasGitDiff()
+		p.Steps = append(p.Steps, p.Series(
+			run(V, ".", "git", "--no-pager", "diff"),
+			wf.StepFunc[Result](func(ctx context.Context, r *Result) (*Result, error) {
+				prev := r.Tasks[len(r.Tasks)-1]
+				if len(prev.Output) != 0 {
+					return r, fmt.Errorf("changes detected: %w", errUnrecoverable)
+				}
+				return r, nil
+			}),
+			wf.StepFunc[Result](func(ctx context.Context, r *Result) (*Result, error) {
+				if len(r.Tasks) == 0 {
+					r.Tasks = append(r.Tasks, Task{Cmd: "print", Output: "no previous tasks, nothing to print."})
+					return r, nil
+				}
+				prev := r.Tasks[len(r.Tasks)-1]
+				fmt.Println(prev.Output)
+				return r, nil
+			}),
+		))
 	}
-}
 
-func iferr(err error) {
-	if err != nil {
-		panic(err)
-	}
-}
+	ctx, cancel := signal.NotifyContext(context.Background(),
+		os.Interrupt,
+		syscall.SIGTERM,
+		syscall.SIGQUIT)
+	defer cancel()
 
-func Release() {
-	d := time.Now().UTC().Format("2006-01-02")
-	ssha, err := shortSha()
-	iferr(err)
-	v := d + "-" + ssha
-	iferr(TagRelease(v, "Release "+v))
-}
-
-func TagRelease(tag, msg string) error {
-	cmd := exec.Command("git", "tag", "-a", tag, "-s", "-m", msg)
-	slog.Info("exec", slog.String("cmd", cmd.String()))
-	_, err := cmd.CombinedOutput()
+	result := &Result{Tasks: []Task{}}
+	resp, err := p.Run(ctx, result)
 	if err != nil {
 		return err
 	}
-	cmdgp := exec.Command("git", "push", "--tags")
-	slog.Info("exec", slog.String("cmd", cmdgp.String()))
-	_, err = cmdgp.CombinedOutput()
+
+	logger.Info("pipeline done", "result", resp)
+	return nil
+}
+
+type CLI struct {
+	Dir        string
+	Bin        string
+	Args       []string
+	ShowOutput bool
+}
+
+func run(verbose bool, dir, bin string, args ...string) *CLI {
+	return &CLI{Dir: dir, Bin: bin, Args: args, ShowOutput: verbose}
+}
+
+func (g *CLI) Run(ctx context.Context, r *Result) (*Result, error) {
+	if g.Bin == "" {
+		return r, fmt.Errorf("%T: binary not set: %w", g, errUnrecoverable)
+	}
+	cmd := exec.Command(g.Bin, g.Args...)
+	var buf strings.Builder
+	if g.ShowOutput {
+		cmd.Stdout = io.MultiWriter(&buf, os.Stdout)
+		cmd.Stderr = io.MultiWriter(&buf, os.Stderr)
+	} else {
+		cmd.Stdout = &buf
+		cmd.Stderr = &buf
+	}
+	if g.Dir != "" {
+		cmd.Dir = g.Dir
+	}
+	err := cmd.Run()
+	r.Tasks = append(r.Tasks, Task{Cmd: cmd.String(), Dir: g.Dir, Output: buf.String()})
 	if err != nil {
-		return err
+		err = fmt.Errorf("%s: %s: %w", cmd.String(), err, errUnrecoverable)
 	}
-	return nil
+	return r, err
 }
 
-func shortSha() (string, error) {
-	cmd := exec.Command("git", "rev-parse", "--short", "HEAD")
-	slog.Info("exec", slog.String("cmd", cmd.String()))
-	b, err := cmd.CombinedOutput()
-	s := strings.ReplaceAll(string(b), "\n", "")
-	return s, err
-}
+// Badge
 
-func Cover() {
-	coverOutput := "cover.out"
-	coverMode := "count" // see `go help testflag` for more info
-	iferr(
-		Go(
-			"test",
-			recDir,
-			"-coverprofile="+coverOutput,
-			"-covermode="+coverMode,
-		),
-	)
-	iferr(
-		Go(
-			"tool",
-			"cover",
-			"-func="+coverOutput,
-			// "-html="+coverOutput,
-			// "-o",
-			// "cover.html",
-		),
-	)
-	fmt.Println("✅ coverage generated: open cover.html to see results")
-}
-
-func Lint() {
-	fmt.Println("🧹 code linting")
-	iferr(Go("mod", "tidy"))
-	iferr(Go("mod", "verify"))
-	iferr(GoRun(goFumpt, "-w", "-extra", curDir))
-	iferr(GoRun(goCILint, "-v", "run", recDir))
-	fmt.Println("✅ code linted")
-}
-
-func Fix() {
-	Lint()
-	fmt.Println("📋 licenses fix")
-	iferr(Notice())
-	fmt.Println("✅ All fixes applied")
-}
-
-func MainBranch() {
-	iferr(Go("test", "-v", recDir))
-	DocGen()
-	fmt.Println("✅ main branch checks passed")
-}
-
-func PullRequest() {
-	fmt.Println("📝 pull request checks")
-	iferr(Go("test", "-v", recDir))
-	DocExamples()
-	Lint()
-	fmt.Println("✅ pull request checks passed")
-}
-
-func Scan() {
-	iferr(GoRun(goVuln, recDir))
-	iferr(OSVScanner())
-	fmt.Println("✅ all scans completed")
-}
-
-func DocGen() {
-	fmt.Println("📝 generating docs")
-	argsGen := []string{"go", "generate"}
-	if verbose {
-		argsGen = append(argsGen, "-v", "-x")
-	}
-	argsGen = append(argsGen, recDir)
-
-	iferr(Go(argsGen[1:]...))
-	docRun(DocKubernetes, argsGen...)
-	docRun(DocKubernetes, "go", "mod", "tidy")
-	docRun(DocTerraform, argsGen...)
-	docRun(DocTerraform, "go", "mod", "tidy")
-	fmt.Println("✅ docs generated")
-}
-
-func DocExamples() {
-	DocGen()
-	fmt.Println("📝 testing examples")
-	docRun(DocKubernetes, "go", "test", mod, "-v", recDir)
-	// no need to recurse the directories
-	// as it uses build tags
-	docRun(DocTerraform, "go", "test", mod, "-v")
-	fmt.Println("✅ docs generated and examples tested")
-}
-
-func Go(args ...string) error {
-	cmd := exec.Command("go", args...)
-	slog.Info("exec go", "cmd", cmd.String())
-	defer slog.Info("done exec go", "cmd", cmd.String())
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	if err := cmd.Run(); err != nil {
-		_ = os.Stderr.Sync()
-		_ = os.Stdout.Sync()
-		return fmt.Errorf("go: %s", err)
-	}
-	return nil
-}
-
-func GoRun(args ...string) error {
-	return Go(append([]string{"run", mod}, args...)...)
-}
-
-// HasGitDiff displays the git diff and errors if there is a diff
-func HasGitDiff() {
-	cmd := exec.Command("git", "--no-pager", "diff")
-	slog.Info("exec", slog.String("cmd", cmd.String()))
-	b, err := cmd.CombinedOutput()
-	iferr(err)
-	if len(b) == 0 {
-		return
-	}
-	buf := bytes.NewBuffer(b)
-	fmt.Println(buf.String())
-	panic("git diff is not empty")
-}
-
-type DocFolder int
+//go:embed badge.svg.tpl
+var tplFS embed.FS
 
 const (
-	DocKubernetes DocFolder = iota + 1
-	DocTerraform
+	brightgreen = "#4c1"
+	green       = "#97ca00"
+	yellow      = "#dfb317"
+	yellowgreen = "#a4a61d"
+	orange      = "#fe7d37"
+	red         = "#e05d44"
 )
 
-func (d DocFolder) String() string {
-	switch d {
-	case DocKubernetes:
-		return "./docs/kubernetes"
-	case DocTerraform:
-		return "./docs/terraform"
+func badgetpl(pct float64) (string, error) {
+	color := ""
+	switch {
+	case pct < 50:
+		color = orange
+	case pct < 60:
+		color = yellow
+	case pct < 70:
+		color = yellowgreen
+	case pct < 80:
+		color = green
+	case pct < 90:
+		color = brightgreen
 	default:
-		return fmt.Sprintf("unknown folder: %T", d)
+		color = red
 	}
+	t := template.Must(template.ParseFS(tplFS, "badge.svg.tpl"))
+	data := struct {
+		Color      string
+		Percentage float64
+	}{Percentage: pct, Color: color}
+
+	var buf bytes.Buffer
+	err := t.Execute(&buf, data)
+	if err != nil {
+		return "", err
+	}
+	return buf.String(), nil
 }
 
-// docRun runs a command in the docs directory
-func docRun(df DocFolder, args ...string) {
-	cmd := exec.Command(args[0], args[1:]...) //nolint:gosec
-	slog.Info("docRun", "cmd", cmd.String(), "folder", df)
-	defer slog.Info("docRun", "cmd", args[0]+" done", "folder", df)
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	switch df {
-	case DocKubernetes:
-		cmd.Dir = "./docs/kubernetes"
-	case DocTerraform:
-		cmd.Dir = "./docs/terraform"
-	default:
-		panic(fmt.Sprintf("unknown folder: %v", df))
+func writeBadge(path string, b []byte) error {
+	_, err := os.Stat(filepath.Dir(path))
+	if os.IsNotExist(err) {
+		err = os.MkdirAll(filepath.Dir(path), 0o755)
 	}
+	if err != nil {
+		return err
+	}
+
+	f, err := os.Create(path)
+	if err != nil {
+		return err
+	}
+	defer func() {
+		err = errors.Join(err, f.Close())
+	}()
+	_, err = f.Write(b)
+	return err
+}
+
+func parseCovPct(r io.Reader) (float64, error) {
+	s := bufio.NewScanner(r)
+	for s.Scan() {
+		t := s.Text()
+		if strings.HasPrefix(t, "total:") {
+			f := strings.Fields(t)
+			fmt.Println("FOUND IT ", f)
+			if f[0] == "total:" && len(f) == 3 {
+				return strconv.ParseFloat(strings.TrimRight(f[2], "%"), 64)
+			}
+
+			break
+		}
+	}
+	if err := s.Err(); err != nil {
+		_, _ = fmt.Fprintln(os.Stderr, "scan:", err)
+	}
+	return 0.0, fmt.Errorf("no coverage found")
+}
+
+func coverPct(w io.Writer, o string) error {
+	cmd := exec.Command("go", "tool", "cover", "-func="+o) //nolint:gosec
+	slog.Info("exec", slog.String("cmd", cmd.String()))
+	defer slog.Info("done", slog.String("cmd", cmd.String()))
+
+	cmd.Stdout = w
+	cmd.Stderr = os.Stderr
 	if err := cmd.Run(); err != nil {
 		_ = os.Stderr.Sync()
-		_ = os.Stdout.Sync()
-		panic(err)
-	}
-}
-
-// OSVScanner is the OSV Scanner to find vulnerabilities
-func OSVScanner() error {
-	slog.Info("running OSV Scanner")
-	defer slog.Info("DONE OSV Scanner")
-	// return GoRun(osvScannerRepo+osvScannerVersion, "-r", curDir)
-	// not scanning docs/go.mod because of github.com/aws/aws-sdk-go
-	// and the osvScanner returns an error when a vulnerability is detected
-	return GoRun(osvScannerRepo+osvScannerVersion, curDir)
-}
-
-// Notice is used to generate a NOTICE file
-func Notice() error {
-	slog.Info("running go-licenses - generating report")
-	defer slog.Info("DONE go-licenses - generating report")
-	var stdout, stderr bytes.Buffer
-	cmd := exec.Command(
-		"go", "run",
-		goLicenses,
-		"report",
-		recDir,
-		"--template=./cmd/tools/ci/licenses.tpl",
-		"--ignore=github.com/golingon/lingon",
-	)
-	cmd.Stdout = &stdout
-	cmd.Stderr = &stderr
-
-	slog.Info("exec", slog.String("cmd", cmd.String()))
-	if err := cmd.Run(); err != nil {
-		return fmt.Errorf(
-			"running go-licenses: %w:\n\n%s", err,
-			stderr.String(),
-		)
-	}
-
-	noticeFile, err := os.Create("NOTICE")
-	if err != nil {
-		return fmt.Errorf("creating NOTICE file: %w", err)
-	}
-
-	if err = GenerateNotice(noticeFile, &stdout); err != nil {
-		return fmt.Errorf("generating NOTICE file: %w", err)
+		return fmt.Errorf("%q: %s", cmd.String(), err)
 	}
 	return nil
 }

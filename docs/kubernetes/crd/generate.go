@@ -5,10 +5,7 @@ package crd
 
 //go:generate rm -rf out/
 //go:generate go run github.com/dave/rebecca/cmd/becca@latest  -package=github.com/golingon/docskubernetes/crd -input readme.md.tpl
-
-//go:generate echo "\n>>>> CRD: importing YAML to Go\n"
 //go:generate go test -v example_import_test.go
 //go:generate go test -v import_options_test.go
-
-//go:generate echo "\n>>>> CRD: exporting Go to YAML\n"
 //go:generate go test -v example_export_test.go
+//go:generate rm -rf out/manifest
