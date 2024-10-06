@@ -98,6 +98,7 @@ type ifElse[T any] struct {
 	s        Selector[T]
 	ifStep   Step[T]
 	elseStep Step[T]
+	Mid[T]
 }
 
 func (s ifElse[T]) String() string {
@@ -105,22 +106,30 @@ func (s ifElse[T]) String() string {
 	return fmt.Sprintf("IfElse Step[%T] { IF: %v, ELSE: %v}", z, s.ifStep, s.elseStep)
 }
 
-func IfElse[T any](s Selector[T], ifStep, elseStep Step[T]) Step[T] {
+func (p *Pipeline[T]) IfElse(s Selector[T], ifStep, elseStep Step[T]) Step[T] {
 	return &ifElse[T]{
 		s:        s,
 		ifStep:   ifStep,
 		elseStep: elseStep,
+		Mid:      p.Mid,
 	}
 }
 
 func (s ifElse[T]) Run(ctx context.Context, r *T) (*T, error) {
+	var step Step[T]
 	if s.s(ctx, r) {
-		return s.ifStep.Run(ctx, r)
+		step = s.ifStep
 	}
 	if s.elseStep != nil {
-		return s.elseStep.Run(ctx, r)
+		step = s.elseStep
 	}
-	panic("Selector 'else' branch missing")
+	if step == nil {
+		return nil, fmt.Errorf("selector chosed missing else branch: %v", r)
+	}
+	for _, m := range slices.Backward(s.Mid) {
+		step = m(step)
+	}
+	return step.Run(setStepID(ctx, gen.ID()), r)
 }
 
 // Series

@@ -156,7 +156,7 @@ func TestPipeline(t *testing.T) {
 			return resp, err
 		}),
 
-		wf.IfElse(selector, ifstep, elsestep),
+		p.IfElse(selector, ifstep, elsestep),
 	}
 
 	ctx := context.Background()
