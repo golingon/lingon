@@ -21,12 +21,22 @@ import (
 var lf = flag.Bool("log", false, "show the logs")
 
 type Result struct {
-	Err      error
-	Messages []string
-	State    State
-	sync.Mutex
+	Err        error
+	Messages   []string
+	State      State
+	sync.Mutex // needed for parallel steps
 }
 type State struct{ Counter int }
+
+func (r *Result) String() string {
+	if r == nil {
+		return "none"
+	}
+	if r.Err != nil {
+		return fmt.Sprintf("Result{State: %#v, Messages: %v, Err: %v}", r.State, r.Messages, r.Err)
+	}
+	return fmt.Sprintf("Result{State: %#v, Messages: %v}", r.State, r.Messages)
+}
 
 func TestEmptyPipeline(t *testing.T) {
 	p := wf.NewPipeline[Result]()
@@ -83,12 +93,14 @@ func TestPipeline(t *testing.T) {
 		}))
 	}
 
-	var logger *slog.Logger
+	var w io.Writer
 	if *lf {
-		logger = slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{}))
+		w = os.Stdout
 	} else {
-		logger = slog.New(slog.NewTextHandler(io.Discard, &slog.HandlerOptions{}))
+		w = io.Discard
 	}
+
+	logger := slog.New(slog.NewTextHandler(w, &slog.HandlerOptions{}))
 
 	p := wf.NewPipeline(LoggerMiddleware[Result](logger))
 	p.Steps = []wf.Step[Result]{

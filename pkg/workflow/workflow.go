@@ -94,6 +94,17 @@ type series[T any] struct {
 	Mid[T]
 }
 
+func (s *series[T]) String() string {
+	if s == nil {
+		return "none"
+	}
+	tt := make([]string, 0, len(s.Stages))
+	for _, t := range s.Stages {
+		tt = append(tt, Name(t))
+	}
+	return fmt.Sprintf("Serie{Stages: [%s]}", strings.Join(tt, ","))
+}
+
 // Series executes a series of steps in sequential order.
 func (p *Pipeline[T]) Series(steps ...Step[T]) *series[T] {
 	return &series[T]{
@@ -126,6 +137,17 @@ type parallel[T any] struct {
 	merge MergeRequest[T]
 	Tasks []Step[T]
 	Mid[T]
+}
+
+func (p *parallel[T]) String() string {
+	if p == nil {
+		return "none"
+	}
+	tt := make([]string, 0, len(p.Tasks))
+	for _, t := range p.Tasks {
+		tt = append(tt, Name(t))
+	}
+	return fmt.Sprintf("Parallel{Tasks: [%s]}", strings.Join(tt, ","))
 }
 
 type MergeRequest[T any] func(context.Context, *T, ...*T) (*T, error)
