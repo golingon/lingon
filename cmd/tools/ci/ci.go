@@ -78,7 +78,7 @@ type Task struct {
 }
 
 func (t Task) String() string {
-	return fmt.Sprintf("[%s] cmd: %q", t.Dir, t.Cmd)
+	return fmt.Sprintf("Task{Dir:'%s', Command: '%s'}", t.Dir, t.Cmd)
 }
 
 var errUnrecoverable = errors.New("unrecoverable")
@@ -113,7 +113,7 @@ func Main(logger *slog.Logger) error {
 
 	mid := []wf.Middleware[Result]{
 		wf.StartTimeInCtxMiddleware[Result](),
-		wf.ErrorMiddleware[Result](func(err error) bool { return errors.Is(err, errUnrecoverable) }),
+		ErrorMiddleware[Result](func(err error) bool { return errors.Is(err, errUnrecoverable) }),
 		wf.LoggerMiddleware[Result](logger),
 	}
 	p := wf.NewPipeline(mid...)
@@ -290,6 +290,10 @@ func run(verbose bool, dir, bin string, args ...string) *CLI {
 	return &CLI{Dir: dir, Bin: bin, Args: args, ShowOutput: verbose}
 }
 
+func (g *CLI) String() string {
+	return fmt.Sprintf("CLI{Dir: %s, Command: '%s'}", g.Dir, g.Bin+" "+strings.Join(g.Args, " "))
+}
+
 func (g *CLI) Run(ctx context.Context, r *Result) (*Result, error) {
 	if g.Bin == "" {
 		return r, fmt.Errorf("%T: binary not set: %w", g, errUnrecoverable)
@@ -312,6 +316,29 @@ func (g *CLI) Run(ctx context.Context, r *Result) (*Result, error) {
 		err = fmt.Errorf("%s: %s: %w", cmd.String(), err, errUnrecoverable)
 	}
 	return r, err
+}
+
+type Outputer interface {
+	Output() string
+}
+
+func ErrorMiddleware[T Outputer](h func(error) bool) wf.Middleware[T] {
+	return func(next wf.Step[T]) wf.Step[T] {
+		return wf.MidFunc[T](func(ctx context.Context, r *T) (*T, error) {
+			resp, err := next.Run(ctx, r)
+			if errors.Is(ctx.Err(), context.Canceled) {
+				return resp, fmt.Errorf("%s: %v", (*resp).Output(), ctx.Err())
+			}
+			if h(err) {
+				// In case of an error, show what output of the failing step.
+				if o := (*resp).Output(); o != "" {
+					fmt.Printf("\noutput:\n\n %s\n", o)
+				}
+				return resp, fmt.Errorf("err: %v", err)
+			}
+			return resp, err
+		})
+	}
 }
 
 // Badge

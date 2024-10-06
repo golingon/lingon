@@ -84,7 +84,7 @@ func LoggerMiddleware[T any](l *slog.Logger) Middleware[T] {
 			name := Name(next)
 			if name != "MidFunc" {
 				id, _ := GetStepID(ctx)
-				l.Info("start", "Type", name, "id", id)
+				l.Info("start", "Type", name, "id", id, "STEP", next)
 			}
 
 			resp, err := next.Run(ctx, res)
@@ -109,38 +109,6 @@ func StartTimeInCtxMiddleware[T any]() Middleware[T] {
 	return func(next Step[T]) Step[T] {
 		return MidFunc[T](func(ctx context.Context, r *T) (*T, error) {
 			return next.Run(setStepStartTime(ctx, time.Now()), r)
-		})
-	}
-}
-
-type ErrWorkflow struct {
-	Err    error
-	Output string
-}
-
-func (e ErrWorkflow) Error() error {
-	return fmt.Errorf("workflow err: %s", e.Output)
-}
-
-type Outputer interface {
-	Output() string
-}
-
-func ErrorMiddleware[T Outputer](h func(error) bool) Middleware[T] {
-	return func(next Step[T]) Step[T] {
-		return MidFunc[T](func(ctx context.Context, r *T) (*T, error) {
-			resp, err := next.Run(ctx, r)
-			if errors.Is(ctx.Err(), context.Canceled) {
-				return resp, fmt.Errorf("%s: %v", (*resp).Output(), ctx.Err())
-			}
-			if h(err) {
-				// In case of an error, show what output of the failing step.
-				if o := (*resp).Output(); o != "" {
-					fmt.Printf("\noutput:\n\n %s\n", o)
-				}
-				return resp, fmt.Errorf("err: %v", err)
-			}
-			return resp, err
 		})
 	}
 }
