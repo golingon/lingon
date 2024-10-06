@@ -84,7 +84,16 @@ func (t Task) String() string {
 var errUnrecoverable = errors.New("unrecoverable")
 
 func main() {
-	logger := slog.Default().With("ci", "lingon")
+	logger := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
+		AddSource: false,
+		ReplaceAttr: func(groups []string, a slog.Attr) slog.Attr {
+			if a.Key == slog.TimeKey {
+				t := a.Value.Time()
+				a = slog.Attr{Key: "time", Value: slog.StringValue(t.Format("15:04:05"))}
+			}
+			return a
+		},
+	})).With("ci", "lingon")
 	if err := Main(logger); err != nil {
 		logger.Error("main", "err", err)
 		os.Exit(1)
@@ -107,14 +116,16 @@ func Main(logger *slog.Logger) error {
 	flag.Parse()
 
 	genargs := []string{"generate", "./..."}
+	vargs := ""
 	if V {
 		genargs = slices.Insert(genargs, 1, "-v", "-x")
+		vargs = "-v"
 	}
 
 	mid := []wf.Middleware[Result]{
 		wf.StartTimeInCtxMiddleware[Result](),
 		ErrorMiddleware[Result](func(err error) bool { return errors.Is(err, errUnrecoverable) }),
-		wf.LoggerMiddleware[Result](logger),
+		LoggerMiddleware[Result](logger),
 	}
 	p := wf.NewPipeline(mid...)
 
@@ -159,7 +170,7 @@ func Main(logger *slog.Logger) error {
 		p.Steps = append(p.Steps, p.Series(
 			run(V, ".", "go", "mod", "tidy"),
 			run(V, ".", "go", "run", goFumpt, "-w", "-extra", "."),
-			run(V, ".", "go", "run", goCILint, "-v", "run", "./..."),
+			run(V, ".", "go", "run", goCILint, vargs, "run", "./..."),
 		))
 	}
 
@@ -185,12 +196,12 @@ func Main(logger *slog.Logger) error {
 			p.Series(
 				run(V, dirK8s, "go", "mod", "tidy"),
 				run(V, dirK8s, "go", genargs...),
-				run(V, dirK8s, "go", "test", "-mod=readonly", "-v", "./..."),
+				run(V, dirK8s, "go", "test", "-mod=readonly", vargs, "./..."),
 			),
 			p.Series(
 				run(V, dirTerra, "go", "mod", "tidy"),
 				run(V, dirTerra, "go", genargs...),
-				run(V, dirTerra, "go", "test", "-mod=readonly", "-v", "./..."),
+				run(V, dirTerra, "go", "test", "-mod=readonly", vargs, "./..."),
 			),
 		))
 	}
@@ -198,14 +209,14 @@ func Main(logger *slog.Logger) error {
 	if pr {
 		p.Steps = append(p.Steps, p.Series(
 			run(V, ".", "go", genargs...),
-			run(V, ".", "go", "test", "-v", "./..."),
+			run(V, ".", "go", "test", vargs, "./..."),
 			run(V, ".", "go", "mod", "tidy"),
 			run(V, dirK8s, "go", genargs...),
 			run(V, dirK8s, "go", "mod", "tidy"),
 			run(V, dirTerra, "go", genargs...),
 			run(V, dirTerra, "go", "mod", "tidy"),
 			run(V, ".", "go", "run", goFumpt, "-w", "-extra", "."),
-			run(V, ".", "go", "run", goCILint, "-v", "run", "./..."),
+			run(V, ".", "go", "run", goCILint, vargs, "run", "./..."),
 		))
 	}
 
@@ -316,6 +327,32 @@ func (g *CLI) Run(ctx context.Context, r *Result) (*Result, error) {
 		err = fmt.Errorf("%s: %s: %w", cmd.String(), err, errUnrecoverable)
 	}
 	return r, err
+}
+
+func LoggerMiddleware[T any](l *slog.Logger) wf.Middleware[T] {
+	return func(next wf.Step[T]) wf.Step[T] {
+		return wf.MidFunc[T](func(ctx context.Context, res *T) (*T, error) {
+			name := wf.Name(next)
+			if name != "MidFunc" {
+				id, _ := wf.GetStepID(ctx)
+				l.Info("start", "Type", name, "id", id, "STEP", next)
+			}
+
+			resp, err := next.Run(ctx, res)
+
+			if name != "MidFunc" {
+				id, _ := wf.GetStepID(ctx)
+				t, errctx := wf.GetStepStartTime(ctx)
+				if errors.Is(errctx, wf.ErrMissingFromContext) {
+					l.Info("done", "Type", name, "id", id, "Result", fmt.Sprintf("%v", resp))
+				} else {
+					l.Info("done", "Type", name, "id", id, "duration", time.Since(t),
+						"Result", fmt.Sprintf("%v", resp))
+				}
+			}
+			return resp, err
+		})
+	}
 }
 
 type Outputer interface {

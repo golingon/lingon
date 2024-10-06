@@ -4,11 +4,14 @@ import (
 	"context"
 	"errors"
 	"flag"
+	"fmt"
 	"io"
 	"log/slog"
 	"os"
 	"reflect"
+	"sync"
 	"testing"
+	"time"
 
 	"dario.cat/mergo"
 	"github.com/golingon/lingon/pkg/testutil"
@@ -21,15 +24,60 @@ type Result struct {
 	Err      error
 	Messages []string
 	State    State
+	sync.Mutex
 }
 type State struct{ Counter int }
 
+func TestEmptyPipeline(t *testing.T) {
+	p := wf.NewPipeline[Result]()
+	_, err := p.Run(context.Background(), &Result{})
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestMiddleware(t *testing.T) {
+	cpt := 0
+	incr := func() {
+		cpt++
+	}
+	mid := func(inc func()) wf.Middleware[Result] {
+		return func(next wf.Step[Result]) wf.Step[Result] {
+			return wf.MidFunc[Result](func(ctx context.Context, res *Result) (*Result, error) {
+				inc()
+				return next.Run(ctx, res)
+			})
+		}
+	}
+	p := wf.NewPipeline(mid(incr))
+	_, err := p.Run(context.Background(), &Result{Messages: []string{}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if cpt != 0 {
+		t.Fatalf("cpt %d != 0", cpt)
+	}
+
+	p.Steps = append(p.Steps, wf.StepFunc[Result](func(ctx context.Context, res *Result) (*Result, error) {
+		return res, nil
+	}))
+	_, err = p.Run(context.Background(), &Result{Messages: []string{}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if cpt != 1 {
+		t.Fatalf("cpt %d != 1", cpt)
+	}
+}
+
 func TestPipeline(t *testing.T) {
-	wf.SetIDGenerator(wf.StaticID{})
+	wf.SetIDGenerator(&wf.StaticID{})
 
 	sf := make([]wf.Step[Result], 0)
 	for range 10 {
 		sf = append(sf, wf.StepFunc[Result](func(ctx context.Context, r *Result) (*Result, error) {
+			r.Lock()
+			defer r.Unlock()
 			r.State.Counter++
 			return r, nil
 		}))
@@ -42,7 +90,7 @@ func TestPipeline(t *testing.T) {
 		logger = slog.New(slog.NewTextHandler(io.Discard, &slog.HandlerOptions{}))
 	}
 
-	p := wf.NewPipeline(wf.LoggerMiddleware[Result](logger))
+	p := wf.NewPipeline(LoggerMiddleware[Result](logger))
 	p.Steps = []wf.Step[Result]{
 		wf.StepFunc[Result](func(ctx context.Context, r *Result) (*Result, error) {
 			r.Messages = append(r.Messages, "first step")
@@ -82,7 +130,7 @@ func TestPipeline(t *testing.T) {
 	}
 
 	ctx := context.Background()
-	got, err := p.Run(ctx, &Result{})
+	got, err := p.Run(ctx, &Result{Messages: []string{}})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -98,6 +146,30 @@ func TestPipeline(t *testing.T) {
 	}
 	if diff := testutil.Diff(got, want); diff != "" {
 		t.Fatal(diff)
+	}
+}
+
+func LoggerMiddleware[T any](l *slog.Logger) wf.Middleware[T] {
+	return func(next wf.Step[T]) wf.Step[T] {
+		return wf.MidFunc[T](func(ctx context.Context, res *T) (*T, error) {
+			name := wf.Name(next)
+			if name != "MidFunc" {
+				id, _ := wf.GetStepID(ctx)
+				l.Info("start", "Type", name, "id", id, "STEP", next)
+			}
+			resp, err := next.Run(ctx, res)
+			if name != "MidFunc" {
+				id, _ := wf.GetStepID(ctx)
+				t, errctx := wf.GetStepStartTime(ctx)
+				if errors.Is(errctx, wf.ErrMissingFromContext) {
+					l.Info("done", "Type", name, "id", id, "Result", fmt.Sprintf("%v", resp))
+				} else {
+					l.Info("done", "Type", name, "id", id, "duration", time.Since(t),
+						"Result", fmt.Sprintf("%v", resp))
+				}
+			}
+			return resp, err
+		})
 	}
 }
 

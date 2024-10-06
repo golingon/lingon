@@ -2,7 +2,6 @@ package workflow
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"log/slog"
 	"reflect"
@@ -78,33 +77,8 @@ type Middleware[T any] func(s Step[T]) Step[T]
 
 type Mid[T any] []Middleware[T]
 
-func LoggerMiddleware[T any](l *slog.Logger) Middleware[T] {
-	return func(next Step[T]) Step[T] {
-		return MidFunc[T](func(ctx context.Context, res *T) (*T, error) {
-			name := Name(next)
-			if name != "MidFunc" {
-				id, _ := GetStepID(ctx)
-				l.Info("start", "Type", name, "id", id, "STEP", next)
-			}
-
-			resp, err := next.Run(ctx, res)
-
-			if name != "MidFunc" {
-				id, _ := GetStepID(ctx)
-				t, errctx := GetStepStartTime(ctx)
-				if errors.Is(errctx, ErrMissingFromContext) {
-					l.Info("done", "Type", name, "id", id, "Result", resp)
-				} else {
-					l.Info("done", "Type", name, "id", id, "duration", time.Since(t), "Result", resp)
-				}
-			}
-			return resp, err
-		})
-	}
-}
-
 // StartTimeInCtxMiddleware stores the [time.Time] when a [Step] starts in to the context.
-// The [LoggerMiddleware] will log it if it is found in the context or ignore it otherwise.
+// It is useful for a logger middleware to display the duration of a step.
 func StartTimeInCtxMiddleware[T any]() Middleware[T] {
 	return func(next Step[T]) Step[T] {
 		return MidFunc[T](func(ctx context.Context, r *T) (*T, error) {
@@ -167,9 +141,6 @@ func (p *Pipeline[T]) Parallel(merge MergeRequest[T], steps ...Step[T]) *paralle
 }
 
 func (p *parallel[T]) Run(ctx context.Context, req *T) (*T, error) {
-	resps := make([]*T, len(p.Tasks))
-	g, groupCtx := errgroup.WithContext(ctx)
-
 	tasks := make([]Step[T], len(p.Tasks))
 	for i, s := range p.Tasks {
 		tasks[i] = s
@@ -177,14 +148,16 @@ func (p *parallel[T]) Run(ctx context.Context, req *T) (*T, error) {
 			tasks[i] = m(tasks[i])
 		}
 	}
+	g, groupCtx := errgroup.WithContext(ctx)
+	resps := make([]*T, len(p.Tasks))
 	for i := range tasks {
 		g.Go(func() error {
 			defer CapturePanic(groupCtx)
 
 			copyReq := new(T)
 			*copyReq = *req
-			groupCtx = setStepID(groupCtx, gen.ID())
-			resp, err := tasks[i].Run(groupCtx, copyReq)
+			ctxg := setStepID(groupCtx, gen.ID())
+			resp, err := tasks[i].Run(ctxg, copyReq)
 			if err != nil {
 				return err
 			}

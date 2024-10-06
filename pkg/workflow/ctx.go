@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"sync"
 	"time"
 
 	"github.com/google/uuid"
@@ -48,11 +49,15 @@ func GetStepStartTime(ctx context.Context) (time.Time, error) {
 // See https://uuid7.com, for more information on UUIDv7.
 // It means to assign an ID for each [Step] of a [Pipeline].
 // It can be overwritten by [SetIDGenerator].
-var gen IDGenerator = UUIDv7{}
+var gen IDGenerator = &UUIDv7{}
 
-type UUIDv7 struct{}
+type UUIDv7 struct{ sync.Mutex }
 
-func (UUIDv7) ID() uuid.UUID { return uuid.Must(uuid.NewV7()) }
+func (g *UUIDv7) ID() uuid.UUID {
+	g.Lock()
+	defer g.Unlock()
+	return uuid.Must(uuid.NewV7())
+}
 
 // SetIDGenerator allows to set a [StaticID] generator for testing purposes.
 func SetIDGenerator(g IDGenerator) {
@@ -71,13 +76,15 @@ var cpt = 0
 
 const u = "00000000-0000-0000-0000-000000000000"
 
-type StaticID struct{}
+type StaticID struct{ sync.Mutex }
 
 // ID returns a [uuid.UUID] starting at 1 in the form of
 // "00000000-0000-0000-0000-000000000001". Each following calls increment by 1.
 //
 // Note: It is meant for debugging and testing.
-func (StaticID) ID() uuid.UUID {
+func (g *StaticID) ID() uuid.UUID {
+	g.Lock()
+	defer g.Unlock()
 	// not efficient, meant for tests
 	cpt++
 	switch {
