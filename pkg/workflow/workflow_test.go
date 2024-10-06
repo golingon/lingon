@@ -9,7 +9,6 @@ import (
 	"log/slog"
 	"os"
 	"reflect"
-	"sync"
 	"testing"
 	"time"
 
@@ -21,10 +20,9 @@ import (
 var lf = flag.Bool("log", false, "show the logs")
 
 type Result struct {
-	Err        error
-	Messages   []string
-	State      State
-	sync.Mutex // needed for parallel steps
+	Err      error
+	Messages []string
+	State    State
 }
 type State struct{ Counter int }
 
@@ -83,16 +81,6 @@ func TestMiddleware(t *testing.T) {
 func TestPipeline(t *testing.T) {
 	wf.SetIDGenerator(&wf.StaticID{})
 
-	sf := make([]wf.Step[Result], 0)
-	for range 10 {
-		sf = append(sf, wf.StepFunc[Result](func(ctx context.Context, r *Result) (*Result, error) {
-			r.Lock()
-			defer r.Unlock()
-			r.State.Counter++
-			return r, nil
-		}))
-	}
-
 	var w io.Writer
 	if *lf {
 		w = os.Stdout
@@ -100,7 +88,35 @@ func TestPipeline(t *testing.T) {
 		w = io.Discard
 	}
 
-	logger := slog.New(slog.NewTextHandler(w, &slog.HandlerOptions{}))
+	logger := slog.New(slog.NewTextHandler(w, &slog.HandlerOptions{
+		ReplaceAttr: func(groups []string, a slog.Attr) slog.Attr {
+			if a.Key == slog.TimeKey {
+				t := a.Value.Time()
+				a = slog.Attr{Key: "time", Value: slog.StringValue(t.Format("15:04:05"))}
+			}
+			return a
+		},
+	}))
+
+	selector := func(ctx context.Context, r *Result) bool {
+		return r.Err == nil
+	}
+	ifstep := wf.StepFunc[Result](func(ctx context.Context, r *Result) (*Result, error) {
+		r.Messages = append(r.Messages, "if step selected")
+		return r, nil
+	})
+	elsestep := wf.StepFunc[Result](func(ctx context.Context, r *Result) (*Result, error) {
+		r.Messages = append(r.Messages, "else step selected")
+		return r, nil
+	})
+
+	sf := make([]wf.Step[Result], 0)
+	for range 10 {
+		sf = append(sf, wf.StepFunc[Result](func(ctx context.Context, r *Result) (*Result, error) {
+			r.State.Counter++
+			return r, nil
+		}))
+	}
 
 	p := wf.NewPipeline(LoggerMiddleware[Result](logger))
 	p.Steps = []wf.Step[Result]{
@@ -139,6 +155,8 @@ func TestPipeline(t *testing.T) {
 			r.Messages = append(r.Messages, "last step")
 			return resp, err
 		}),
+
+		wf.IfElse(selector, ifstep, elsestep),
 	}
 
 	ctx := context.Background()
@@ -154,6 +172,7 @@ func TestPipeline(t *testing.T) {
 			"extra serial step",
 			"extra inner step",
 			"last step",
+			"else step selected",
 		},
 	}
 	if diff := testutil.Diff(got, want); diff != "" {
@@ -186,6 +205,8 @@ func LoggerMiddleware[T any](l *slog.Logger) wf.Middleware[T] {
 }
 
 type handleErr struct{ l *slog.Logger }
+
+func (h handleErr) String() string { return "ErrorHandler" }
 
 var errIgnoreMe = errors.New("ignore me")
 

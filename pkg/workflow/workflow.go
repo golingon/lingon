@@ -60,9 +60,12 @@ func NewPipeline[T any](mid ...Middleware[T]) *Pipeline[T] {
 type StepFunc[T any] func(context.Context, *T) (*T, error)
 
 func (f StepFunc[T]) Run(ctx context.Context, res *T) (*T, error) {
-	ctx = setStepID(ctx, gen.ID())
-	resp, err := f(ctx, res)
-	return resp, err
+	return f(setStepID(ctx, gen.ID()), res)
+}
+
+func (f StepFunc[T]) String() string {
+	var z T
+	return fmt.Sprintf("StepFunc[%T]", z)
 }
 
 // Middleware
@@ -85,6 +88,39 @@ func StartTimeInCtxMiddleware[T any]() Middleware[T] {
 			return next.Run(setStepStartTime(ctx, time.Now()), r)
 		})
 	}
+}
+
+// Selector
+
+type Selector[T any] func(context.Context, *T) bool
+
+type ifElse[T any] struct {
+	s        Selector[T]
+	ifStep   Step[T]
+	elseStep Step[T]
+}
+
+func (s ifElse[T]) String() string {
+	var z T
+	return fmt.Sprintf("IfElse Step[%T] { IF: %v, ELSE: %v}", z, s.ifStep, s.elseStep)
+}
+
+func IfElse[T any](s Selector[T], ifStep, elseStep Step[T]) Step[T] {
+	return &ifElse[T]{
+		s:        s,
+		ifStep:   ifStep,
+		elseStep: elseStep,
+	}
+}
+
+func (s ifElse[T]) Run(ctx context.Context, r *T) (*T, error) {
+	if s.s(ctx, r) {
+		return s.ifStep.Run(ctx, r)
+	}
+	if s.elseStep != nil {
+		return s.elseStep.Run(ctx, r)
+	}
+	panic("Selector 'else' branch missing")
 }
 
 // Series
@@ -147,7 +183,7 @@ func (p *parallel[T]) String() string {
 	for _, t := range p.Tasks {
 		tt = append(tt, Name(t))
 	}
-	return fmt.Sprintf("Parallel{Tasks: [%s]}", strings.Join(tt, ","))
+	return fmt.Sprintf("Parallel{Tasks: [%s]}", strings.Join(tt, ", "))
 }
 
 type MergeRequest[T any] func(context.Context, *T, ...*T) (*T, error)
@@ -178,8 +214,7 @@ func (p *parallel[T]) Run(ctx context.Context, req *T) (*T, error) {
 
 			copyReq := new(T)
 			*copyReq = *req
-			ctxg := setStepID(groupCtx, gen.ID())
-			resp, err := tasks[i].Run(ctxg, copyReq)
+			resp, err := tasks[i].Run(setStepID(groupCtx, gen.ID()), copyReq)
 			if err != nil {
 				return err
 			}
