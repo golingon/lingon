@@ -8,7 +8,7 @@ updates:
   - package-ecosystem: "gomod"
     directory: "/"
     schedule:
-      interval: weekly
+      interval: monthly
     open-pull-requests-limit: 5
     groups:
       gomod:
@@ -16,19 +16,31 @@ updates:
           - "k8s.io/*"
           - "sigs.k8s.io/*"
           - "*"
-          
+    commit-message:
+      prefix: "[dep] "
+    labels:
+      - "dependencies"
+
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: weekly
+      interval: monthly
     open-pull-requests-limit: 5
     groups:
       gh:
         patterns:
           - "*"
+    commit-message:
+      prefix: "[ci] "
+    labels:
+      - "ci"
+      - "dependencies"
 
   - package-ecosystem: gomod
-    directory: /docs/kubernetes
+    directories:
+      - /docs/kubernetes
+      - /docs/platypus2
+      - /docs/terraform
     schedule:
       interval: monthly
     groups:
@@ -37,25 +49,8 @@ updates:
           - "k8s.io/*"
           - "sigs.k8s.io/*"
           - "*"
-
-  - package-ecosystem: gomod
-    directory: /docs/platypus2
-    schedule:
-      interval: monthly
-    groups:
-      gomod:
-        patterns:
-          - "k8s.io/*"
-          - "sigs.k8s.io/*"
-          - "*"
-
-  - package-ecosystem: gomod
-    directory: /docs/terraform
-    schedule:
-      interval: monthly
-    groups:
-      gomod:
-        patterns:
-          - "k8s.io/*"
-          - "sigs.k8s.io/*"
-          - "*"
+    commit-message:
+      prefix: "[docs] "
+    labels:
+      - "doc"
+      - "dependencies"
