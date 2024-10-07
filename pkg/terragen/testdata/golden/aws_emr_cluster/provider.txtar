@@ -711,1263 +711,1263 @@ type IgnoreTags struct {
 	Keys terra.SetValue[terra.StringValue] `hcl:"keys,attr"`
 }
 
-type AssumeRoleAttributes struct {
+type assumeRoleAttributes struct {
 	ref terra.Reference
 }
 
-func (ar AssumeRoleAttributes) InternalRef() (terra.Reference, error) {
+func (ar assumeRoleAttributes) InternalRef() (terra.Reference, error) {
 	return ar.ref, nil
 }
 
-func (ar AssumeRoleAttributes) InternalWithRef(ref terra.Reference) AssumeRoleAttributes {
-	return AssumeRoleAttributes{ref: ref}
+func (ar assumeRoleAttributes) InternalWithRef(ref terra.Reference) assumeRoleAttributes {
+	return assumeRoleAttributes{ref: ref}
 }
 
-func (ar AssumeRoleAttributes) InternalTokens() (hclwrite.Tokens, error) {
+func (ar assumeRoleAttributes) InternalTokens() (hclwrite.Tokens, error) {
 	return ar.ref.InternalTokens()
 }
 
-func (ar AssumeRoleAttributes) Duration() terra.StringValue {
+func (ar assumeRoleAttributes) Duration() terra.StringValue {
 	return terra.ReferenceAsString(ar.ref.Append("duration"))
 }
 
-func (ar AssumeRoleAttributes) ExternalId() terra.StringValue {
+func (ar assumeRoleAttributes) ExternalId() terra.StringValue {
 	return terra.ReferenceAsString(ar.ref.Append("external_id"))
 }
 
-func (ar AssumeRoleAttributes) Policy() terra.StringValue {
+func (ar assumeRoleAttributes) Policy() terra.StringValue {
 	return terra.ReferenceAsString(ar.ref.Append("policy"))
 }
 
-func (ar AssumeRoleAttributes) PolicyArns() terra.SetValue[terra.StringValue] {
+func (ar assumeRoleAttributes) PolicyArns() terra.SetValue[terra.StringValue] {
 	return terra.ReferenceAsSet[terra.StringValue](ar.ref.Append("policy_arns"))
 }
 
-func (ar AssumeRoleAttributes) RoleArn() terra.StringValue {
+func (ar assumeRoleAttributes) RoleArn() terra.StringValue {
 	return terra.ReferenceAsString(ar.ref.Append("role_arn"))
 }
 
-func (ar AssumeRoleAttributes) SessionName() terra.StringValue {
+func (ar assumeRoleAttributes) SessionName() terra.StringValue {
 	return terra.ReferenceAsString(ar.ref.Append("session_name"))
 }
 
-func (ar AssumeRoleAttributes) SourceIdentity() terra.StringValue {
+func (ar assumeRoleAttributes) SourceIdentity() terra.StringValue {
 	return terra.ReferenceAsString(ar.ref.Append("source_identity"))
 }
 
-func (ar AssumeRoleAttributes) Tags() terra.MapValue[terra.StringValue] {
+func (ar assumeRoleAttributes) Tags() terra.MapValue[terra.StringValue] {
 	return terra.ReferenceAsMap[terra.StringValue](ar.ref.Append("tags"))
 }
 
-func (ar AssumeRoleAttributes) TransitiveTagKeys() terra.SetValue[terra.StringValue] {
+func (ar assumeRoleAttributes) TransitiveTagKeys() terra.SetValue[terra.StringValue] {
 	return terra.ReferenceAsSet[terra.StringValue](ar.ref.Append("transitive_tag_keys"))
 }
 
-type AssumeRoleWithWebIdentityAttributes struct {
+type assumeRoleWithWebIdentityAttributes struct {
 	ref terra.Reference
 }
 
-func (arwwi AssumeRoleWithWebIdentityAttributes) InternalRef() (terra.Reference, error) {
+func (arwwi assumeRoleWithWebIdentityAttributes) InternalRef() (terra.Reference, error) {
 	return arwwi.ref, nil
 }
 
-func (arwwi AssumeRoleWithWebIdentityAttributes) InternalWithRef(ref terra.Reference) AssumeRoleWithWebIdentityAttributes {
-	return AssumeRoleWithWebIdentityAttributes{ref: ref}
+func (arwwi assumeRoleWithWebIdentityAttributes) InternalWithRef(ref terra.Reference) assumeRoleWithWebIdentityAttributes {
+	return assumeRoleWithWebIdentityAttributes{ref: ref}
 }
 
-func (arwwi AssumeRoleWithWebIdentityAttributes) InternalTokens() (hclwrite.Tokens, error) {
+func (arwwi assumeRoleWithWebIdentityAttributes) InternalTokens() (hclwrite.Tokens, error) {
 	return arwwi.ref.InternalTokens()
 }
 
-func (arwwi AssumeRoleWithWebIdentityAttributes) Duration() terra.StringValue {
+func (arwwi assumeRoleWithWebIdentityAttributes) Duration() terra.StringValue {
 	return terra.ReferenceAsString(arwwi.ref.Append("duration"))
 }
 
-func (arwwi AssumeRoleWithWebIdentityAttributes) Policy() terra.StringValue {
+func (arwwi assumeRoleWithWebIdentityAttributes) Policy() terra.StringValue {
 	return terra.ReferenceAsString(arwwi.ref.Append("policy"))
 }
 
-func (arwwi AssumeRoleWithWebIdentityAttributes) PolicyArns() terra.SetValue[terra.StringValue] {
+func (arwwi assumeRoleWithWebIdentityAttributes) PolicyArns() terra.SetValue[terra.StringValue] {
 	return terra.ReferenceAsSet[terra.StringValue](arwwi.ref.Append("policy_arns"))
 }
 
-func (arwwi AssumeRoleWithWebIdentityAttributes) RoleArn() terra.StringValue {
+func (arwwi assumeRoleWithWebIdentityAttributes) RoleArn() terra.StringValue {
 	return terra.ReferenceAsString(arwwi.ref.Append("role_arn"))
 }
 
-func (arwwi AssumeRoleWithWebIdentityAttributes) SessionName() terra.StringValue {
+func (arwwi assumeRoleWithWebIdentityAttributes) SessionName() terra.StringValue {
 	return terra.ReferenceAsString(arwwi.ref.Append("session_name"))
 }
 
-func (arwwi AssumeRoleWithWebIdentityAttributes) WebIdentityToken() terra.StringValue {
+func (arwwi assumeRoleWithWebIdentityAttributes) WebIdentityToken() terra.StringValue {
 	return terra.ReferenceAsString(arwwi.ref.Append("web_identity_token"))
 }
 
-func (arwwi AssumeRoleWithWebIdentityAttributes) WebIdentityTokenFile() terra.StringValue {
+func (arwwi assumeRoleWithWebIdentityAttributes) WebIdentityTokenFile() terra.StringValue {
 	return terra.ReferenceAsString(arwwi.ref.Append("web_identity_token_file"))
 }
 
-type DefaultTagsAttributes struct {
+type defaultTagsAttributes struct {
 	ref terra.Reference
 }
 
-func (dt DefaultTagsAttributes) InternalRef() (terra.Reference, error) {
+func (dt defaultTagsAttributes) InternalRef() (terra.Reference, error) {
 	return dt.ref, nil
 }
 
-func (dt DefaultTagsAttributes) InternalWithRef(ref terra.Reference) DefaultTagsAttributes {
-	return DefaultTagsAttributes{ref: ref}
+func (dt defaultTagsAttributes) InternalWithRef(ref terra.Reference) defaultTagsAttributes {
+	return defaultTagsAttributes{ref: ref}
 }
 
-func (dt DefaultTagsAttributes) InternalTokens() (hclwrite.Tokens, error) {
+func (dt defaultTagsAttributes) InternalTokens() (hclwrite.Tokens, error) {
 	return dt.ref.InternalTokens()
 }
 
-func (dt DefaultTagsAttributes) Tags() terra.MapValue[terra.StringValue] {
+func (dt defaultTagsAttributes) Tags() terra.MapValue[terra.StringValue] {
 	return terra.ReferenceAsMap[terra.StringValue](dt.ref.Append("tags"))
 }
 
-type EndpointsAttributes struct {
+type endpointsAttributes struct {
 	ref terra.Reference
 }
 
-func (e EndpointsAttributes) InternalRef() (terra.Reference, error) {
+func (e endpointsAttributes) InternalRef() (terra.Reference, error) {
 	return e.ref, nil
 }
 
-func (e EndpointsAttributes) InternalWithRef(ref terra.Reference) EndpointsAttributes {
-	return EndpointsAttributes{ref: ref}
+func (e endpointsAttributes) InternalWithRef(ref terra.Reference) endpointsAttributes {
+	return endpointsAttributes{ref: ref}
 }
 
-func (e EndpointsAttributes) InternalTokens() (hclwrite.Tokens, error) {
+func (e endpointsAttributes) InternalTokens() (hclwrite.Tokens, error) {
 	return e.ref.InternalTokens()
 }
 
-func (e EndpointsAttributes) Accessanalyzer() terra.StringValue {
+func (e endpointsAttributes) Accessanalyzer() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("accessanalyzer"))
 }
 
-func (e EndpointsAttributes) Account() terra.StringValue {
+func (e endpointsAttributes) Account() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("account"))
 }
 
-func (e EndpointsAttributes) Acm() terra.StringValue {
+func (e endpointsAttributes) Acm() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("acm"))
 }
 
-func (e EndpointsAttributes) Acmpca() terra.StringValue {
+func (e endpointsAttributes) Acmpca() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("acmpca"))
 }
 
-func (e EndpointsAttributes) Amg() terra.StringValue {
+func (e endpointsAttributes) Amg() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("amg"))
 }
 
-func (e EndpointsAttributes) Amp() terra.StringValue {
+func (e endpointsAttributes) Amp() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("amp"))
 }
 
-func (e EndpointsAttributes) Amplify() terra.StringValue {
+func (e endpointsAttributes) Amplify() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("amplify"))
 }
 
-func (e EndpointsAttributes) Apigateway() terra.StringValue {
+func (e endpointsAttributes) Apigateway() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("apigateway"))
 }
 
-func (e EndpointsAttributes) Apigatewayv2() terra.StringValue {
+func (e endpointsAttributes) Apigatewayv2() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("apigatewayv2"))
 }
 
-func (e EndpointsAttributes) Appautoscaling() terra.StringValue {
+func (e endpointsAttributes) Appautoscaling() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("appautoscaling"))
 }
 
-func (e EndpointsAttributes) Appconfig() terra.StringValue {
+func (e endpointsAttributes) Appconfig() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("appconfig"))
 }
 
-func (e EndpointsAttributes) Appfabric() terra.StringValue {
+func (e endpointsAttributes) Appfabric() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("appfabric"))
 }
 
-func (e EndpointsAttributes) Appflow() terra.StringValue {
+func (e endpointsAttributes) Appflow() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("appflow"))
 }
 
-func (e EndpointsAttributes) Appintegrations() terra.StringValue {
+func (e endpointsAttributes) Appintegrations() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("appintegrations"))
 }
 
-func (e EndpointsAttributes) Appintegrationsservice() terra.StringValue {
+func (e endpointsAttributes) Appintegrationsservice() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("appintegrationsservice"))
 }
 
-func (e EndpointsAttributes) Applicationautoscaling() terra.StringValue {
+func (e endpointsAttributes) Applicationautoscaling() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("applicationautoscaling"))
 }
 
-func (e EndpointsAttributes) Applicationinsights() terra.StringValue {
+func (e endpointsAttributes) Applicationinsights() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("applicationinsights"))
 }
 
-func (e EndpointsAttributes) Appmesh() terra.StringValue {
+func (e endpointsAttributes) Appmesh() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("appmesh"))
 }
 
-func (e EndpointsAttributes) Appregistry() terra.StringValue {
+func (e endpointsAttributes) Appregistry() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("appregistry"))
 }
 
-func (e EndpointsAttributes) Apprunner() terra.StringValue {
+func (e endpointsAttributes) Apprunner() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("apprunner"))
 }
 
-func (e EndpointsAttributes) Appstream() terra.StringValue {
+func (e endpointsAttributes) Appstream() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("appstream"))
 }
 
-func (e EndpointsAttributes) Appsync() terra.StringValue {
+func (e endpointsAttributes) Appsync() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("appsync"))
 }
 
-func (e EndpointsAttributes) Athena() terra.StringValue {
+func (e endpointsAttributes) Athena() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("athena"))
 }
 
-func (e EndpointsAttributes) Auditmanager() terra.StringValue {
+func (e endpointsAttributes) Auditmanager() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("auditmanager"))
 }
 
-func (e EndpointsAttributes) Autoscaling() terra.StringValue {
+func (e endpointsAttributes) Autoscaling() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("autoscaling"))
 }
 
-func (e EndpointsAttributes) Autoscalingplans() terra.StringValue {
+func (e endpointsAttributes) Autoscalingplans() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("autoscalingplans"))
 }
 
-func (e EndpointsAttributes) Backup() terra.StringValue {
+func (e endpointsAttributes) Backup() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("backup"))
 }
 
-func (e EndpointsAttributes) Batch() terra.StringValue {
+func (e endpointsAttributes) Batch() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("batch"))
 }
 
-func (e EndpointsAttributes) Beanstalk() terra.StringValue {
+func (e endpointsAttributes) Beanstalk() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("beanstalk"))
 }
 
-func (e EndpointsAttributes) Bedrock() terra.StringValue {
+func (e endpointsAttributes) Bedrock() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("bedrock"))
 }
 
-func (e EndpointsAttributes) Bedrockagent() terra.StringValue {
+func (e endpointsAttributes) Bedrockagent() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("bedrockagent"))
 }
 
-func (e EndpointsAttributes) Budgets() terra.StringValue {
+func (e endpointsAttributes) Budgets() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("budgets"))
 }
 
-func (e EndpointsAttributes) Ce() terra.StringValue {
+func (e endpointsAttributes) Ce() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("ce"))
 }
 
-func (e EndpointsAttributes) Chime() terra.StringValue {
+func (e endpointsAttributes) Chime() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("chime"))
 }
 
-func (e EndpointsAttributes) Chimesdkmediapipelines() terra.StringValue {
+func (e endpointsAttributes) Chimesdkmediapipelines() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("chimesdkmediapipelines"))
 }
 
-func (e EndpointsAttributes) Chimesdkvoice() terra.StringValue {
+func (e endpointsAttributes) Chimesdkvoice() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("chimesdkvoice"))
 }
 
-func (e EndpointsAttributes) Cleanrooms() terra.StringValue {
+func (e endpointsAttributes) Cleanrooms() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("cleanrooms"))
 }
 
-func (e EndpointsAttributes) Cloud9() terra.StringValue {
+func (e endpointsAttributes) Cloud9() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("cloud9"))
 }
 
-func (e EndpointsAttributes) Cloudcontrol() terra.StringValue {
+func (e endpointsAttributes) Cloudcontrol() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("cloudcontrol"))
 }
 
-func (e EndpointsAttributes) Cloudcontrolapi() terra.StringValue {
+func (e endpointsAttributes) Cloudcontrolapi() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("cloudcontrolapi"))
 }
 
-func (e EndpointsAttributes) Cloudformation() terra.StringValue {
+func (e endpointsAttributes) Cloudformation() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("cloudformation"))
 }
 
-func (e EndpointsAttributes) Cloudfront() terra.StringValue {
+func (e endpointsAttributes) Cloudfront() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("cloudfront"))
 }
 
-func (e EndpointsAttributes) Cloudfrontkeyvaluestore() terra.StringValue {
+func (e endpointsAttributes) Cloudfrontkeyvaluestore() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("cloudfrontkeyvaluestore"))
 }
 
-func (e EndpointsAttributes) Cloudhsm() terra.StringValue {
+func (e endpointsAttributes) Cloudhsm() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("cloudhsm"))
 }
 
-func (e EndpointsAttributes) Cloudhsmv2() terra.StringValue {
+func (e endpointsAttributes) Cloudhsmv2() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("cloudhsmv2"))
 }
 
-func (e EndpointsAttributes) Cloudsearch() terra.StringValue {
+func (e endpointsAttributes) Cloudsearch() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("cloudsearch"))
 }
 
-func (e EndpointsAttributes) Cloudtrail() terra.StringValue {
+func (e endpointsAttributes) Cloudtrail() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("cloudtrail"))
 }
 
-func (e EndpointsAttributes) Cloudwatch() terra.StringValue {
+func (e endpointsAttributes) Cloudwatch() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("cloudwatch"))
 }
 
-func (e EndpointsAttributes) Cloudwatchevents() terra.StringValue {
+func (e endpointsAttributes) Cloudwatchevents() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("cloudwatchevents"))
 }
 
-func (e EndpointsAttributes) Cloudwatchevidently() terra.StringValue {
+func (e endpointsAttributes) Cloudwatchevidently() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("cloudwatchevidently"))
 }
 
-func (e EndpointsAttributes) Cloudwatchlog() terra.StringValue {
+func (e endpointsAttributes) Cloudwatchlog() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("cloudwatchlog"))
 }
 
-func (e EndpointsAttributes) Cloudwatchlogs() terra.StringValue {
+func (e endpointsAttributes) Cloudwatchlogs() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("cloudwatchlogs"))
 }
 
-func (e EndpointsAttributes) Cloudwatchobservabilityaccessmanager() terra.StringValue {
+func (e endpointsAttributes) Cloudwatchobservabilityaccessmanager() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("cloudwatchobservabilityaccessmanager"))
 }
 
-func (e EndpointsAttributes) Cloudwatchrum() terra.StringValue {
+func (e endpointsAttributes) Cloudwatchrum() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("cloudwatchrum"))
 }
 
-func (e EndpointsAttributes) Codeartifact() terra.StringValue {
+func (e endpointsAttributes) Codeartifact() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("codeartifact"))
 }
 
-func (e EndpointsAttributes) Codebuild() terra.StringValue {
+func (e endpointsAttributes) Codebuild() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("codebuild"))
 }
 
-func (e EndpointsAttributes) Codecatalyst() terra.StringValue {
+func (e endpointsAttributes) Codecatalyst() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("codecatalyst"))
 }
 
-func (e EndpointsAttributes) Codecommit() terra.StringValue {
+func (e endpointsAttributes) Codecommit() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("codecommit"))
 }
 
-func (e EndpointsAttributes) Codedeploy() terra.StringValue {
+func (e endpointsAttributes) Codedeploy() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("codedeploy"))
 }
 
-func (e EndpointsAttributes) Codeguruprofiler() terra.StringValue {
+func (e endpointsAttributes) Codeguruprofiler() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("codeguruprofiler"))
 }
 
-func (e EndpointsAttributes) Codegurureviewer() terra.StringValue {
+func (e endpointsAttributes) Codegurureviewer() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("codegurureviewer"))
 }
 
-func (e EndpointsAttributes) Codepipeline() terra.StringValue {
+func (e endpointsAttributes) Codepipeline() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("codepipeline"))
 }
 
-func (e EndpointsAttributes) Codestarconnections() terra.StringValue {
+func (e endpointsAttributes) Codestarconnections() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("codestarconnections"))
 }
 
-func (e EndpointsAttributes) Codestarnotifications() terra.StringValue {
+func (e endpointsAttributes) Codestarnotifications() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("codestarnotifications"))
 }
 
-func (e EndpointsAttributes) Cognitoidentity() terra.StringValue {
+func (e endpointsAttributes) Cognitoidentity() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("cognitoidentity"))
 }
 
-func (e EndpointsAttributes) Cognitoidentityprovider() terra.StringValue {
+func (e endpointsAttributes) Cognitoidentityprovider() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("cognitoidentityprovider"))
 }
 
-func (e EndpointsAttributes) Cognitoidp() terra.StringValue {
+func (e endpointsAttributes) Cognitoidp() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("cognitoidp"))
 }
 
-func (e EndpointsAttributes) Comprehend() terra.StringValue {
+func (e endpointsAttributes) Comprehend() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("comprehend"))
 }
 
-func (e EndpointsAttributes) Computeoptimizer() terra.StringValue {
+func (e endpointsAttributes) Computeoptimizer() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("computeoptimizer"))
 }
 
-func (e EndpointsAttributes) Config() terra.StringValue {
+func (e endpointsAttributes) Config() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("config"))
 }
 
-func (e EndpointsAttributes) Configservice() terra.StringValue {
+func (e endpointsAttributes) Configservice() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("configservice"))
 }
 
-func (e EndpointsAttributes) Connect() terra.StringValue {
+func (e endpointsAttributes) Connect() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("connect"))
 }
 
-func (e EndpointsAttributes) Connectcases() terra.StringValue {
+func (e endpointsAttributes) Connectcases() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("connectcases"))
 }
 
-func (e EndpointsAttributes) Controltower() terra.StringValue {
+func (e endpointsAttributes) Controltower() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("controltower"))
 }
 
-func (e EndpointsAttributes) Costandusagereportservice() terra.StringValue {
+func (e endpointsAttributes) Costandusagereportservice() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("costandusagereportservice"))
 }
 
-func (e EndpointsAttributes) Costexplorer() terra.StringValue {
+func (e endpointsAttributes) Costexplorer() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("costexplorer"))
 }
 
-func (e EndpointsAttributes) Costoptimizationhub() terra.StringValue {
+func (e endpointsAttributes) Costoptimizationhub() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("costoptimizationhub"))
 }
 
-func (e EndpointsAttributes) Cur() terra.StringValue {
+func (e endpointsAttributes) Cur() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("cur"))
 }
 
-func (e EndpointsAttributes) Customerprofiles() terra.StringValue {
+func (e endpointsAttributes) Customerprofiles() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("customerprofiles"))
 }
 
-func (e EndpointsAttributes) Databasemigration() terra.StringValue {
+func (e endpointsAttributes) Databasemigration() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("databasemigration"))
 }
 
-func (e EndpointsAttributes) Databasemigrationservice() terra.StringValue {
+func (e endpointsAttributes) Databasemigrationservice() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("databasemigrationservice"))
 }
 
-func (e EndpointsAttributes) Dataexchange() terra.StringValue {
+func (e endpointsAttributes) Dataexchange() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("dataexchange"))
 }
 
-func (e EndpointsAttributes) Datapipeline() terra.StringValue {
+func (e endpointsAttributes) Datapipeline() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("datapipeline"))
 }
 
-func (e EndpointsAttributes) Datasync() terra.StringValue {
+func (e endpointsAttributes) Datasync() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("datasync"))
 }
 
-func (e EndpointsAttributes) Datazone() terra.StringValue {
+func (e endpointsAttributes) Datazone() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("datazone"))
 }
 
-func (e EndpointsAttributes) Dax() terra.StringValue {
+func (e endpointsAttributes) Dax() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("dax"))
 }
 
-func (e EndpointsAttributes) Deploy() terra.StringValue {
+func (e endpointsAttributes) Deploy() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("deploy"))
 }
 
-func (e EndpointsAttributes) Detective() terra.StringValue {
+func (e endpointsAttributes) Detective() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("detective"))
 }
 
-func (e EndpointsAttributes) Devicefarm() terra.StringValue {
+func (e endpointsAttributes) Devicefarm() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("devicefarm"))
 }
 
-func (e EndpointsAttributes) Devopsguru() terra.StringValue {
+func (e endpointsAttributes) Devopsguru() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("devopsguru"))
 }
 
-func (e EndpointsAttributes) Directconnect() terra.StringValue {
+func (e endpointsAttributes) Directconnect() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("directconnect"))
 }
 
-func (e EndpointsAttributes) Directoryservice() terra.StringValue {
+func (e endpointsAttributes) Directoryservice() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("directoryservice"))
 }
 
-func (e EndpointsAttributes) Dlm() terra.StringValue {
+func (e endpointsAttributes) Dlm() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("dlm"))
 }
 
-func (e EndpointsAttributes) Dms() terra.StringValue {
+func (e endpointsAttributes) Dms() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("dms"))
 }
 
-func (e EndpointsAttributes) Docdb() terra.StringValue {
+func (e endpointsAttributes) Docdb() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("docdb"))
 }
 
-func (e EndpointsAttributes) Docdbelastic() terra.StringValue {
+func (e endpointsAttributes) Docdbelastic() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("docdbelastic"))
 }
 
-func (e EndpointsAttributes) Ds() terra.StringValue {
+func (e endpointsAttributes) Ds() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("ds"))
 }
 
-func (e EndpointsAttributes) Dynamodb() terra.StringValue {
+func (e endpointsAttributes) Dynamodb() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("dynamodb"))
 }
 
-func (e EndpointsAttributes) Ec2() terra.StringValue {
+func (e endpointsAttributes) Ec2() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("ec2"))
 }
 
-func (e EndpointsAttributes) Ecr() terra.StringValue {
+func (e endpointsAttributes) Ecr() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("ecr"))
 }
 
-func (e EndpointsAttributes) Ecrpublic() terra.StringValue {
+func (e endpointsAttributes) Ecrpublic() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("ecrpublic"))
 }
 
-func (e EndpointsAttributes) Ecs() terra.StringValue {
+func (e endpointsAttributes) Ecs() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("ecs"))
 }
 
-func (e EndpointsAttributes) Efs() terra.StringValue {
+func (e endpointsAttributes) Efs() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("efs"))
 }
 
-func (e EndpointsAttributes) Eks() terra.StringValue {
+func (e endpointsAttributes) Eks() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("eks"))
 }
 
-func (e EndpointsAttributes) Elasticache() terra.StringValue {
+func (e endpointsAttributes) Elasticache() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("elasticache"))
 }
 
-func (e EndpointsAttributes) Elasticbeanstalk() terra.StringValue {
+func (e endpointsAttributes) Elasticbeanstalk() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("elasticbeanstalk"))
 }
 
-func (e EndpointsAttributes) Elasticloadbalancing() terra.StringValue {
+func (e endpointsAttributes) Elasticloadbalancing() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("elasticloadbalancing"))
 }
 
-func (e EndpointsAttributes) Elasticloadbalancingv2() terra.StringValue {
+func (e endpointsAttributes) Elasticloadbalancingv2() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("elasticloadbalancingv2"))
 }
 
-func (e EndpointsAttributes) Elasticsearch() terra.StringValue {
+func (e endpointsAttributes) Elasticsearch() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("elasticsearch"))
 }
 
-func (e EndpointsAttributes) Elasticsearchservice() terra.StringValue {
+func (e endpointsAttributes) Elasticsearchservice() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("elasticsearchservice"))
 }
 
-func (e EndpointsAttributes) Elastictranscoder() terra.StringValue {
+func (e endpointsAttributes) Elastictranscoder() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("elastictranscoder"))
 }
 
-func (e EndpointsAttributes) Elb() terra.StringValue {
+func (e endpointsAttributes) Elb() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("elb"))
 }
 
-func (e EndpointsAttributes) Elbv2() terra.StringValue {
+func (e endpointsAttributes) Elbv2() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("elbv2"))
 }
 
-func (e EndpointsAttributes) Emr() terra.StringValue {
+func (e endpointsAttributes) Emr() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("emr"))
 }
 
-func (e EndpointsAttributes) Emrcontainers() terra.StringValue {
+func (e endpointsAttributes) Emrcontainers() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("emrcontainers"))
 }
 
-func (e EndpointsAttributes) Emrserverless() terra.StringValue {
+func (e endpointsAttributes) Emrserverless() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("emrserverless"))
 }
 
-func (e EndpointsAttributes) Es() terra.StringValue {
+func (e endpointsAttributes) Es() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("es"))
 }
 
-func (e EndpointsAttributes) Eventbridge() terra.StringValue {
+func (e endpointsAttributes) Eventbridge() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("eventbridge"))
 }
 
-func (e EndpointsAttributes) Events() terra.StringValue {
+func (e endpointsAttributes) Events() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("events"))
 }
 
-func (e EndpointsAttributes) Evidently() terra.StringValue {
+func (e endpointsAttributes) Evidently() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("evidently"))
 }
 
-func (e EndpointsAttributes) Finspace() terra.StringValue {
+func (e endpointsAttributes) Finspace() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("finspace"))
 }
 
-func (e EndpointsAttributes) Firehose() terra.StringValue {
+func (e endpointsAttributes) Firehose() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("firehose"))
 }
 
-func (e EndpointsAttributes) Fis() terra.StringValue {
+func (e endpointsAttributes) Fis() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("fis"))
 }
 
-func (e EndpointsAttributes) Fms() terra.StringValue {
+func (e endpointsAttributes) Fms() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("fms"))
 }
 
-func (e EndpointsAttributes) Fsx() terra.StringValue {
+func (e endpointsAttributes) Fsx() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("fsx"))
 }
 
-func (e EndpointsAttributes) Gamelift() terra.StringValue {
+func (e endpointsAttributes) Gamelift() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("gamelift"))
 }
 
-func (e EndpointsAttributes) Glacier() terra.StringValue {
+func (e endpointsAttributes) Glacier() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("glacier"))
 }
 
-func (e EndpointsAttributes) Globalaccelerator() terra.StringValue {
+func (e endpointsAttributes) Globalaccelerator() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("globalaccelerator"))
 }
 
-func (e EndpointsAttributes) Glue() terra.StringValue {
+func (e endpointsAttributes) Glue() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("glue"))
 }
 
-func (e EndpointsAttributes) Grafana() terra.StringValue {
+func (e endpointsAttributes) Grafana() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("grafana"))
 }
 
-func (e EndpointsAttributes) Greengrass() terra.StringValue {
+func (e endpointsAttributes) Greengrass() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("greengrass"))
 }
 
-func (e EndpointsAttributes) Groundstation() terra.StringValue {
+func (e endpointsAttributes) Groundstation() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("groundstation"))
 }
 
-func (e EndpointsAttributes) Guardduty() terra.StringValue {
+func (e endpointsAttributes) Guardduty() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("guardduty"))
 }
 
-func (e EndpointsAttributes) Healthlake() terra.StringValue {
+func (e endpointsAttributes) Healthlake() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("healthlake"))
 }
 
-func (e EndpointsAttributes) Iam() terra.StringValue {
+func (e endpointsAttributes) Iam() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("iam"))
 }
 
-func (e EndpointsAttributes) Identitystore() terra.StringValue {
+func (e endpointsAttributes) Identitystore() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("identitystore"))
 }
 
-func (e EndpointsAttributes) Imagebuilder() terra.StringValue {
+func (e endpointsAttributes) Imagebuilder() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("imagebuilder"))
 }
 
-func (e EndpointsAttributes) Inspector() terra.StringValue {
+func (e endpointsAttributes) Inspector() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("inspector"))
 }
 
-func (e EndpointsAttributes) Inspector2() terra.StringValue {
+func (e endpointsAttributes) Inspector2() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("inspector2"))
 }
 
-func (e EndpointsAttributes) Inspectorv2() terra.StringValue {
+func (e endpointsAttributes) Inspectorv2() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("inspectorv2"))
 }
 
-func (e EndpointsAttributes) Internetmonitor() terra.StringValue {
+func (e endpointsAttributes) Internetmonitor() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("internetmonitor"))
 }
 
-func (e EndpointsAttributes) Iot() terra.StringValue {
+func (e endpointsAttributes) Iot() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("iot"))
 }
 
-func (e EndpointsAttributes) Iotanalytics() terra.StringValue {
+func (e endpointsAttributes) Iotanalytics() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("iotanalytics"))
 }
 
-func (e EndpointsAttributes) Iotevents() terra.StringValue {
+func (e endpointsAttributes) Iotevents() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("iotevents"))
 }
 
-func (e EndpointsAttributes) Ivs() terra.StringValue {
+func (e endpointsAttributes) Ivs() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("ivs"))
 }
 
-func (e EndpointsAttributes) Ivschat() terra.StringValue {
+func (e endpointsAttributes) Ivschat() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("ivschat"))
 }
 
-func (e EndpointsAttributes) Kafka() terra.StringValue {
+func (e endpointsAttributes) Kafka() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("kafka"))
 }
 
-func (e EndpointsAttributes) Kafkaconnect() terra.StringValue {
+func (e endpointsAttributes) Kafkaconnect() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("kafkaconnect"))
 }
 
-func (e EndpointsAttributes) Kendra() terra.StringValue {
+func (e endpointsAttributes) Kendra() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("kendra"))
 }
 
-func (e EndpointsAttributes) Keyspaces() terra.StringValue {
+func (e endpointsAttributes) Keyspaces() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("keyspaces"))
 }
 
-func (e EndpointsAttributes) Kinesis() terra.StringValue {
+func (e endpointsAttributes) Kinesis() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("kinesis"))
 }
 
-func (e EndpointsAttributes) Kinesisanalytics() terra.StringValue {
+func (e endpointsAttributes) Kinesisanalytics() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("kinesisanalytics"))
 }
 
-func (e EndpointsAttributes) Kinesisanalyticsv2() terra.StringValue {
+func (e endpointsAttributes) Kinesisanalyticsv2() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("kinesisanalyticsv2"))
 }
 
-func (e EndpointsAttributes) Kinesisvideo() terra.StringValue {
+func (e endpointsAttributes) Kinesisvideo() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("kinesisvideo"))
 }
 
-func (e EndpointsAttributes) Kms() terra.StringValue {
+func (e endpointsAttributes) Kms() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("kms"))
 }
 
-func (e EndpointsAttributes) Lakeformation() terra.StringValue {
+func (e endpointsAttributes) Lakeformation() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("lakeformation"))
 }
 
-func (e EndpointsAttributes) Lambda() terra.StringValue {
+func (e endpointsAttributes) Lambda() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("lambda"))
 }
 
-func (e EndpointsAttributes) Launchwizard() terra.StringValue {
+func (e endpointsAttributes) Launchwizard() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("launchwizard"))
 }
 
-func (e EndpointsAttributes) Lex() terra.StringValue {
+func (e endpointsAttributes) Lex() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("lex"))
 }
 
-func (e EndpointsAttributes) Lexmodelbuilding() terra.StringValue {
+func (e endpointsAttributes) Lexmodelbuilding() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("lexmodelbuilding"))
 }
 
-func (e EndpointsAttributes) Lexmodelbuildingservice() terra.StringValue {
+func (e endpointsAttributes) Lexmodelbuildingservice() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("lexmodelbuildingservice"))
 }
 
-func (e EndpointsAttributes) Lexmodels() terra.StringValue {
+func (e endpointsAttributes) Lexmodels() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("lexmodels"))
 }
 
-func (e EndpointsAttributes) Lexmodelsv2() terra.StringValue {
+func (e endpointsAttributes) Lexmodelsv2() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("lexmodelsv2"))
 }
 
-func (e EndpointsAttributes) Lexv2Models() terra.StringValue {
+func (e endpointsAttributes) Lexv2Models() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("lexv2models"))
 }
 
-func (e EndpointsAttributes) Licensemanager() terra.StringValue {
+func (e endpointsAttributes) Licensemanager() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("licensemanager"))
 }
 
-func (e EndpointsAttributes) Lightsail() terra.StringValue {
+func (e endpointsAttributes) Lightsail() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("lightsail"))
 }
 
-func (e EndpointsAttributes) Location() terra.StringValue {
+func (e endpointsAttributes) Location() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("location"))
 }
 
-func (e EndpointsAttributes) Locationservice() terra.StringValue {
+func (e endpointsAttributes) Locationservice() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("locationservice"))
 }
 
-func (e EndpointsAttributes) Logs() terra.StringValue {
+func (e endpointsAttributes) Logs() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("logs"))
 }
 
-func (e EndpointsAttributes) Lookoutmetrics() terra.StringValue {
+func (e endpointsAttributes) Lookoutmetrics() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("lookoutmetrics"))
 }
 
-func (e EndpointsAttributes) M2() terra.StringValue {
+func (e endpointsAttributes) M2() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("m2"))
 }
 
-func (e EndpointsAttributes) Macie2() terra.StringValue {
+func (e endpointsAttributes) Macie2() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("macie2"))
 }
 
-func (e EndpointsAttributes) Managedgrafana() terra.StringValue {
+func (e endpointsAttributes) Managedgrafana() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("managedgrafana"))
 }
 
-func (e EndpointsAttributes) Mediaconnect() terra.StringValue {
+func (e endpointsAttributes) Mediaconnect() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("mediaconnect"))
 }
 
-func (e EndpointsAttributes) Mediaconvert() terra.StringValue {
+func (e endpointsAttributes) Mediaconvert() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("mediaconvert"))
 }
 
-func (e EndpointsAttributes) Medialive() terra.StringValue {
+func (e endpointsAttributes) Medialive() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("medialive"))
 }
 
-func (e EndpointsAttributes) Mediapackage() terra.StringValue {
+func (e endpointsAttributes) Mediapackage() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("mediapackage"))
 }
 
-func (e EndpointsAttributes) Mediapackagev2() terra.StringValue {
+func (e endpointsAttributes) Mediapackagev2() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("mediapackagev2"))
 }
 
-func (e EndpointsAttributes) Mediastore() terra.StringValue {
+func (e endpointsAttributes) Mediastore() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("mediastore"))
 }
 
-func (e EndpointsAttributes) Memorydb() terra.StringValue {
+func (e endpointsAttributes) Memorydb() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("memorydb"))
 }
 
-func (e EndpointsAttributes) Mq() terra.StringValue {
+func (e endpointsAttributes) Mq() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("mq"))
 }
 
-func (e EndpointsAttributes) Msk() terra.StringValue {
+func (e endpointsAttributes) Msk() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("msk"))
 }
 
-func (e EndpointsAttributes) Mwaa() terra.StringValue {
+func (e endpointsAttributes) Mwaa() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("mwaa"))
 }
 
-func (e EndpointsAttributes) Neptune() terra.StringValue {
+func (e endpointsAttributes) Neptune() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("neptune"))
 }
 
-func (e EndpointsAttributes) Networkfirewall() terra.StringValue {
+func (e endpointsAttributes) Networkfirewall() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("networkfirewall"))
 }
 
-func (e EndpointsAttributes) Networkmanager() terra.StringValue {
+func (e endpointsAttributes) Networkmanager() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("networkmanager"))
 }
 
-func (e EndpointsAttributes) Oam() terra.StringValue {
+func (e endpointsAttributes) Oam() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("oam"))
 }
 
-func (e EndpointsAttributes) Opensearch() terra.StringValue {
+func (e endpointsAttributes) Opensearch() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("opensearch"))
 }
 
-func (e EndpointsAttributes) Opensearchingestion() terra.StringValue {
+func (e endpointsAttributes) Opensearchingestion() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("opensearchingestion"))
 }
 
-func (e EndpointsAttributes) Opensearchserverless() terra.StringValue {
+func (e endpointsAttributes) Opensearchserverless() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("opensearchserverless"))
 }
 
-func (e EndpointsAttributes) Opensearchservice() terra.StringValue {
+func (e endpointsAttributes) Opensearchservice() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("opensearchservice"))
 }
 
-func (e EndpointsAttributes) Opsworks() terra.StringValue {
+func (e endpointsAttributes) Opsworks() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("opsworks"))
 }
 
-func (e EndpointsAttributes) Organizations() terra.StringValue {
+func (e endpointsAttributes) Organizations() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("organizations"))
 }
 
-func (e EndpointsAttributes) Osis() terra.StringValue {
+func (e endpointsAttributes) Osis() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("osis"))
 }
 
-func (e EndpointsAttributes) Outposts() terra.StringValue {
+func (e endpointsAttributes) Outposts() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("outposts"))
 }
 
-func (e EndpointsAttributes) Paymentcryptography() terra.StringValue {
+func (e endpointsAttributes) Paymentcryptography() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("paymentcryptography"))
 }
 
-func (e EndpointsAttributes) Pcaconnectorad() terra.StringValue {
+func (e endpointsAttributes) Pcaconnectorad() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("pcaconnectorad"))
 }
 
-func (e EndpointsAttributes) Pinpoint() terra.StringValue {
+func (e endpointsAttributes) Pinpoint() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("pinpoint"))
 }
 
-func (e EndpointsAttributes) Pipes() terra.StringValue {
+func (e endpointsAttributes) Pipes() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("pipes"))
 }
 
-func (e EndpointsAttributes) Polly() terra.StringValue {
+func (e endpointsAttributes) Polly() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("polly"))
 }
 
-func (e EndpointsAttributes) Pricing() terra.StringValue {
+func (e endpointsAttributes) Pricing() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("pricing"))
 }
 
-func (e EndpointsAttributes) Prometheus() terra.StringValue {
+func (e endpointsAttributes) Prometheus() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("prometheus"))
 }
 
-func (e EndpointsAttributes) Prometheusservice() terra.StringValue {
+func (e endpointsAttributes) Prometheusservice() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("prometheusservice"))
 }
 
-func (e EndpointsAttributes) Qbusiness() terra.StringValue {
+func (e endpointsAttributes) Qbusiness() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("qbusiness"))
 }
 
-func (e EndpointsAttributes) Qldb() terra.StringValue {
+func (e endpointsAttributes) Qldb() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("qldb"))
 }
 
-func (e EndpointsAttributes) Quicksight() terra.StringValue {
+func (e endpointsAttributes) Quicksight() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("quicksight"))
 }
 
-func (e EndpointsAttributes) Ram() terra.StringValue {
+func (e endpointsAttributes) Ram() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("ram"))
 }
 
-func (e EndpointsAttributes) Rbin() terra.StringValue {
+func (e endpointsAttributes) Rbin() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("rbin"))
 }
 
-func (e EndpointsAttributes) Rds() terra.StringValue {
+func (e endpointsAttributes) Rds() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("rds"))
 }
 
-func (e EndpointsAttributes) Recyclebin() terra.StringValue {
+func (e endpointsAttributes) Recyclebin() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("recyclebin"))
 }
 
-func (e EndpointsAttributes) Redshift() terra.StringValue {
+func (e endpointsAttributes) Redshift() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("redshift"))
 }
 
-func (e EndpointsAttributes) Redshiftdata() terra.StringValue {
+func (e endpointsAttributes) Redshiftdata() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("redshiftdata"))
 }
 
-func (e EndpointsAttributes) Redshiftdataapiservice() terra.StringValue {
+func (e endpointsAttributes) Redshiftdataapiservice() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("redshiftdataapiservice"))
 }
 
-func (e EndpointsAttributes) Redshiftserverless() terra.StringValue {
+func (e endpointsAttributes) Redshiftserverless() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("redshiftserverless"))
 }
 
-func (e EndpointsAttributes) Rekognition() terra.StringValue {
+func (e endpointsAttributes) Rekognition() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("rekognition"))
 }
 
-func (e EndpointsAttributes) Resourceexplorer2() terra.StringValue {
+func (e endpointsAttributes) Resourceexplorer2() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("resourceexplorer2"))
 }
 
-func (e EndpointsAttributes) Resourcegroups() terra.StringValue {
+func (e endpointsAttributes) Resourcegroups() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("resourcegroups"))
 }
 
-func (e EndpointsAttributes) Resourcegroupstagging() terra.StringValue {
+func (e endpointsAttributes) Resourcegroupstagging() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("resourcegroupstagging"))
 }
 
-func (e EndpointsAttributes) Resourcegroupstaggingapi() terra.StringValue {
+func (e endpointsAttributes) Resourcegroupstaggingapi() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("resourcegroupstaggingapi"))
 }
 
-func (e EndpointsAttributes) Rolesanywhere() terra.StringValue {
+func (e endpointsAttributes) Rolesanywhere() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("rolesanywhere"))
 }
 
-func (e EndpointsAttributes) Route53() terra.StringValue {
+func (e endpointsAttributes) Route53() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("route53"))
 }
 
-func (e EndpointsAttributes) Route53Domains() terra.StringValue {
+func (e endpointsAttributes) Route53Domains() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("route53domains"))
 }
 
-func (e EndpointsAttributes) Route53Recoverycontrolconfig() terra.StringValue {
+func (e endpointsAttributes) Route53Recoverycontrolconfig() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("route53recoverycontrolconfig"))
 }
 
-func (e EndpointsAttributes) Route53Recoveryreadiness() terra.StringValue {
+func (e endpointsAttributes) Route53Recoveryreadiness() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("route53recoveryreadiness"))
 }
 
-func (e EndpointsAttributes) Route53Resolver() terra.StringValue {
+func (e endpointsAttributes) Route53Resolver() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("route53resolver"))
 }
 
-func (e EndpointsAttributes) Rum() terra.StringValue {
+func (e endpointsAttributes) Rum() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("rum"))
 }
 
-func (e EndpointsAttributes) S3() terra.StringValue {
+func (e endpointsAttributes) S3() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("s3"))
 }
 
-func (e EndpointsAttributes) S3Api() terra.StringValue {
+func (e endpointsAttributes) S3Api() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("s3api"))
 }
 
-func (e EndpointsAttributes) S3Control() terra.StringValue {
+func (e endpointsAttributes) S3Control() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("s3control"))
 }
 
-func (e EndpointsAttributes) S3Outposts() terra.StringValue {
+func (e endpointsAttributes) S3Outposts() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("s3outposts"))
 }
 
-func (e EndpointsAttributes) Sagemaker() terra.StringValue {
+func (e endpointsAttributes) Sagemaker() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("sagemaker"))
 }
 
-func (e EndpointsAttributes) Scheduler() terra.StringValue {
+func (e endpointsAttributes) Scheduler() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("scheduler"))
 }
 
-func (e EndpointsAttributes) Schemas() terra.StringValue {
+func (e endpointsAttributes) Schemas() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("schemas"))
 }
 
-func (e EndpointsAttributes) Sdb() terra.StringValue {
+func (e endpointsAttributes) Sdb() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("sdb"))
 }
 
-func (e EndpointsAttributes) Secretsmanager() terra.StringValue {
+func (e endpointsAttributes) Secretsmanager() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("secretsmanager"))
 }
 
-func (e EndpointsAttributes) Securityhub() terra.StringValue {
+func (e endpointsAttributes) Securityhub() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("securityhub"))
 }
 
-func (e EndpointsAttributes) Securitylake() terra.StringValue {
+func (e endpointsAttributes) Securitylake() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("securitylake"))
 }
 
-func (e EndpointsAttributes) Serverlessapplicationrepository() terra.StringValue {
+func (e endpointsAttributes) Serverlessapplicationrepository() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("serverlessapplicationrepository"))
 }
 
-func (e EndpointsAttributes) Serverlessapprepo() terra.StringValue {
+func (e endpointsAttributes) Serverlessapprepo() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("serverlessapprepo"))
 }
 
-func (e EndpointsAttributes) Serverlessrepo() terra.StringValue {
+func (e endpointsAttributes) Serverlessrepo() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("serverlessrepo"))
 }
 
-func (e EndpointsAttributes) Servicecatalog() terra.StringValue {
+func (e endpointsAttributes) Servicecatalog() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("servicecatalog"))
 }
 
-func (e EndpointsAttributes) Servicecatalogappregistry() terra.StringValue {
+func (e endpointsAttributes) Servicecatalogappregistry() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("servicecatalogappregistry"))
 }
 
-func (e EndpointsAttributes) Servicediscovery() terra.StringValue {
+func (e endpointsAttributes) Servicediscovery() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("servicediscovery"))
 }
 
-func (e EndpointsAttributes) Servicequotas() terra.StringValue {
+func (e endpointsAttributes) Servicequotas() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("servicequotas"))
 }
 
-func (e EndpointsAttributes) Ses() terra.StringValue {
+func (e endpointsAttributes) Ses() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("ses"))
 }
 
-func (e EndpointsAttributes) Sesv2() terra.StringValue {
+func (e endpointsAttributes) Sesv2() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("sesv2"))
 }
 
-func (e EndpointsAttributes) Sfn() terra.StringValue {
+func (e endpointsAttributes) Sfn() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("sfn"))
 }
 
-func (e EndpointsAttributes) Shield() terra.StringValue {
+func (e endpointsAttributes) Shield() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("shield"))
 }
 
-func (e EndpointsAttributes) Signer() terra.StringValue {
+func (e endpointsAttributes) Signer() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("signer"))
 }
 
-func (e EndpointsAttributes) Simpledb() terra.StringValue {
+func (e endpointsAttributes) Simpledb() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("simpledb"))
 }
 
-func (e EndpointsAttributes) Sns() terra.StringValue {
+func (e endpointsAttributes) Sns() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("sns"))
 }
 
-func (e EndpointsAttributes) Sqs() terra.StringValue {
+func (e endpointsAttributes) Sqs() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("sqs"))
 }
 
-func (e EndpointsAttributes) Ssm() terra.StringValue {
+func (e endpointsAttributes) Ssm() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("ssm"))
 }
 
-func (e EndpointsAttributes) Ssmcontacts() terra.StringValue {
+func (e endpointsAttributes) Ssmcontacts() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("ssmcontacts"))
 }
 
-func (e EndpointsAttributes) Ssmincidents() terra.StringValue {
+func (e endpointsAttributes) Ssmincidents() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("ssmincidents"))
 }
 
-func (e EndpointsAttributes) Ssmsap() terra.StringValue {
+func (e endpointsAttributes) Ssmsap() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("ssmsap"))
 }
 
-func (e EndpointsAttributes) Sso() terra.StringValue {
+func (e endpointsAttributes) Sso() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("sso"))
 }
 
-func (e EndpointsAttributes) Ssoadmin() terra.StringValue {
+func (e endpointsAttributes) Ssoadmin() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("ssoadmin"))
 }
 
-func (e EndpointsAttributes) Stepfunctions() terra.StringValue {
+func (e endpointsAttributes) Stepfunctions() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("stepfunctions"))
 }
 
-func (e EndpointsAttributes) Storagegateway() terra.StringValue {
+func (e endpointsAttributes) Storagegateway() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("storagegateway"))
 }
 
-func (e EndpointsAttributes) Sts() terra.StringValue {
+func (e endpointsAttributes) Sts() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("sts"))
 }
 
-func (e EndpointsAttributes) Swf() terra.StringValue {
+func (e endpointsAttributes) Swf() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("swf"))
 }
 
-func (e EndpointsAttributes) Synthetics() terra.StringValue {
+func (e endpointsAttributes) Synthetics() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("synthetics"))
 }
 
-func (e EndpointsAttributes) Timestreamwrite() terra.StringValue {
+func (e endpointsAttributes) Timestreamwrite() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("timestreamwrite"))
 }
 
-func (e EndpointsAttributes) Transcribe() terra.StringValue {
+func (e endpointsAttributes) Transcribe() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("transcribe"))
 }
 
-func (e EndpointsAttributes) Transcribeservice() terra.StringValue {
+func (e endpointsAttributes) Transcribeservice() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("transcribeservice"))
 }
 
-func (e EndpointsAttributes) Transfer() terra.StringValue {
+func (e endpointsAttributes) Transfer() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("transfer"))
 }
 
-func (e EndpointsAttributes) Verifiedpermissions() terra.StringValue {
+func (e endpointsAttributes) Verifiedpermissions() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("verifiedpermissions"))
 }
 
-func (e EndpointsAttributes) Vpclattice() terra.StringValue {
+func (e endpointsAttributes) Vpclattice() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("vpclattice"))
 }
 
-func (e EndpointsAttributes) Waf() terra.StringValue {
+func (e endpointsAttributes) Waf() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("waf"))
 }
 
-func (e EndpointsAttributes) Wafregional() terra.StringValue {
+func (e endpointsAttributes) Wafregional() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("wafregional"))
 }
 
-func (e EndpointsAttributes) Wafv2() terra.StringValue {
+func (e endpointsAttributes) Wafv2() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("wafv2"))
 }
 
-func (e EndpointsAttributes) Wellarchitected() terra.StringValue {
+func (e endpointsAttributes) Wellarchitected() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("wellarchitected"))
 }
 
-func (e EndpointsAttributes) Worklink() terra.StringValue {
+func (e endpointsAttributes) Worklink() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("worklink"))
 }
 
-func (e EndpointsAttributes) Workspaces() terra.StringValue {
+func (e endpointsAttributes) Workspaces() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("workspaces"))
 }
 
-func (e EndpointsAttributes) Xray() terra.StringValue {
+func (e endpointsAttributes) Xray() terra.StringValue {
 	return terra.ReferenceAsString(e.ref.Append("xray"))
 }
 
-type IgnoreTagsAttributes struct {
+type ignoreTagsAttributes struct {
 	ref terra.Reference
 }
 
-func (it IgnoreTagsAttributes) InternalRef() (terra.Reference, error) {
+func (it ignoreTagsAttributes) InternalRef() (terra.Reference, error) {
 	return it.ref, nil
 }
 
-func (it IgnoreTagsAttributes) InternalWithRef(ref terra.Reference) IgnoreTagsAttributes {
-	return IgnoreTagsAttributes{ref: ref}
+func (it ignoreTagsAttributes) InternalWithRef(ref terra.Reference) ignoreTagsAttributes {
+	return ignoreTagsAttributes{ref: ref}
 }
 
-func (it IgnoreTagsAttributes) InternalTokens() (hclwrite.Tokens, error) {
+func (it ignoreTagsAttributes) InternalTokens() (hclwrite.Tokens, error) {
 	return it.ref.InternalTokens()
 }
 
-func (it IgnoreTagsAttributes) KeyPrefixes() terra.SetValue[terra.StringValue] {
+func (it ignoreTagsAttributes) KeyPrefixes() terra.SetValue[terra.StringValue] {
 	return terra.ReferenceAsSet[terra.StringValue](it.ref.Append("key_prefixes"))
 }
 
-func (it IgnoreTagsAttributes) Keys() terra.SetValue[terra.StringValue] {
+func (it ignoreTagsAttributes) Keys() terra.SetValue[terra.StringValue] {
 	return terra.ReferenceAsSet[terra.StringValue](it.ref.Append("keys"))
 }
 
@@ -2564,44 +2564,44 @@ func (aec awsEmrClusterAttributes) VisibleToAllUsers() terra.BoolValue {
 	return terra.ReferenceAsBool(aec.ref.Append("visible_to_all_users"))
 }
 
-func (aec awsEmrClusterAttributes) PlacementGroupConfig() terra.ListValue[PlacementGroupConfigAttributes] {
-	return terra.ReferenceAsList[PlacementGroupConfigAttributes](aec.ref.Append("placement_group_config"))
+func (aec awsEmrClusterAttributes) PlacementGroupConfig() terra.ListValue[placementGroupConfigAttributes] {
+	return terra.ReferenceAsList[placementGroupConfigAttributes](aec.ref.Append("placement_group_config"))
 }
 
-func (aec awsEmrClusterAttributes) Step() terra.ListValue[StepAttributes] {
-	return terra.ReferenceAsList[StepAttributes](aec.ref.Append("step"))
+func (aec awsEmrClusterAttributes) Step() terra.ListValue[stepAttributes] {
+	return terra.ReferenceAsList[stepAttributes](aec.ref.Append("step"))
 }
 
-func (aec awsEmrClusterAttributes) AutoTerminationPolicy() terra.ListValue[AutoTerminationPolicyAttributes] {
-	return terra.ReferenceAsList[AutoTerminationPolicyAttributes](aec.ref.Append("auto_termination_policy"))
+func (aec awsEmrClusterAttributes) AutoTerminationPolicy() terra.ListValue[autoTerminationPolicyAttributes] {
+	return terra.ReferenceAsList[autoTerminationPolicyAttributes](aec.ref.Append("auto_termination_policy"))
 }
 
-func (aec awsEmrClusterAttributes) BootstrapAction() terra.ListValue[BootstrapActionAttributes] {
-	return terra.ReferenceAsList[BootstrapActionAttributes](aec.ref.Append("bootstrap_action"))
+func (aec awsEmrClusterAttributes) BootstrapAction() terra.ListValue[bootstrapActionAttributes] {
+	return terra.ReferenceAsList[bootstrapActionAttributes](aec.ref.Append("bootstrap_action"))
 }
 
-func (aec awsEmrClusterAttributes) CoreInstanceFleet() terra.ListValue[CoreInstanceFleetAttributes] {
-	return terra.ReferenceAsList[CoreInstanceFleetAttributes](aec.ref.Append("core_instance_fleet"))
+func (aec awsEmrClusterAttributes) CoreInstanceFleet() terra.ListValue[coreInstanceFleetAttributes] {
+	return terra.ReferenceAsList[coreInstanceFleetAttributes](aec.ref.Append("core_instance_fleet"))
 }
 
-func (aec awsEmrClusterAttributes) CoreInstanceGroup() terra.ListValue[CoreInstanceGroupAttributes] {
-	return terra.ReferenceAsList[CoreInstanceGroupAttributes](aec.ref.Append("core_instance_group"))
+func (aec awsEmrClusterAttributes) CoreInstanceGroup() terra.ListValue[coreInstanceGroupAttributes] {
+	return terra.ReferenceAsList[coreInstanceGroupAttributes](aec.ref.Append("core_instance_group"))
 }
 
-func (aec awsEmrClusterAttributes) Ec2Attributes() terra.ListValue[Ec2AttributesAttributes] {
-	return terra.ReferenceAsList[Ec2AttributesAttributes](aec.ref.Append("ec2_attributes"))
+func (aec awsEmrClusterAttributes) Ec2Attributes() terra.ListValue[ec2AttributesAttributes] {
+	return terra.ReferenceAsList[ec2AttributesAttributes](aec.ref.Append("ec2_attributes"))
 }
 
-func (aec awsEmrClusterAttributes) KerberosAttributes() terra.ListValue[KerberosAttributesAttributes] {
-	return terra.ReferenceAsList[KerberosAttributesAttributes](aec.ref.Append("kerberos_attributes"))
+func (aec awsEmrClusterAttributes) KerberosAttributes() terra.ListValue[kerberosAttributesAttributes] {
+	return terra.ReferenceAsList[kerberosAttributesAttributes](aec.ref.Append("kerberos_attributes"))
 }
 
-func (aec awsEmrClusterAttributes) MasterInstanceFleet() terra.ListValue[MasterInstanceFleetAttributes] {
-	return terra.ReferenceAsList[MasterInstanceFleetAttributes](aec.ref.Append("master_instance_fleet"))
+func (aec awsEmrClusterAttributes) MasterInstanceFleet() terra.ListValue[masterInstanceFleetAttributes] {
+	return terra.ReferenceAsList[masterInstanceFleetAttributes](aec.ref.Append("master_instance_fleet"))
 }
 
-func (aec awsEmrClusterAttributes) MasterInstanceGroup() terra.ListValue[MasterInstanceGroupAttributes] {
-	return terra.ReferenceAsList[MasterInstanceGroupAttributes](aec.ref.Append("master_instance_group"))
+func (aec awsEmrClusterAttributes) MasterInstanceGroup() terra.ListValue[masterInstanceGroupAttributes] {
+	return terra.ReferenceAsList[masterInstanceGroupAttributes](aec.ref.Append("master_instance_group"))
 }
 
 type awsEmrClusterState struct {
@@ -2919,819 +2919,819 @@ type MasterInstanceGroupEbsConfig struct {
 	VolumesPerInstance terra.NumberValue `hcl:"volumes_per_instance,attr"`
 }
 
-type PlacementGroupConfigAttributes struct {
+type placementGroupConfigAttributes struct {
 	ref terra.Reference
 }
 
-func (pgc PlacementGroupConfigAttributes) InternalRef() (terra.Reference, error) {
+func (pgc placementGroupConfigAttributes) InternalRef() (terra.Reference, error) {
 	return pgc.ref, nil
 }
 
-func (pgc PlacementGroupConfigAttributes) InternalWithRef(ref terra.Reference) PlacementGroupConfigAttributes {
-	return PlacementGroupConfigAttributes{ref: ref}
+func (pgc placementGroupConfigAttributes) InternalWithRef(ref terra.Reference) placementGroupConfigAttributes {
+	return placementGroupConfigAttributes{ref: ref}
 }
 
-func (pgc PlacementGroupConfigAttributes) InternalTokens() (hclwrite.Tokens, error) {
+func (pgc placementGroupConfigAttributes) InternalTokens() (hclwrite.Tokens, error) {
 	return pgc.ref.InternalTokens()
 }
 
-func (pgc PlacementGroupConfigAttributes) InstanceRole() terra.StringValue {
+func (pgc placementGroupConfigAttributes) InstanceRole() terra.StringValue {
 	return terra.ReferenceAsString(pgc.ref.Append("instance_role"))
 }
 
-func (pgc PlacementGroupConfigAttributes) PlacementStrategy() terra.StringValue {
+func (pgc placementGroupConfigAttributes) PlacementStrategy() terra.StringValue {
 	return terra.ReferenceAsString(pgc.ref.Append("placement_strategy"))
 }
 
-type StepAttributes struct {
+type stepAttributes struct {
 	ref terra.Reference
 }
 
-func (s StepAttributes) InternalRef() (terra.Reference, error) {
+func (s stepAttributes) InternalRef() (terra.Reference, error) {
 	return s.ref, nil
 }
 
-func (s StepAttributes) InternalWithRef(ref terra.Reference) StepAttributes {
-	return StepAttributes{ref: ref}
+func (s stepAttributes) InternalWithRef(ref terra.Reference) stepAttributes {
+	return stepAttributes{ref: ref}
 }
 
-func (s StepAttributes) InternalTokens() (hclwrite.Tokens, error) {
+func (s stepAttributes) InternalTokens() (hclwrite.Tokens, error) {
 	return s.ref.InternalTokens()
 }
 
-func (s StepAttributes) ActionOnFailure() terra.StringValue {
+func (s stepAttributes) ActionOnFailure() terra.StringValue {
 	return terra.ReferenceAsString(s.ref.Append("action_on_failure"))
 }
 
-func (s StepAttributes) Name() terra.StringValue {
+func (s stepAttributes) Name() terra.StringValue {
 	return terra.ReferenceAsString(s.ref.Append("name"))
 }
 
-func (s StepAttributes) HadoopJarStep() terra.ListValue[StepHadoopJarStepAttributes] {
-	return terra.ReferenceAsList[StepHadoopJarStepAttributes](s.ref.Append("hadoop_jar_step"))
+func (s stepAttributes) HadoopJarStep() terra.ListValue[stepHadoopJarStepAttributes] {
+	return terra.ReferenceAsList[stepHadoopJarStepAttributes](s.ref.Append("hadoop_jar_step"))
 }
 
-type StepHadoopJarStepAttributes struct {
+type stepHadoopJarStepAttributes struct {
 	ref terra.Reference
 }
 
-func (hjs StepHadoopJarStepAttributes) InternalRef() (terra.Reference, error) {
+func (hjs stepHadoopJarStepAttributes) InternalRef() (terra.Reference, error) {
 	return hjs.ref, nil
 }
 
-func (hjs StepHadoopJarStepAttributes) InternalWithRef(ref terra.Reference) StepHadoopJarStepAttributes {
-	return StepHadoopJarStepAttributes{ref: ref}
+func (hjs stepHadoopJarStepAttributes) InternalWithRef(ref terra.Reference) stepHadoopJarStepAttributes {
+	return stepHadoopJarStepAttributes{ref: ref}
 }
 
-func (hjs StepHadoopJarStepAttributes) InternalTokens() (hclwrite.Tokens, error) {
+func (hjs stepHadoopJarStepAttributes) InternalTokens() (hclwrite.Tokens, error) {
 	return hjs.ref.InternalTokens()
 }
 
-func (hjs StepHadoopJarStepAttributes) Args() terra.ListValue[terra.StringValue] {
+func (hjs stepHadoopJarStepAttributes) Args() terra.ListValue[terra.StringValue] {
 	return terra.ReferenceAsList[terra.StringValue](hjs.ref.Append("args"))
 }
 
-func (hjs StepHadoopJarStepAttributes) Jar() terra.StringValue {
+func (hjs stepHadoopJarStepAttributes) Jar() terra.StringValue {
 	return terra.ReferenceAsString(hjs.ref.Append("jar"))
 }
 
-func (hjs StepHadoopJarStepAttributes) MainClass() terra.StringValue {
+func (hjs stepHadoopJarStepAttributes) MainClass() terra.StringValue {
 	return terra.ReferenceAsString(hjs.ref.Append("main_class"))
 }
 
-func (hjs StepHadoopJarStepAttributes) Properties() terra.MapValue[terra.StringValue] {
+func (hjs stepHadoopJarStepAttributes) Properties() terra.MapValue[terra.StringValue] {
 	return terra.ReferenceAsMap[terra.StringValue](hjs.ref.Append("properties"))
 }
 
-type AutoTerminationPolicyAttributes struct {
+type autoTerminationPolicyAttributes struct {
 	ref terra.Reference
 }
 
-func (atp AutoTerminationPolicyAttributes) InternalRef() (terra.Reference, error) {
+func (atp autoTerminationPolicyAttributes) InternalRef() (terra.Reference, error) {
 	return atp.ref, nil
 }
 
-func (atp AutoTerminationPolicyAttributes) InternalWithRef(ref terra.Reference) AutoTerminationPolicyAttributes {
-	return AutoTerminationPolicyAttributes{ref: ref}
+func (atp autoTerminationPolicyAttributes) InternalWithRef(ref terra.Reference) autoTerminationPolicyAttributes {
+	return autoTerminationPolicyAttributes{ref: ref}
 }
 
-func (atp AutoTerminationPolicyAttributes) InternalTokens() (hclwrite.Tokens, error) {
+func (atp autoTerminationPolicyAttributes) InternalTokens() (hclwrite.Tokens, error) {
 	return atp.ref.InternalTokens()
 }
 
-func (atp AutoTerminationPolicyAttributes) IdleTimeout() terra.NumberValue {
+func (atp autoTerminationPolicyAttributes) IdleTimeout() terra.NumberValue {
 	return terra.ReferenceAsNumber(atp.ref.Append("idle_timeout"))
 }
 
-type BootstrapActionAttributes struct {
+type bootstrapActionAttributes struct {
 	ref terra.Reference
 }
 
-func (ba BootstrapActionAttributes) InternalRef() (terra.Reference, error) {
+func (ba bootstrapActionAttributes) InternalRef() (terra.Reference, error) {
 	return ba.ref, nil
 }
 
-func (ba BootstrapActionAttributes) InternalWithRef(ref terra.Reference) BootstrapActionAttributes {
-	return BootstrapActionAttributes{ref: ref}
+func (ba bootstrapActionAttributes) InternalWithRef(ref terra.Reference) bootstrapActionAttributes {
+	return bootstrapActionAttributes{ref: ref}
 }
 
-func (ba BootstrapActionAttributes) InternalTokens() (hclwrite.Tokens, error) {
+func (ba bootstrapActionAttributes) InternalTokens() (hclwrite.Tokens, error) {
 	return ba.ref.InternalTokens()
 }
 
-func (ba BootstrapActionAttributes) Args() terra.ListValue[terra.StringValue] {
+func (ba bootstrapActionAttributes) Args() terra.ListValue[terra.StringValue] {
 	return terra.ReferenceAsList[terra.StringValue](ba.ref.Append("args"))
 }
 
-func (ba BootstrapActionAttributes) Name() terra.StringValue {
+func (ba bootstrapActionAttributes) Name() terra.StringValue {
 	return terra.ReferenceAsString(ba.ref.Append("name"))
 }
 
-func (ba BootstrapActionAttributes) Path() terra.StringValue {
+func (ba bootstrapActionAttributes) Path() terra.StringValue {
 	return terra.ReferenceAsString(ba.ref.Append("path"))
 }
 
-type CoreInstanceFleetAttributes struct {
+type coreInstanceFleetAttributes struct {
 	ref terra.Reference
 }
 
-func (cif CoreInstanceFleetAttributes) InternalRef() (terra.Reference, error) {
+func (cif coreInstanceFleetAttributes) InternalRef() (terra.Reference, error) {
 	return cif.ref, nil
 }
 
-func (cif CoreInstanceFleetAttributes) InternalWithRef(ref terra.Reference) CoreInstanceFleetAttributes {
-	return CoreInstanceFleetAttributes{ref: ref}
+func (cif coreInstanceFleetAttributes) InternalWithRef(ref terra.Reference) coreInstanceFleetAttributes {
+	return coreInstanceFleetAttributes{ref: ref}
 }
 
-func (cif CoreInstanceFleetAttributes) InternalTokens() (hclwrite.Tokens, error) {
+func (cif coreInstanceFleetAttributes) InternalTokens() (hclwrite.Tokens, error) {
 	return cif.ref.InternalTokens()
 }
 
-func (cif CoreInstanceFleetAttributes) Id() terra.StringValue {
+func (cif coreInstanceFleetAttributes) Id() terra.StringValue {
 	return terra.ReferenceAsString(cif.ref.Append("id"))
 }
 
-func (cif CoreInstanceFleetAttributes) Name() terra.StringValue {
+func (cif coreInstanceFleetAttributes) Name() terra.StringValue {
 	return terra.ReferenceAsString(cif.ref.Append("name"))
 }
 
-func (cif CoreInstanceFleetAttributes) ProvisionedOnDemandCapacity() terra.NumberValue {
+func (cif coreInstanceFleetAttributes) ProvisionedOnDemandCapacity() terra.NumberValue {
 	return terra.ReferenceAsNumber(cif.ref.Append("provisioned_on_demand_capacity"))
 }
 
-func (cif CoreInstanceFleetAttributes) ProvisionedSpotCapacity() terra.NumberValue {
+func (cif coreInstanceFleetAttributes) ProvisionedSpotCapacity() terra.NumberValue {
 	return terra.ReferenceAsNumber(cif.ref.Append("provisioned_spot_capacity"))
 }
 
-func (cif CoreInstanceFleetAttributes) TargetOnDemandCapacity() terra.NumberValue {
+func (cif coreInstanceFleetAttributes) TargetOnDemandCapacity() terra.NumberValue {
 	return terra.ReferenceAsNumber(cif.ref.Append("target_on_demand_capacity"))
 }
 
-func (cif CoreInstanceFleetAttributes) TargetSpotCapacity() terra.NumberValue {
+func (cif coreInstanceFleetAttributes) TargetSpotCapacity() terra.NumberValue {
 	return terra.ReferenceAsNumber(cif.ref.Append("target_spot_capacity"))
 }
 
-func (cif CoreInstanceFleetAttributes) InstanceTypeConfigs() terra.SetValue[CoreInstanceFleetInstanceTypeConfigsAttributes] {
-	return terra.ReferenceAsSet[CoreInstanceFleetInstanceTypeConfigsAttributes](cif.ref.Append("instance_type_configs"))
+func (cif coreInstanceFleetAttributes) InstanceTypeConfigs() terra.SetValue[coreInstanceFleetInstanceTypeConfigsAttributes] {
+	return terra.ReferenceAsSet[coreInstanceFleetInstanceTypeConfigsAttributes](cif.ref.Append("instance_type_configs"))
 }
 
-func (cif CoreInstanceFleetAttributes) LaunchSpecifications() terra.ListValue[CoreInstanceFleetLaunchSpecificationsAttributes] {
-	return terra.ReferenceAsList[CoreInstanceFleetLaunchSpecificationsAttributes](cif.ref.Append("launch_specifications"))
+func (cif coreInstanceFleetAttributes) LaunchSpecifications() terra.ListValue[coreInstanceFleetLaunchSpecificationsAttributes] {
+	return terra.ReferenceAsList[coreInstanceFleetLaunchSpecificationsAttributes](cif.ref.Append("launch_specifications"))
 }
 
-type CoreInstanceFleetInstanceTypeConfigsAttributes struct {
+type coreInstanceFleetInstanceTypeConfigsAttributes struct {
 	ref terra.Reference
 }
 
-func (itc CoreInstanceFleetInstanceTypeConfigsAttributes) InternalRef() (terra.Reference, error) {
+func (itc coreInstanceFleetInstanceTypeConfigsAttributes) InternalRef() (terra.Reference, error) {
 	return itc.ref, nil
 }
 
-func (itc CoreInstanceFleetInstanceTypeConfigsAttributes) InternalWithRef(ref terra.Reference) CoreInstanceFleetInstanceTypeConfigsAttributes {
-	return CoreInstanceFleetInstanceTypeConfigsAttributes{ref: ref}
+func (itc coreInstanceFleetInstanceTypeConfigsAttributes) InternalWithRef(ref terra.Reference) coreInstanceFleetInstanceTypeConfigsAttributes {
+	return coreInstanceFleetInstanceTypeConfigsAttributes{ref: ref}
 }
 
-func (itc CoreInstanceFleetInstanceTypeConfigsAttributes) InternalTokens() (hclwrite.Tokens, error) {
+func (itc coreInstanceFleetInstanceTypeConfigsAttributes) InternalTokens() (hclwrite.Tokens, error) {
 	return itc.ref.InternalTokens()
 }
 
-func (itc CoreInstanceFleetInstanceTypeConfigsAttributes) BidPrice() terra.StringValue {
+func (itc coreInstanceFleetInstanceTypeConfigsAttributes) BidPrice() terra.StringValue {
 	return terra.ReferenceAsString(itc.ref.Append("bid_price"))
 }
 
-func (itc CoreInstanceFleetInstanceTypeConfigsAttributes) BidPriceAsPercentageOfOnDemandPrice() terra.NumberValue {
+func (itc coreInstanceFleetInstanceTypeConfigsAttributes) BidPriceAsPercentageOfOnDemandPrice() terra.NumberValue {
 	return terra.ReferenceAsNumber(itc.ref.Append("bid_price_as_percentage_of_on_demand_price"))
 }
 
-func (itc CoreInstanceFleetInstanceTypeConfigsAttributes) InstanceType() terra.StringValue {
+func (itc coreInstanceFleetInstanceTypeConfigsAttributes) InstanceType() terra.StringValue {
 	return terra.ReferenceAsString(itc.ref.Append("instance_type"))
 }
 
-func (itc CoreInstanceFleetInstanceTypeConfigsAttributes) WeightedCapacity() terra.NumberValue {
+func (itc coreInstanceFleetInstanceTypeConfigsAttributes) WeightedCapacity() terra.NumberValue {
 	return terra.ReferenceAsNumber(itc.ref.Append("weighted_capacity"))
 }
 
-func (itc CoreInstanceFleetInstanceTypeConfigsAttributes) Configurations() terra.SetValue[CoreInstanceFleetInstanceTypeConfigsConfigurationsAttributes] {
-	return terra.ReferenceAsSet[CoreInstanceFleetInstanceTypeConfigsConfigurationsAttributes](itc.ref.Append("configurations"))
+func (itc coreInstanceFleetInstanceTypeConfigsAttributes) Configurations() terra.SetValue[coreInstanceFleetInstanceTypeConfigsConfigurationsAttributes] {
+	return terra.ReferenceAsSet[coreInstanceFleetInstanceTypeConfigsConfigurationsAttributes](itc.ref.Append("configurations"))
 }
 
-func (itc CoreInstanceFleetInstanceTypeConfigsAttributes) EbsConfig() terra.SetValue[CoreInstanceFleetInstanceTypeConfigsEbsConfigAttributes] {
-	return terra.ReferenceAsSet[CoreInstanceFleetInstanceTypeConfigsEbsConfigAttributes](itc.ref.Append("ebs_config"))
+func (itc coreInstanceFleetInstanceTypeConfigsAttributes) EbsConfig() terra.SetValue[coreInstanceFleetInstanceTypeConfigsEbsConfigAttributes] {
+	return terra.ReferenceAsSet[coreInstanceFleetInstanceTypeConfigsEbsConfigAttributes](itc.ref.Append("ebs_config"))
 }
 
-type CoreInstanceFleetInstanceTypeConfigsConfigurationsAttributes struct {
+type coreInstanceFleetInstanceTypeConfigsConfigurationsAttributes struct {
 	ref terra.Reference
 }
 
-func (c CoreInstanceFleetInstanceTypeConfigsConfigurationsAttributes) InternalRef() (terra.Reference, error) {
+func (c coreInstanceFleetInstanceTypeConfigsConfigurationsAttributes) InternalRef() (terra.Reference, error) {
 	return c.ref, nil
 }
 
-func (c CoreInstanceFleetInstanceTypeConfigsConfigurationsAttributes) InternalWithRef(ref terra.Reference) CoreInstanceFleetInstanceTypeConfigsConfigurationsAttributes {
-	return CoreInstanceFleetInstanceTypeConfigsConfigurationsAttributes{ref: ref}
+func (c coreInstanceFleetInstanceTypeConfigsConfigurationsAttributes) InternalWithRef(ref terra.Reference) coreInstanceFleetInstanceTypeConfigsConfigurationsAttributes {
+	return coreInstanceFleetInstanceTypeConfigsConfigurationsAttributes{ref: ref}
 }
 
-func (c CoreInstanceFleetInstanceTypeConfigsConfigurationsAttributes) InternalTokens() (hclwrite.Tokens, error) {
+func (c coreInstanceFleetInstanceTypeConfigsConfigurationsAttributes) InternalTokens() (hclwrite.Tokens, error) {
 	return c.ref.InternalTokens()
 }
 
-func (c CoreInstanceFleetInstanceTypeConfigsConfigurationsAttributes) Classification() terra.StringValue {
+func (c coreInstanceFleetInstanceTypeConfigsConfigurationsAttributes) Classification() terra.StringValue {
 	return terra.ReferenceAsString(c.ref.Append("classification"))
 }
 
-func (c CoreInstanceFleetInstanceTypeConfigsConfigurationsAttributes) Properties() terra.MapValue[terra.StringValue] {
+func (c coreInstanceFleetInstanceTypeConfigsConfigurationsAttributes) Properties() terra.MapValue[terra.StringValue] {
 	return terra.ReferenceAsMap[terra.StringValue](c.ref.Append("properties"))
 }
 
-type CoreInstanceFleetInstanceTypeConfigsEbsConfigAttributes struct {
+type coreInstanceFleetInstanceTypeConfigsEbsConfigAttributes struct {
 	ref terra.Reference
 }
 
-func (ec CoreInstanceFleetInstanceTypeConfigsEbsConfigAttributes) InternalRef() (terra.Reference, error) {
+func (ec coreInstanceFleetInstanceTypeConfigsEbsConfigAttributes) InternalRef() (terra.Reference, error) {
 	return ec.ref, nil
 }
 
-func (ec CoreInstanceFleetInstanceTypeConfigsEbsConfigAttributes) InternalWithRef(ref terra.Reference) CoreInstanceFleetInstanceTypeConfigsEbsConfigAttributes {
-	return CoreInstanceFleetInstanceTypeConfigsEbsConfigAttributes{ref: ref}
+func (ec coreInstanceFleetInstanceTypeConfigsEbsConfigAttributes) InternalWithRef(ref terra.Reference) coreInstanceFleetInstanceTypeConfigsEbsConfigAttributes {
+	return coreInstanceFleetInstanceTypeConfigsEbsConfigAttributes{ref: ref}
 }
 
-func (ec CoreInstanceFleetInstanceTypeConfigsEbsConfigAttributes) InternalTokens() (hclwrite.Tokens, error) {
+func (ec coreInstanceFleetInstanceTypeConfigsEbsConfigAttributes) InternalTokens() (hclwrite.Tokens, error) {
 	return ec.ref.InternalTokens()
 }
 
-func (ec CoreInstanceFleetInstanceTypeConfigsEbsConfigAttributes) Iops() terra.NumberValue {
+func (ec coreInstanceFleetInstanceTypeConfigsEbsConfigAttributes) Iops() terra.NumberValue {
 	return terra.ReferenceAsNumber(ec.ref.Append("iops"))
 }
 
-func (ec CoreInstanceFleetInstanceTypeConfigsEbsConfigAttributes) Size() terra.NumberValue {
+func (ec coreInstanceFleetInstanceTypeConfigsEbsConfigAttributes) Size() terra.NumberValue {
 	return terra.ReferenceAsNumber(ec.ref.Append("size"))
 }
 
-func (ec CoreInstanceFleetInstanceTypeConfigsEbsConfigAttributes) Type() terra.StringValue {
+func (ec coreInstanceFleetInstanceTypeConfigsEbsConfigAttributes) Type() terra.StringValue {
 	return terra.ReferenceAsString(ec.ref.Append("type"))
 }
 
-func (ec CoreInstanceFleetInstanceTypeConfigsEbsConfigAttributes) VolumesPerInstance() terra.NumberValue {
+func (ec coreInstanceFleetInstanceTypeConfigsEbsConfigAttributes) VolumesPerInstance() terra.NumberValue {
 	return terra.ReferenceAsNumber(ec.ref.Append("volumes_per_instance"))
 }
 
-type CoreInstanceFleetLaunchSpecificationsAttributes struct {
+type coreInstanceFleetLaunchSpecificationsAttributes struct {
 	ref terra.Reference
 }
 
-func (ls CoreInstanceFleetLaunchSpecificationsAttributes) InternalRef() (terra.Reference, error) {
+func (ls coreInstanceFleetLaunchSpecificationsAttributes) InternalRef() (terra.Reference, error) {
 	return ls.ref, nil
 }
 
-func (ls CoreInstanceFleetLaunchSpecificationsAttributes) InternalWithRef(ref terra.Reference) CoreInstanceFleetLaunchSpecificationsAttributes {
-	return CoreInstanceFleetLaunchSpecificationsAttributes{ref: ref}
+func (ls coreInstanceFleetLaunchSpecificationsAttributes) InternalWithRef(ref terra.Reference) coreInstanceFleetLaunchSpecificationsAttributes {
+	return coreInstanceFleetLaunchSpecificationsAttributes{ref: ref}
 }
 
-func (ls CoreInstanceFleetLaunchSpecificationsAttributes) InternalTokens() (hclwrite.Tokens, error) {
+func (ls coreInstanceFleetLaunchSpecificationsAttributes) InternalTokens() (hclwrite.Tokens, error) {
 	return ls.ref.InternalTokens()
 }
 
-func (ls CoreInstanceFleetLaunchSpecificationsAttributes) OnDemandSpecification() terra.ListValue[CoreInstanceFleetLaunchSpecificationsOnDemandSpecificationAttributes] {
-	return terra.ReferenceAsList[CoreInstanceFleetLaunchSpecificationsOnDemandSpecificationAttributes](ls.ref.Append("on_demand_specification"))
+func (ls coreInstanceFleetLaunchSpecificationsAttributes) OnDemandSpecification() terra.ListValue[coreInstanceFleetLaunchSpecificationsOnDemandSpecificationAttributes] {
+	return terra.ReferenceAsList[coreInstanceFleetLaunchSpecificationsOnDemandSpecificationAttributes](ls.ref.Append("on_demand_specification"))
 }
 
-func (ls CoreInstanceFleetLaunchSpecificationsAttributes) SpotSpecification() terra.ListValue[CoreInstanceFleetLaunchSpecificationsSpotSpecificationAttributes] {
-	return terra.ReferenceAsList[CoreInstanceFleetLaunchSpecificationsSpotSpecificationAttributes](ls.ref.Append("spot_specification"))
+func (ls coreInstanceFleetLaunchSpecificationsAttributes) SpotSpecification() terra.ListValue[coreInstanceFleetLaunchSpecificationsSpotSpecificationAttributes] {
+	return terra.ReferenceAsList[coreInstanceFleetLaunchSpecificationsSpotSpecificationAttributes](ls.ref.Append("spot_specification"))
 }
 
-type CoreInstanceFleetLaunchSpecificationsOnDemandSpecificationAttributes struct {
+type coreInstanceFleetLaunchSpecificationsOnDemandSpecificationAttributes struct {
 	ref terra.Reference
 }
 
-func (ods CoreInstanceFleetLaunchSpecificationsOnDemandSpecificationAttributes) InternalRef() (terra.Reference, error) {
+func (ods coreInstanceFleetLaunchSpecificationsOnDemandSpecificationAttributes) InternalRef() (terra.Reference, error) {
 	return ods.ref, nil
 }
 
-func (ods CoreInstanceFleetLaunchSpecificationsOnDemandSpecificationAttributes) InternalWithRef(ref terra.Reference) CoreInstanceFleetLaunchSpecificationsOnDemandSpecificationAttributes {
-	return CoreInstanceFleetLaunchSpecificationsOnDemandSpecificationAttributes{ref: ref}
+func (ods coreInstanceFleetLaunchSpecificationsOnDemandSpecificationAttributes) InternalWithRef(ref terra.Reference) coreInstanceFleetLaunchSpecificationsOnDemandSpecificationAttributes {
+	return coreInstanceFleetLaunchSpecificationsOnDemandSpecificationAttributes{ref: ref}
 }
 
-func (ods CoreInstanceFleetLaunchSpecificationsOnDemandSpecificationAttributes) InternalTokens() (hclwrite.Tokens, error) {
+func (ods coreInstanceFleetLaunchSpecificationsOnDemandSpecificationAttributes) InternalTokens() (hclwrite.Tokens, error) {
 	return ods.ref.InternalTokens()
 }
 
-func (ods CoreInstanceFleetLaunchSpecificationsOnDemandSpecificationAttributes) AllocationStrategy() terra.StringValue {
+func (ods coreInstanceFleetLaunchSpecificationsOnDemandSpecificationAttributes) AllocationStrategy() terra.StringValue {
 	return terra.ReferenceAsString(ods.ref.Append("allocation_strategy"))
 }
 
-type CoreInstanceFleetLaunchSpecificationsSpotSpecificationAttributes struct {
+type coreInstanceFleetLaunchSpecificationsSpotSpecificationAttributes struct {
 	ref terra.Reference
 }
 
-func (ss CoreInstanceFleetLaunchSpecificationsSpotSpecificationAttributes) InternalRef() (terra.Reference, error) {
+func (ss coreInstanceFleetLaunchSpecificationsSpotSpecificationAttributes) InternalRef() (terra.Reference, error) {
 	return ss.ref, nil
 }
 
-func (ss CoreInstanceFleetLaunchSpecificationsSpotSpecificationAttributes) InternalWithRef(ref terra.Reference) CoreInstanceFleetLaunchSpecificationsSpotSpecificationAttributes {
-	return CoreInstanceFleetLaunchSpecificationsSpotSpecificationAttributes{ref: ref}
+func (ss coreInstanceFleetLaunchSpecificationsSpotSpecificationAttributes) InternalWithRef(ref terra.Reference) coreInstanceFleetLaunchSpecificationsSpotSpecificationAttributes {
+	return coreInstanceFleetLaunchSpecificationsSpotSpecificationAttributes{ref: ref}
 }
 
-func (ss CoreInstanceFleetLaunchSpecificationsSpotSpecificationAttributes) InternalTokens() (hclwrite.Tokens, error) {
+func (ss coreInstanceFleetLaunchSpecificationsSpotSpecificationAttributes) InternalTokens() (hclwrite.Tokens, error) {
 	return ss.ref.InternalTokens()
 }
 
-func (ss CoreInstanceFleetLaunchSpecificationsSpotSpecificationAttributes) AllocationStrategy() terra.StringValue {
+func (ss coreInstanceFleetLaunchSpecificationsSpotSpecificationAttributes) AllocationStrategy() terra.StringValue {
 	return terra.ReferenceAsString(ss.ref.Append("allocation_strategy"))
 }
 
-func (ss CoreInstanceFleetLaunchSpecificationsSpotSpecificationAttributes) BlockDurationMinutes() terra.NumberValue {
+func (ss coreInstanceFleetLaunchSpecificationsSpotSpecificationAttributes) BlockDurationMinutes() terra.NumberValue {
 	return terra.ReferenceAsNumber(ss.ref.Append("block_duration_minutes"))
 }
 
-func (ss CoreInstanceFleetLaunchSpecificationsSpotSpecificationAttributes) TimeoutAction() terra.StringValue {
+func (ss coreInstanceFleetLaunchSpecificationsSpotSpecificationAttributes) TimeoutAction() terra.StringValue {
 	return terra.ReferenceAsString(ss.ref.Append("timeout_action"))
 }
 
-func (ss CoreInstanceFleetLaunchSpecificationsSpotSpecificationAttributes) TimeoutDurationMinutes() terra.NumberValue {
+func (ss coreInstanceFleetLaunchSpecificationsSpotSpecificationAttributes) TimeoutDurationMinutes() terra.NumberValue {
 	return terra.ReferenceAsNumber(ss.ref.Append("timeout_duration_minutes"))
 }
 
-type CoreInstanceGroupAttributes struct {
+type coreInstanceGroupAttributes struct {
 	ref terra.Reference
 }
 
-func (cig CoreInstanceGroupAttributes) InternalRef() (terra.Reference, error) {
+func (cig coreInstanceGroupAttributes) InternalRef() (terra.Reference, error) {
 	return cig.ref, nil
 }
 
-func (cig CoreInstanceGroupAttributes) InternalWithRef(ref terra.Reference) CoreInstanceGroupAttributes {
-	return CoreInstanceGroupAttributes{ref: ref}
+func (cig coreInstanceGroupAttributes) InternalWithRef(ref terra.Reference) coreInstanceGroupAttributes {
+	return coreInstanceGroupAttributes{ref: ref}
 }
 
-func (cig CoreInstanceGroupAttributes) InternalTokens() (hclwrite.Tokens, error) {
+func (cig coreInstanceGroupAttributes) InternalTokens() (hclwrite.Tokens, error) {
 	return cig.ref.InternalTokens()
 }
 
-func (cig CoreInstanceGroupAttributes) AutoscalingPolicy() terra.StringValue {
+func (cig coreInstanceGroupAttributes) AutoscalingPolicy() terra.StringValue {
 	return terra.ReferenceAsString(cig.ref.Append("autoscaling_policy"))
 }
 
-func (cig CoreInstanceGroupAttributes) BidPrice() terra.StringValue {
+func (cig coreInstanceGroupAttributes) BidPrice() terra.StringValue {
 	return terra.ReferenceAsString(cig.ref.Append("bid_price"))
 }
 
-func (cig CoreInstanceGroupAttributes) Id() terra.StringValue {
+func (cig coreInstanceGroupAttributes) Id() terra.StringValue {
 	return terra.ReferenceAsString(cig.ref.Append("id"))
 }
 
-func (cig CoreInstanceGroupAttributes) InstanceCount() terra.NumberValue {
+func (cig coreInstanceGroupAttributes) InstanceCount() terra.NumberValue {
 	return terra.ReferenceAsNumber(cig.ref.Append("instance_count"))
 }
 
-func (cig CoreInstanceGroupAttributes) InstanceType() terra.StringValue {
+func (cig coreInstanceGroupAttributes) InstanceType() terra.StringValue {
 	return terra.ReferenceAsString(cig.ref.Append("instance_type"))
 }
 
-func (cig CoreInstanceGroupAttributes) Name() terra.StringValue {
+func (cig coreInstanceGroupAttributes) Name() terra.StringValue {
 	return terra.ReferenceAsString(cig.ref.Append("name"))
 }
 
-func (cig CoreInstanceGroupAttributes) EbsConfig() terra.SetValue[CoreInstanceGroupEbsConfigAttributes] {
-	return terra.ReferenceAsSet[CoreInstanceGroupEbsConfigAttributes](cig.ref.Append("ebs_config"))
+func (cig coreInstanceGroupAttributes) EbsConfig() terra.SetValue[coreInstanceGroupEbsConfigAttributes] {
+	return terra.ReferenceAsSet[coreInstanceGroupEbsConfigAttributes](cig.ref.Append("ebs_config"))
 }
 
-type CoreInstanceGroupEbsConfigAttributes struct {
+type coreInstanceGroupEbsConfigAttributes struct {
 	ref terra.Reference
 }
 
-func (ec CoreInstanceGroupEbsConfigAttributes) InternalRef() (terra.Reference, error) {
+func (ec coreInstanceGroupEbsConfigAttributes) InternalRef() (terra.Reference, error) {
 	return ec.ref, nil
 }
 
-func (ec CoreInstanceGroupEbsConfigAttributes) InternalWithRef(ref terra.Reference) CoreInstanceGroupEbsConfigAttributes {
-	return CoreInstanceGroupEbsConfigAttributes{ref: ref}
+func (ec coreInstanceGroupEbsConfigAttributes) InternalWithRef(ref terra.Reference) coreInstanceGroupEbsConfigAttributes {
+	return coreInstanceGroupEbsConfigAttributes{ref: ref}
 }
 
-func (ec CoreInstanceGroupEbsConfigAttributes) InternalTokens() (hclwrite.Tokens, error) {
+func (ec coreInstanceGroupEbsConfigAttributes) InternalTokens() (hclwrite.Tokens, error) {
 	return ec.ref.InternalTokens()
 }
 
-func (ec CoreInstanceGroupEbsConfigAttributes) Iops() terra.NumberValue {
+func (ec coreInstanceGroupEbsConfigAttributes) Iops() terra.NumberValue {
 	return terra.ReferenceAsNumber(ec.ref.Append("iops"))
 }
 
-func (ec CoreInstanceGroupEbsConfigAttributes) Size() terra.NumberValue {
+func (ec coreInstanceGroupEbsConfigAttributes) Size() terra.NumberValue {
 	return terra.ReferenceAsNumber(ec.ref.Append("size"))
 }
 
-func (ec CoreInstanceGroupEbsConfigAttributes) Throughput() terra.NumberValue {
+func (ec coreInstanceGroupEbsConfigAttributes) Throughput() terra.NumberValue {
 	return terra.ReferenceAsNumber(ec.ref.Append("throughput"))
 }
 
-func (ec CoreInstanceGroupEbsConfigAttributes) Type() terra.StringValue {
+func (ec coreInstanceGroupEbsConfigAttributes) Type() terra.StringValue {
 	return terra.ReferenceAsString(ec.ref.Append("type"))
 }
 
-func (ec CoreInstanceGroupEbsConfigAttributes) VolumesPerInstance() terra.NumberValue {
+func (ec coreInstanceGroupEbsConfigAttributes) VolumesPerInstance() terra.NumberValue {
 	return terra.ReferenceAsNumber(ec.ref.Append("volumes_per_instance"))
 }
 
-type Ec2AttributesAttributes struct {
+type ec2AttributesAttributes struct {
 	ref terra.Reference
 }
 
-func (ea Ec2AttributesAttributes) InternalRef() (terra.Reference, error) {
+func (ea ec2AttributesAttributes) InternalRef() (terra.Reference, error) {
 	return ea.ref, nil
 }
 
-func (ea Ec2AttributesAttributes) InternalWithRef(ref terra.Reference) Ec2AttributesAttributes {
-	return Ec2AttributesAttributes{ref: ref}
+func (ea ec2AttributesAttributes) InternalWithRef(ref terra.Reference) ec2AttributesAttributes {
+	return ec2AttributesAttributes{ref: ref}
 }
 
-func (ea Ec2AttributesAttributes) InternalTokens() (hclwrite.Tokens, error) {
+func (ea ec2AttributesAttributes) InternalTokens() (hclwrite.Tokens, error) {
 	return ea.ref.InternalTokens()
 }
 
-func (ea Ec2AttributesAttributes) AdditionalMasterSecurityGroups() terra.StringValue {
+func (ea ec2AttributesAttributes) AdditionalMasterSecurityGroups() terra.StringValue {
 	return terra.ReferenceAsString(ea.ref.Append("additional_master_security_groups"))
 }
 
-func (ea Ec2AttributesAttributes) AdditionalSlaveSecurityGroups() terra.StringValue {
+func (ea ec2AttributesAttributes) AdditionalSlaveSecurityGroups() terra.StringValue {
 	return terra.ReferenceAsString(ea.ref.Append("additional_slave_security_groups"))
 }
 
-func (ea Ec2AttributesAttributes) EmrManagedMasterSecurityGroup() terra.StringValue {
+func (ea ec2AttributesAttributes) EmrManagedMasterSecurityGroup() terra.StringValue {
 	return terra.ReferenceAsString(ea.ref.Append("emr_managed_master_security_group"))
 }
 
-func (ea Ec2AttributesAttributes) EmrManagedSlaveSecurityGroup() terra.StringValue {
+func (ea ec2AttributesAttributes) EmrManagedSlaveSecurityGroup() terra.StringValue {
 	return terra.ReferenceAsString(ea.ref.Append("emr_managed_slave_security_group"))
 }
 
-func (ea Ec2AttributesAttributes) InstanceProfile() terra.StringValue {
+func (ea ec2AttributesAttributes) InstanceProfile() terra.StringValue {
 	return terra.ReferenceAsString(ea.ref.Append("instance_profile"))
 }
 
-func (ea Ec2AttributesAttributes) KeyName() terra.StringValue {
+func (ea ec2AttributesAttributes) KeyName() terra.StringValue {
 	return terra.ReferenceAsString(ea.ref.Append("key_name"))
 }
 
-func (ea Ec2AttributesAttributes) ServiceAccessSecurityGroup() terra.StringValue {
+func (ea ec2AttributesAttributes) ServiceAccessSecurityGroup() terra.StringValue {
 	return terra.ReferenceAsString(ea.ref.Append("service_access_security_group"))
 }
 
-func (ea Ec2AttributesAttributes) SubnetId() terra.StringValue {
+func (ea ec2AttributesAttributes) SubnetId() terra.StringValue {
 	return terra.ReferenceAsString(ea.ref.Append("subnet_id"))
 }
 
-func (ea Ec2AttributesAttributes) SubnetIds() terra.SetValue[terra.StringValue] {
+func (ea ec2AttributesAttributes) SubnetIds() terra.SetValue[terra.StringValue] {
 	return terra.ReferenceAsSet[terra.StringValue](ea.ref.Append("subnet_ids"))
 }
 
-type KerberosAttributesAttributes struct {
+type kerberosAttributesAttributes struct {
 	ref terra.Reference
 }
 
-func (ka KerberosAttributesAttributes) InternalRef() (terra.Reference, error) {
+func (ka kerberosAttributesAttributes) InternalRef() (terra.Reference, error) {
 	return ka.ref, nil
 }
 
-func (ka KerberosAttributesAttributes) InternalWithRef(ref terra.Reference) KerberosAttributesAttributes {
-	return KerberosAttributesAttributes{ref: ref}
+func (ka kerberosAttributesAttributes) InternalWithRef(ref terra.Reference) kerberosAttributesAttributes {
+	return kerberosAttributesAttributes{ref: ref}
 }
 
-func (ka KerberosAttributesAttributes) InternalTokens() (hclwrite.Tokens, error) {
+func (ka kerberosAttributesAttributes) InternalTokens() (hclwrite.Tokens, error) {
 	return ka.ref.InternalTokens()
 }
 
-func (ka KerberosAttributesAttributes) AdDomainJoinPassword() terra.StringValue {
+func (ka kerberosAttributesAttributes) AdDomainJoinPassword() terra.StringValue {
 	return terra.ReferenceAsString(ka.ref.Append("ad_domain_join_password"))
 }
 
-func (ka KerberosAttributesAttributes) AdDomainJoinUser() terra.StringValue {
+func (ka kerberosAttributesAttributes) AdDomainJoinUser() terra.StringValue {
 	return terra.ReferenceAsString(ka.ref.Append("ad_domain_join_user"))
 }
 
-func (ka KerberosAttributesAttributes) CrossRealmTrustPrincipalPassword() terra.StringValue {
+func (ka kerberosAttributesAttributes) CrossRealmTrustPrincipalPassword() terra.StringValue {
 	return terra.ReferenceAsString(ka.ref.Append("cross_realm_trust_principal_password"))
 }
 
-func (ka KerberosAttributesAttributes) KdcAdminPassword() terra.StringValue {
+func (ka kerberosAttributesAttributes) KdcAdminPassword() terra.StringValue {
 	return terra.ReferenceAsString(ka.ref.Append("kdc_admin_password"))
 }
 
-func (ka KerberosAttributesAttributes) Realm() terra.StringValue {
+func (ka kerberosAttributesAttributes) Realm() terra.StringValue {
 	return terra.ReferenceAsString(ka.ref.Append("realm"))
 }
 
-type MasterInstanceFleetAttributes struct {
+type masterInstanceFleetAttributes struct {
 	ref terra.Reference
 }
 
-func (mif MasterInstanceFleetAttributes) InternalRef() (terra.Reference, error) {
+func (mif masterInstanceFleetAttributes) InternalRef() (terra.Reference, error) {
 	return mif.ref, nil
 }
 
-func (mif MasterInstanceFleetAttributes) InternalWithRef(ref terra.Reference) MasterInstanceFleetAttributes {
-	return MasterInstanceFleetAttributes{ref: ref}
+func (mif masterInstanceFleetAttributes) InternalWithRef(ref terra.Reference) masterInstanceFleetAttributes {
+	return masterInstanceFleetAttributes{ref: ref}
 }
 
-func (mif MasterInstanceFleetAttributes) InternalTokens() (hclwrite.Tokens, error) {
+func (mif masterInstanceFleetAttributes) InternalTokens() (hclwrite.Tokens, error) {
 	return mif.ref.InternalTokens()
 }
 
-func (mif MasterInstanceFleetAttributes) Id() terra.StringValue {
+func (mif masterInstanceFleetAttributes) Id() terra.StringValue {
 	return terra.ReferenceAsString(mif.ref.Append("id"))
 }
 
-func (mif MasterInstanceFleetAttributes) Name() terra.StringValue {
+func (mif masterInstanceFleetAttributes) Name() terra.StringValue {
 	return terra.ReferenceAsString(mif.ref.Append("name"))
 }
 
-func (mif MasterInstanceFleetAttributes) ProvisionedOnDemandCapacity() terra.NumberValue {
+func (mif masterInstanceFleetAttributes) ProvisionedOnDemandCapacity() terra.NumberValue {
 	return terra.ReferenceAsNumber(mif.ref.Append("provisioned_on_demand_capacity"))
 }
 
-func (mif MasterInstanceFleetAttributes) ProvisionedSpotCapacity() terra.NumberValue {
+func (mif masterInstanceFleetAttributes) ProvisionedSpotCapacity() terra.NumberValue {
 	return terra.ReferenceAsNumber(mif.ref.Append("provisioned_spot_capacity"))
 }
 
-func (mif MasterInstanceFleetAttributes) TargetOnDemandCapacity() terra.NumberValue {
+func (mif masterInstanceFleetAttributes) TargetOnDemandCapacity() terra.NumberValue {
 	return terra.ReferenceAsNumber(mif.ref.Append("target_on_demand_capacity"))
 }
 
-func (mif MasterInstanceFleetAttributes) TargetSpotCapacity() terra.NumberValue {
+func (mif masterInstanceFleetAttributes) TargetSpotCapacity() terra.NumberValue {
 	return terra.ReferenceAsNumber(mif.ref.Append("target_spot_capacity"))
 }
 
-func (mif MasterInstanceFleetAttributes) InstanceTypeConfigs() terra.SetValue[MasterInstanceFleetInstanceTypeConfigsAttributes] {
-	return terra.ReferenceAsSet[MasterInstanceFleetInstanceTypeConfigsAttributes](mif.ref.Append("instance_type_configs"))
+func (mif masterInstanceFleetAttributes) InstanceTypeConfigs() terra.SetValue[masterInstanceFleetInstanceTypeConfigsAttributes] {
+	return terra.ReferenceAsSet[masterInstanceFleetInstanceTypeConfigsAttributes](mif.ref.Append("instance_type_configs"))
 }
 
-func (mif MasterInstanceFleetAttributes) LaunchSpecifications() terra.ListValue[MasterInstanceFleetLaunchSpecificationsAttributes] {
-	return terra.ReferenceAsList[MasterInstanceFleetLaunchSpecificationsAttributes](mif.ref.Append("launch_specifications"))
+func (mif masterInstanceFleetAttributes) LaunchSpecifications() terra.ListValue[masterInstanceFleetLaunchSpecificationsAttributes] {
+	return terra.ReferenceAsList[masterInstanceFleetLaunchSpecificationsAttributes](mif.ref.Append("launch_specifications"))
 }
 
-type MasterInstanceFleetInstanceTypeConfigsAttributes struct {
+type masterInstanceFleetInstanceTypeConfigsAttributes struct {
 	ref terra.Reference
 }
 
-func (itc MasterInstanceFleetInstanceTypeConfigsAttributes) InternalRef() (terra.Reference, error) {
+func (itc masterInstanceFleetInstanceTypeConfigsAttributes) InternalRef() (terra.Reference, error) {
 	return itc.ref, nil
 }
 
-func (itc MasterInstanceFleetInstanceTypeConfigsAttributes) InternalWithRef(ref terra.Reference) MasterInstanceFleetInstanceTypeConfigsAttributes {
-	return MasterInstanceFleetInstanceTypeConfigsAttributes{ref: ref}
+func (itc masterInstanceFleetInstanceTypeConfigsAttributes) InternalWithRef(ref terra.Reference) masterInstanceFleetInstanceTypeConfigsAttributes {
+	return masterInstanceFleetInstanceTypeConfigsAttributes{ref: ref}
 }
 
-func (itc MasterInstanceFleetInstanceTypeConfigsAttributes) InternalTokens() (hclwrite.Tokens, error) {
+func (itc masterInstanceFleetInstanceTypeConfigsAttributes) InternalTokens() (hclwrite.Tokens, error) {
 	return itc.ref.InternalTokens()
 }
 
-func (itc MasterInstanceFleetInstanceTypeConfigsAttributes) BidPrice() terra.StringValue {
+func (itc masterInstanceFleetInstanceTypeConfigsAttributes) BidPrice() terra.StringValue {
 	return terra.ReferenceAsString(itc.ref.Append("bid_price"))
 }
 
-func (itc MasterInstanceFleetInstanceTypeConfigsAttributes) BidPriceAsPercentageOfOnDemandPrice() terra.NumberValue {
+func (itc masterInstanceFleetInstanceTypeConfigsAttributes) BidPriceAsPercentageOfOnDemandPrice() terra.NumberValue {
 	return terra.ReferenceAsNumber(itc.ref.Append("bid_price_as_percentage_of_on_demand_price"))
 }
 
-func (itc MasterInstanceFleetInstanceTypeConfigsAttributes) InstanceType() terra.StringValue {
+func (itc masterInstanceFleetInstanceTypeConfigsAttributes) InstanceType() terra.StringValue {
 	return terra.ReferenceAsString(itc.ref.Append("instance_type"))
 }
 
-func (itc MasterInstanceFleetInstanceTypeConfigsAttributes) WeightedCapacity() terra.NumberValue {
+func (itc masterInstanceFleetInstanceTypeConfigsAttributes) WeightedCapacity() terra.NumberValue {
 	return terra.ReferenceAsNumber(itc.ref.Append("weighted_capacity"))
 }
 
-func (itc MasterInstanceFleetInstanceTypeConfigsAttributes) Configurations() terra.SetValue[MasterInstanceFleetInstanceTypeConfigsConfigurationsAttributes] {
-	return terra.ReferenceAsSet[MasterInstanceFleetInstanceTypeConfigsConfigurationsAttributes](itc.ref.Append("configurations"))
+func (itc masterInstanceFleetInstanceTypeConfigsAttributes) Configurations() terra.SetValue[masterInstanceFleetInstanceTypeConfigsConfigurationsAttributes] {
+	return terra.ReferenceAsSet[masterInstanceFleetInstanceTypeConfigsConfigurationsAttributes](itc.ref.Append("configurations"))
 }
 
-func (itc MasterInstanceFleetInstanceTypeConfigsAttributes) EbsConfig() terra.SetValue[MasterInstanceFleetInstanceTypeConfigsEbsConfigAttributes] {
-	return terra.ReferenceAsSet[MasterInstanceFleetInstanceTypeConfigsEbsConfigAttributes](itc.ref.Append("ebs_config"))
+func (itc masterInstanceFleetInstanceTypeConfigsAttributes) EbsConfig() terra.SetValue[masterInstanceFleetInstanceTypeConfigsEbsConfigAttributes] {
+	return terra.ReferenceAsSet[masterInstanceFleetInstanceTypeConfigsEbsConfigAttributes](itc.ref.Append("ebs_config"))
 }
 
-type MasterInstanceFleetInstanceTypeConfigsConfigurationsAttributes struct {
+type masterInstanceFleetInstanceTypeConfigsConfigurationsAttributes struct {
 	ref terra.Reference
 }
 
-func (c MasterInstanceFleetInstanceTypeConfigsConfigurationsAttributes) InternalRef() (terra.Reference, error) {
+func (c masterInstanceFleetInstanceTypeConfigsConfigurationsAttributes) InternalRef() (terra.Reference, error) {
 	return c.ref, nil
 }
 
-func (c MasterInstanceFleetInstanceTypeConfigsConfigurationsAttributes) InternalWithRef(ref terra.Reference) MasterInstanceFleetInstanceTypeConfigsConfigurationsAttributes {
-	return MasterInstanceFleetInstanceTypeConfigsConfigurationsAttributes{ref: ref}
+func (c masterInstanceFleetInstanceTypeConfigsConfigurationsAttributes) InternalWithRef(ref terra.Reference) masterInstanceFleetInstanceTypeConfigsConfigurationsAttributes {
+	return masterInstanceFleetInstanceTypeConfigsConfigurationsAttributes{ref: ref}
 }
 
-func (c MasterInstanceFleetInstanceTypeConfigsConfigurationsAttributes) InternalTokens() (hclwrite.Tokens, error) {
+func (c masterInstanceFleetInstanceTypeConfigsConfigurationsAttributes) InternalTokens() (hclwrite.Tokens, error) {
 	return c.ref.InternalTokens()
 }
 
-func (c MasterInstanceFleetInstanceTypeConfigsConfigurationsAttributes) Classification() terra.StringValue {
+func (c masterInstanceFleetInstanceTypeConfigsConfigurationsAttributes) Classification() terra.StringValue {
 	return terra.ReferenceAsString(c.ref.Append("classification"))
 }
 
-func (c MasterInstanceFleetInstanceTypeConfigsConfigurationsAttributes) Properties() terra.MapValue[terra.StringValue] {
+func (c masterInstanceFleetInstanceTypeConfigsConfigurationsAttributes) Properties() terra.MapValue[terra.StringValue] {
 	return terra.ReferenceAsMap[terra.StringValue](c.ref.Append("properties"))
 }
 
-type MasterInstanceFleetInstanceTypeConfigsEbsConfigAttributes struct {
+type masterInstanceFleetInstanceTypeConfigsEbsConfigAttributes struct {
 	ref terra.Reference
 }
 
-func (ec MasterInstanceFleetInstanceTypeConfigsEbsConfigAttributes) InternalRef() (terra.Reference, error) {
+func (ec masterInstanceFleetInstanceTypeConfigsEbsConfigAttributes) InternalRef() (terra.Reference, error) {
 	return ec.ref, nil
 }
 
-func (ec MasterInstanceFleetInstanceTypeConfigsEbsConfigAttributes) InternalWithRef(ref terra.Reference) MasterInstanceFleetInstanceTypeConfigsEbsConfigAttributes {
-	return MasterInstanceFleetInstanceTypeConfigsEbsConfigAttributes{ref: ref}
+func (ec masterInstanceFleetInstanceTypeConfigsEbsConfigAttributes) InternalWithRef(ref terra.Reference) masterInstanceFleetInstanceTypeConfigsEbsConfigAttributes {
+	return masterInstanceFleetInstanceTypeConfigsEbsConfigAttributes{ref: ref}
 }
 
-func (ec MasterInstanceFleetInstanceTypeConfigsEbsConfigAttributes) InternalTokens() (hclwrite.Tokens, error) {
+func (ec masterInstanceFleetInstanceTypeConfigsEbsConfigAttributes) InternalTokens() (hclwrite.Tokens, error) {
 	return ec.ref.InternalTokens()
 }
 
-func (ec MasterInstanceFleetInstanceTypeConfigsEbsConfigAttributes) Iops() terra.NumberValue {
+func (ec masterInstanceFleetInstanceTypeConfigsEbsConfigAttributes) Iops() terra.NumberValue {
 	return terra.ReferenceAsNumber(ec.ref.Append("iops"))
 }
 
-func (ec MasterInstanceFleetInstanceTypeConfigsEbsConfigAttributes) Size() terra.NumberValue {
+func (ec masterInstanceFleetInstanceTypeConfigsEbsConfigAttributes) Size() terra.NumberValue {
 	return terra.ReferenceAsNumber(ec.ref.Append("size"))
 }
 
-func (ec MasterInstanceFleetInstanceTypeConfigsEbsConfigAttributes) Type() terra.StringValue {
+func (ec masterInstanceFleetInstanceTypeConfigsEbsConfigAttributes) Type() terra.StringValue {
 	return terra.ReferenceAsString(ec.ref.Append("type"))
 }
 
-func (ec MasterInstanceFleetInstanceTypeConfigsEbsConfigAttributes) VolumesPerInstance() terra.NumberValue {
+func (ec masterInstanceFleetInstanceTypeConfigsEbsConfigAttributes) VolumesPerInstance() terra.NumberValue {
 	return terra.ReferenceAsNumber(ec.ref.Append("volumes_per_instance"))
 }
 
-type MasterInstanceFleetLaunchSpecificationsAttributes struct {
+type masterInstanceFleetLaunchSpecificationsAttributes struct {
 	ref terra.Reference
 }
 
-func (ls MasterInstanceFleetLaunchSpecificationsAttributes) InternalRef() (terra.Reference, error) {
+func (ls masterInstanceFleetLaunchSpecificationsAttributes) InternalRef() (terra.Reference, error) {
 	return ls.ref, nil
 }
 
-func (ls MasterInstanceFleetLaunchSpecificationsAttributes) InternalWithRef(ref terra.Reference) MasterInstanceFleetLaunchSpecificationsAttributes {
-	return MasterInstanceFleetLaunchSpecificationsAttributes{ref: ref}
+func (ls masterInstanceFleetLaunchSpecificationsAttributes) InternalWithRef(ref terra.Reference) masterInstanceFleetLaunchSpecificationsAttributes {
+	return masterInstanceFleetLaunchSpecificationsAttributes{ref: ref}
 }
 
-func (ls MasterInstanceFleetLaunchSpecificationsAttributes) InternalTokens() (hclwrite.Tokens, error) {
+func (ls masterInstanceFleetLaunchSpecificationsAttributes) InternalTokens() (hclwrite.Tokens, error) {
 	return ls.ref.InternalTokens()
 }
 
-func (ls MasterInstanceFleetLaunchSpecificationsAttributes) OnDemandSpecification() terra.ListValue[MasterInstanceFleetLaunchSpecificationsOnDemandSpecificationAttributes] {
-	return terra.ReferenceAsList[MasterInstanceFleetLaunchSpecificationsOnDemandSpecificationAttributes](ls.ref.Append("on_demand_specification"))
+func (ls masterInstanceFleetLaunchSpecificationsAttributes) OnDemandSpecification() terra.ListValue[masterInstanceFleetLaunchSpecificationsOnDemandSpecificationAttributes] {
+	return terra.ReferenceAsList[masterInstanceFleetLaunchSpecificationsOnDemandSpecificationAttributes](ls.ref.Append("on_demand_specification"))
 }
 
-func (ls MasterInstanceFleetLaunchSpecificationsAttributes) SpotSpecification() terra.ListValue[MasterInstanceFleetLaunchSpecificationsSpotSpecificationAttributes] {
-	return terra.ReferenceAsList[MasterInstanceFleetLaunchSpecificationsSpotSpecificationAttributes](ls.ref.Append("spot_specification"))
+func (ls masterInstanceFleetLaunchSpecificationsAttributes) SpotSpecification() terra.ListValue[masterInstanceFleetLaunchSpecificationsSpotSpecificationAttributes] {
+	return terra.ReferenceAsList[masterInstanceFleetLaunchSpecificationsSpotSpecificationAttributes](ls.ref.Append("spot_specification"))
 }
 
-type MasterInstanceFleetLaunchSpecificationsOnDemandSpecificationAttributes struct {
+type masterInstanceFleetLaunchSpecificationsOnDemandSpecificationAttributes struct {
 	ref terra.Reference
 }
 
-func (ods MasterInstanceFleetLaunchSpecificationsOnDemandSpecificationAttributes) InternalRef() (terra.Reference, error) {
+func (ods masterInstanceFleetLaunchSpecificationsOnDemandSpecificationAttributes) InternalRef() (terra.Reference, error) {
 	return ods.ref, nil
 }
 
-func (ods MasterInstanceFleetLaunchSpecificationsOnDemandSpecificationAttributes) InternalWithRef(ref terra.Reference) MasterInstanceFleetLaunchSpecificationsOnDemandSpecificationAttributes {
-	return MasterInstanceFleetLaunchSpecificationsOnDemandSpecificationAttributes{ref: ref}
+func (ods masterInstanceFleetLaunchSpecificationsOnDemandSpecificationAttributes) InternalWithRef(ref terra.Reference) masterInstanceFleetLaunchSpecificationsOnDemandSpecificationAttributes {
+	return masterInstanceFleetLaunchSpecificationsOnDemandSpecificationAttributes{ref: ref}
 }
 
-func (ods MasterInstanceFleetLaunchSpecificationsOnDemandSpecificationAttributes) InternalTokens() (hclwrite.Tokens, error) {
+func (ods masterInstanceFleetLaunchSpecificationsOnDemandSpecificationAttributes) InternalTokens() (hclwrite.Tokens, error) {
 	return ods.ref.InternalTokens()
 }
 
-func (ods MasterInstanceFleetLaunchSpecificationsOnDemandSpecificationAttributes) AllocationStrategy() terra.StringValue {
+func (ods masterInstanceFleetLaunchSpecificationsOnDemandSpecificationAttributes) AllocationStrategy() terra.StringValue {
 	return terra.ReferenceAsString(ods.ref.Append("allocation_strategy"))
 }
 
-type MasterInstanceFleetLaunchSpecificationsSpotSpecificationAttributes struct {
+type masterInstanceFleetLaunchSpecificationsSpotSpecificationAttributes struct {
 	ref terra.Reference
 }
 
-func (ss MasterInstanceFleetLaunchSpecificationsSpotSpecificationAttributes) InternalRef() (terra.Reference, error) {
+func (ss masterInstanceFleetLaunchSpecificationsSpotSpecificationAttributes) InternalRef() (terra.Reference, error) {
 	return ss.ref, nil
 }
 
-func (ss MasterInstanceFleetLaunchSpecificationsSpotSpecificationAttributes) InternalWithRef(ref terra.Reference) MasterInstanceFleetLaunchSpecificationsSpotSpecificationAttributes {
-	return MasterInstanceFleetLaunchSpecificationsSpotSpecificationAttributes{ref: ref}
+func (ss masterInstanceFleetLaunchSpecificationsSpotSpecificationAttributes) InternalWithRef(ref terra.Reference) masterInstanceFleetLaunchSpecificationsSpotSpecificationAttributes {
+	return masterInstanceFleetLaunchSpecificationsSpotSpecificationAttributes{ref: ref}
 }
 
-func (ss MasterInstanceFleetLaunchSpecificationsSpotSpecificationAttributes) InternalTokens() (hclwrite.Tokens, error) {
+func (ss masterInstanceFleetLaunchSpecificationsSpotSpecificationAttributes) InternalTokens() (hclwrite.Tokens, error) {
 	return ss.ref.InternalTokens()
 }
 
-func (ss MasterInstanceFleetLaunchSpecificationsSpotSpecificationAttributes) AllocationStrategy() terra.StringValue {
+func (ss masterInstanceFleetLaunchSpecificationsSpotSpecificationAttributes) AllocationStrategy() terra.StringValue {
 	return terra.ReferenceAsString(ss.ref.Append("allocation_strategy"))
 }
 
-func (ss MasterInstanceFleetLaunchSpecificationsSpotSpecificationAttributes) BlockDurationMinutes() terra.NumberValue {
+func (ss masterInstanceFleetLaunchSpecificationsSpotSpecificationAttributes) BlockDurationMinutes() terra.NumberValue {
 	return terra.ReferenceAsNumber(ss.ref.Append("block_duration_minutes"))
 }
 
-func (ss MasterInstanceFleetLaunchSpecificationsSpotSpecificationAttributes) TimeoutAction() terra.StringValue {
+func (ss masterInstanceFleetLaunchSpecificationsSpotSpecificationAttributes) TimeoutAction() terra.StringValue {
 	return terra.ReferenceAsString(ss.ref.Append("timeout_action"))
 }
 
-func (ss MasterInstanceFleetLaunchSpecificationsSpotSpecificationAttributes) TimeoutDurationMinutes() terra.NumberValue {
+func (ss masterInstanceFleetLaunchSpecificationsSpotSpecificationAttributes) TimeoutDurationMinutes() terra.NumberValue {
 	return terra.ReferenceAsNumber(ss.ref.Append("timeout_duration_minutes"))
 }
 
-type MasterInstanceGroupAttributes struct {
+type masterInstanceGroupAttributes struct {
 	ref terra.Reference
 }
 
-func (mig MasterInstanceGroupAttributes) InternalRef() (terra.Reference, error) {
+func (mig masterInstanceGroupAttributes) InternalRef() (terra.Reference, error) {
 	return mig.ref, nil
 }
 
-func (mig MasterInstanceGroupAttributes) InternalWithRef(ref terra.Reference) MasterInstanceGroupAttributes {
-	return MasterInstanceGroupAttributes{ref: ref}
+func (mig masterInstanceGroupAttributes) InternalWithRef(ref terra.Reference) masterInstanceGroupAttributes {
+	return masterInstanceGroupAttributes{ref: ref}
 }
 
-func (mig MasterInstanceGroupAttributes) InternalTokens() (hclwrite.Tokens, error) {
+func (mig masterInstanceGroupAttributes) InternalTokens() (hclwrite.Tokens, error) {
 	return mig.ref.InternalTokens()
 }
 
-func (mig MasterInstanceGroupAttributes) BidPrice() terra.StringValue {
+func (mig masterInstanceGroupAttributes) BidPrice() terra.StringValue {
 	return terra.ReferenceAsString(mig.ref.Append("bid_price"))
 }
 
-func (mig MasterInstanceGroupAttributes) Id() terra.StringValue {
+func (mig masterInstanceGroupAttributes) Id() terra.StringValue {
 	return terra.ReferenceAsString(mig.ref.Append("id"))
 }
 
-func (mig MasterInstanceGroupAttributes) InstanceCount() terra.NumberValue {
+func (mig masterInstanceGroupAttributes) InstanceCount() terra.NumberValue {
 	return terra.ReferenceAsNumber(mig.ref.Append("instance_count"))
 }
 
-func (mig MasterInstanceGroupAttributes) InstanceType() terra.StringValue {
+func (mig masterInstanceGroupAttributes) InstanceType() terra.StringValue {
 	return terra.ReferenceAsString(mig.ref.Append("instance_type"))
 }
 
-func (mig MasterInstanceGroupAttributes) Name() terra.StringValue {
+func (mig masterInstanceGroupAttributes) Name() terra.StringValue {
 	return terra.ReferenceAsString(mig.ref.Append("name"))
 }
 
-func (mig MasterInstanceGroupAttributes) EbsConfig() terra.SetValue[MasterInstanceGroupEbsConfigAttributes] {
-	return terra.ReferenceAsSet[MasterInstanceGroupEbsConfigAttributes](mig.ref.Append("ebs_config"))
+func (mig masterInstanceGroupAttributes) EbsConfig() terra.SetValue[masterInstanceGroupEbsConfigAttributes] {
+	return terra.ReferenceAsSet[masterInstanceGroupEbsConfigAttributes](mig.ref.Append("ebs_config"))
 }
 
-type MasterInstanceGroupEbsConfigAttributes struct {
+type masterInstanceGroupEbsConfigAttributes struct {
 	ref terra.Reference
 }
 
-func (ec MasterInstanceGroupEbsConfigAttributes) InternalRef() (terra.Reference, error) {
+func (ec masterInstanceGroupEbsConfigAttributes) InternalRef() (terra.Reference, error) {
 	return ec.ref, nil
 }
 
-func (ec MasterInstanceGroupEbsConfigAttributes) InternalWithRef(ref terra.Reference) MasterInstanceGroupEbsConfigAttributes {
-	return MasterInstanceGroupEbsConfigAttributes{ref: ref}
+func (ec masterInstanceGroupEbsConfigAttributes) InternalWithRef(ref terra.Reference) masterInstanceGroupEbsConfigAttributes {
+	return masterInstanceGroupEbsConfigAttributes{ref: ref}
 }
 
-func (ec MasterInstanceGroupEbsConfigAttributes) InternalTokens() (hclwrite.Tokens, error) {
+func (ec masterInstanceGroupEbsConfigAttributes) InternalTokens() (hclwrite.Tokens, error) {
 	return ec.ref.InternalTokens()
 }
 
-func (ec MasterInstanceGroupEbsConfigAttributes) Iops() terra.NumberValue {
+func (ec masterInstanceGroupEbsConfigAttributes) Iops() terra.NumberValue {
 	return terra.ReferenceAsNumber(ec.ref.Append("iops"))
 }
 
-func (ec MasterInstanceGroupEbsConfigAttributes) Size() terra.NumberValue {
+func (ec masterInstanceGroupEbsConfigAttributes) Size() terra.NumberValue {
 	return terra.ReferenceAsNumber(ec.ref.Append("size"))
 }
 
-func (ec MasterInstanceGroupEbsConfigAttributes) Throughput() terra.NumberValue {
+func (ec masterInstanceGroupEbsConfigAttributes) Throughput() terra.NumberValue {
 	return terra.ReferenceAsNumber(ec.ref.Append("throughput"))
 }
 
-func (ec MasterInstanceGroupEbsConfigAttributes) Type() terra.StringValue {
+func (ec masterInstanceGroupEbsConfigAttributes) Type() terra.StringValue {
 	return terra.ReferenceAsString(ec.ref.Append("type"))
 }
 
-func (ec MasterInstanceGroupEbsConfigAttributes) VolumesPerInstance() terra.NumberValue {
+func (ec masterInstanceGroupEbsConfigAttributes) VolumesPerInstance() terra.NumberValue {
 	return terra.ReferenceAsNumber(ec.ref.Append("volumes_per_instance"))
 }
 

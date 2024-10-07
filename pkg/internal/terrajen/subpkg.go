@@ -295,7 +295,7 @@ func subPkgAttributeStruct(n *node, schemaType SchemaType) *jen.Statement {
 }
 
 func subPkgAttributeStructName(n *node, schemaType SchemaType) string {
-	structName := strcase.Pascal(n.uniqueName) + suffixAttributes
+	structName := strcase.Camel(n.uniqueName) + suffixAttributes
 	if schemaType == SchemaTypeDataSource {
 		return prefixStructDataSource + structName
 	}
