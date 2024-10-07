@@ -76,7 +76,7 @@ func Example_export() {
 	_ = os.RemoveAll(out)
 
 	tm := team.New()
-	if err := kube.Export(
+	err := kube.Export(
 		tm,
 		// directory where to export the manifests
 		kube.WithExportOutputDirectory(out),
@@ -108,7 +108,8 @@ func Example_export() {
 		// 		// do something with the secret
 		// 		return nil
 		// 	}),
-	); err != nil {
+	)
+	if err != nil {
 		fmt.Printf("%s\n", err)
 	}
 	fmt.Println("successfully exported CRDs to manifests")

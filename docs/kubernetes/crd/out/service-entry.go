@@ -3,7 +3,7 @@
 package team
 
 import (
-	v1beta11 "istio.io/api/networking/v1beta1"
+	v1alpha3 "istio.io/api/networking/v1alpha3"
 	v1beta1 "istio.io/client-go/pkg/apis/networking/v1beta1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -13,15 +13,15 @@ var TeamGraphMicrosoftServiceEntry = &v1beta1.ServiceEntry{
 		Name:      "team-graph-microsoft",
 		Namespace: "team-onboarding",
 	},
-	Spec: v1beta11.ServiceEntry{
+	Spec: v1alpha3.ServiceEntry{
 		ExportTo: []string{"."},
 		Hosts:    []string{"graph.microsoft.com"},
-		Ports: []*v1beta11.ServicePort{{
+		Ports: []*v1alpha3.ServicePort{{
 			Name:     "https",
 			Number:   uint32(0x1bb),
 			Protocol: "HTTPS",
 		}},
-		Resolution: v1beta11.ServiceEntry_Resolution(int32(2)),
+		Resolution: v1alpha3.ServiceEntry_Resolution(int32(2)),
 	},
 	TypeMeta: metav1.TypeMeta{
 		APIVersion: "networking.istio.io/v1beta1",

@@ -280,8 +280,12 @@ var (
 // `gotype`.
 func TestCompileGenGoCode(t *testing.T) {
 	ctx := tu.WithTimeout(t, context.Background(), time.Minute*10)
+	t.Cleanup(func() {
+		os.RemoveAll("out")
+	})
 	for _, test := range providerTests {
 		t.Run(test.Name, func(t *testing.T) {
+			t.Parallel()
 			outDir := filepath.Join("out", test.Name)
 			schemaPath := filepath.Join(goldenTestDir, test.Name, "schema.json")
 			schemaFile, err := os.Open(schemaPath)
@@ -314,6 +318,8 @@ func TestCompileGenGoCode(t *testing.T) {
 
 // goTypeExec executes `gotype` in the given directory.
 func goTypeExec(t *testing.T, ctx context.Context, dir string) {
+	start := time.Now()
+	defer func() { t.Logf("gotype duration: %v", time.Since(start)) }()
 	cmd := exec.CommandContext(ctx, "go", "run", gotype, "-v", ".")
 	cmd.Dir = dir
 	out, err := cmd.CombinedOutput()

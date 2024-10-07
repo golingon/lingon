@@ -31,7 +31,7 @@ func Example_import() {
 	// Remove previously generated output directory
 	_ = os.RemoveAll("./out")
 
-	if err := kube.Import(
+	err := kube.Import(
 		kube.WithImportAppName("team"),
 		kube.WithImportPackageName("team"),
 		kube.WithImportManifestFiles([]string{"./manifest.yaml"}),
@@ -43,7 +43,8 @@ func Example_import() {
 		kube.WithImportIgnoreErrors(false),
 		// use the default logger even if unused with WithImportVerbose(false)
 		kube.WithImportLogger(kube.Logger(os.Stderr)),
-	); err != nil {
+	)
+	if err != nil {
 		fmt.Printf("%s\n", err)
 	}
 	fmt.Println("successfully imported CRDs from manifest.yaml")
