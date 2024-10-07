@@ -34,4 +34,4 @@ jobs:
           cache-dependency-path: ./go.mod
 
       - name: run CI
-        run: go run cmd/tools/ci/*.go -pr -nodiff
+        run: go run ./cmd/tools/ci/ -pr -nodiff
