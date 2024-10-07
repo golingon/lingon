@@ -17,7 +17,7 @@ jobs:
   test:
     permissions:
       contents: read # for actions/checkout to fetch code
-      pull-requests: read # for golangci/golangci-lint-action to fetch pull requests
+      # pull-requests: read # for golangci/golangci-lint-action to fetch pull requests
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -36,4 +36,4 @@ jobs:
           cache-dependency-path: ./go.mod
 
       - name: run CI
-        run: go run cmd/tools/ci/*.go -pr -nodiff
+        run: go run cmd/tools/ci/ -pr -nodiff

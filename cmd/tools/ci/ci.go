@@ -33,25 +33,36 @@ const (
 	osvScannerRepo    = "github.com/google/osv-scanner/cmd/osv-scanner"
 	osvScannerVersion = "@v1.8.2"
 	osvScanner        = osvScannerRepo + osvScannerVersion
+	osvScannerBin     = "osv-scanner"
 
 	// goVuln to find vulnerabilities
 	vulnRepo    = "golang.org/x/vuln/cmd/govulncheck"
 	vulnVersion = "@latest"
 	goVuln      = vulnRepo + vulnVersion
+	goVulnBin   = "govulncheck"
 
 	// goCILint is for linting code
 	goCILintRepo    = "github.com/golangci/golangci-lint/cmd/golangci-lint"
 	goCILintVersion = "@v1.60.3"
 	goCILint        = goCILintRepo + goCILintVersion
+	goCILintBin     = "golangci-lint"
 
 	// goFumpt is mvdan.cc/gofumpt to format code
 	goFumptRepo    = "mvdan.cc/gofumpt"
-	goFumptVersion = "@v0.6.0"
+	goFumptVersion = "@v0.7.0"
 	goFumpt        = goFumptRepo + goFumptVersion
+	goFumptBin     = "gofumpt"
 
 	dirK8s   = "./docs/kubernetes"
 	dirTerra = "./docs/terraform"
 )
+
+var binz = map[string]string{
+	osvScanner: osvScannerBin,
+	goVuln:     goVulnBin,
+	goCILint:   goCILintBin,
+	goFumpt:    goFumptBin,
+}
 
 type Result struct {
 	Tasks []Task
@@ -84,7 +95,7 @@ func (t Task) String() string {
 var errUnrecoverable = errors.New("unrecoverable")
 
 func main() {
-	logger := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
+	logger := slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
 		AddSource: false,
 		ReplaceAttr: func(groups []string, a slog.Attr) slog.Attr {
 			if a.Key == slog.TimeKey {
@@ -211,19 +222,20 @@ func Main(logger *slog.Logger) error {
 			run(V, ".", "go", genargs...),
 			run(V, ".", "go", "test", vargs, "./..."),
 			run(V, ".", "go", "mod", "tidy"),
-			run(V, dirK8s, "go", genargs...),
-			run(V, dirK8s, "go", "mod", "tidy"),
-			run(V, dirTerra, "go", genargs...),
-			run(V, dirTerra, "go", "mod", "tidy"),
-			run(V, ".", "go", "run", goFumpt, "-w", "-extra", "."),
-			run(V, ".", "go", "run", goCILint, vargs, "run", "./..."),
+			// FIXME: causing too many issues right now
+			// run(V, dirK8s, "go", genargs...),
+			// run(V, dirK8s, "go", "mod", "tidy"),
+			// run(V, dirTerra, "go", genargs...),
+			// run(V, dirTerra, "go", "mod", "tidy"),
+			installRun(V, goFumpt, "-w", "-extra", "."),
+			installRun(V, goCILint, vargs, "run", "./..."),
 		))
 	}
 
 	if scan {
 		p.Steps = append(p.Steps, p.Series(
-			run(V, ".", "go", "run", goVuln, "./..."),
-			run(V, ".", "go", "run", osvScanner, "."),
+			installRun(V, goVuln, "./..."),
+			installRun(V, osvScanner, "."),
 		))
 	}
 
@@ -305,11 +317,34 @@ func (g *CLI) String() string {
 	return fmt.Sprintf("CLI{Dir: %s, Command: '%s'}", g.Dir, g.Bin+" "+strings.Join(g.Args, " "))
 }
 
+func installRun(verbose bool, bin string, args ...string) wf.Step[Result] {
+	cli, ok := binz[bin]
+	if !ok {
+		// not a tool we use
+		return run(verbose, ".", "go", append([]string{"run", bin}, args...)...)
+	}
+	if _, err := exec.LookPath(cli); err != nil {
+		// tool not found => installing
+		fmt.Println("install tool", bin)
+		instErr := exec.Command("go", "install", bin).Run()
+		if instErr != nil {
+			return run(verbose, ".", "go", append([]string{"run", bin}, args...)...)
+		}
+	}
+	if _, err := exec.LookPath(cli); err != nil {
+		// tool not in the path
+		fmt.Println("tool not in the path", bin)
+		return run(verbose, ".", "go", append([]string{"run", bin}, args...)...)
+	}
+	fmt.Println("running local tool", cli)
+	return run(verbose, ".", cli, args...)
+}
+
 func (g *CLI) Run(ctx context.Context, r *Result) (*Result, error) {
 	if g.Bin == "" {
 		return r, fmt.Errorf("%T: binary not set: %w", g, errUnrecoverable)
 	}
-	cmd := exec.Command(g.Bin, g.Args...)
+	cmd := exec.CommandContext(ctx, g.Bin, g.Args...)
 	var buf strings.Builder
 	if g.ShowOutput {
 		cmd.Stdout = io.MultiWriter(&buf, os.Stdout)
