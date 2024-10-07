@@ -9,6 +9,7 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/hashicorp/hcl/v2/hclsyntax"
 	"github.com/hashicorp/hcl/v2/hclwrite"
 	"github.com/zclconf/go-cty/cty"
 	"github.com/zclconf/go-cty/cty/gocty"
@@ -262,15 +263,20 @@ func encodeStruct(
 				if fv.Kind() == reflect.Ptr && fv.IsNil() {
 					continue
 				}
-				if fv.CanInterface() && fv.Interface() != nil {
-					ctyVal, err := impliedCtyValue(fv)
-					if err != nil {
-						return err
-					}
-					body.SetAttributeRaw(
-						tagName,
-						hclwrite.TokensForValue(ctyVal),
+				if !(fv.CanInterface() && fv.Interface() != nil) {
+					continue
+				}
+				attrTokens, err := encodeAttributeAsGoType(fv)
+				if err != nil {
+					return fmt.Errorf(
+						"creating tokens for field %s: %w",
+						sf.Name, err,
 					)
+				}
+				// Make sure that tokens is not nil because we don't want to
+				// write empty attributes.
+				if attrTokens != nil {
+					body.SetAttributeRaw(tagName, attrTokens)
 				}
 			}
 		case "block":
@@ -317,6 +323,123 @@ func encodeStruct(
 	return nil
 }
 
+// encodeAttributeAsGoType encodes as an HCL attribute.
+func encodeAttributeAsGoType(
+	rv reflect.Value,
+) (hclwrite.Tokens, error) {
+	switch rv.Kind() {
+	case reflect.Pointer:
+		if rv.IsNil() {
+			return nil, nil
+		}
+		return encodeAttributeAsGoType(rv.Elem())
+	case reflect.Map:
+		if rv.IsNil() {
+			return nil, nil
+		}
+		tokens := hclwrite.Tokens{
+			&hclwrite.Token{
+				Type:  hclsyntax.TokenOBrace,
+				Bytes: []byte{'{'},
+			},
+		}
+		iter := rv.MapRange()
+		for iter.Next() {
+			keyTokens, err := encodeAttributeAsGoType(iter.Key())
+			if err != nil {
+				return nil, err
+			}
+			valueTokens, err := encodeAttributeAsGoType(iter.Value())
+			if err != nil {
+				return nil, err
+			}
+			tokens = append(tokens, keyTokens...)
+			tokens = append(tokens, &hclwrite.Token{
+				Type:  hclsyntax.TokenEqual,
+				Bytes: []byte{'='},
+			})
+			tokens = append(tokens, valueTokens...)
+			tokens = append(tokens, &hclwrite.Token{
+				Type:  hclsyntax.TokenComma,
+				Bytes: []byte{','},
+			})
+		}
+		tokens = append(tokens, &hclwrite.Token{
+			Type:  hclsyntax.TokenCBrace,
+			Bytes: []byte{'}'},
+		})
+		return tokens, nil
+	case reflect.Array, reflect.Slice:
+		if rv.Kind() == reflect.Slice && rv.IsNil() {
+			return nil, nil
+		}
+		tokens := hclwrite.Tokens{
+			&hclwrite.Token{
+				Type:  hclsyntax.TokenOBrack,
+				Bytes: []byte{'['},
+			},
+		}
+		for i := 0; i < rv.Len(); i++ {
+			indexTokens, err := encodeAttributeAsGoType(rv.Index(i))
+			if err != nil {
+				return nil, err
+			}
+			tokens = append(tokens, indexTokens...)
+			if i < rv.Len()-1 {
+				tokens = append(tokens, &hclwrite.Token{
+					Type:  hclsyntax.TokenComma,
+					Bytes: []byte{','},
+				})
+			}
+		}
+		tokens = append(tokens, &hclwrite.Token{
+			Type:  hclsyntax.TokenCBrack,
+			Bytes: []byte{']'},
+		})
+		return tokens, nil
+	case reflect.Struct:
+		file := hclwrite.NewEmptyFile()
+		body := file.Body()
+
+		if err := encodeStruct(rv, nil, body); err != nil {
+			return nil, err
+		}
+		if len(body.BuildTokens(nil)) == 0 {
+			return nil, nil
+		}
+		tokens := hclwrite.Tokens{
+			{
+				Type:  hclsyntax.TokenOBrace,
+				Bytes: []byte{'{'},
+			},
+			{
+				Type:  hclsyntax.TokenNewline,
+				Bytes: []byte{'\n'},
+			},
+		}
+		tokens = append(tokens, body.BuildTokens(nil)...)
+		tokens = append(tokens, &hclwrite.Token{
+			Type:  hclsyntax.TokenCBrace,
+			Bytes: []byte{'}'},
+		})
+		return tokens, nil
+	default:
+		// All values, like `terra.String` are actually structs and implement
+		// the Tokenizer interface.
+		// Handle all the basic Go types (like string, int) by implying their
+		// cty type and value.
+		ctyVal, err := impliedCtyValue(rv)
+		if err != nil {
+			return nil, fmt.Errorf(
+				"unsupported type for attribute: %q. Tried implying the cty value: %w",
+				rv.Kind(),
+				err,
+			)
+		}
+		return hclwrite.TokensForValue(ctyVal), nil
+	}
+}
+
 func encodeBlock(
 	rv reflect.Value,
 	tagName string,
@@ -345,11 +468,8 @@ func encodeBlock(
 		}
 		return encodeBlock(rv.Elem(), tagName, body)
 	default:
-		if rv.IsNil() {
-			return nil
-		}
 		return fmt.Errorf(
-			"supported type for \",block\" HCL tag: %s",
+			"unsupported type for \",block\" HCL tag: %s",
 			rv.Kind(),
 		)
 	}
@@ -372,7 +492,7 @@ func encodeRemainBody(rv reflect.Value, body *hclwrite.Body) error {
 		return encodeRemainBody(rv.Elem(), body)
 	default:
 		return fmt.Errorf(
-			"supported type for \",remain\" HCL tag: %s",
+			"unsupported type for \",remain\" HCL tag: %s",
 			rv.Kind(),
 		)
 	}

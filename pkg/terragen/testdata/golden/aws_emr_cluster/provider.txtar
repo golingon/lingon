@@ -2409,9 +2409,9 @@ type Args struct {
 	// VisibleToAllUsers: bool, optional
 	VisibleToAllUsers terra.BoolValue `hcl:"visible_to_all_users,attr"`
 	// PlacementGroupConfig: min=0
-	PlacementGroupConfig []PlacementGroupConfig `hcl:"placement_group_config,block" validate:"min=0"`
+	PlacementGroupConfig []PlacementGroupConfig `hcl:"placement_group_config,attr" validate:"min=0"`
 	// Step: min=0
-	Step []Step `hcl:"step,block" validate:"min=0"`
+	Step []Step `hcl:"step,attr" validate:"min=0"`
 	// AutoTerminationPolicy: optional
 	AutoTerminationPolicy *AutoTerminationPolicy `hcl:"auto_termination_policy,block"`
 	// BootstrapAction: min=0
@@ -2665,7 +2665,7 @@ type Step struct {
 	// Name: string, optional
 	Name terra.StringValue `hcl:"name,attr"`
 	// StepHadoopJarStep: min=0
-	HadoopJarStep []StepHadoopJarStep `hcl:"hadoop_jar_step,block" validate:"min=0"`
+	HadoopJarStep []StepHadoopJarStep `hcl:"hadoop_jar_step,attr" validate:"min=0"`
 }
 
 type StepHadoopJarStep struct {

@@ -11,6 +11,7 @@ import (
 	"log/slog"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 
 	"github.com/golingon/lingon/pkg/internal/terrajen"
@@ -131,7 +132,9 @@ func generateProviderTxtar(
 	//
 	// Generate Resources
 	//
-	for name, resource := range schema.ResourceSchemas {
+
+	for _, name := range sortMapKeys(schema.ResourceSchemas) {
+		resource := schema.ResourceSchemas[name]
 		resourceSchema := provider.SchemaResource(name, resource.Block)
 		rsf := terrajen.ResourceFile(resourceSchema)
 		resourceBuf := bytes.Buffer{}
@@ -162,7 +165,8 @@ func generateProviderTxtar(
 	//
 	// Generate Data blocks
 	//
-	for name, data := range schema.DataSourceSchemas {
+	for _, name := range sortMapKeys(schema.DataSourceSchemas) {
+		data := schema.DataSourceSchemas[name]
 		dataSchema := provider.SchemaData(name, data.Block)
 		df := terrajen.DataSourceFile(dataSchema)
 		dataBuf := bytes.Buffer{}
@@ -252,4 +256,13 @@ func ParseProvider(s string) (Provider, error) {
 	p.Version = sourceVersion[1]
 	// Add the provider to the map
 	return p, nil
+}
+
+func sortMapKeys[T any](m map[string]T) []string {
+	keys := make([]string, 0, len(m))
+	for k := range m {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	return keys
 }

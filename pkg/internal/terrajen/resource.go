@@ -101,7 +101,7 @@ func resourceStruct(s *Schema) *jen.Statement {
 
 func resourceStateStruct(s *Schema) *jen.Statement {
 	fields := make([]jen.Code, 0)
-	for _, attr := range s.graph.attributes {
+	for _, attr := range s.graph.root.attributes {
 		pan := strcase.Pascal(attr.name)
 		stmt := jen.Id(pan)
 		stmt.Add(ctyTypeToGoType(attr.ctyType, pan))
@@ -113,7 +113,7 @@ func resourceStateStruct(s *Schema) *jen.Statement {
 		fields = append(fields, stmt)
 	}
 
-	for _, child := range s.graph.children {
+	for _, child := range s.graph.root.children {
 		stmt := jen.Id(strcase.Pascal(child.name))
 		if len(child.nestingPath) == 0 {
 			stmt.Op("*")

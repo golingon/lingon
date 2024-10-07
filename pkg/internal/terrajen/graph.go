@@ -18,37 +18,17 @@ import (
 )
 
 func newGraph(schema *tfjson.SchemaBlock) *graph {
-	g := graph{}
-
-	for _, atName := range sortMapKeys(schema.Attributes) {
-		attr := schema.Attributes[atName]
-		// Attributes which are objects will be treated as children
-		if _, ok := ctyTypeElementObject(attr.AttributeType); ok {
-			g.children = append(
-				g.children,
-				g.traverseCtyType(
-					nil,
-					atName,
-					attr.AttributeType,
-					isAttributeArg(attr),
-				),
-			)
-			continue
-		}
-		g.attributes = append(
-			g.attributes, &attribute{
-				name:       atName,
-				ctyType:    attr.AttributeType,
-				isArg:      isAttributeArg(attr),
-				isRequired: attr.Required,
-			},
-		)
+	root := &node{}
+	g := graph{
+		root: root,
 	}
+
+	g.processAttributes(root, nil, schema.Attributes)
 
 	for _, blockName := range sortMapKeys(schema.NestedBlocks) {
 		blockType := schema.NestedBlocks[blockName]
-		g.children = append(
-			g.children,
+		root.children = append(
+			root.children,
 			g.traverseBlockType(nil, blockName, blockType),
 		)
 	}
@@ -62,10 +42,9 @@ func newGraph(schema *tfjson.SchemaBlock) *graph {
 // generator.
 // A graph is created by supplying a tfjson.SchemaBlock.
 type graph struct {
-	// attributes are the top-level attributes for a terraform configuration
-	attributes []*attribute
-	// children contains all top-level nodes for a terraform configuration
-	children []*node
+	// root node is the root of the schema block and does not have things like a
+	// name.
+	root *node
 	// nodes contains all nodes in the schema block
 	nodes []*node
 }
@@ -87,7 +66,19 @@ type node struct {
 	uniqueName string
 	attributes []*attribute
 
-	// block values
+	// isAttribute is true if the node is an attribute (not a block) in HCL.
+	// A block is a nested object, like:
+	// 	node {
+	// 	  attribute = "value"}
+	// 	}
+	//
+	// An attribute is a key-value pair, like:
+	// 	node = {
+	// 	  attribute = "value"
+	// 	}
+	isAttribute bool
+	// isArg is true if the node can be passed as an argument in the terraform
+	// configuration.
 	isArg bool
 	// nestingPath is the path from one Go struct to it's child.
 	// For Terraform Schema Blocks this is only ever going to be
@@ -170,6 +161,49 @@ func (g *graph) isEmpty() bool {
 	return len(g.nodes) == 0
 }
 
+func (g *graph) processAttributes(
+	node *node,
+	path []string,
+	attributes map[string]*tfjson.SchemaAttribute,
+) {
+	for _, atName := range sortMapKeys(attributes) {
+		attr := attributes[atName]
+		// Attributes which are objects will be treated as children.
+		if attr.AttributeNestedType != nil {
+			node.children = append(
+				node.children,
+				g.traverseCtyNestedType(
+					path,
+					atName,
+					attr.AttributeNestedType,
+					isAttributeArg(attr),
+				),
+			)
+			continue
+		}
+		if _, ok := ctyTypeElementObject(attr.AttributeType); ok {
+			node.children = append(
+				node.children,
+				g.traverseCtyType(
+					path,
+					atName,
+					attr.AttributeType,
+					isAttributeArg(attr),
+				),
+			)
+			continue
+		}
+		node.attributes = append(
+			node.attributes, &attribute{
+				name:       atName,
+				ctyType:    attr.AttributeType,
+				isArg:      isAttributeArg(attr),
+				isRequired: attr.Required,
+			},
+		)
+	}
+}
+
 func (g *graph) traverseBlockType(
 	path []string,
 	name string,
@@ -179,7 +213,7 @@ func (g *graph) traverseBlockType(
 		name:        name,
 		path:        path,
 		uniqueName:  name,
-		nestingPath: blockNodeNestingMode(blockType),
+		nestingPath: blockNodeNestingMode(blockType.NestingMode),
 		isRequired:  isArgBlockRequired(blockType),
 		minItems:    blockType.MinItems,
 		maxItems:    blockType.MaxItems,
@@ -189,31 +223,8 @@ func (g *graph) traverseBlockType(
 	}
 	g.nodes = append(g.nodes, &n)
 
-	// First handle the attributes
-	for _, atName := range sortMapKeys(blockType.Block.Attributes) {
-		attr := blockType.Block.Attributes[atName]
-		// Attributes which are objects will be treated as children
-		if _, ok := ctyTypeElementObject(attr.AttributeType); ok {
-			n.children = append(
-				n.children,
-				g.traverseCtyType(
-					appendPath(path, name),
-					atName,
-					attr.AttributeType,
-					isAttributeArg(attr),
-				),
-			)
-			continue
-		}
-		n.attributes = append(
-			n.attributes, &attribute{
-				name:       atName,
-				ctyType:    attr.AttributeType,
-				isArg:      isAttributeArg(attr),
-				isRequired: attr.Required,
-			},
-		)
-	}
+	// First handle the attributes.
+	g.processAttributes(&n, appendPath(path, name), blockType.Block.Attributes)
 
 	for _, blockName := range sortMapKeys(blockType.Block.NestedBlocks) {
 		blockType := blockType.Block.NestedBlocks[blockName]
@@ -222,6 +233,29 @@ func (g *graph) traverseBlockType(
 			g.traverseBlockType(appendPath(path, name), blockName, blockType),
 		)
 	}
+	return &n
+}
+
+func (g *graph) traverseCtyNestedType(
+	path []string,
+	name string,
+	nestedType *tfjson.SchemaNestedAttributeType,
+	isArg bool,
+) *node {
+	n := node{
+		name:        name,
+		path:        path,
+		uniqueName:  name,
+		nestingPath: blockNodeNestingMode(nestedType.NestingMode),
+		isRequired:  false,
+		isAttribute: true, // Nested types are always attributes.
+		isArg:       isArg,
+		receiver:    structReceiverFromName(name),
+	}
+	g.nodes = append(g.nodes, &n)
+
+	g.processAttributes(&n, append(path, name), nestedType.Attributes)
+
 	return &n
 }
 
@@ -237,6 +271,7 @@ func (g *graph) traverseCtyType(
 		uniqueName:  name,
 		nestingPath: ctyNodeNestingMode(ct),
 		isRequired:  false,
+		isAttribute: true, // Cty types are always attributes.
 		isArg:       isArg,
 		receiver:    structReceiverFromName(name),
 	}
@@ -328,8 +363,10 @@ func ctyTypeElementObject(ct cty.Type) (cty.Type, bool) {
 	}
 }
 
-func blockNodeNestingMode(block *tfjson.SchemaBlockType) []nodeNestingMode {
-	switch block.NestingMode {
+func blockNodeNestingMode(
+	nestingMode tfjson.SchemaNestingMode,
+) []nodeNestingMode {
+	switch nestingMode {
 	case tfjson.SchemaNestingModeSingle, tfjson.SchemaNestingModeGroup:
 		return nil
 	case tfjson.SchemaNestingModeList, tfjson.SchemaNestingModeMap:
@@ -344,7 +381,7 @@ func blockNodeNestingMode(block *tfjson.SchemaBlockType) []nodeNestingMode {
 		panic(
 			fmt.Sprintf(
 				"unsupported SchemaNestingMode: %s",
-				block.NestingMode,
+				nestingMode,
 			),
 		)
 	}
@@ -370,8 +407,7 @@ func ctyNodeNestingMode(ct cty.Type) []nodeNestingMode {
 			[]nodeNestingMode{nodeNestingModeSet},
 			ctyNodeNestingMode(ct.ElementType())...,
 		)
-	case ct.IsMapType():
-		ct.IsCollectionType()
+	case ct.IsMapType(), ct.IsCollectionType():
 		return append(
 			[]nodeNestingMode{nodeNestingModeMap},
 			ctyNodeNestingMode(ct.ElementType())...,

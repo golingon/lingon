@@ -71,8 +71,12 @@ func subPkgArgStruct(s *Schema, n *node, schemaType SchemaType) *jen.Statement {
 		}
 		stmt := jen.Comment(child.comment()).Line()
 		stmt.Add(jen.Id(strcase.Pascal(child.name)))
+		hclTag := ",block"
+		if child.isAttribute {
+			hclTag = ",attr"
+		}
 		tags := map[string]string{
-			tagHCL: child.name + ",block",
+			tagHCL: child.name + hclTag,
 		}
 		if child.isSingularArg() {
 			stmt.Op("*")

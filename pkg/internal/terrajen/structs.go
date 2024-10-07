@@ -15,7 +15,7 @@ import (
 // provider, resource, data resource)
 func argsStruct(s *Schema) *jen.Statement {
 	fields := make([]jen.Code, 0)
-	for _, attr := range s.graph.attributes {
+	for _, attr := range s.graph.root.attributes {
 		if !attr.isArg {
 			continue
 		}
@@ -34,12 +34,16 @@ func argsStruct(s *Schema) *jen.Statement {
 		fields = append(fields, stmt)
 	}
 
-	for _, child := range s.graph.children {
+	for _, child := range s.graph.root.children {
 		if !child.isArg {
 			continue
 		}
+		hclTag := ",block"
+		if child.isAttribute {
+			hclTag = ",attr"
+		}
 		tags := map[string]string{
-			tagHCL: child.name + ",block",
+			tagHCL: child.name + hclTag,
 		}
 		stmt := jen.Comment(child.comment()).Line()
 		stmt.Add(jen.Id(strcase.Pascal(child.uniqueName)))
@@ -97,7 +101,7 @@ func attributesStruct(s *Schema) *jen.Statement {
 	//
 	// Methods
 	//
-	for _, attr := range s.graph.attributes {
+	for _, attr := range s.graph.root.attributes {
 		ct := attr.ctyType
 		stmt.Add(
 			jen.Comment(
@@ -131,7 +135,7 @@ func attributesStruct(s *Schema) *jen.Statement {
 		stmt.Line()
 	}
 
-	for _, child := range s.graph.children {
+	for _, child := range s.graph.root.children {
 		structName := subPkgAttributeStructName(child, s.SchemaType)
 		// structName := strcase.Pascal(child.uniqueName) + suffixAttributes
 		qualStruct := jen.Id(structName).Clone

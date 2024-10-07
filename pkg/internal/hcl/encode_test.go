@@ -5,6 +5,11 @@ package hcl
 
 import (
 	"bytes"
+	"flag"
+	"fmt"
+	"log/slog"
+	"os"
+	"path/filepath"
 	"reflect"
 	"testing"
 
@@ -85,8 +90,7 @@ var cbcfg = CommonBlockConfig{
 // 4. Assert that they match
 //
 // This is a bit complex but much more convincing and easier to maintain in the
-// long run than
-// string-based comparisons.
+// long run than string-based comparisons.
 func TestEncode(t *testing.T) {
 	// Create the expected HCL values which we will use to create the encoder
 	// arguments
@@ -218,26 +222,154 @@ func TestEncodeRaw(t *testing.T) {
 			},
 		},
 	}
-	var b bytes.Buffer
-	err := EncodeRaw(&b, expectedHCL)
-	tu.AssertNoError(t, err, "EncodeRaw failed")
-
-	actualHCL := HCLFile{}
-	err = hclsimple.Decode("test.hcl", b.Bytes(), nil, &actualHCL)
-	tu.AssertNoError(t, err, "Decode failed")
-
-	if diff := tu.Diff(actualHCL, expectedHCL); diff != "" {
-		t.Error(tu.Callers(), diff)
-	}
+	assertEncodeRawAndDecode(t, expectedHCL)
 }
 
 func TestEncode_StructWithNil(t *testing.T) {
 	type StructWithNil struct {
 		ShouldBeNil *string `hcl:"should_be_nil"`
 	}
+	expectedHCL := StructWithNil{}
+	assertEncodeRawAndDecode(t, expectedHCL)
+	// Make explicit check that there are no blocks.
 	block := hclwrite.NewBlock("block", nil)
-	err := encodeStruct(reflect.ValueOf(StructWithNil{}), block, block.Body())
+	err := encodeStruct(reflect.ValueOf(expectedHCL), block,
+		block.Body())
 	tu.AssertNoError(t, err)
 
 	tu.AssertEqual(t, len(block.Body().Attributes()), 0)
+}
+
+type StructWithChildAttribute struct {
+	Child    *ChildStruct  `hcl:"child,attr"`
+	Children []ChildStruct `hcl:"children,attr"`
+}
+
+type ChildStruct struct {
+	ChildField string `hcl:"child_field,attr" cty:"child_field"`
+}
+
+func TestEncode_StructWithChildAttribute(t *testing.T) {
+	expectedHCL := StructWithChildAttribute{
+		Child: &ChildStruct{
+			ChildField: "child_field_value",
+		},
+		Children: []ChildStruct{
+			{
+				ChildField: "child_field_value_1",
+			},
+			{
+				ChildField: "child_field_value_2",
+			},
+		},
+	}
+	assertEncodeRawAndDecode(t, expectedHCL)
+}
+
+func assertEncodeRawAndDecode[T any](t *testing.T, in T) {
+	var b bytes.Buffer
+	err := EncodeRaw(&b, in)
+	tu.AssertNoError(t, err, "EncodeRaw failed")
+
+	var out T
+	err = hclsimple.Decode("test.hcl", b.Bytes(), nil, &out)
+	tu.AssertNoError(t, err, "Decode failed")
+
+	if diff := tu.Diff(out, in); diff != "" {
+		t.Error(tu.Callers(), diff)
+	}
+}
+
+func TestMain(m *testing.M) {
+	update := flag.Bool("update", false, "update golden files")
+	flag.Parse()
+	if *update {
+		slog.Info("updating golden files and skipping tests")
+		if err := generatedGoldenFiles(); err != nil {
+			slog.Error("generating golden files", "error", err)
+			os.Exit(1)
+		}
+		// Skip running tests if updating golden files.
+		return
+	}
+	os.Exit(m.Run())
+}
+
+func TestEncodeRawGolden(t *testing.T) {
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			var b bytes.Buffer
+			err := EncodeRaw(&b, tt.value())
+			tu.AssertNoError(t, err, "EncodeRaw failed")
+
+			goldenFile := filepath.Join(goldenTestDir, tt.name+".hcl")
+			golden, err := os.ReadFile(goldenFile)
+			tu.AssertNoError(t, err, "reading golden file failed")
+
+			tu.AssertEqual(t, b.String(), string(golden))
+		})
+	}
+}
+
+type test struct {
+	name  string
+	value func() interface{}
+}
+
+var tests = []test{
+	{
+		name: "empty_values",
+		value: func() interface{} {
+			type (
+				Whatever    struct{}
+				EmptyStruct struct {
+					EmptySlice    []string          `hcl:"empty_slice,attr"`
+					EmptyArray    [3]string         `hcl:"empty_array,attr"`
+					EmptyMap      map[string]string `hcl:"empty_map,attr"`
+					EmptyWhatever []Whatever        `hcl:"empty_whatever,attr"`
+				}
+			)
+			return EmptyStruct{
+				EmptySlice:    []string{},
+				EmptyArray:    [3]string{},
+				EmptyMap:      map[string]string{},
+				EmptyWhatever: []Whatever{},
+			}
+		},
+	},
+	{
+		name: "nil_values",
+		value: func() interface{} {
+			type (
+				Whatever  struct{}
+				NilStruct struct {
+					NilSlice []Whatever          `hcl:"nil_slice,attr"`
+					NilArray [3]Whatever         `hcl:"nil_array,attr"`
+					NilMap   map[string]Whatever `hcl:"nil_map,attr"`
+				}
+			)
+			return NilStruct{}
+		},
+	},
+}
+
+var goldenTestDir = filepath.Join("testdata", "golden")
+
+func generatedGoldenFiles() error {
+	if err := os.MkdirAll(goldenTestDir, 0o755); err != nil {
+		return fmt.Errorf("creating golden directory: %w", err)
+	}
+	for _, tt := range tests {
+		tt := tt
+		var b bytes.Buffer
+		err := EncodeRaw(&b, tt.value())
+		if err != nil {
+			return fmt.Errorf("encoding %q: %w", tt.name, err)
+		}
+		testFile := filepath.Join(goldenTestDir, tt.name+".hcl")
+		if err := os.WriteFile(testFile, b.Bytes(), 0o644); err != nil {
+			return fmt.Errorf("writing golden file %q: %w", testFile, err)
+		}
+	}
+	return nil
 }

@@ -76,6 +76,19 @@ var providerTests = []ProviderTestCase{
 			"aws_globalaccelerator_cross_account_attachment",
 		},
 	},
+	{
+		Name:            "cidaas",
+		ProviderName:    "cidaas",
+		ProviderSource:  "cidaas/cidaas",
+		ProviderVersion: "3.1.2",
+
+		FilterResources: []string{
+			"cidaas_app",
+			"cidaas_custom_provider",
+			"cidaas_registration_field",
+		},
+		FilterDataSources: []string{},
+	},
 }
 
 func TestMain(m *testing.M) {
