@@ -26,6 +26,16 @@ func Name[T any](s Step[T]) string {
 	return strings.Replace(t.Name(), reflect.TypeOf(z).Elem().PkgPath()+".", "", 1)
 }
 
+type typ struct{}
+
+var (
+	_ Step[typ] = (*Pipeline[typ])(nil)
+	_ Step[typ] = (*MidFunc[typ])(nil)
+	_ Step[typ] = (*series[typ])(nil)
+	_ Step[typ] = (*parallel[typ])(nil)
+	_ Step[typ] = (*ifElse[typ])(nil)
+)
+
 type Pipeline[T any] struct {
 	Steps []Step[T]
 	Mid[T]
