@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"sync"
-	"time"
 
 	"github.com/google/uuid"
 )
@@ -27,18 +26,6 @@ func GetStepID(ctx context.Context) (uuid.UUID, error) {
 	v, ok := ctx.Value(stepIDKey).(uuid.UUID)
 	if !ok {
 		return uuid.UUID{}, ErrMissingFromContext
-	}
-	return v, nil
-}
-
-func setStepStartTime(ctx context.Context, t time.Time) context.Context {
-	return context.WithValue(ctx, stepStartTime, t)
-}
-
-func GetStepStartTime(ctx context.Context) (time.Time, error) {
-	v, ok := ctx.Value(stepStartTime).(time.Time)
-	if !ok {
-		return time.Time{}, ErrMissingFromContext
 	}
 	return v, nil
 }

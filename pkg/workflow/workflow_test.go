@@ -183,21 +183,18 @@ func TestPipeline(t *testing.T) {
 func LoggerMiddleware[T any](l *slog.Logger) wf.Middleware[T] {
 	return func(next wf.Step[T]) wf.Step[T] {
 		return wf.MidFunc[T](func(ctx context.Context, res *T) (*T, error) {
+			start := time.Now()
 			name := wf.Name(next)
 			if name != "MidFunc" {
 				id, _ := wf.GetStepID(ctx)
 				l.Info("start", "Type", name, "id", id, "STEP", next)
 			}
 			resp, err := next.Run(ctx, res)
+
 			if name != "MidFunc" {
 				id, _ := wf.GetStepID(ctx)
-				t, errctx := wf.GetStepStartTime(ctx)
-				if errors.Is(errctx, wf.ErrMissingFromContext) {
-					l.Info("done", "Type", name, "id", id, "Result", fmt.Sprintf("%v", resp))
-				} else {
-					l.Info("done", "Type", name, "id", id, "duration", time.Since(t),
-						"Result", fmt.Sprintf("%v", resp))
-				}
+				l.Info("done", "Type", name, "id", id, "duration", time.Since(start),
+					"Result", fmt.Sprintf("%v", resp))
 			}
 			return resp, err
 		})

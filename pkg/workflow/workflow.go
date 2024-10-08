@@ -7,7 +7,6 @@ import (
 	"reflect"
 	"slices"
 	"strings"
-	"time"
 
 	"dario.cat/mergo"
 	"golang.org/x/sync/errgroup"
@@ -89,16 +88,6 @@ func (f MidFunc[T]) Run(ctx context.Context, req *T) (*T, error) {
 type Middleware[T any] func(s Step[T]) Step[T]
 
 type Mid[T any] []Middleware[T]
-
-// StartTimeInCtxMiddleware stores the [time.Time] when a [Step] starts in to the context.
-// It is useful for a logger middleware to display the duration of a step.
-func StartTimeInCtxMiddleware[T any]() Middleware[T] {
-	return func(next Step[T]) Step[T] {
-		return MidFunc[T](func(ctx context.Context, r *T) (*T, error) {
-			return next.Run(setStepStartTime(ctx, time.Now()), r)
-		})
-	}
-}
 
 // Selector
 
