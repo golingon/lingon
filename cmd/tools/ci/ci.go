@@ -134,7 +134,6 @@ func Main(logger *slog.Logger) error {
 	}
 
 	mid := []wf.Middleware[Result]{
-		wf.StartTimeInCtxMiddleware[Result](),
 		ErrorMiddleware[Result](func(err error) bool { return errors.Is(err, errUnrecoverable) }),
 		LoggerMiddleware[Result](logger),
 	}
@@ -367,6 +366,7 @@ func (g *CLI) Run(ctx context.Context, r *Result) (*Result, error) {
 func LoggerMiddleware[T any](l *slog.Logger) wf.Middleware[T] {
 	return func(next wf.Step[T]) wf.Step[T] {
 		return wf.MidFunc[T](func(ctx context.Context, res *T) (*T, error) {
+			start := time.Now()
 			name := wf.Name(next)
 			if name != "MidFunc" {
 				id, _ := wf.GetStepID(ctx)
@@ -377,13 +377,8 @@ func LoggerMiddleware[T any](l *slog.Logger) wf.Middleware[T] {
 
 			if name != "MidFunc" {
 				id, _ := wf.GetStepID(ctx)
-				t, errctx := wf.GetStepStartTime(ctx)
-				if errors.Is(errctx, wf.ErrMissingFromContext) {
-					l.Info("done", "Type", name, "id", id, "Result", fmt.Sprintf("%v", resp))
-				} else {
-					l.Info("done", "Type", name, "id", id, "duration", time.Since(t),
-						"Result", fmt.Sprintf("%v", resp))
-				}
+				l.Info("done", "Type", name, "id", id, "duration", time.Since(start),
+					"Result", fmt.Sprintf("%v", resp))
 			}
 			return resp, err
 		})
