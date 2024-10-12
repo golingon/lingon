@@ -118,14 +118,17 @@ func TestPipeline(t *testing.T) {
 		}))
 	}
 
-	p := wf.NewPipeline(LoggerMiddleware[Result](logger))
+	mid := []wf.Middleware[Result]{
+		LoggerMiddleware[Result](logger),
+	}
+	p := wf.NewPipeline(mid...)
 	p.Steps = []wf.Step[Result]{
 		wf.StepFunc[Result](func(ctx context.Context, r *Result) (*Result, error) {
 			r.Messages = append(r.Messages, "first step")
 			return r, nil
 		}),
-		p.Series(
-			p.Parallel(wf.MergeTransform[Result](mergo.WithTransformers(addInt{})), sf...),
+		wf.Series(mid,
+			wf.Parallel(mid, wf.MergeTransform[Result](mergo.WithTransformers(addInt{})), sf...),
 			wf.StepFunc[Result](func(ctx context.Context, r *Result) (*Result, error) {
 				r.Messages = append(r.Messages, "extra serial step")
 				r.Err = errors.Join(r.Err, errIgnoreMe)
@@ -155,8 +158,7 @@ func TestPipeline(t *testing.T) {
 			r.Messages = append(r.Messages, "last step")
 			return resp, err
 		}),
-
-		p.IfElse(selector, ifstep, elsestep),
+		wf.Select(mid, selector, ifstep, elsestep),
 	}
 
 	ctx := context.Background()
