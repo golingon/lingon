@@ -140,7 +140,7 @@ func Main(logger *slog.Logger) error {
 	p := wf.NewPipeline(mid...)
 
 	if update {
-		p.Steps = append(p.Steps, p.Series(
+		p.Steps = append(p.Steps, wf.Series(mid,
 			run(V, ".", "go", "get", "-u", "./..."),
 			run(V, ".", "go", "mod", "tidy"),
 			run(V, dirK8s, "go", "get", "-u", "./..."),
@@ -152,7 +152,7 @@ func Main(logger *slog.Logger) error {
 
 	if cover {
 		coverOut := "cover.out"
-		p.Steps = append(p.Steps, p.Series(
+		p.Steps = append(p.Steps, wf.Series(mid,
 			run(V, ".", "go", "test", "-coverprofile="+coverOut, "-covermode=count", "./pkg/..."),
 			run(V, ".", "go", "tool", "cover", "-func="+coverOut),
 			wf.StepFunc[Result](func(ctx context.Context, r *Result) (*Result, error) {
@@ -177,7 +177,7 @@ func Main(logger *slog.Logger) error {
 	}
 
 	if lint {
-		p.Steps = append(p.Steps, p.Series(
+		p.Steps = append(p.Steps, wf.Series(mid,
 			run(V, ".", "go", "mod", "tidy"),
 			run(V, ".", "go", "run", goFumpt, "-w", "-extra", "."),
 			run(V, ".", "go", "run", goCILint, vargs, "run", "./..."),
@@ -185,16 +185,16 @@ func Main(logger *slog.Logger) error {
 	}
 
 	if generate {
-		p.Steps = append(p.Steps, p.Parallel(wf.MergeTransform[Result](mergo.WithAppendSlice),
-			p.Series(
+		p.Steps = append(p.Steps, wf.Parallel(mid, wf.MergeTransform[Result](mergo.WithAppendSlice),
+			wf.Series(mid,
 				run(V, ".", "go", genargs...),
 				run(V, ".", "go", "mod", "tidy"),
 			),
-			p.Series(
+			wf.Series(mid,
 				run(V, dirK8s, "go", genargs...),
 				run(V, dirK8s, "go", "mod", "tidy"),
 			),
-			p.Series(
+			wf.Series(mid,
 				run(V, dirTerra, "go", genargs...),
 				run(V, dirTerra, "go", "mod", "tidy"),
 			),
@@ -202,13 +202,13 @@ func Main(logger *slog.Logger) error {
 	}
 
 	if examples {
-		p.Steps = append(p.Steps, p.Parallel(wf.MergeTransform[Result](mergo.WithAppendSlice),
-			p.Series(
+		p.Steps = append(p.Steps, wf.Parallel(mid, wf.MergeTransform[Result](mergo.WithAppendSlice),
+			wf.Series(mid,
 				run(V, dirK8s, "go", "mod", "tidy"),
 				run(V, dirK8s, "go", genargs...),
 				run(V, dirK8s, "go", "test", "-mod=readonly", vargs, "./..."),
 			),
-			p.Series(
+			wf.Series(mid,
 				run(V, dirTerra, "go", "mod", "tidy"),
 				run(V, dirTerra, "go", genargs...),
 				run(V, dirTerra, "go", "test", "-mod=readonly", vargs, "./..."),
@@ -217,7 +217,7 @@ func Main(logger *slog.Logger) error {
 	}
 
 	if pr {
-		p.Steps = append(p.Steps, p.Series(
+		p.Steps = append(p.Steps, wf.Series(mid,
 			run(V, ".", "go", genargs...),
 			run(V, ".", "go", "test", vargs, "./..."),
 			run(V, ".", "go", "mod", "tidy"),
@@ -232,14 +232,14 @@ func Main(logger *slog.Logger) error {
 	}
 
 	if scan {
-		p.Steps = append(p.Steps, p.Series(
+		p.Steps = append(p.Steps, wf.Series(mid,
 			installRun(V, goVuln, "./..."),
 			installRun(V, osvScanner, "."),
 		))
 	}
 
 	if release {
-		p.Steps = append(p.Steps, p.Series(
+		p.Steps = append(p.Steps, wf.Series(mid,
 			run(V, ".", "git", "rev-parse", "--short", "HEAD"),
 			wf.StepFunc[Result](func(ctx context.Context, r *Result) (*Result, error) {
 				prev := r.Tasks[len(r.Tasks)-1]
@@ -264,7 +264,7 @@ func Main(logger *slog.Logger) error {
 
 	// should be last
 	if nodiff {
-		p.Steps = append(p.Steps, p.Series(
+		p.Steps = append(p.Steps, wf.Series(mid,
 			run(V, ".", "git", "--no-pager", "diff"),
 			wf.StepFunc[Result](func(ctx context.Context, r *Result) (*Result, error) {
 				prev := r.Tasks[len(r.Tasks)-1]

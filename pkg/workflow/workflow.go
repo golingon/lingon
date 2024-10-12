@@ -32,7 +32,7 @@ var (
 	_ Step[typ] = (*MidFunc[typ])(nil)
 	_ Step[typ] = (*series[typ])(nil)
 	_ Step[typ] = (*parallel[typ])(nil)
-	_ Step[typ] = (*ifElse[typ])(nil)
+	_ Step[typ] = (*selector[typ])(nil)
 )
 
 type Pipeline[T any] struct {
@@ -93,28 +93,28 @@ type Mid[T any] []Middleware[T]
 
 type Selector[T any] func(context.Context, *T) bool
 
-type ifElse[T any] struct {
+type selector[T any] struct {
 	s        Selector[T]
 	ifStep   Step[T]
 	elseStep Step[T]
 	Mid[T]
 }
 
-func (s ifElse[T]) String() string {
+func (s selector[T]) String() string {
 	var z T
-	return fmt.Sprintf("IfElse Step[%T] { IF: %v, ELSE: %v}", z, s.ifStep, s.elseStep)
+	return fmt.Sprintf("Selector Step[%T] { IF: %v, ELSE: %v}", z, s.ifStep, s.elseStep)
 }
 
-func (p *Pipeline[T]) IfElse(s Selector[T], ifStep, elseStep Step[T]) Step[T] {
-	return &ifElse[T]{
+func Select[T any](mid Mid[T], s Selector[T], ifStep, elseStep Step[T]) Step[T] {
+	return &selector[T]{
 		s:        s,
 		ifStep:   ifStep,
 		elseStep: elseStep,
-		Mid:      p.Mid,
+		Mid:      mid,
 	}
 }
 
-func (s ifElse[T]) Run(ctx context.Context, r *T) (*T, error) {
+func (s selector[T]) Run(ctx context.Context, r *T) (*T, error) {
 	var step Step[T]
 	if s.s(ctx, r) {
 		step = s.ifStep
@@ -150,10 +150,10 @@ func (s *series[T]) String() string {
 }
 
 // Series executes a series of steps in sequential order.
-func (p *Pipeline[T]) Series(steps ...Step[T]) *series[T] {
+func Series[T any](mid Mid[T], steps ...Step[T]) *series[T] {
 	return &series[T]{
 		Stages: steps,
-		Mid:    p.Mid,
+		Mid:    mid,
 	}
 }
 
@@ -198,11 +198,11 @@ type MergeRequest[T any] func(context.Context, *T, ...*T) (*T, error)
 
 // Parallel executes a list of steps in parallel.
 // Once all the steps are done, the merge request [MergeRequest] will combine all the results into one struct T.
-func (p *Pipeline[T]) Parallel(merge MergeRequest[T], steps ...Step[T]) *parallel[T] {
+func Parallel[T any](mid Mid[T], merge MergeRequest[T], steps ...Step[T]) *parallel[T] {
 	return &parallel[T]{
 		merge: merge,
 		Tasks: steps,
-		Mid:   p.Mid,
+		Mid:   mid,
 	}
 }
 
