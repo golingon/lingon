@@ -21,6 +21,7 @@ import (
 	"slices"
 	"strconv"
 	"strings"
+	"sync"
 	"syscall"
 	"time"
 
@@ -65,21 +66,28 @@ var binz = map[string]string{
 }
 
 type Result struct {
-	Tasks []Task
+	Context *Task
+	Tasks   []*Task
+}
+
+func (r *Result) Stack(t *Task) {
+	if r.Context == nil {
+		r.Context = t
+		return
+	}
+	r.Tasks = append(r.Tasks, r.Context)
+	r.Context = t
 }
 
 func (r Result) Output() string {
-	if len(r.Tasks) > 0 {
-		return r.Tasks[len(r.Tasks)-1].Output
+	if r.Context != nil {
+		return r.Context.Output
 	}
 	return "none"
 }
 
-func (r Result) String() string {
-	if len(r.Tasks) == 0 {
-		return "none"
-	}
-	return fmt.Sprintf("tasks:[..., %s]", r.Tasks[len(r.Tasks)-1])
+func (r *Result) String() string {
+	return fmt.Sprintf("current: [%s]", r.Context)
 }
 
 type Task struct {
@@ -88,7 +96,7 @@ type Task struct {
 	Dir    string
 }
 
-func (t Task) String() string {
+func (t *Task) String() string {
 	return fmt.Sprintf("Task{Dir:'%s', Command: '%s'}", t.Dir, t.Cmd)
 }
 
@@ -226,15 +234,15 @@ func Main(logger *slog.Logger) error {
 			// run(V, dirK8s, "go", "mod", "tidy"),
 			// run(V, dirTerra, "go", genargs...),
 			// run(V, dirTerra, "go", "mod", "tidy"),
-			installRun(V, goFumpt, "-w", "-extra", "."),
-			installRun(V, goCILint, vargs, "run", "./..."),
+			installRun(logger, V, goFumpt, "-w", "-extra", "."),
+			installRun(logger, V, goCILint, vargs, "run", "./..."),
 		))
 	}
 
 	if scan {
 		p.Steps = append(p.Steps, wf.Series(mid,
-			installRun(V, goVuln, "./..."),
-			installRun(V, osvScanner, "."),
+			installRun(logger, V, goVuln, "./..."),
+			installRun(logger, V, osvScanner, "."),
 		))
 	}
 
@@ -242,21 +250,27 @@ func Main(logger *slog.Logger) error {
 		p.Steps = append(p.Steps, wf.Series(mid,
 			run(V, ".", "git", "rev-parse", "--short", "HEAD"),
 			wf.StepFunc[Result](func(ctx context.Context, r *Result) (*Result, error) {
-				prev := r.Tasks[len(r.Tasks)-1]
+				if r.Context == nil {
+					return r, fmt.Errorf("no previous task output")
+				}
+				prev := r.Context
 				ssha := strings.ReplaceAll(prev.Output, "\n", "")
 				d := time.Now().UTC().Format("2006-01-02")
 				v := d + "-" + ssha
-				r.Tasks = append(r.Tasks, Task{Output: v})
+				r.Stack(&Task{Output: v})
 				return r, nil
 			}),
 			wf.StepFunc[Result](func(ctx context.Context, r *Result) (*Result, error) {
-				prev := r.Tasks[len(r.Tasks)-1]
+				if r.Context == nil {
+					return r, fmt.Errorf("no previous task output")
+				}
+				prev := r.Context
 				cmd := exec.Command("git", "tag", "-a", prev.Output, "-s", "-m", "Release "+prev.Output)
 				o, err := cmd.CombinedOutput()
 				if err != nil {
 					return r, err
 				}
-				r.Tasks = append(r.Tasks, Task{Cmd: cmd.String(), Output: string(o)})
+				r.Stack(&Task{Cmd: cmd.String(), Output: string(o)})
 				return r, nil
 			}),
 		))
@@ -267,19 +281,10 @@ func Main(logger *slog.Logger) error {
 		p.Steps = append(p.Steps, wf.Series(mid,
 			run(V, ".", "git", "--no-pager", "diff"),
 			wf.StepFunc[Result](func(ctx context.Context, r *Result) (*Result, error) {
-				prev := r.Tasks[len(r.Tasks)-1]
-				if len(prev.Output) != 0 {
+				if r.Context != nil && len(r.Context.Output) != 0 {
+					fmt.Println(r.Context.Output)
 					return r, fmt.Errorf("changes detected: %w", errUnrecoverable)
 				}
-				return r, nil
-			}),
-			wf.StepFunc[Result](func(ctx context.Context, r *Result) (*Result, error) {
-				if len(r.Tasks) == 0 {
-					r.Tasks = append(r.Tasks, Task{Cmd: "print", Output: "no previous tasks, nothing to print."})
-					return r, nil
-				}
-				prev := r.Tasks[len(r.Tasks)-1]
-				fmt.Println(prev.Output)
 				return r, nil
 			}),
 		))
@@ -291,7 +296,7 @@ func Main(logger *slog.Logger) error {
 		syscall.SIGQUIT)
 	defer cancel()
 
-	result := &Result{Tasks: []Task{}}
+	result := &Result{}
 	resp, err := p.Run(ctx, result)
 	if err != nil {
 		return err
@@ -316,26 +321,25 @@ func (g *CLI) String() string {
 	return fmt.Sprintf("CLI{Dir: %s, Command: '%s'}", g.Dir, g.Bin+" "+strings.Join(g.Args, " "))
 }
 
-func installRun(verbose bool, bin string, args ...string) wf.Step[Result] {
+func installRun(logger *slog.Logger, verbose bool, bin string, args ...string) wf.Step[Result] {
 	cli, ok := binz[bin]
 	if !ok {
 		// not a tool we use
 		return run(verbose, ".", "go", append([]string{"run", bin}, args...)...)
 	}
 	if _, err := exec.LookPath(cli); err != nil {
-		// tool not found => installing
-		fmt.Println("install tool", bin)
-		instErr := exec.Command("go", "install", bin).Run()
+		cmd := exec.Command("go", "install", bin)
+		logger.Info("tool not found => installing", "cmd", cmd.String())
+		instErr := cmd.Run()
 		if instErr != nil {
 			return run(verbose, ".", "go", append([]string{"run", bin}, args...)...)
 		}
 	}
 	if _, err := exec.LookPath(cli); err != nil {
-		// tool not in the path
-		fmt.Println("tool not in the path", bin)
+		logger.Info("tool not in the path", "bin", bin)
 		return run(verbose, ".", "go", append([]string{"run", bin}, args...)...)
 	}
-	fmt.Println("running local tool", cli)
+	logger.Info("running local tool", "cli", cli)
 	return run(verbose, ".", cli, args...)
 }
 
@@ -356,7 +360,7 @@ func (g *CLI) Run(ctx context.Context, r *Result) (*Result, error) {
 		cmd.Dir = g.Dir
 	}
 	err := cmd.Run()
-	r.Tasks = append(r.Tasks, Task{Cmd: cmd.String(), Dir: g.Dir, Output: buf.String()})
+	r.Stack(&Task{Cmd: cmd.String(), Dir: g.Dir, Output: buf.String()})
 	if err != nil {
 		err = fmt.Errorf("%s: %s: %w", cmd.String(), err, errUnrecoverable)
 	}
@@ -401,11 +405,39 @@ func ErrorMiddleware[T Outputer](h func(error) bool) wf.Middleware[T] {
 				if o := (*resp).Output(); o != "" {
 					fmt.Printf("\noutput:\n\n %s\n", o)
 				}
-				return resp, fmt.Errorf("err: %v", err)
+				return resp, err
 			}
 			return resp, err
 		})
 	}
+}
+
+// Cache
+
+type cache struct {
+	s    wf.Step[Result]
+	once func() (*Result, error)
+	set  bool
+}
+
+func (c *cache) String() string {
+	return fmt.Sprintf("cached: %#v", c.s)
+}
+
+func Cache(step wf.Step[Result]) *cache {
+	return &cache{s: step}
+}
+
+func (c *cache) Run(ctx context.Context, r *Result) (*Result, error) {
+	if !c.set {
+		c.once = sync.OnceValues(func() (*Result, error) {
+			return c.s.Run(ctx, r)
+		})
+		c.set = true
+	}
+	resp, err := c.once()
+	r.Stack(resp.Context)
+	return r, err
 }
 
 // Badge
