@@ -10,7 +10,6 @@ require (
 	github.com/google/go-cmp v0.6.0
 	github.com/google/uuid v1.6.0
 	github.com/hashicorp/hcl/v2 v2.22.0
-	github.com/hashicorp/terraform-exec v0.21.0
 	github.com/hashicorp/terraform-json v0.23.0
 	github.com/tidwall/gjson v1.18.0
 	github.com/tidwall/sjson v1.2.5
