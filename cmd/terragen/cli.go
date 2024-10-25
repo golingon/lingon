@@ -42,6 +42,7 @@ import (
 
 func main() {
 	var (
+		cmd         string
 		outDir      string
 		tfOutDir    string
 		providerStr string
@@ -50,6 +51,12 @@ func main() {
 		v           bool
 	)
 
+	flag.StringVar(
+		&cmd,
+		"cmd",
+		"tofu",
+		"terra command to run (e.g. tofu or terraform)",
+	)
 	flag.StringVar(
 		&tfOutDir,
 		"tfout",
@@ -104,7 +111,11 @@ func main() {
 		slog.String("provider", providerStr),
 		slog.String("out", tfOutDir),
 	)
-	schemas, err := terragen.GenerateProviderSchema(ctx, provider)
+	schemas, err := terragen.GenerateProviderSchema(
+		ctx,
+		provider,
+		terragen.WithGenerateCmd(cmd),
+	)
 	if err != nil {
 		slog.Error("generating provider schema", "err", err)
 		os.Exit(1)
