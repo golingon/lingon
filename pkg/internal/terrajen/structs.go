@@ -64,13 +64,15 @@ func argsStruct(s *Schema) *jen.Statement {
 		fields = append(fields, stmt)
 	}
 
-	return jen.Comment(
-		fmt.Sprintf(
-			"%s contains the configurations for %s.",
-			s.ArgumentStructName,
-			s.Type,
-		),
-	).
+	comment := fmt.Sprintf(
+		"%s contains the configurations for %s.",
+		s.ArgumentStructName,
+		s.Type,
+	)
+	if s.SchemaType == SchemaTypeProvider {
+		comment = s.Comment()
+	}
+	return jen.Comment(comment).
 		Line().
 		Type().
 		Id(s.ArgumentStructName).

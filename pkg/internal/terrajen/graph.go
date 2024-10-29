@@ -50,7 +50,9 @@ type graph struct {
 }
 
 type node struct {
-	name string
+	name        string
+	description string
+	deprecated  bool
 	// path is the list of nodes from the root (resource/data/provider)
 	// node to this node.
 	// E.g. if a resource "x" has a block "y" which contains this node's
@@ -112,16 +114,26 @@ func (n *node) isSingularState() bool {
 }
 
 func (n *node) comment() string {
-	if n.isSingularArg() {
-		required := "optional"
-		if n.isRequired {
-			required = "required"
-		}
-		return fmt.Sprintf("%s: %s", strcase.Pascal(n.uniqueName), required)
+	str := strings.Builder{}
+	if n.description != "" {
+		str.WriteString(n.description + "\n\n")
 	}
-	return fmt.Sprintf(
-		"%s: %s", strcase.Pascal(n.uniqueName), nodeBlockListValidateTags(n),
-	)
+
+	str.WriteString(strcase.Pascal(n.uniqueName))
+
+	if n.isSingularArg() {
+		if n.isRequired {
+			str.WriteString(" is requred")
+		} else {
+			str.WriteString(" is optional")
+		}
+	} else {
+		str.WriteString(" is " + nodeBlockListValidateTags(n))
+	}
+	if n.deprecated {
+		str.WriteString("\n\nDeprecated.")
+	}
+	return str.String()
 }
 
 type nodeNestingMode int
@@ -133,8 +145,10 @@ const (
 )
 
 type attribute struct {
-	name    string
-	ctyType cty.Type
+	name        string
+	description string
+	deprecated  bool
+	ctyType     cty.Type
 	// isArg is true if the attribute can be passed as an argument
 	// to the node schema block, else it is false
 	isArg bool
@@ -144,17 +158,23 @@ type attribute struct {
 }
 
 func (a *attribute) comment() string {
-	required := "optional"
-	if a.isRequired {
-		required = "required"
+	str := strings.Builder{}
+	if a.description != "" {
+		str.WriteString(a.description + "\n\n")
 	}
 
-	return fmt.Sprintf(
-		"%s: %s, %s",
-		strcase.Pascal(a.name),
-		a.ctyType.FriendlyName(),
-		required,
-	)
+	str.WriteString(strcase.Pascal(a.name))
+
+	if a.isRequired {
+		str.WriteString(" is requred.")
+	} else {
+		str.WriteString(" is optional.")
+	}
+
+	if a.deprecated {
+		str.WriteString("\n\nDeprecated.")
+	}
+	return str.String()
 }
 
 func (g *graph) isEmpty() bool {
@@ -170,35 +190,38 @@ func (g *graph) processAttributes(
 		attr := attributes[atName]
 		// Attributes which are objects will be treated as children.
 		if attr.AttributeNestedType != nil {
+			child := g.traverseCtyNestedType(
+				path,
+				atName,
+				attr.AttributeNestedType,
+				isAttributeArg(attr),
+			)
+			child.description = attr.Description
 			node.children = append(
 				node.children,
-				g.traverseCtyNestedType(
-					path,
-					atName,
-					attr.AttributeNestedType,
-					isAttributeArg(attr),
-				),
+				child,
 			)
 			continue
 		}
 		if _, ok := ctyTypeElementObject(attr.AttributeType); ok {
-			node.children = append(
-				node.children,
-				g.traverseCtyType(
-					path,
-					atName,
-					attr.AttributeType,
-					isAttributeArg(attr),
-				),
+			child := g.traverseCtyType(
+				path,
+				atName,
+				attr.AttributeType,
+				isAttributeArg(attr),
 			)
+			child.description = attr.Description
+			node.children = append(node.children, child)
 			continue
 		}
 		node.attributes = append(
 			node.attributes, &attribute{
-				name:       atName,
-				ctyType:    attr.AttributeType,
-				isArg:      isAttributeArg(attr),
-				isRequired: attr.Required,
+				name:        atName,
+				description: attr.Description,
+				deprecated:  attr.Deprecated,
+				ctyType:     attr.AttributeType,
+				isArg:       isAttributeArg(attr),
+				isRequired:  attr.Required,
 			},
 		)
 	}
@@ -211,6 +234,8 @@ func (g *graph) traverseBlockType(
 ) *node {
 	n := node{
 		name:        name,
+		description: blockType.Block.Description,
+		deprecated:  blockType.Block.Deprecated,
 		path:        path,
 		uniqueName:  name,
 		nestingPath: blockNodeNestingMode(blockType.NestingMode),
@@ -292,11 +317,15 @@ func (g *graph) traverseCtyType(
 			continue
 		}
 		n.attributes = append(
+			// No information at this level on description or deprecation.
+			// All we have is a cty.Type.
 			n.attributes, &attribute{
-				name:       atName,
-				ctyType:    at,
-				isArg:      isArg,
-				isRequired: false,
+				name:        atName,
+				description: "",    // N/A
+				deprecated:  false, // N/A
+				ctyType:     at,
+				isArg:       isArg,
+				isRequired:  false,
 			},
 		)
 	}

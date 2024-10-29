@@ -31,13 +31,6 @@ func providerStructCompileCheck(s *Schema) *jen.Statement {
 }
 
 func providerStruct(s *Schema) *jen.Statement {
-	// stmt := jen.Type().Id(s.StructName).Struct(
-	// 	jen.Id(idFieldArgs).Id(s.ArgumentStructName),
-	// 	jen.Line(),
-	// )
-	// stmt.Line()
-	// stmt.Line()
-
 	// Use the args struct as the main struct, because there is nothing else to
 	// go in the provider.
 	stmt := argsStruct(s)

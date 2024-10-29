@@ -83,7 +83,6 @@ func main() {
 		"clean the out directory before generating Go files",
 	)
 	flag.BoolVar(&v, "v", false, "show version")
-
 	flag.Parse()
 
 	if v {
@@ -105,6 +104,7 @@ func main() {
 		slog.Error("invalid provider", "err", err)
 		os.Exit(1)
 	}
+
 	ctx := context.Background()
 	slog.Info(
 		"Generating Terraform provider schema",
