@@ -4,8 +4,6 @@
 package terrajen
 
 import (
-	"fmt"
-
 	"github.com/dave/jennifer/jen"
 	"github.com/veggiemonk/strcase"
 )
@@ -36,13 +34,7 @@ func resourceStructCompileCheck(s *Schema) *jen.Statement {
 }
 
 func resourceStruct(s *Schema) *jen.Statement {
-	stmt := jen.Comment(
-		fmt.Sprintf(
-			"%s represents the Terraform resource %s.",
-			s.StructName,
-			s.Type,
-		),
-	).
+	stmt := jen.Comment(s.Comment()).
 		Line().
 		Type().Id(s.StructName).Struct(
 		jen.Id(idFieldName).String(),

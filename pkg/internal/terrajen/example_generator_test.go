@@ -85,9 +85,13 @@ func Example() {
 	//
 	// var _ terra.Provider = (*Provider)(nil)
 	//
-	// // Provider contains the configurations for provider.
+	// /*
+	// Provider is the provider for hashicorp/google.
+	//
+	// Documentation: https://registry.terraform.io/providers/hashicorp/google/4.58.0/docs
+	// */
 	// type Provider struct {
-	// 	// Field: string, required
+	// 	// Field is requred.
 	// 	Field terra.StringValue `hcl:"field,attr" validate:"required"`
 	// }
 	//

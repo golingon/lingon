@@ -4,6 +4,7 @@
 package terrajen
 
 import (
+	"fmt"
 	"go/token"
 	"path/filepath"
 	"strings"
@@ -55,6 +56,8 @@ const (
 // represented by ProviderGenerator
 func (a *ProviderGenerator) SchemaProvider(sb *tfjson.SchemaBlock) *Schema {
 	return &Schema{
+		Description:          sb.Description,
+		Deprecated:           sb.Deprecated,
 		SchemaType:           SchemaTypeProvider,
 		GeneratedPkgLocation: a.GeneratedPackageLocation, // gen/aws
 		ProviderName:         a.ProviderName,             // aws
@@ -87,6 +90,8 @@ func (a *ProviderGenerator) SchemaResource(
 	sb *tfjson.SchemaBlock,
 ) *Schema {
 	rs := &Schema{
+		Description:          sb.Description,
+		Deprecated:           sb.Deprecated,
 		SchemaType:           SchemaTypeResource,
 		GeneratedPkgLocation: a.GeneratedPackageLocation, // gen/aws
 		ProviderName:         a.ProviderName,             // aws
@@ -131,6 +136,8 @@ func (a *ProviderGenerator) SchemaData(
 ) *Schema {
 	dataName := "data_" + name
 	ds := &Schema{
+		Description:          sb.Description,
+		Deprecated:           sb.Deprecated,
 		SchemaType:           SchemaTypeDataSource,
 		GeneratedPkgLocation: a.GeneratedPackageLocation, // gen/aws
 		ProviderName:         a.ProviderName,             // aws
@@ -188,11 +195,13 @@ func structReceiverFromName(name string) string {
 // A schema can represent a resource, a data object or the provider
 // configuration.
 type Schema struct {
+	Description          string
+	Deprecated           bool
 	SchemaType           SchemaType // resource / provider / data
 	GoProviderPkgPath    string     // github.com/golingon/lingon/gen/providers
 	GeneratedPkgLocation string     // gen/providers/aws
 	ProviderName         string     // aws
-	ProviderSource       string     // registry.terraform.io/hashicorp/aws
+	ProviderSource       string     // hashicorp/aws
 	ProviderVersion      string     // 4.49.0
 	PackageName          string     // aws_iam_role
 	Type                 string     // aws_iam_role
@@ -211,6 +220,53 @@ type Schema struct {
 	SubPkgPath string // aws_iam_role
 	FilePath   string // gen/providers/aws/ xxx
 	graph      *graph
+}
+
+func (s *Schema) Comment() string {
+	str := strings.Builder{}
+
+	if s.Description != "" {
+		str.WriteString(s.Description + "\n\n")
+	}
+	switch s.SchemaType {
+	case SchemaTypeProvider:
+		str.WriteString(
+			fmt.Sprintf(
+				"%s is the provider for %s.",
+				s.StructName,
+				s.ProviderSource,
+			),
+		)
+	case SchemaTypeResource:
+		str.WriteString(
+			fmt.Sprintf(
+				"%s is the resource %s.",
+				s.StructName,
+				s.Type,
+			),
+		)
+	case SchemaTypeDataSource:
+		str.WriteString(
+			fmt.Sprintf(
+				"%s is the data source %s.",
+				s.StructName,
+				s.Type,
+			),
+		)
+	}
+
+	docsURL := fmt.Sprintf(
+		"https://registry.terraform.io/providers/%s/%s/docs",
+		s.ProviderSource,
+		s.ProviderVersion,
+	)
+	str.WriteString("\n\nDocumentation: " + docsURL)
+
+	if s.Deprecated {
+		str.WriteString("\n\nDeprecated.")
+	}
+
+	return str.String()
 }
 
 func (s *Schema) SubPkgQualPath() string {

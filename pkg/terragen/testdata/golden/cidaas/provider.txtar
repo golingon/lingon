@@ -7,9 +7,17 @@ import "github.com/golingon/lingon/pkg/terra"
 
 var _ terra.Provider = (*Provider)(nil)
 
-// Provider contains the configurations for provider.
+/*
+Provider is the provider for cidaas/cidaas.
+
+Documentation: https://registry.terraform.io/providers/cidaas/cidaas/3.1.2/docs
+*/
 type Provider struct {
-	// BaseUrl: string, required
+	/*
+	   The base url of the Terraform client
+
+	   BaseUrl is requred.
+	*/
 	BaseUrl terra.StringValue `hcl:"base_url,attr" validate:"required"`
 }
 
@@ -46,7 +54,18 @@ import (
 
 var _ terra.Resource = (*Resource)(nil)
 
-// Resource represents the Terraform resource cidaas_app.
+/*
+The App resource allows creation and management of clients in Cidaas system. When creating a client with a custom `client_id` and `client_secret` you can include the configuration in the resource. If not provided, Cidaas will generate a set for you. `client_secret` is sensitive data. Refer to the article [Terraform Sensitive Variables](https://developer.hashicorp.com/terraform/tutorials/configuration-language/sensitive-variables) to properly handle sensitive information.
+
+ Ensure that the below scopes are assigned to the client with the specified `client_id`:
+- cidaas:apps_read
+- cidaas:apps_write
+- cidaas:apps_delete
+
+Resource is the resource cidaas_app.
+
+Documentation: https://registry.terraform.io/providers/cidaas/cidaas/3.1.2/docs
+*/
 type Resource struct {
 	Name      string
 	Args      Args
@@ -114,245 +133,469 @@ func (ca *Resource) StateMust() *cidaasAppState {
 
 // Args contains the configurations for cidaas_app.
 type Args struct {
-	// AccentColor: string, optional
+	/*
+	   The accent color of the client. e.g., `#f7941d`. The value must be a valid hex colorThe default is set to `#ef4923`.
+
+	   AccentColor is optional.
+	*/
 	AccentColor terra.StringValue `hcl:"accent_color,attr"`
-	// AdditionalAccessTokenPayload: set of string, optional
+	/*
+	   Access token payload definition.
+
+	   AdditionalAccessTokenPayload is optional.
+	*/
 	AdditionalAccessTokenPayload terra.SetValue[terra.StringValue] `hcl:"additional_access_token_payload,attr"`
-	// AllowDisposableEmail: bool, optional
+	/*
+	   Allow disposable email addresses. Default is set to `false` while creating an app.
+
+	   AllowDisposableEmail is optional.
+	*/
 	AllowDisposableEmail terra.BoolValue `hcl:"allow_disposable_email,attr"`
-	// AllowGuestLogin: bool, optional
+	/*
+	   Flag to specify whether guest users are allowed to access functionalities of the client. Default is set to `false`
+
+	   AllowGuestLogin is optional.
+	*/
 	AllowGuestLogin terra.BoolValue `hcl:"allow_guest_login,attr"`
-	// AllowLoginWith: set of string, optional
+	/*
+	   allow_login_with is used to specify the preferred methods of login allowed for a client. Allowed values are EMAIL, MOBILE and USER_NAMEThe default is set to `['EMAIL', 'MOBILE', 'USER_NAME']`.
+
+	   AllowLoginWith is optional.
+	*/
 	AllowLoginWith terra.SetValue[terra.StringValue] `hcl:"allow_login_with,attr"`
-	// AllowedFields: set of string, optional
+	// AllowedFields is optional.
 	AllowedFields terra.SetValue[terra.StringValue] `hcl:"allowed_fields,attr"`
-	// AllowedLogoutUrls: set of string, optional
+	/*
+	   Allowed logout URLs for OAuth2 client.
+
+	   AllowedLogoutUrls is optional.
+	*/
 	AllowedLogoutUrls terra.SetValue[terra.StringValue] `hcl:"allowed_logout_urls,attr"`
-	// AllowedMfa: set of string, optional
+	// AllowedMfa is optional.
 	AllowedMfa terra.SetValue[terra.StringValue] `hcl:"allowed_mfa,attr"`
-	// AllowedOrigins: set of string, optional
+	/*
+	   List of the origins allowed to access the client.
+
+	   AllowedOrigins is optional.
+	*/
 	AllowedOrigins terra.SetValue[terra.StringValue] `hcl:"allowed_origins,attr"`
-	// AllowedRoles: set of string, optional
+	// AllowedRoles is optional.
 	AllowedRoles terra.SetValue[terra.StringValue] `hcl:"allowed_roles,attr"`
-	// AllowedScopes: set of string, optional
+	/*
+	   The URL of the company website. allowed_scopes is a required attribute. It must be provided in the main config or common_config
+
+	   AllowedScopes is optional.
+	*/
 	AllowedScopes terra.SetValue[terra.StringValue] `hcl:"allowed_scopes,attr"`
-	// AllowedWebOrigins: set of string, optional
+	/*
+	   List of the web origins allowed to access the client.
+
+	   AllowedWebOrigins is optional.
+	*/
 	AllowedWebOrigins terra.SetValue[terra.StringValue] `hcl:"allowed_web_origins,attr"`
-	// AlwaysAskMfa: bool, optional
+	// AlwaysAskMfa is optional.
 	AlwaysAskMfa terra.BoolValue `hcl:"always_ask_mfa,attr"`
-	// ApplicationMetaData: map of string, optional
+	/*
+	   A map to add metadata of a client.
+
+	   ApplicationMetaData is optional.
+	*/
 	ApplicationMetaData terra.MapValue[terra.StringValue] `hcl:"application_meta_data,attr"`
-	// AutoLoginAfterRegister: bool, optional
+	/*
+	   Automatically login after registration. Default is set to `false` while creating an app.
+
+	   AutoLoginAfterRegister is optional.
+	*/
 	AutoLoginAfterRegister terra.BoolValue `hcl:"auto_login_after_register,attr"`
-	// BackchannelLogoutUri: string, optional
+	// BackchannelLogoutUri is optional.
 	BackchannelLogoutUri terra.StringValue `hcl:"backchannel_logout_uri,attr"`
-	// BackgroundUri: string, optional
+	/*
+	   The URL to the background image of the client.
+
+	   BackgroundUri is optional.
+	*/
 	BackgroundUri terra.StringValue `hcl:"background_uri,attr"`
-	// BlockingMechanismRef: string, optional
+	// BlockingMechanismRef is optional.
 	BlockingMechanismRef terra.StringValue `hcl:"blocking_mechanism_ref,attr"`
-	// BotCaptchaRef: string, optional
+	// BotCaptchaRef is optional.
 	BotCaptchaRef terra.StringValue `hcl:"bot_captcha_ref,attr"`
-	// BotProvider: string, optional
+	// BotProvider is optional.
 	BotProvider terra.StringValue `hcl:"bot_provider,attr"`
-	// CaptchaRef: string, optional
+	// CaptchaRef is optional.
 	CaptchaRef terra.StringValue `hcl:"captcha_ref,attr"`
-	// CaptchaRefs: set of string, optional
+	// CaptchaRefs is optional.
 	CaptchaRefs terra.SetValue[terra.StringValue] `hcl:"captcha_refs,attr"`
-	// ClientDisplayName: string, optional
+	/*
+	   The display name of the client.
+
+	   ClientDisplayName is optional.
+	*/
 	ClientDisplayName terra.StringValue `hcl:"client_display_name,attr"`
-	// ClientId: string, optional
+	/*
+	   The client_id is the unqique identifier of the app. It's an optional attribute. If not provided, cidaas will gererate one for you and the state will be updated with the same
+
+	   ClientId is optional.
+	*/
 	ClientId terra.StringValue `hcl:"client_id,attr"`
-	// ClientName: string, required
+	/*
+	   Name of the client.
+
+	   ClientName is requred.
+	*/
 	ClientName terra.StringValue `hcl:"client_name,attr" validate:"required"`
-	// ClientSecret: string, optional
+	/*
+	   The client_id is the unqique identifier of the app. It's an optional attribute. If not provided, cidaas will gererate one for you and the state will be updated with the same
+
+	   ClientSecret is optional.
+	*/
 	ClientSecret terra.StringValue `hcl:"client_secret,attr"`
-	// ClientType: string, optional
+	/*
+	   The type of the client. The allowed values are SINGLE_PAGE, REGULAR_WEB, NON_INTERACTIVEIOS, ANDROID, WINDOWS_MOBILE, DESKTOP, MOBILE, DEVICE and THIRD_PARTY
+
+	   ClientType is optional.
+	*/
 	ClientType terra.StringValue `hcl:"client_type,attr"`
-	// ClientUri: string, optional
+	// ClientUri is optional.
 	ClientUri terra.StringValue `hcl:"client_uri,attr"`
-	// CommunicationMediumVerification: string, optional
+	// CommunicationMediumVerification is optional.
 	CommunicationMediumVerification terra.StringValue `hcl:"communication_medium_verification,attr"`
-	// CompanyAddress: string, optional
+	/*
+	   The company address.
+
+	   CompanyAddress is optional.
+	*/
 	CompanyAddress terra.StringValue `hcl:"company_address,attr"`
-	// CompanyName: string, optional
+	/*
+	   The name of the company that the client belongs to.
+
+	   CompanyName is optional.
+	*/
 	CompanyName terra.StringValue `hcl:"company_name,attr"`
-	// CompanyWebsite: string, optional
+	/*
+	   The URL of the company website.
+
+	   CompanyWebsite is optional.
+	*/
 	CompanyWebsite terra.StringValue `hcl:"company_website,attr"`
-	// ConsentPageGroup: string, optional
+	// ConsentPageGroup is optional.
 	ConsentPageGroup terra.StringValue `hcl:"consent_page_group,attr"`
-	// ConsentRefs: set of string, optional
+	// ConsentRefs is optional.
 	ConsentRefs terra.SetValue[terra.StringValue] `hcl:"consent_refs,attr"`
-	// Contacts: set of string, optional
+	/*
+	   The contacts of the client.
+
+	   Contacts is optional.
+	*/
 	Contacts terra.SetValue[terra.StringValue] `hcl:"contacts,attr"`
-	// ContentAlign: string, optional
+	/*
+	   The alignment of the content of the client. e.g., `CENTER`. Allowed values are CENTER, LEFT and RIGHTThe default is set to `CENTER`.
+
+	   ContentAlign is optional.
+	*/
 	ContentAlign terra.StringValue `hcl:"content_align,attr"`
-	// DefaultAcrValues: set of string, optional
+	// DefaultAcrValues is optional.
 	DefaultAcrValues terra.SetValue[terra.StringValue] `hcl:"default_acr_values,attr"`
-	// DefaultMaxAge: number, optional
+	/*
+	   The default maximum age for the token in seconds. Default is 86400 seconds (24 hours).
+
+	   DefaultMaxAge is optional.
+	*/
 	DefaultMaxAge terra.NumberValue `hcl:"default_max_age,attr"`
-	// DefaultRoles: set of string, optional
+	// DefaultRoles is optional.
 	DefaultRoles terra.SetValue[terra.StringValue] `hcl:"default_roles,attr"`
-	// DefaultScopes: set of string, optional
+	// DefaultScopes is optional.
 	DefaultScopes terra.SetValue[terra.StringValue] `hcl:"default_scopes,attr"`
-	// Description: string, optional
+	// Description is optional.
 	Description terra.StringValue `hcl:"description,attr"`
-	// Editable: bool, optional
+	/*
+	   Flag to define if your client is editable or not. Default is `true`.
+
+	   Editable is optional.
+	*/
 	Editable terra.BoolValue `hcl:"editable,attr"`
-	// EmailVerificationRequired: bool, optional
+	// EmailVerificationRequired is optional.
 	EmailVerificationRequired terra.BoolValue `hcl:"email_verification_required,attr"`
-	// EnableBotDetection: bool, optional
+	// EnableBotDetection is optional.
 	EnableBotDetection terra.BoolValue `hcl:"enable_bot_detection,attr"`
-	// EnableClassicalProvider: bool, optional
+	// EnableClassicalProvider is optional.
 	EnableClassicalProvider terra.BoolValue `hcl:"enable_classical_provider,attr"`
-	// EnableDeduplication: bool, optional
+	/*
+	   Enable deduplication.
+
+	   EnableDeduplication is optional.
+	*/
 	EnableDeduplication terra.BoolValue `hcl:"enable_deduplication,attr"`
-	// EnablePasswordlessAuth: bool, optional
+	/*
+	   Enable passwordless authentication. Default is set to `true` while creating an app.
+
+	   EnablePasswordlessAuth is optional.
+	*/
 	EnablePasswordlessAuth terra.BoolValue `hcl:"enable_passwordless_auth,attr"`
-	// Enabled: bool, optional
+	// Enabled is optional.
 	Enabled terra.BoolValue `hcl:"enabled,attr"`
-	// FdsEnabled: bool, optional
+	/*
+	   Flag to enable or disable fraud detection system. By default, it is enabled when a client is created
+
+	   FdsEnabled is optional.
+	*/
 	FdsEnabled terra.BoolValue `hcl:"fds_enabled,attr"`
-	// GrantTypes: set of string, optional
+	/*
+	   The grant types of the client. The default value is set to `['implicit','authorization_code', 'password', 'refresh_token']`
+
+	   GrantTypes is optional.
+	*/
 	GrantTypes terra.SetValue[terra.StringValue] `hcl:"grant_types,attr"`
-	// GroupIds: set of string, optional
+	// GroupIds is optional.
 	GroupIds terra.SetValue[terra.StringValue] `hcl:"group_ids,attr"`
-	// GroupTypes: set of string, optional
+	// GroupTypes is optional.
 	GroupTypes terra.SetValue[terra.StringValue] `hcl:"group_types,attr"`
-	// HostedPageGroup: string, optional
+	/*
+	   Hosted page group.
+
+	   HostedPageGroup is optional.
+	*/
 	HostedPageGroup terra.StringValue `hcl:"hosted_page_group,attr"`
-	// IdTokenEncryptedResponseAlg: string, optional
+	// IdTokenEncryptedResponseAlg is optional.
 	IdTokenEncryptedResponseAlg terra.StringValue `hcl:"id_token_encrypted_response_alg,attr"`
-	// IdTokenEncryptedResponseEnc: string, optional
+	// IdTokenEncryptedResponseEnc is optional.
 	IdTokenEncryptedResponseEnc terra.StringValue `hcl:"id_token_encrypted_response_enc,attr"`
-	// IdTokenLifetimeInSeconds: number, optional
+	/*
+	   The lifetime of the id_token in seconds. Default is 86400 seconds (24 hours).
+
+	   IdTokenLifetimeInSeconds is optional.
+	*/
 	IdTokenLifetimeInSeconds terra.NumberValue `hcl:"id_token_lifetime_in_seconds,attr"`
-	// IdTokenSignedResponseAlg: string, optional
+	// IdTokenSignedResponseAlg is optional.
 	IdTokenSignedResponseAlg terra.StringValue `hcl:"id_token_signed_response_alg,attr"`
-	// ImprintUri: string, optional
+	/*
+	   The URL to the imprint page.
+
+	   ImprintUri is optional.
+	*/
 	ImprintUri terra.StringValue `hcl:"imprint_uri,attr"`
-	// InitiateLoginUri: string, optional
+	// InitiateLoginUri is optional.
 	InitiateLoginUri terra.StringValue `hcl:"initiate_login_uri,attr"`
-	// IsGroupLoginSelectionEnabled: bool, optional
+	// IsGroupLoginSelectionEnabled is optional.
 	IsGroupLoginSelectionEnabled terra.BoolValue `hcl:"is_group_login_selection_enabled,attr"`
-	// IsHybridApp: bool, optional
+	/*
+	   Flag to set if your app is hybrid or not. Default is set to `false`. Set to `true` to make your app hybrid.
+
+	   IsHybridApp is optional.
+	*/
 	IsHybridApp terra.BoolValue `hcl:"is_hybrid_app,attr"`
-	// IsLoginSuccessPageEnabled: bool, optional
+	// IsLoginSuccessPageEnabled is optional.
 	IsLoginSuccessPageEnabled terra.BoolValue `hcl:"is_login_success_page_enabled,attr"`
-	// IsRegisterSuccessPageEnabled: bool, optional
+	// IsRegisterSuccessPageEnabled is optional.
 	IsRegisterSuccessPageEnabled terra.BoolValue `hcl:"is_register_success_page_enabled,attr"`
-	// IsRememberMeSelected: bool, optional
+	// IsRememberMeSelected is optional.
 	IsRememberMeSelected terra.BoolValue `hcl:"is_remember_me_selected,attr"`
-	// JweEnabled: bool, optional
+	/*
+	   Flag to specify whether JSON Web Encryption (JWE) should be enabled for encrypting data.
+
+	   JweEnabled is optional.
+	*/
 	JweEnabled terra.BoolValue `hcl:"jwe_enabled,attr"`
-	// Jwks: string, optional
+	// Jwks is optional.
 	Jwks terra.StringValue `hcl:"jwks,attr"`
-	// JwksUri: string, optional
+	// JwksUri is optional.
 	JwksUri terra.StringValue `hcl:"jwks_uri,attr"`
-	// LoginProviders: set of string, optional
+	/*
+	   With this attribute one can setup login provider to the client.
+
+	   LoginProviders is optional.
+	*/
 	LoginProviders terra.SetValue[terra.StringValue] `hcl:"login_providers,attr"`
-	// LogoAlign: string, optional
+	// LogoAlign is optional.
 	LogoAlign terra.StringValue `hcl:"logo_align,attr"`
-	// LogoUri: string, optional
+	// LogoUri is optional.
 	LogoUri terra.StringValue `hcl:"logo_uri,attr"`
-	// MediaType: string, optional
+	/*
+	   The media type of the client. e.g., `IMAGE`. Allowed values are VIDEO and IMAGEThe default is set to `IMAGE`.
+
+	   MediaType is optional.
+	*/
 	MediaType terra.StringValue `hcl:"media_type,attr"`
-	// MfaConfiguration: string, optional
+	// MfaConfiguration is optional.
 	MfaConfiguration terra.StringValue `hcl:"mfa_configuration,attr"`
-	// MobileNumberVerificationRequired: bool, optional
+	// MobileNumberVerificationRequired is optional.
 	MobileNumberVerificationRequired terra.BoolValue `hcl:"mobile_number_verification_required,attr"`
-	// PasswordPolicyRef: string, optional
+	// PasswordPolicyRef is optional.
 	PasswordPolicyRef terra.StringValue `hcl:"password_policy_ref,attr"`
-	// PendingScopes: set of string, optional
+	// PendingScopes is optional.
 	PendingScopes terra.SetValue[terra.StringValue] `hcl:"pending_scopes,attr"`
-	// PolicyUri: string, optional
+	/*
+	   The URL to the policy of a client.
+
+	   PolicyUri is optional.
+	*/
 	PolicyUri terra.StringValue `hcl:"policy_uri,attr"`
-	// PostLogoutRedirectUris: set of string, optional
+	// PostLogoutRedirectUris is optional.
 	PostLogoutRedirectUris terra.SetValue[terra.StringValue] `hcl:"post_logout_redirect_uris,attr"`
-	// PrimaryColor: string, optional
+	/*
+	   The primary color of the client. e.g., `#ef4923`. The value must be a valid hex colorThe default is set to `#f7941d`.
+
+	   PrimaryColor is optional.
+	*/
 	PrimaryColor terra.StringValue `hcl:"primary_color,attr"`
-	// RedirectUris: set of string, optional
+	/*
+	   Redirect URIs for OAuth2 client.
+
+	   RedirectUris is optional.
+	*/
 	RedirectUris terra.SetValue[terra.StringValue] `hcl:"redirect_uris,attr"`
-	// RefreshTokenLifetimeInSeconds: number, optional
+	/*
+	   The lifetime of the refresh token in seconds. Default is 15780000 seconds.
+
+	   RefreshTokenLifetimeInSeconds is optional.
+	*/
 	RefreshTokenLifetimeInSeconds terra.NumberValue `hcl:"refresh_token_lifetime_in_seconds,attr"`
-	// RegisterWithLoginInformation: bool, optional
+	/*
+	   Register with login information. Default is set to `false` while creating an app.
+
+	   RegisterWithLoginInformation is optional.
+	*/
 	RegisterWithLoginInformation terra.BoolValue `hcl:"register_with_login_information,attr"`
-	// RegistrationAccessToken: string, optional
+	// RegistrationAccessToken is optional.
 	RegistrationAccessToken terra.StringValue `hcl:"registration_access_token,attr"`
-	// RegistrationClientUri: string, optional
+	// RegistrationClientUri is optional.
 	RegistrationClientUri terra.StringValue `hcl:"registration_client_uri,attr"`
-	// RequestObjectEncryptionAlg: string, optional
+	// RequestObjectEncryptionAlg is optional.
 	RequestObjectEncryptionAlg terra.StringValue `hcl:"request_object_encryption_alg,attr"`
-	// RequestObjectEncryptionEnc: string, optional
+	// RequestObjectEncryptionEnc is optional.
 	RequestObjectEncryptionEnc terra.StringValue `hcl:"request_object_encryption_enc,attr"`
-	// RequestObjectSigningAlg: string, optional
+	// RequestObjectSigningAlg is optional.
 	RequestObjectSigningAlg terra.StringValue `hcl:"request_object_signing_alg,attr"`
-	// RequestUris: set of string, optional
+	// RequestUris is optional.
 	RequestUris terra.SetValue[terra.StringValue] `hcl:"request_uris,attr"`
-	// RequiredFields: set of string, optional
+	/*
+	   The required fields while registering to the client.
+
+	   RequiredFields is optional.
+	*/
 	RequiredFields terra.SetValue[terra.StringValue] `hcl:"required_fields,attr"`
-	// ResponseTypes: set of string, optional
+	/*
+	   The response types of the client. The default value is set to `['code','token', 'id_token']`
+
+	   ResponseTypes is optional.
+	*/
 	ResponseTypes terra.SetValue[terra.StringValue] `hcl:"response_types,attr"`
-	// Role: string, optional
+	// Role is optional.
 	Role terra.StringValue `hcl:"role,attr"`
-	// SectorIdentifierUri: string, optional
+	// SectorIdentifierUri is optional.
 	SectorIdentifierUri terra.StringValue `hcl:"sector_identifier_uri,attr"`
-	// SmartMfa: bool, optional
+	// SmartMfa is optional.
 	SmartMfa terra.BoolValue `hcl:"smart_mfa,attr"`
-	// Sub: string, optional
+	// Sub is optional.
 	Sub terra.StringValue `hcl:"sub,attr"`
-	// SubjectType: string, optional
+	// SubjectType is optional.
 	SubjectType terra.StringValue `hcl:"subject_type,attr"`
-	// SuggestMfa: set of string, optional
+	// SuggestMfa is optional.
 	SuggestMfa terra.SetValue[terra.StringValue] `hcl:"suggest_mfa,attr"`
-	// TemplateGroupId: string, optional
+	/*
+	   The id of the template group to be configured for commenication. Default is set to the system default group.
+
+	   TemplateGroupId is optional.
+	*/
 	TemplateGroupId terra.StringValue `hcl:"template_group_id,attr"`
-	// TokenEndpointAuthMethod: string, optional
+	// TokenEndpointAuthMethod is optional.
 	TokenEndpointAuthMethod terra.StringValue `hcl:"token_endpoint_auth_method,attr"`
-	// TokenEndpointAuthSigningAlg: string, optional
+	// TokenEndpointAuthSigningAlg is optional.
 	TokenEndpointAuthSigningAlg terra.StringValue `hcl:"token_endpoint_auth_signing_alg,attr"`
-	// TokenLifetimeInSeconds: number, optional
+	/*
+	   The lifetime of the token in seconds. Default is 86400 seconds (24 hours).
+
+	   TokenLifetimeInSeconds is optional.
+	*/
 	TokenLifetimeInSeconds terra.NumberValue `hcl:"token_lifetime_in_seconds,attr"`
-	// TosUri: string, optional
+	/*
+	   The URL to the TOS of a client.
+
+	   TosUri is optional.
+	*/
 	TosUri terra.StringValue `hcl:"tos_uri,attr"`
-	// UserConsent: bool, optional
+	/*
+	   Specifies whether user consent is required or not. Default is `false`
+
+	   UserConsent is optional.
+	*/
 	UserConsent terra.BoolValue `hcl:"user_consent,attr"`
-	// UserinfoEncryptedResponseAlg: string, optional
+	// UserinfoEncryptedResponseAlg is optional.
 	UserinfoEncryptedResponseAlg terra.StringValue `hcl:"userinfo_encrypted_response_alg,attr"`
-	// UserinfoEncryptedResponseEnc: string, optional
+	// UserinfoEncryptedResponseEnc is optional.
 	UserinfoEncryptedResponseEnc terra.StringValue `hcl:"userinfo_encrypted_response_enc,attr"`
-	// UserinfoSignedResponseAlg: string, optional
+	// UserinfoSignedResponseAlg is optional.
 	UserinfoSignedResponseAlg terra.StringValue `hcl:"userinfo_signed_response_alg,attr"`
-	// ValidatePhoneNumber: bool, optional
+	/*
+	   if enabled, phone number is validaed. Default is set to `false` while creating an app.
+
+	   ValidatePhoneNumber is optional.
+	*/
 	ValidatePhoneNumber terra.BoolValue `hcl:"validate_phone_number,attr"`
-	// VideoUrl: string, optional
+	/*
+	   The URL to the video of the client.
+
+	   VideoUrl is optional.
+	*/
 	VideoUrl terra.StringValue `hcl:"video_url,attr"`
-	// WebMessageUris: set of string, optional
+	/*
+	   A list of URLs for web messages used.
+
+	   WebMessageUris is optional.
+	*/
 	WebMessageUris terra.SetValue[terra.StringValue] `hcl:"web_message_uris,attr"`
-	// Webfinger: string, optional
+	// Webfinger is optional.
 	Webfinger terra.StringValue `hcl:"webfinger,attr"`
-	// AdProviders: min=0
+	/*
+	   A list of Active Directory identity providers that users can authenticate with.
+
+	   AdProviders is min=0
+	*/
 	AdProviders []AdProviders `hcl:"ad_providers,attr" validate:"min=0"`
-	// AllowGuestLoginGroups: min=0
+	// AllowGuestLoginGroups is min=0
 	AllowGuestLoginGroups []AllowGuestLoginGroups `hcl:"allow_guest_login_groups,attr" validate:"min=0"`
-	// AllowedGroups: min=0
+	// AllowedGroups is min=0
 	AllowedGroups []AllowedGroups `hcl:"allowed_groups,attr" validate:"min=0"`
-	// CommonConfigs: optional
+	/*
+	   The `common_configs` attribute is used for sharing the same configuration across multiple cidaas_app resources. It is a map of some attributes from the main configuration. Please check the list of the attributes that it supports in the common_confis section. if an attribute is available both common_config and main config then attribute from the main config will be considered to create an app
+
+	   CommonConfigs is optional
+	*/
 	CommonConfigs *CommonConfigs `hcl:"common_configs,attr"`
-	// CustomProviders: min=0
+	/*
+	   A list of custom identity providers that users can authenticate with. A custom provider can be created with the help of the resource cidaas_custom_provider.
+
+	   CustomProviders is min=0
+	*/
 	CustomProviders []CustomProviders `hcl:"custom_providers,attr" validate:"min=0"`
-	// GroupSelection: optional
+	// GroupSelection is optional
 	GroupSelection *GroupSelection `hcl:"group_selection,attr"`
-	// LoginSpi: optional
+	/*
+	   A map defining the Login SPI configuration.
+
+	   LoginSpi is optional
+	*/
 	LoginSpi *LoginSpi `hcl:"login_spi,attr"`
-	// Mfa: optional
+	/*
+	   Configuration settings for Multi-Factor Authentication (MFA).
+
+	   Mfa is optional
+	*/
 	Mfa *Mfa `hcl:"mfa,attr"`
-	// MobileSettings: optional
+	// MobileSettings is optional
 	MobileSettings *MobileSettings `hcl:"mobile_settings,attr"`
-	// OperationsAllowedGroups: min=0
+	// OperationsAllowedGroups is min=0
 	OperationsAllowedGroups []OperationsAllowedGroups `hcl:"operations_allowed_groups,attr" validate:"min=0"`
-	// SamlProviders: min=0
+	/*
+	   A list of SAML identity providers that users can authenticate with.
+
+	   SamlProviders is min=0
+	*/
 	SamlProviders []SamlProviders `hcl:"saml_providers,attr" validate:"min=0"`
-	// SocialProviders: min=0
+	/*
+	   A list of social identity providers that users can authenticate with. Examples: Google, Facebook etc...
+
+	   SocialProviders is min=0
+	*/
 	SocialProviders []SocialProviders `hcl:"social_providers,attr" validate:"min=0"`
 }
 
@@ -1087,299 +1330,311 @@ import (
 )
 
 type AdProviders struct {
-	// DisplayName: string, optional
+	// DisplayName is optional.
 	DisplayName terra.StringValue `hcl:"display_name,attr"`
-	// Domains: set of string, optional
+	// Domains is optional.
 	Domains terra.SetValue[terra.StringValue] `hcl:"domains,attr"`
-	// IsProviderVisible: bool, optional
+	// IsProviderVisible is optional.
 	IsProviderVisible terra.BoolValue `hcl:"is_provider_visible,attr"`
-	// LogoUrl: string, optional
+	// LogoUrl is optional.
 	LogoUrl terra.StringValue `hcl:"logo_url,attr"`
-	// ProviderName: string, optional
+	// ProviderName is optional.
 	ProviderName terra.StringValue `hcl:"provider_name,attr"`
-	// Type: string, optional
+	// Type is optional.
 	Type terra.StringValue `hcl:"type,attr"`
 }
 
 type AllowGuestLoginGroups struct {
-	// DefaultRoles: set of string, optional
+	// DefaultRoles is optional.
 	DefaultRoles terra.SetValue[terra.StringValue] `hcl:"default_roles,attr"`
-	// GroupId: string, optional
+	// GroupId is optional.
 	GroupId terra.StringValue `hcl:"group_id,attr"`
-	// Roles: set of string, optional
+	// Roles is optional.
 	Roles terra.SetValue[terra.StringValue] `hcl:"roles,attr"`
 }
 
 type AllowedGroups struct {
-	// DefaultRoles: set of string, optional
+	// DefaultRoles is optional.
 	DefaultRoles terra.SetValue[terra.StringValue] `hcl:"default_roles,attr"`
-	// GroupId: string, optional
+	// GroupId is optional.
 	GroupId terra.StringValue `hcl:"group_id,attr"`
-	// Roles: set of string, optional
+	// Roles is optional.
 	Roles terra.SetValue[terra.StringValue] `hcl:"roles,attr"`
 }
 
 type CommonConfigs struct {
-	// AccentColor: string, optional
+	// AccentColor is optional.
 	AccentColor terra.StringValue `hcl:"accent_color,attr"`
-	// AllowGuestLogin: bool, optional
+	// AllowGuestLogin is optional.
 	AllowGuestLogin terra.BoolValue `hcl:"allow_guest_login,attr"`
-	// AllowLoginWith: set of string, optional
+	// AllowLoginWith is optional.
 	AllowLoginWith terra.SetValue[terra.StringValue] `hcl:"allow_login_with,attr"`
-	// AllowedLogoutUrls: set of string, optional
+	// AllowedLogoutUrls is optional.
 	AllowedLogoutUrls terra.SetValue[terra.StringValue] `hcl:"allowed_logout_urls,attr"`
-	// AllowedMfa: set of string, optional
+	// AllowedMfa is optional.
 	AllowedMfa terra.SetValue[terra.StringValue] `hcl:"allowed_mfa,attr"`
-	// AllowedOrigins: set of string, optional
+	// AllowedOrigins is optional.
 	AllowedOrigins terra.SetValue[terra.StringValue] `hcl:"allowed_origins,attr"`
-	// AllowedRoles: set of string, optional
+	// AllowedRoles is optional.
 	AllowedRoles terra.SetValue[terra.StringValue] `hcl:"allowed_roles,attr"`
-	// AllowedScopes: set of string, optional
+	// AllowedScopes is optional.
 	AllowedScopes terra.SetValue[terra.StringValue] `hcl:"allowed_scopes,attr"`
-	// AllowedWebOrigins: set of string, optional
+	// AllowedWebOrigins is optional.
 	AllowedWebOrigins terra.SetValue[terra.StringValue] `hcl:"allowed_web_origins,attr"`
-	// AlwaysAskMfa: bool, optional
+	// AlwaysAskMfa is optional.
 	AlwaysAskMfa terra.BoolValue `hcl:"always_ask_mfa,attr"`
-	// AutoLoginAfterRegister: bool, optional
+	// AutoLoginAfterRegister is optional.
 	AutoLoginAfterRegister terra.BoolValue `hcl:"auto_login_after_register,attr"`
-	// BotProvider: string, optional
+	// BotProvider is optional.
 	BotProvider terra.StringValue `hcl:"bot_provider,attr"`
-	// ClientType: string, optional
+	// ClientType is optional.
 	ClientType terra.StringValue `hcl:"client_type,attr"`
-	// CompanyAddress: string, optional
+	// CompanyAddress is optional.
 	CompanyAddress terra.StringValue `hcl:"company_address,attr"`
-	// CompanyName: string, optional
+	// CompanyName is optional.
 	CompanyName terra.StringValue `hcl:"company_name,attr"`
-	// CompanyWebsite: string, optional
+	// CompanyWebsite is optional.
 	CompanyWebsite terra.StringValue `hcl:"company_website,attr"`
-	// DefaultMaxAge: number, optional
+	// DefaultMaxAge is optional.
 	DefaultMaxAge terra.NumberValue `hcl:"default_max_age,attr"`
-	// DefaultRoles: set of string, optional
+	// DefaultRoles is optional.
 	DefaultRoles terra.SetValue[terra.StringValue] `hcl:"default_roles,attr"`
-	// DefaultScopes: set of string, optional
+	// DefaultScopes is optional.
 	DefaultScopes terra.SetValue[terra.StringValue] `hcl:"default_scopes,attr"`
-	// Editable: bool, optional
+	// Editable is optional.
 	Editable terra.BoolValue `hcl:"editable,attr"`
-	// EmailVerificationRequired: bool, optional
+	// EmailVerificationRequired is optional.
 	EmailVerificationRequired terra.BoolValue `hcl:"email_verification_required,attr"`
-	// EnableClassicalProvider: bool, optional
+	// EnableClassicalProvider is optional.
 	EnableClassicalProvider terra.BoolValue `hcl:"enable_classical_provider,attr"`
-	// EnableDeduplication: bool, optional
+	// EnableDeduplication is optional.
 	EnableDeduplication terra.BoolValue `hcl:"enable_deduplication,attr"`
-	// EnablePasswordlessAuth: bool, optional
+	// EnablePasswordlessAuth is optional.
 	EnablePasswordlessAuth terra.BoolValue `hcl:"enable_passwordless_auth,attr"`
-	// Enabled: bool, optional
+	// Enabled is optional.
 	Enabled terra.BoolValue `hcl:"enabled,attr"`
-	// FdsEnabled: bool, optional
+	// FdsEnabled is optional.
 	FdsEnabled terra.BoolValue `hcl:"fds_enabled,attr"`
-	// GrantTypes: set of string, optional
+	// GrantTypes is optional.
 	GrantTypes terra.SetValue[terra.StringValue] `hcl:"grant_types,attr"`
-	// HostedPageGroup: string, optional
+	// HostedPageGroup is optional.
 	HostedPageGroup terra.StringValue `hcl:"hosted_page_group,attr"`
-	// IdTokenLifetimeInSeconds: number, optional
+	// IdTokenLifetimeInSeconds is optional.
 	IdTokenLifetimeInSeconds terra.NumberValue `hcl:"id_token_lifetime_in_seconds,attr"`
-	// IsHybridApp: bool, optional
+	// IsHybridApp is optional.
 	IsHybridApp terra.BoolValue `hcl:"is_hybrid_app,attr"`
-	// IsRememberMeSelected: bool, optional
+	// IsRememberMeSelected is optional.
 	IsRememberMeSelected terra.BoolValue `hcl:"is_remember_me_selected,attr"`
-	// LoginProviders: set of string, optional
+	// LoginProviders is optional.
 	LoginProviders terra.SetValue[terra.StringValue] `hcl:"login_providers,attr"`
-	// LogoAlign: string, optional
+	// LogoAlign is optional.
 	LogoAlign terra.StringValue `hcl:"logo_align,attr"`
-	// MediaType: string, optional
+	// MediaType is optional.
 	MediaType terra.StringValue `hcl:"media_type,attr"`
-	// PendingScopes: set of string, optional
+	// PendingScopes is optional.
 	PendingScopes terra.SetValue[terra.StringValue] `hcl:"pending_scopes,attr"`
-	// PrimaryColor: string, optional
+	// PrimaryColor is optional.
 	PrimaryColor terra.StringValue `hcl:"primary_color,attr"`
-	// RedirectUris: set of string, optional
+	// RedirectUris is optional.
 	RedirectUris terra.SetValue[terra.StringValue] `hcl:"redirect_uris,attr"`
-	// RefreshTokenLifetimeInSeconds: number, optional
+	// RefreshTokenLifetimeInSeconds is optional.
 	RefreshTokenLifetimeInSeconds terra.NumberValue `hcl:"refresh_token_lifetime_in_seconds,attr"`
-	// RegisterWithLoginInformation: bool, optional
+	// RegisterWithLoginInformation is optional.
 	RegisterWithLoginInformation terra.BoolValue `hcl:"register_with_login_information,attr"`
-	// ResponseTypes: set of string, optional
+	// ResponseTypes is optional.
 	ResponseTypes terra.SetValue[terra.StringValue] `hcl:"response_types,attr"`
-	// TemplateGroupId: string, optional
+	// TemplateGroupId is optional.
 	TemplateGroupId terra.StringValue `hcl:"template_group_id,attr"`
-	// TokenLifetimeInSeconds: number, optional
+	// TokenLifetimeInSeconds is optional.
 	TokenLifetimeInSeconds terra.NumberValue `hcl:"token_lifetime_in_seconds,attr"`
-	// Webfinger: string, optional
+	// Webfinger is optional.
 	Webfinger terra.StringValue `hcl:"webfinger,attr"`
-	// CommonConfigsAdProviders: min=0
+	// CommonConfigsAdProviders is min=0
 	AdProviders []CommonConfigsAdProviders `hcl:"ad_providers,attr" validate:"min=0"`
-	// CommonConfigsAllowedGroups: min=0
+	// CommonConfigsAllowedGroups is min=0
 	AllowedGroups []CommonConfigsAllowedGroups `hcl:"allowed_groups,attr" validate:"min=0"`
-	// CommonConfigsCustomProviders: min=0
+	// CommonConfigsCustomProviders is min=0
 	CustomProviders []CommonConfigsCustomProviders `hcl:"custom_providers,attr" validate:"min=0"`
-	// CommonConfigsMfa: optional
+	// CommonConfigsMfa is optional
 	Mfa *CommonConfigsMfa `hcl:"mfa,attr"`
-	// CommonConfigsOperationsAllowedGroups: min=0
+	// CommonConfigsOperationsAllowedGroups is min=0
 	OperationsAllowedGroups []CommonConfigsOperationsAllowedGroups `hcl:"operations_allowed_groups,attr" validate:"min=0"`
-	// CommonConfigsSamlProviders: min=0
+	// CommonConfigsSamlProviders is min=0
 	SamlProviders []CommonConfigsSamlProviders `hcl:"saml_providers,attr" validate:"min=0"`
-	// CommonConfigsSocialProviders: min=0
+	// CommonConfigsSocialProviders is min=0
 	SocialProviders []CommonConfigsSocialProviders `hcl:"social_providers,attr" validate:"min=0"`
 }
 
 type CommonConfigsAdProviders struct {
-	// DisplayName: string, optional
+	// DisplayName is optional.
 	DisplayName terra.StringValue `hcl:"display_name,attr"`
-	// Domains: set of string, optional
+	// Domains is optional.
 	Domains terra.SetValue[terra.StringValue] `hcl:"domains,attr"`
-	// IsProviderVisible: bool, optional
+	// IsProviderVisible is optional.
 	IsProviderVisible terra.BoolValue `hcl:"is_provider_visible,attr"`
-	// LogoUrl: string, optional
+	// LogoUrl is optional.
 	LogoUrl terra.StringValue `hcl:"logo_url,attr"`
-	// ProviderName: string, optional
+	// ProviderName is optional.
 	ProviderName terra.StringValue `hcl:"provider_name,attr"`
-	// Type: string, optional
+	// Type is optional.
 	Type terra.StringValue `hcl:"type,attr"`
 }
 
 type CommonConfigsAllowedGroups struct {
-	// DefaultRoles: set of string, optional
+	// DefaultRoles is optional.
 	DefaultRoles terra.SetValue[terra.StringValue] `hcl:"default_roles,attr"`
-	// GroupId: string, optional
+	// GroupId is optional.
 	GroupId terra.StringValue `hcl:"group_id,attr"`
-	// Roles: set of string, optional
+	// Roles is optional.
 	Roles terra.SetValue[terra.StringValue] `hcl:"roles,attr"`
 }
 
 type CommonConfigsCustomProviders struct {
-	// DisplayName: string, optional
+	// DisplayName is optional.
 	DisplayName terra.StringValue `hcl:"display_name,attr"`
-	// Domains: set of string, optional
+	// Domains is optional.
 	Domains terra.SetValue[terra.StringValue] `hcl:"domains,attr"`
-	// IsProviderVisible: bool, optional
+	// IsProviderVisible is optional.
 	IsProviderVisible terra.BoolValue `hcl:"is_provider_visible,attr"`
-	// LogoUrl: string, optional
+	// LogoUrl is optional.
 	LogoUrl terra.StringValue `hcl:"logo_url,attr"`
-	// ProviderName: string, optional
+	// ProviderName is optional.
 	ProviderName terra.StringValue `hcl:"provider_name,attr"`
-	// Type: string, optional
+	// Type is optional.
 	Type terra.StringValue `hcl:"type,attr"`
 }
 
 type CommonConfigsMfa struct {
-	// AllowedMethods: set of string, optional
+	// AllowedMethods is optional.
 	AllowedMethods terra.SetValue[terra.StringValue] `hcl:"allowed_methods,attr"`
-	// Setting: string, optional
+	// Setting is optional.
 	Setting terra.StringValue `hcl:"setting,attr"`
-	// TimeIntervalInSeconds: number, optional
+	// TimeIntervalInSeconds is optional.
 	TimeIntervalInSeconds terra.NumberValue `hcl:"time_interval_in_seconds,attr"`
 }
 
 type CommonConfigsOperationsAllowedGroups struct {
-	// DefaultRoles: set of string, optional
+	// DefaultRoles is optional.
 	DefaultRoles terra.SetValue[terra.StringValue] `hcl:"default_roles,attr"`
-	// GroupId: string, optional
+	// GroupId is optional.
 	GroupId terra.StringValue `hcl:"group_id,attr"`
-	// Roles: set of string, optional
+	// Roles is optional.
 	Roles terra.SetValue[terra.StringValue] `hcl:"roles,attr"`
 }
 
 type CommonConfigsSamlProviders struct {
-	// DisplayName: string, optional
+	// DisplayName is optional.
 	DisplayName terra.StringValue `hcl:"display_name,attr"`
-	// Domains: set of string, optional
+	// Domains is optional.
 	Domains terra.SetValue[terra.StringValue] `hcl:"domains,attr"`
-	// IsProviderVisible: bool, optional
+	// IsProviderVisible is optional.
 	IsProviderVisible terra.BoolValue `hcl:"is_provider_visible,attr"`
-	// LogoUrl: string, optional
+	// LogoUrl is optional.
 	LogoUrl terra.StringValue `hcl:"logo_url,attr"`
-	// ProviderName: string, optional
+	// ProviderName is optional.
 	ProviderName terra.StringValue `hcl:"provider_name,attr"`
-	// Type: string, optional
+	// Type is optional.
 	Type terra.StringValue `hcl:"type,attr"`
 }
 
 type CommonConfigsSocialProviders struct {
-	// ProviderName: string, optional
+	// ProviderName is optional.
 	ProviderName terra.StringValue `hcl:"provider_name,attr"`
-	// SocialId: string, optional
+	// SocialId is optional.
 	SocialId terra.StringValue `hcl:"social_id,attr"`
 }
 
 type CustomProviders struct {
-	// DisplayName: string, optional
+	// DisplayName is optional.
 	DisplayName terra.StringValue `hcl:"display_name,attr"`
-	// Domains: set of string, optional
+	// Domains is optional.
 	Domains terra.SetValue[terra.StringValue] `hcl:"domains,attr"`
-	// IsProviderVisible: bool, optional
+	// IsProviderVisible is optional.
 	IsProviderVisible terra.BoolValue `hcl:"is_provider_visible,attr"`
-	// LogoUrl: string, optional
+	// LogoUrl is optional.
 	LogoUrl terra.StringValue `hcl:"logo_url,attr"`
-	// ProviderName: string, optional
+	// ProviderName is optional.
 	ProviderName terra.StringValue `hcl:"provider_name,attr"`
-	// Type: string, optional
+	// Type is optional.
 	Type terra.StringValue `hcl:"type,attr"`
 }
 
 type GroupSelection struct {
-	// AlwaysShowGroupSelection: bool, optional
+	// AlwaysShowGroupSelection is optional.
 	AlwaysShowGroupSelection terra.BoolValue `hcl:"always_show_group_selection,attr"`
-	// SelectableGroupTypes: set of string, optional
+	// SelectableGroupTypes is optional.
 	SelectableGroupTypes terra.SetValue[terra.StringValue] `hcl:"selectable_group_types,attr"`
-	// SelectableGroups: set of string, optional
+	// SelectableGroups is optional.
 	SelectableGroups terra.SetValue[terra.StringValue] `hcl:"selectable_groups,attr"`
 }
 
 type LoginSpi struct {
-	// OauthClientId: string, optional
+	// OauthClientId is optional.
 	OauthClientId terra.StringValue `hcl:"oauth_client_id,attr"`
-	// SpiUrl: string, optional
+	// SpiUrl is optional.
 	SpiUrl terra.StringValue `hcl:"spi_url,attr"`
 }
 
 type Mfa struct {
-	// AllowedMethods: set of string, optional
+	/*
+	   Optional set of allowed MFA methods.
+
+	   AllowedMethods is optional.
+	*/
 	AllowedMethods terra.SetValue[terra.StringValue] `hcl:"allowed_methods,attr"`
-	// Setting: string, optional
+	/*
+	   Specifies the Multi-Factor Authentication (MFA) setting. Allowed values are 'OFF', 'ALWAYS', 'SMART', 'TIME_BASED' and 'SMART_PLUS_TIME_BASED'.
+
+	   Setting is optional.
+	*/
 	Setting terra.StringValue `hcl:"setting,attr"`
-	// TimeIntervalInSeconds: number, optional
+	/*
+	   Optional time interval in seconds for time-based Multi-Factor Authentication.
+
+	   TimeIntervalInSeconds is optional.
+	*/
 	TimeIntervalInSeconds terra.NumberValue `hcl:"time_interval_in_seconds,attr"`
 }
 
 type MobileSettings struct {
-	// BundleId: string, optional
+	// BundleId is optional.
 	BundleId terra.StringValue `hcl:"bundle_id,attr"`
-	// KeyHash: string, optional
+	// KeyHash is optional.
 	KeyHash terra.StringValue `hcl:"key_hash,attr"`
-	// PackageName: string, optional
+	// PackageName is optional.
 	PackageName terra.StringValue `hcl:"package_name,attr"`
-	// TeamId: string, optional
+	// TeamId is optional.
 	TeamId terra.StringValue `hcl:"team_id,attr"`
 }
 
 type OperationsAllowedGroups struct {
-	// DefaultRoles: set of string, optional
+	// DefaultRoles is optional.
 	DefaultRoles terra.SetValue[terra.StringValue] `hcl:"default_roles,attr"`
-	// GroupId: string, optional
+	// GroupId is optional.
 	GroupId terra.StringValue `hcl:"group_id,attr"`
-	// Roles: set of string, optional
+	// Roles is optional.
 	Roles terra.SetValue[terra.StringValue] `hcl:"roles,attr"`
 }
 
 type SamlProviders struct {
-	// DisplayName: string, optional
+	// DisplayName is optional.
 	DisplayName terra.StringValue `hcl:"display_name,attr"`
-	// Domains: set of string, optional
+	// Domains is optional.
 	Domains terra.SetValue[terra.StringValue] `hcl:"domains,attr"`
-	// IsProviderVisible: bool, optional
+	// IsProviderVisible is optional.
 	IsProviderVisible terra.BoolValue `hcl:"is_provider_visible,attr"`
-	// LogoUrl: string, optional
+	// LogoUrl is optional.
 	LogoUrl terra.StringValue `hcl:"logo_url,attr"`
-	// ProviderName: string, optional
+	// ProviderName is optional.
 	ProviderName terra.StringValue `hcl:"provider_name,attr"`
-	// Type: string, optional
+	// Type is optional.
 	Type terra.StringValue `hcl:"type,attr"`
 }
 
 type SocialProviders struct {
-	// ProviderName: string, optional
+	// ProviderName is optional.
 	ProviderName terra.StringValue `hcl:"provider_name,attr"`
-	// SocialId: string, optional
+	// SocialId is optional.
 	SocialId terra.StringValue `hcl:"social_id,attr"`
 }
 
@@ -2357,7 +2612,18 @@ import (
 
 var _ terra.Resource = (*Resource)(nil)
 
-// Resource represents the Terraform resource cidaas_custom_provider.
+/*
+This example demonstrates the configuration of a custom provider resource for interacting with Cidaas.
+
+ Ensure that the below scopes are assigned to the client with the specified `client_id`:
+- cidaas:providers_read
+- cidaas:providers_write
+- cidaas:providers_delete
+
+Resource is the resource cidaas_custom_provider.
+
+Documentation: https://registry.terraform.io/providers/cidaas/cidaas/3.1.2/docs
+*/
 type Resource struct {
 	Name      string
 	Args      Args
@@ -2425,31 +2691,83 @@ func (ccp *Resource) StateMust() *cidaasCustomProviderState {
 
 // Args contains the configurations for cidaas_custom_provider.
 type Args struct {
-	// AuthorizationEndpoint: string, required
+	/*
+	   The URL for authorization of the provider.
+
+	   AuthorizationEndpoint is requred.
+	*/
 	AuthorizationEndpoint terra.StringValue `hcl:"authorization_endpoint,attr" validate:"required"`
-	// ClientId: string, required
+	/*
+	   The client ID of the provider.
+
+	   ClientId is requred.
+	*/
 	ClientId terra.StringValue `hcl:"client_id,attr" validate:"required"`
-	// ClientSecret: string, required
+	/*
+	   The client secret of the provider.
+
+	   ClientSecret is requred.
+	*/
 	ClientSecret terra.StringValue `hcl:"client_secret,attr" validate:"required"`
-	// DisplayName: string, required
+	/*
+	   The display name of the provider.
+
+	   DisplayName is requred.
+	*/
 	DisplayName terra.StringValue `hcl:"display_name,attr" validate:"required"`
-	// Domains: set of string, optional
+	/*
+	   The domains of the provider.
+
+	   Domains is optional.
+	*/
 	Domains terra.SetValue[terra.StringValue] `hcl:"domains,attr"`
-	// LogoUrl: string, optional
+	/*
+	   The URL for the provider's logo.
+
+	   LogoUrl is optional.
+	*/
 	LogoUrl terra.StringValue `hcl:"logo_url,attr"`
-	// ProviderName: string, required
+	/*
+	   The unique identifier of the custom provider. This cannot be updated for an existing state.
+
+	   ProviderName is requred.
+	*/
 	ProviderName terra.StringValue `hcl:"provider_name,attr" validate:"required"`
-	// ScopeDisplayLabel: string, required
+	/*
+	   Display label for the scope of the provider.
+
+	   ScopeDisplayLabel is requred.
+	*/
 	ScopeDisplayLabel terra.StringValue `hcl:"scope_display_label,attr" validate:"required"`
-	// StandardType: string, optional
+	/*
+	   Type of standard. Allowed values `OAUTH2` and `OPENID_CONNECT`.
+
+	   StandardType is optional.
+	*/
 	StandardType terra.StringValue `hcl:"standard_type,attr"`
-	// TokenEndpoint: string, required
+	/*
+	   The URL to generate token with this provider.
+
+	   TokenEndpoint is requred.
+	*/
 	TokenEndpoint terra.StringValue `hcl:"token_endpoint,attr" validate:"required"`
-	// UserinfoEndpoint: string, required
+	/*
+	   The URL to fetch user details using this provider.
+
+	   UserinfoEndpoint is requred.
+	*/
 	UserinfoEndpoint terra.StringValue `hcl:"userinfo_endpoint,attr" validate:"required"`
-	// Scopes: min=0
+	/*
+	   List of scopes of the provider with details
+
+	   Scopes is min=0
+	*/
 	Scopes []Scopes `hcl:"scopes,attr" validate:"min=0"`
-	// UserinfoFields: optional
+	/*
+	   Object containing various user information fields with their values. The userinfo_fields section includes specific fields such as name, family_name, address, etc., along with custom_fields allowing additional user information customization
+
+	   UserinfoFields is optional
+	*/
 	UserinfoFields *UserinfoFields `hcl:"userinfo_fields,attr"`
 }
 
@@ -2552,56 +2870,68 @@ import (
 )
 
 type Scopes struct {
-	// Recommended: bool, optional
+	/*
+	   Indicates if the scope is recommended.
+
+	   Recommended is optional.
+	*/
 	Recommended terra.BoolValue `hcl:"recommended,attr"`
-	// Required: bool, optional
+	/*
+	   Indicates if the scope is required.
+
+	   Required is optional.
+	*/
 	Required terra.BoolValue `hcl:"required,attr"`
-	// ScopeName: string, optional
+	/*
+	   The name of the scope, e.g., `openid`, `profile`.
+
+	   ScopeName is optional.
+	*/
 	ScopeName terra.StringValue `hcl:"scope_name,attr"`
 }
 
 type UserinfoFields struct {
-	// Address: string, optional
+	// Address is optional.
 	Address terra.StringValue `hcl:"address,attr"`
-	// Birthdate: string, optional
+	// Birthdate is optional.
 	Birthdate terra.StringValue `hcl:"birthdate,attr"`
-	// CustomFields: map of string, optional
+	// CustomFields is optional.
 	CustomFields terra.MapValue[terra.StringValue] `hcl:"custom_fields,attr"`
-	// Email: string, optional
+	// Email is optional.
 	Email terra.StringValue `hcl:"email,attr"`
-	// EmailVerified: string, optional
+	// EmailVerified is optional.
 	EmailVerified terra.StringValue `hcl:"email_verified,attr"`
-	// FamilyName: string, optional
+	// FamilyName is optional.
 	FamilyName terra.StringValue `hcl:"family_name,attr"`
-	// Gender: string, optional
+	// Gender is optional.
 	Gender terra.StringValue `hcl:"gender,attr"`
-	// GivenName: string, optional
+	// GivenName is optional.
 	GivenName terra.StringValue `hcl:"given_name,attr"`
-	// Locale: string, optional
+	// Locale is optional.
 	Locale terra.StringValue `hcl:"locale,attr"`
-	// MiddleName: string, optional
+	// MiddleName is optional.
 	MiddleName terra.StringValue `hcl:"middle_name,attr"`
-	// MobileNumber: string, optional
+	// MobileNumber is optional.
 	MobileNumber terra.StringValue `hcl:"mobile_number,attr"`
-	// Name: string, optional
+	// Name is optional.
 	Name terra.StringValue `hcl:"name,attr"`
-	// Nickname: string, optional
+	// Nickname is optional.
 	Nickname terra.StringValue `hcl:"nickname,attr"`
-	// PhoneNumber: string, optional
+	// PhoneNumber is optional.
 	PhoneNumber terra.StringValue `hcl:"phone_number,attr"`
-	// Picture: string, optional
+	// Picture is optional.
 	Picture terra.StringValue `hcl:"picture,attr"`
-	// PreferredUsername: string, optional
+	// PreferredUsername is optional.
 	PreferredUsername terra.StringValue `hcl:"preferred_username,attr"`
-	// Profile: string, optional
+	// Profile is optional.
 	Profile terra.StringValue `hcl:"profile,attr"`
-	// Sub: string, optional
+	// Sub is optional.
 	Sub terra.StringValue `hcl:"sub,attr"`
-	// UpdatedAt: string, optional
+	// UpdatedAt is optional.
 	UpdatedAt terra.StringValue `hcl:"updated_at,attr"`
-	// Website: string, optional
+	// Website is optional.
 	Website terra.StringValue `hcl:"website,attr"`
-	// Zoneinfo: string, optional
+	// Zoneinfo is optional.
 	Zoneinfo terra.StringValue `hcl:"zoneinfo,attr"`
 }
 
@@ -2776,7 +3106,19 @@ import (
 
 var _ terra.Resource = (*Resource)(nil)
 
-// Resource represents the Terraform resource cidaas_registration_field.
+/*
+The `cidaas_registration_page_field` in the provider allows management of registration fields in the Cidaas system. This resource enables you to configure and customize the fields displayed during user registration.
+
+ Ensure that the below scopes are assigned to the client with the specified `client_id`:
+- cidaas:field_setup_read
+- cidaas:field_setup_write
+- cidaas:field_setup_delete
+
+
+Resource is the resource cidaas_registration_field.
+
+Documentation: https://registry.terraform.io/providers/cidaas/cidaas/3.1.2/docs
+*/
 type Resource struct {
 	Name      string
 	Args      Args
@@ -2844,43 +3186,111 @@ func (crf *Resource) StateMust() *cidaasRegistrationFieldState {
 
 // Args contains the configurations for cidaas_registration_field.
 type Args struct {
-	// Claimable: bool, optional
+	/*
+	   Flag to mark if a field is claimable. Defaults set to `true`
+
+	   Claimable is optional.
+	*/
 	Claimable terra.BoolValue `hcl:"claimable,attr"`
-	// ConsentRefs: set of string, optional
+	/*
+	   List of consents(the ids of the consent in cidaas must be passed) in registration. The data type must be `CONSENT` in this case
+
+	   ConsentRefs is optional.
+	*/
 	ConsentRefs terra.SetValue[terra.StringValue] `hcl:"consent_refs,attr"`
-	// DataType: string, required
+	/*
+	   The data type of the field. This cannot be modified for an existing resource. Allowed values are `TEXT`,`NUMBER`,`SELECT`,`MULTISELECT`,`RADIO`,`CHECKBOX`,`PASSWORD`,`DATE`,`URL`,`EMAIL`,`TEXTAREA`,`MOBILE`,`CONSENT`,`JSON_STRING`,`USERNAME`,`ARRAY`,`GROUPING`,`DAYDATE`,
+
+	   DataType is requred.
+	*/
 	DataType terra.StringValue `hcl:"data_type,attr" validate:"required"`
-	// Enabled: bool, optional
+	/*
+	   Flag to mark if a field is enabled. Defaults set to `true`
+
+	   Enabled is optional.
+	*/
 	Enabled terra.BoolValue `hcl:"enabled,attr"`
-	// FieldKey: string, required
+	/*
+	   The unique identifier of the registration field. This cannot be modified for an existing resource.
+
+	   FieldKey is requred.
+	*/
 	FieldKey terra.StringValue `hcl:"field_key,attr" validate:"required"`
-	// FieldType: string, optional
+	/*
+	   Specifies whether the field type is `SYSTEM` or `CUSTOM`. Defaults to `CUSTOM`. This cannot be modified for an existing resource. `SYSTEM` fields cannot be created but can be modified. To modify an existing field import it first and then update.
+
+	   FieldType is optional.
+	*/
 	FieldType terra.StringValue `hcl:"field_type,attr"`
-	// Internal: bool, optional
+	/*
+	   Flag to mark if a field is internal. Defaults set to `false`
+
+	   Internal is optional.
+	*/
 	Internal terra.BoolValue `hcl:"internal,attr"`
-	// IsGroup: bool, optional
+	/*
+	   Setting is_group to `true` creates a registration field group. Defaults set to `false` The data_type attribute must be set to TEXT when is_group is true.
+
+	   IsGroup is optional.
+	*/
 	IsGroup terra.BoolValue `hcl:"is_group,attr"`
-	// IsList: bool, optional
+	// IsList is optional.
 	IsList terra.BoolValue `hcl:"is_list,attr"`
-	// IsSearchable: bool, optional
+	/*
+	   Flag to mark if a field is searchable. Defaults set to `true`
+
+	   IsSearchable is optional.
+	*/
 	IsSearchable terra.BoolValue `hcl:"is_searchable,attr"`
-	// Order: number, optional
+	/*
+	   The attribute order is used to set the order of the Field in the UI. Defaults set to `1`
+
+	   Order is optional.
+	*/
 	Order terra.NumberValue `hcl:"order,attr"`
-	// OverwriteWithNullValueFromSocialProvider: bool, optional
+	/*
+	   Set to true if you want the value should be reset by identity provider. Defaults set to `false`
+
+	   OverwriteWithNullValueFromSocialProvider is optional.
+	*/
 	OverwriteWithNullValueFromSocialProvider terra.BoolValue `hcl:"overwrite_with_null_value_from_social_provider,attr"`
-	// ParentGroupId: string, optional
+	/*
+	   The ID of the parent registration group. Defaults to `DEFAULT` if not provided.
+
+	   ParentGroupId is optional.
+	*/
 	ParentGroupId terra.StringValue `hcl:"parent_group_id,attr"`
-	// ReadOnly: bool, optional
+	/*
+	   Flag to mark if a field is read only. Defaults set to `false`
+
+	   ReadOnly is optional.
+	*/
 	ReadOnly terra.BoolValue `hcl:"read_only,attr"`
-	// Required: bool, optional
+	/*
+	   Flag to mark if a field is required in registration. Defaults set to `false`
+
+	   Required is optional.
+	*/
 	Required terra.BoolValue `hcl:"required,attr"`
-	// Scopes: set of string, optional
+	/*
+	   The scopes of the registration field.
+
+	   Scopes is optional.
+	*/
 	Scopes terra.SetValue[terra.StringValue] `hcl:"scopes,attr"`
-	// Unique: bool, optional
+	/*
+	   Flag to mark if a field is unique. Defaults set to `false`
+
+	   Unique is optional.
+	*/
 	Unique terra.BoolValue `hcl:"unique,attr"`
-	// FieldDefinition: optional
+	// FieldDefinition is optional
 	FieldDefinition *FieldDefinition `hcl:"field_definition,attr"`
-	// LocalTexts: min=0
+	/*
+	   The localized detail of the registration field.
+
+	   LocalTexts is min=0
+	*/
 	LocalTexts []LocalTexts `hcl:"local_texts,attr" validate:"min=0"`
 }
 
@@ -3025,48 +3435,100 @@ import (
 )
 
 type FieldDefinition struct {
-	// InitialDate: string, optional
+	/*
+	   The initial date. Applicable only for DATE attributes. Example format: `2024-06-28T18:30:00Z`.
+
+	   InitialDate is optional.
+	*/
 	InitialDate terra.StringValue `hcl:"initial_date,attr"`
-	// InitialDateView: string, optional
+	/*
+	   The view of the calender. Applicable only for DATE attributes. Allowed values: `month`, `year` and `multi-year`
+
+	   InitialDateView is optional.
+	*/
 	InitialDateView terra.StringValue `hcl:"initial_date_view,attr"`
-	// MaxDate: string, optional
+	/*
+	   The maximum date a user can select. Applicable only for DATE attributes. Example format: `2024-06-28T18:30:00Z`.
+
+	   MaxDate is optional.
+	*/
 	MaxDate terra.StringValue `hcl:"max_date,attr"`
-	// MaxLength: number, optional
+	/*
+	   The maximum length of a string type attribute.
+
+	   MaxLength is optional.
+	*/
 	MaxLength terra.NumberValue `hcl:"max_length,attr"`
-	// MinDate: string, optional
+	/*
+	   The earliest date a user can select. Applicable only for DATE attributes. Example format: `2024-06-28T18:30:00Z`.
+
+	   MinDate is optional.
+	*/
 	MinDate terra.StringValue `hcl:"min_date,attr"`
-	// MinLength: number, optional
+	/*
+	   The minimum length of a string type attribute
+
+	   MinLength is optional.
+	*/
 	MinLength terra.NumberValue `hcl:"min_length,attr"`
 }
 
 type LocalTexts struct {
-	// Locale: string, optional
+	/*
+	   The locale of the field. example: de-DE.
+
+	   Locale is optional.
+	*/
 	Locale terra.StringValue `hcl:"locale,attr"`
-	// MaxLengthMsg: string, optional
+	/*
+	   warning/error msg to show to the user when user exceeds the maximum character configured. This is applicable only for the attributes of base_data_type string.
+
+	   MaxLengthMsg is optional.
+	*/
 	MaxLengthMsg terra.StringValue `hcl:"max_length_msg,attr"`
-	// MinLengthMsg: string, optional
+	/*
+	   warning/error msg to show to the user when user don't provide the minimum character required. This is applicable only for the attributes of base_data_type string.
+
+	   MinLengthMsg is optional.
+	*/
 	MinLengthMsg terra.StringValue `hcl:"min_length_msg,attr"`
-	// Name: string, required
+	/*
+	   The name of the field in the local configured. for example: in **en-US** the name is `Sample Field` in de-DE `Beispielfeld`.
+
+	   Name is requred.
+	*/
 	Name terra.StringValue `hcl:"name,attr" validate:"required"`
-	// RequiredMsg: string, optional
+	/*
+	   When the flag required is set to true the required_msg must be provided. required_msg is shown if user does not provide a required field.
+
+	   RequiredMsg is optional.
+	*/
 	RequiredMsg terra.StringValue `hcl:"required_msg,attr"`
-	// LocalTextsAttributes: min=0
+	/*
+	   The field attributes must be provided for the data_type SELECT, MULTISELECT and RADIO. it's an array of key value pairs. Example provided in the example section.
+
+	   LocalTextsAttributes is min=0
+	*/
 	Attributes []LocalTextsAttributes `hcl:"attributes,attr" validate:"min=0"`
-	// LocalTextsConsentLabel: optional
+	/*
+	   required when data_type is CONSENT. Example provided in the example section.
+
+	   LocalTextsConsentLabel is optional
+	*/
 	ConsentLabel *LocalTextsConsentLabel `hcl:"consent_label,attr"`
 }
 
 type LocalTextsAttributes struct {
-	// Key: string, required
+	// Key is requred.
 	Key terra.StringValue `hcl:"key,attr" validate:"required"`
-	// Value: string, required
+	// Value is requred.
 	Value terra.StringValue `hcl:"value,attr" validate:"required"`
 }
 
 type LocalTextsConsentLabel struct {
-	// Label: string, required
+	// Label is requred.
 	Label terra.StringValue `hcl:"label,attr" validate:"required"`
-	// LabelText: string, required
+	// LabelText is requred.
 	LabelText terra.StringValue `hcl:"label_text,attr" validate:"required"`
 }
 
