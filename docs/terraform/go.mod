@@ -6,8 +6,7 @@ replace github.com/golingon/lingon => ../../
 
 require (
 	github.com/golingon/lingon v0.0.0-20241004101456-8a565cc8a01a
-	github.com/hashicorp/hcl/v2 v2.22.0
-	github.com/hashicorp/terraform-json v0.22.1
+	github.com/hashicorp/terraform-json v0.23.0
 )
 
 require (
@@ -20,6 +19,7 @@ require (
 	github.com/go-playground/validator/v10 v10.22.1 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/hashicorp/go-version v1.7.0 // indirect
+	github.com/hashicorp/hcl/v2 v2.22.0 // indirect
 	github.com/hashicorp/terraform-exec v0.21.0 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
 	github.com/mitchellh/go-wordwrap v1.0.1 // indirect

@@ -5,12 +5,12 @@ go 1.23.2
 require (
 	github.com/golingon/lingon v0.0.0-20241004101456-8a565cc8a01a
 	github.com/rogpeppe/go-internal v1.13.1
-	istio.io/api v1.23.2
-	istio.io/client-go v1.23.2
-	k8s.io/apiextensions-apiserver v0.31.1
-	k8s.io/apimachinery v0.31.1
-	k8s.io/client-go v0.31.1
-	sigs.k8s.io/secrets-store-csi-driver v1.4.5
+	istio.io/api v1.23.3
+	istio.io/client-go v1.23.3
+	k8s.io/apiextensions-apiserver v0.31.2
+	k8s.io/apimachinery v0.31.2
+	k8s.io/client-go v0.31.2
+	sigs.k8s.io/secrets-store-csi-driver v1.4.6
 )
 
 require (
@@ -40,7 +40,7 @@ require (
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	k8s.io/api v0.31.1 // indirect
+	k8s.io/api v0.31.2 // indirect
 	k8s.io/klog/v2 v2.130.1 // indirect
 	k8s.io/utils v0.0.0-20240921022957-49e7df575cb6 // indirect
 	mvdan.cc/gofumpt v0.7.0 // indirect
