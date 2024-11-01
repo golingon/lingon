@@ -23,18 +23,18 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # v3.5.0
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v3.5.0
         with:
           fetch-depth: 0 # this is important, otherwise it won't checkout the full tree (i.e. no previous tags)
 
       - name: Set up Go
-        uses: actions/setup-go@0a12ed9d6a96ab950c8f026ed9f722fe0da7ef32 # v5.0.2
+        uses: actions/setup-go@41dfa10bad2bb2ae585af6ee5bb4d7d973ad74ed # v5.1.0
         with:
           go-version-file: "./go.mod"
           cache: true
           check-latest: true
 
-      - uses: anchore/sbom-action/download-syft@61119d458adab75f756bc0b9e4bde25725f86a7a #v0.17.2
+      - uses: anchore/sbom-action/download-syft@251a468eed47e5082b105c3ba6ee500c0e65a764 #v0.17.6
 
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@286f3b13b1b49da4ac219696163fb8c1c93e1200 # v6.0.0
