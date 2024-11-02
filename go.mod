@@ -11,7 +11,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/hashicorp/hcl/v2 v2.22.0
 	github.com/hashicorp/terraform-exec v0.21.0
-	github.com/hashicorp/terraform-json v0.22.1
+	github.com/hashicorp/terraform-json v0.23.0
 	github.com/tidwall/gjson v1.18.0
 	github.com/tidwall/sjson v1.2.5
 	github.com/veggiemonk/strcase v0.0.0-20240108101409-9f441287a9a9
@@ -20,10 +20,10 @@ require (
 	golang.org/x/sync v0.8.0
 	golang.org/x/tools v0.26.0
 	gopkg.in/yaml.v3 v3.0.1
-	k8s.io/api v0.31.1
-	k8s.io/apiextensions-apiserver v0.31.1
-	k8s.io/apimachinery v0.31.1
-	k8s.io/client-go v0.31.1
+	k8s.io/api v0.31.2
+	k8s.io/apiextensions-apiserver v0.31.2
+	k8s.io/apimachinery v0.31.2
+	k8s.io/client-go v0.31.2
 	mvdan.cc/gofumpt v0.7.0
 	sigs.k8s.io/yaml v1.4.0
 )
