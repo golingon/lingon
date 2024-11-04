@@ -14,19 +14,19 @@ require (
 	github.com/golingon/terraproviders/tls/4.0.5 v0.0.0-20240416110925-4deecce434a2
 	github.com/grafana/dashboard-linter v0.0.0-20230622143601-02e2cd156626
 	github.com/hashicorp/terraform-exec v0.21.0
-	github.com/hashicorp/terraform-json v0.22.1
+	github.com/hashicorp/terraform-json v0.23.0
 	github.com/nats-io/nats.go v1.37.0
-	github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.77.1
-	github.com/prometheus/client_golang v1.20.4
+	github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.78.0
+	github.com/prometheus/client_golang v1.20.5
 	github.com/rogpeppe/go-internal v1.13.1
 	github.com/tidwall/gjson v1.18.0
 	github.com/zeitlinger/conflate v0.0.0-20230622100834-279724abda8c
 	go.uber.org/automaxprocs v1.6.0
 	google.golang.org/grpc v1.67.1
 	google.golang.org/protobuf v1.35.1
-	k8s.io/api v0.31.1
-	k8s.io/apiextensions-apiserver v0.31.1
-	k8s.io/apimachinery v0.31.1
+	k8s.io/api v0.31.2
+	k8s.io/apiextensions-apiserver v0.31.2
+	k8s.io/apimachinery v0.31.2
 	k8s.io/client-go v12.0.0+incompatible
 	k8s.io/kube-aggregator v0.31.1
 	sigs.k8s.io/kind v0.24.0
