@@ -1,6 +1,8 @@
 module github.com/golingon/lingon
 
-go 1.23.2
+go 1.22.2
+
+toolchain go1.23.2
 
 require (
 	dario.cat/mergo v1.0.1
