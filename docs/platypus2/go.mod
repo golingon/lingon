@@ -1,10 +1,12 @@
 module github.com/golingon/lingoneks
 
 go 1.23.1
+toolchain go1.23.3
+
 replace github.com/golingon/lingon => ../../
 
 require (
-	github.com/VictoriaMetrics/metricsql v0.79.0
+	github.com/VictoriaMetrics/metricsql v0.80.0
 	github.com/VictoriaMetrics/operator/api v0.0.0-20240412180039-21ab04581f22
 	github.com/ardanlabs/conf/v3 v3.2.0
 	github.com/aws/karpenter v0.29.2
@@ -16,20 +18,20 @@ require (
 	github.com/hashicorp/terraform-exec v0.21.0
 	github.com/hashicorp/terraform-json v0.23.0
 	github.com/nats-io/nats.go v1.37.0
-	github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.78.0
+	github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.78.2
 	github.com/prometheus/client_golang v1.20.5
 	github.com/rogpeppe/go-internal v1.13.1
 	github.com/tidwall/gjson v1.18.0
 	github.com/zeitlinger/conflate v0.0.0-20230622100834-279724abda8c
 	go.uber.org/automaxprocs v1.6.0
-	google.golang.org/grpc v1.67.1
-	google.golang.org/protobuf v1.35.1
+	google.golang.org/grpc v1.68.0
+	google.golang.org/protobuf v1.35.2
 	k8s.io/api v0.31.2
 	k8s.io/apiextensions-apiserver v0.31.2
 	k8s.io/apimachinery v0.31.2
 	k8s.io/client-go v12.0.0+incompatible
 	k8s.io/kube-aggregator v0.31.1
-	sigs.k8s.io/kind v0.24.0
+	sigs.k8s.io/kind v0.25.0
 	sigs.k8s.io/yaml v1.4.0
 )
 
