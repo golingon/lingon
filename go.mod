@@ -16,7 +16,7 @@ require (
 	github.com/veggiemonk/strcase v0.0.0-20240108101409-9f441287a9a9
 	github.com/zclconf/go-cty v1.15.1
 	golang.org/x/exp v0.0.0-20241004190924-225e2abe05e6
-	golang.org/x/sync v0.9.0
+	golang.org/x/sync v0.10.0
 	golang.org/x/tools v0.27.0
 	gopkg.in/yaml.v3 v3.0.1
 	k8s.io/api v0.31.3
@@ -46,11 +46,11 @@ require (
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.1 // indirect
 	github.com/x448/float16 v0.8.4 // indirect
-	golang.org/x/crypto v0.29.0 // indirect
+	golang.org/x/crypto v0.31.0 // indirect
 	golang.org/x/mod v0.22.0 // indirect
 	golang.org/x/net v0.31.0 // indirect
-	golang.org/x/sys v0.27.0 // indirect
-	golang.org/x/text v0.20.0 // indirect
+	golang.org/x/sys v0.28.0 // indirect
+	golang.org/x/text v0.21.0 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	k8s.io/klog/v2 v2.130.1 // indirect
