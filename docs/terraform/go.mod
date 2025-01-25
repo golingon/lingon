@@ -6,7 +6,7 @@ replace github.com/golingon/lingon => ../../
 
 require (
 	github.com/golingon/lingon v0.0.0-20241004101456-8a565cc8a01a
-	github.com/hashicorp/terraform-json v0.23.0
+	github.com/hashicorp/terraform-json v0.24.0
 )
 
 require (
