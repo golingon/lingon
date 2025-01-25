@@ -28,13 +28,13 @@ jobs:
           fetch-depth: 0 # this is important, otherwise it won't checkout the full tree (i.e. no previous tags)
 
       - name: Set up Go
-        uses: actions/setup-go@41dfa10bad2bb2ae585af6ee5bb4d7d973ad74ed # v5.1.0
+        uses: actions/setup-go@3041bf56c941b39c61721a86cd11f3bb1338122a # v5.2.0
         with:
           go-version-file: "./go.mod"
           cache: true
           check-latest: true
 
-      - uses: anchore/sbom-action/download-syft@55dc4ee22412511ee8c3142cbea40418e6cec693 #v0.17.8
+      - uses: anchore/sbom-action/download-syft@df80a981bc6edbc4e220a492d3cbe9f5547a6e75 #v0.17.9
 
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@9ed2f89a662bf1735a48bc8557fd212fa902bebf # v6.1.0
