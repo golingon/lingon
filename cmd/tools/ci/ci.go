@@ -30,40 +30,13 @@ import (
 )
 
 const (
-	// OSVScanner is the OSV Scanner to find vulnerabilities
-	osvScannerRepo    = "github.com/google/osv-scanner/cmd/osv-scanner"
-	osvScannerVersion = "@v1.8.2"
-	osvScanner        = osvScannerRepo + osvScannerVersion
-	osvScannerBin     = "osv-scanner"
-
-	// goVuln to find vulnerabilities
-	vulnRepo    = "golang.org/x/vuln/cmd/govulncheck"
-	vulnVersion = "@latest"
-	goVuln      = vulnRepo + vulnVersion
-	goVulnBin   = "govulncheck"
-
-	// goCILint is for linting code
-	goCILintRepo    = "github.com/golangci/golangci-lint/cmd/golangci-lint"
-	goCILintVersion = "@v1.60.3"
-	goCILint        = goCILintRepo + goCILintVersion
-	goCILintBin     = "golangci-lint"
-
-	// goFumpt is mvdan.cc/gofumpt to format code
-	goFumptRepo    = "mvdan.cc/gofumpt"
-	goFumptVersion = "@v0.7.0"
-	goFumpt        = goFumptRepo + goFumptVersion
-	goFumptBin     = "gofumpt"
-
-	dirK8s   = "./docs/kubernetes"
-	dirTerra = "./docs/terraform"
+	osvScanner = "github.com/google/osv-scanner/cmd/osv-scanner"
+	goVuln     = "golang.org/x/vuln/cmd/govulncheck"
+	goCILint   = "github.com/golangci/golangci-lint/cmd/golangci-lint"
+	goFumpt    = "mvdan.cc/gofumpt"
+	dirK8s     = "./docs/kubernetes"
+	dirTerra   = "./docs/terraform"
 )
-
-var binz = map[string]string{
-	osvScanner: osvScannerBin,
-	goVuln:     goVulnBin,
-	goCILint:   goCILintBin,
-	goFumpt:    goFumptBin,
-}
 
 type Result struct {
 	Context *Task
@@ -322,25 +295,8 @@ func (g *CLI) String() string {
 }
 
 func installRun(logger *slog.Logger, verbose bool, bin string, args ...string) wf.Step[Result] {
-	cli, ok := binz[bin]
-	if !ok {
-		// not a tool we use
-		return run(verbose, ".", "go", append([]string{"run", bin}, args...)...)
-	}
-	if _, err := exec.LookPath(cli); err != nil {
-		cmd := exec.Command("go", "install", bin)
-		logger.Info("tool not found => installing", "cmd", cmd.String())
-		instErr := cmd.Run()
-		if instErr != nil {
-			return run(verbose, ".", "go", append([]string{"run", bin}, args...)...)
-		}
-	}
-	if _, err := exec.LookPath(cli); err != nil {
-		logger.Info("tool not in the path", "bin", bin)
-		return run(verbose, ".", "go", append([]string{"run", bin}, args...)...)
-	}
-	logger.Info("running local tool", "cli", cli)
-	return run(verbose, ".", cli, args...)
+	logger.Info("running local tool", "cli", bin)
+	return run(verbose, ".", "go", append([]string{"tool", bin}, args...)...)
 }
 
 func (g *CLI) Run(ctx context.Context, r *Result) (*Result, error) {
