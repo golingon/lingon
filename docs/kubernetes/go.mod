@@ -2,14 +2,16 @@ module github.com/golingon/docskubernetes
 
 go 1.23.2
 
+toolchain go1.24.1
+
 require (
 	github.com/golingon/lingon v0.0.0-20250209104311-4fc653ffb361
 	github.com/rogpeppe/go-internal v1.14.1
-	istio.io/api v1.24.3
-	istio.io/client-go v1.24.3
-	k8s.io/apiextensions-apiserver v0.32.2
-	k8s.io/apimachinery v0.32.2
-	k8s.io/client-go v0.32.2
+	istio.io/api v1.25.1
+	istio.io/client-go v1.25.1
+	k8s.io/apiextensions-apiserver v0.32.3
+	k8s.io/apimachinery v0.32.3
+	k8s.io/client-go v0.32.3
 	sigs.k8s.io/secrets-store-csi-driver v1.4.8
 )
 
@@ -36,10 +38,10 @@ require (
 	golang.org/x/text v0.22.0 // indirect
 	golang.org/x/tools v0.29.0 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20250207221924-e9438ea467c6 // indirect
-	google.golang.org/protobuf v1.36.5 // indirect
+	google.golang.org/protobuf v1.36.6 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	k8s.io/api v0.32.2 // indirect
+	k8s.io/api v0.32.3 // indirect
 	k8s.io/klog/v2 v2.130.1 // indirect
 	k8s.io/utils v0.0.0-20241210054802-24370beab758 // indirect
 	mvdan.cc/gofumpt v0.7.0 // indirect
