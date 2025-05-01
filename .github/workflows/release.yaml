@@ -19,7 +19,7 @@ jobs:
     steps:
 
       - name: Harden Runner
-        uses: step-security/harden-runner@c6295a65d1254861815972266d5933fd6e532bdf # v2.11.1
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           egress-policy: audit
 
@@ -34,7 +34,7 @@ jobs:
           cache: true
           check-latest: true
 
-      - uses: anchore/sbom-action/download-syft@f325610c9f50a54015d37c8d16cb3b0e2c8f4de0 #v0.18.0
+      - uses: anchore/sbom-action/download-syft@9f7302141466aa6482940f15371237e9d9f4c34a #v0.19.0
 
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@9c156ee8a17a598857849441385a2041ef570552 # v6.3.0
