@@ -139,7 +139,6 @@ require (
 	github.com/golangci/revgrep v0.8.0 // indirect
 	github.com/golangci/unconvert v0.0.0-20240309020433-c5143eacb3ed // indirect
 	github.com/google/go-containerregistry v0.20.2 // indirect
-	github.com/google/gofuzz v1.2.0 // indirect
 	github.com/google/osv-scanner v1.9.2 // indirect
 	github.com/gordonklaus/ineffassign v0.1.0 // indirect
 	github.com/gorilla/css v1.0.1 // indirect
