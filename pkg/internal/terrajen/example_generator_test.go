@@ -91,7 +91,7 @@ func Example() {
 	// Documentation: https://registry.terraform.io/providers/hashicorp/google/4.58.0/docs
 	// */
 	// type Provider struct {
-	// 	// Field is requred.
+	// 	// Field is required.
 	// 	Field terra.StringValue `hcl:"field,attr" validate:"required"`
 	// }
 	//
