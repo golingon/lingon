@@ -24,7 +24,7 @@ func SubPkgFile(s *Schema) (*jen.File, bool) {
 	if s.graph.isEmpty() {
 		return nil, false
 	}
-	f := jen.NewFile(s.SubPkgName)
+	f := jen.NewFile(strings.ReplaceAll(s.SubPkgName, "-", "_"))
 	f.ImportAlias(pkgHCL, "hcl")
 	f.HeaderComment(HeaderComment)
 	for _, n := range s.graph.nodes {
