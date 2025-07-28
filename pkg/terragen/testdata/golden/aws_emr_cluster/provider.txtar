@@ -14,193 +14,97 @@ Documentation: https://registry.terraform.io/providers/hashicorp/aws/5.44.0/docs
 */
 type Provider struct {
 	/*
-	   The access key for API operations. You can retrieve this
+	   AccessKey is optional. The access key for API operations. You can retrieve this
 	   from the 'Security & Credentials' section of the AWS console.
-
-	   AccessKey is optional.
 	*/
 	AccessKey terra.StringValue `hcl:"access_key,attr"`
 	// AllowedAccountIds is optional.
 	AllowedAccountIds terra.SetValue[terra.StringValue] `hcl:"allowed_account_ids,attr"`
-	/*
-	   File containing custom root and intermediate certificates. Can also be configured using the `AWS_CA_BUNDLE` environment variable. (Setting `ca_bundle` in the shared config file is not supported.)
-
-	   CustomCaBundle is optional.
-	*/
+	// CustomCaBundle is optional. File containing custom root and intermediate certificates. Can also be configured using the `AWS_CA_BUNDLE` environment variable. (Setting `ca_bundle` in the shared config file is not supported.)
 	CustomCaBundle terra.StringValue `hcl:"custom_ca_bundle,attr"`
-	/*
-	   Address of the EC2 metadata service endpoint to use. Can also be configured using the `AWS_EC2_METADATA_SERVICE_ENDPOINT` environment variable.
-
-	   Ec2MetadataServiceEndpoint is optional.
-	*/
+	// Ec2MetadataServiceEndpoint is optional. Address of the EC2 metadata service endpoint to use. Can also be configured using the `AWS_EC2_METADATA_SERVICE_ENDPOINT` environment variable.
 	Ec2MetadataServiceEndpoint terra.StringValue `hcl:"ec2_metadata_service_endpoint,attr"`
-	/*
-	   Protocol to use with EC2 metadata service endpoint.Valid values are `IPv4` and `IPv6`. Can also be configured using the `AWS_EC2_METADATA_SERVICE_ENDPOINT_MODE` environment variable.
-
-	   Ec2MetadataServiceEndpointMode is optional.
-	*/
+	// Ec2MetadataServiceEndpointMode is optional. Protocol to use with EC2 metadata service endpoint.Valid values are `IPv4` and `IPv6`. Can also be configured using the `AWS_EC2_METADATA_SERVICE_ENDPOINT_MODE` environment variable.
 	Ec2MetadataServiceEndpointMode terra.StringValue `hcl:"ec2_metadata_service_endpoint_mode,attr"`
 	// ForbiddenAccountIds is optional.
 	ForbiddenAccountIds terra.SetValue[terra.StringValue] `hcl:"forbidden_account_ids,attr"`
-	/*
-	   URL of a proxy to use for HTTP requests when accessing the AWS API. Can also be set using the `HTTP_PROXY` or `http_proxy` environment variables.
-
-	   HttpProxy is optional.
-	*/
+	// HttpProxy is optional. URL of a proxy to use for HTTP requests when accessing the AWS API. Can also be set using the `HTTP_PROXY` or `http_proxy` environment variables.
 	HttpProxy terra.StringValue `hcl:"http_proxy,attr"`
-	/*
-	   URL of a proxy to use for HTTPS requests when accessing the AWS API. Can also be set using the `HTTPS_PROXY` or `https_proxy` environment variables.
-
-	   HttpsProxy is optional.
-	*/
+	// HttpsProxy is optional. URL of a proxy to use for HTTPS requests when accessing the AWS API. Can also be set using the `HTTPS_PROXY` or `https_proxy` environment variables.
 	HttpsProxy terra.StringValue `hcl:"https_proxy,attr"`
-	/*
-	   Explicitly allow the provider to perform "insecure" SSL requests. If omitted, default value is `false`
-
-	   Insecure is optional.
-	*/
+	// Insecure is optional. Explicitly allow the provider to perform "insecure" SSL requests. If omitted, default value is `false`
 	Insecure terra.BoolValue `hcl:"insecure,attr"`
 	/*
-	   The maximum number of times an AWS API request is
+	   MaxRetries is optional. The maximum number of times an AWS API request is
 	   being executed. If the API request still fails, an error is
 	   thrown.
-
-	   MaxRetries is optional.
 	*/
 	MaxRetries terra.NumberValue `hcl:"max_retries,attr"`
-	/*
-	   Comma-separated list of hosts that should not use HTTP or HTTPS proxies. Can also be set using the `NO_PROXY` or `no_proxy` environment variables.
-
-	   NoProxy is optional.
-	*/
+	// NoProxy is optional. Comma-separated list of hosts that should not use HTTP or HTTPS proxies. Can also be set using the `NO_PROXY` or `no_proxy` environment variables.
 	NoProxy terra.StringValue `hcl:"no_proxy,attr"`
 	/*
-	   The profile for API operations. If not set, the default profile
+	   Profile is optional. The profile for API operations. If not set, the default profile
 	   created with `aws configure` will be used.
-
-	   Profile is optional.
 	*/
 	Profile terra.StringValue `hcl:"profile,attr"`
 	/*
-	   The region where AWS operations will take place. Examples
+	   Region is optional. The region where AWS operations will take place. Examples
 	   are us-east-1, us-west-2, etc.
-
-	   Region is optional.
 	*/
 	Region terra.StringValue `hcl:"region,attr"`
-	/*
-	   Specifies how retries are attempted. Valid values are `standard` and `adaptive`. Can also be configured using the `AWS_RETRY_MODE` environment variable.
-
-	   RetryMode is optional.
-	*/
+	// RetryMode is optional. Specifies how retries are attempted. Valid values are `standard` and `adaptive`. Can also be configured using the `AWS_RETRY_MODE` environment variable.
 	RetryMode terra.StringValue `hcl:"retry_mode,attr"`
-	/*
-	   Specifies whether S3 API calls in the `us-east-1` region use the legacy global endpoint or a regional endpoint. Valid values are `legacy` or `regional`. Can also be configured using the `AWS_S3_US_EAST_1_REGIONAL_ENDPOINT` environment variable or the `s3_us_east_1_regional_endpoint` shared config file parameter
-
-	   S3UsEast1RegionalEndpoint is optional.
-	*/
+	// S3UsEast1RegionalEndpoint is optional. Specifies whether S3 API calls in the `us-east-1` region use the legacy global endpoint or a regional endpoint. Valid values are `legacy` or `regional`. Can also be configured using the `AWS_S3_US_EAST_1_REGIONAL_ENDPOINT` environment variable or the `s3_us_east_1_regional_endpoint` shared config file parameter
 	S3UsEast1RegionalEndpoint terra.StringValue `hcl:"s3_us_east_1_regional_endpoint,attr"`
 	/*
-	   Set this to true to enable the request to use path-style addressing,
+	   S3UsePathStyle is optional. Set this to true to enable the request to use path-style addressing,
 	   i.e., https://s3.amazonaws.com/BUCKET/KEY. By default, the S3 client will
 	   use virtual hosted bucket addressing when possible
 	   (https://BUCKET.s3.amazonaws.com/KEY). Specific to the Amazon S3 service.
-
-	   S3UsePathStyle is optional.
 	*/
 	S3UsePathStyle terra.BoolValue `hcl:"s3_use_path_style,attr"`
 	/*
-	   The secret key for API operations. You can retrieve this
+	   SecretKey is optional. The secret key for API operations. You can retrieve this
 	   from the 'Security & Credentials' section of the AWS console.
-
-	   SecretKey is optional.
 	*/
 	SecretKey terra.StringValue `hcl:"secret_key,attr"`
-	/*
-	   List of paths to shared config files. If not set, defaults to [~/.aws/config].
-
-	   SharedConfigFiles is optional.
-	*/
+	// SharedConfigFiles is optional. List of paths to shared config files. If not set, defaults to [~/.aws/config].
 	SharedConfigFiles terra.ListValue[terra.StringValue] `hcl:"shared_config_files,attr"`
-	/*
-	   List of paths to shared credentials files. If not set, defaults to [~/.aws/credentials].
-
-	   SharedCredentialsFiles is optional.
-	*/
+	// SharedCredentialsFiles is optional. List of paths to shared credentials files. If not set, defaults to [~/.aws/credentials].
 	SharedCredentialsFiles terra.ListValue[terra.StringValue] `hcl:"shared_credentials_files,attr"`
-	/*
-	   Skip the credentials validation via STS API. Used for AWS API implementations that do not have STS available/implemented.
-
-	   SkipCredentialsValidation is optional.
-	*/
+	// SkipCredentialsValidation is optional. Skip the credentials validation via STS API. Used for AWS API implementations that do not have STS available/implemented.
 	SkipCredentialsValidation terra.BoolValue `hcl:"skip_credentials_validation,attr"`
-	/*
-	   Skip the AWS Metadata API check. Used for AWS API implementations that do not have a metadata api endpoint.
-
-	   SkipMetadataApiCheck is optional.
-	*/
+	// SkipMetadataApiCheck is optional. Skip the AWS Metadata API check. Used for AWS API implementations that do not have a metadata api endpoint.
 	SkipMetadataApiCheck terra.StringValue `hcl:"skip_metadata_api_check,attr"`
-	/*
-	   Skip static validation of region name. Used by users of alternative AWS-like APIs or users w/ access to regions that are not public (yet).
-
-	   SkipRegionValidation is optional.
-	*/
+	// SkipRegionValidation is optional. Skip static validation of region name. Used by users of alternative AWS-like APIs or users w/ access to regions that are not public (yet).
 	SkipRegionValidation terra.BoolValue `hcl:"skip_region_validation,attr"`
-	/*
-	   Skip requesting the account ID. Used for AWS API implementations that do not have IAM/STS API and/or metadata API.
-
-	   SkipRequestingAccountId is optional.
-	*/
+	// SkipRequestingAccountId is optional. Skip requesting the account ID. Used for AWS API implementations that do not have IAM/STS API and/or metadata API.
 	SkipRequestingAccountId terra.BoolValue `hcl:"skip_requesting_account_id,attr"`
 	/*
-	   The region where AWS STS operations will take place. Examples
+	   StsRegion is optional. The region where AWS STS operations will take place. Examples
 	   are us-east-1 and us-west-2.
-
-	   StsRegion is optional.
 	*/
 	StsRegion terra.StringValue `hcl:"sts_region,attr"`
 	/*
-	   session token. A session token is only required if you are
+	   Token is optional. session token. A session token is only required if you are
 	   using temporary security credentials.
-
-	   Token is optional.
 	*/
 	Token terra.StringValue `hcl:"token,attr"`
-	/*
-	   The capacity of the AWS SDK's token bucket rate limiter.
-
-	   TokenBucketRateLimiterCapacity is optional.
-	*/
+	// TokenBucketRateLimiterCapacity is optional. The capacity of the AWS SDK's token bucket rate limiter.
 	TokenBucketRateLimiterCapacity terra.NumberValue `hcl:"token_bucket_rate_limiter_capacity,attr"`
-	/*
-	   Resolve an endpoint with DualStack capability
-
-	   UseDualstackEndpoint is optional.
-	*/
+	// UseDualstackEndpoint is optional. Resolve an endpoint with DualStack capability
 	UseDualstackEndpoint terra.BoolValue `hcl:"use_dualstack_endpoint,attr"`
-	/*
-	   Resolve an endpoint with FIPS capability
-
-	   UseFipsEndpoint is optional.
-	*/
+	// UseFipsEndpoint is optional. Resolve an endpoint with FIPS capability
 	UseFipsEndpoint terra.BoolValue `hcl:"use_fips_endpoint,attr"`
-	// AssumeRole is min=0
+	// AssumeRole is min=0.
 	AssumeRole []AssumeRole `hcl:"assume_role,block" validate:"min=0"`
-	// AssumeRoleWithWebIdentity is min=0
+	// AssumeRoleWithWebIdentity is min=0.
 	AssumeRoleWithWebIdentity []AssumeRoleWithWebIdentity `hcl:"assume_role_with_web_identity,block" validate:"min=0"`
-	/*
-	   Configuration block with settings to default resource tags across all resources.
-
-	   DefaultTags is min=0
-	*/
+	// DefaultTags is min=0. Configuration block with settings to default resource tags across all resources.
 	DefaultTags []DefaultTags `hcl:"default_tags,block" validate:"min=0"`
-	// Endpoints is min=0
+	// Endpoints is min=0.
 	Endpoints []Endpoints `hcl:"endpoints,block" validate:"min=0"`
-	/*
-	   Configuration block with settings to ignore resource tags across all resources.
-
-	   IgnoreTags is min=0
-	*/
+	// IgnoreTags is min=0. Configuration block with settings to ignore resource tags across all resources.
 	IgnoreTags []IgnoreTags `hcl:"ignore_tags,block" validate:"min=0"`
 }
 
@@ -234,92 +138,36 @@ import (
 )
 
 type AssumeRole struct {
-	/*
-	   The duration, between 15 minutes and 12 hours, of the role session. Valid time units are ns, us (or µs), ms, s, h, or m.
-
-	   Duration is optional.
-	*/
+	// Duration is optional. The duration, between 15 minutes and 12 hours, of the role session. Valid time units are ns, us (or µs), ms, s, h, or m.
 	Duration terra.StringValue `hcl:"duration,attr"`
-	/*
-	   A unique identifier that might be required when you assume a role in another account.
-
-	   ExternalId is optional.
-	*/
+	// ExternalId is optional. A unique identifier that might be required when you assume a role in another account.
 	ExternalId terra.StringValue `hcl:"external_id,attr"`
-	/*
-	   IAM Policy JSON describing further restricting permissions for the IAM Role being assumed.
-
-	   Policy is optional.
-	*/
+	// Policy is optional. IAM Policy JSON describing further restricting permissions for the IAM Role being assumed.
 	Policy terra.StringValue `hcl:"policy,attr"`
-	/*
-	   Amazon Resource Names (ARNs) of IAM Policies describing further restricting permissions for the IAM Role being assumed.
-
-	   PolicyArns is optional.
-	*/
+	// PolicyArns is optional. Amazon Resource Names (ARNs) of IAM Policies describing further restricting permissions for the IAM Role being assumed.
 	PolicyArns terra.SetValue[terra.StringValue] `hcl:"policy_arns,attr"`
-	/*
-	   Amazon Resource Name (ARN) of an IAM Role to assume prior to making API calls.
-
-	   RoleArn is optional.
-	*/
+	// RoleArn is optional. Amazon Resource Name (ARN) of an IAM Role to assume prior to making API calls.
 	RoleArn terra.StringValue `hcl:"role_arn,attr"`
-	/*
-	   An identifier for the assumed role session.
-
-	   SessionName is optional.
-	*/
+	// SessionName is optional. An identifier for the assumed role session.
 	SessionName terra.StringValue `hcl:"session_name,attr"`
-	/*
-	   Source identity specified by the principal assuming the role.
-
-	   SourceIdentity is optional.
-	*/
+	// SourceIdentity is optional. Source identity specified by the principal assuming the role.
 	SourceIdentity terra.StringValue `hcl:"source_identity,attr"`
-	/*
-	   Assume role session tags.
-
-	   Tags is optional.
-	*/
+	// Tags is optional. Assume role session tags.
 	Tags terra.MapValue[terra.StringValue] `hcl:"tags,attr"`
-	/*
-	   Assume role session tag keys to pass to any subsequent sessions.
-
-	   TransitiveTagKeys is optional.
-	*/
+	// TransitiveTagKeys is optional. Assume role session tag keys to pass to any subsequent sessions.
 	TransitiveTagKeys terra.SetValue[terra.StringValue] `hcl:"transitive_tag_keys,attr"`
 }
 
 type AssumeRoleWithWebIdentity struct {
-	/*
-	   The duration, between 15 minutes and 12 hours, of the role session. Valid time units are ns, us (or µs), ms, s, h, or m.
-
-	   Duration is optional.
-	*/
+	// Duration is optional. The duration, between 15 minutes and 12 hours, of the role session. Valid time units are ns, us (or µs), ms, s, h, or m.
 	Duration terra.StringValue `hcl:"duration,attr"`
-	/*
-	   IAM Policy JSON describing further restricting permissions for the IAM Role being assumed.
-
-	   Policy is optional.
-	*/
+	// Policy is optional. IAM Policy JSON describing further restricting permissions for the IAM Role being assumed.
 	Policy terra.StringValue `hcl:"policy,attr"`
-	/*
-	   Amazon Resource Names (ARNs) of IAM Policies describing further restricting permissions for the IAM Role being assumed.
-
-	   PolicyArns is optional.
-	*/
+	// PolicyArns is optional. Amazon Resource Names (ARNs) of IAM Policies describing further restricting permissions for the IAM Role being assumed.
 	PolicyArns terra.SetValue[terra.StringValue] `hcl:"policy_arns,attr"`
-	/*
-	   Amazon Resource Name (ARN) of an IAM Role to assume prior to making API calls.
-
-	   RoleArn is optional.
-	*/
+	// RoleArn is optional. Amazon Resource Name (ARN) of an IAM Role to assume prior to making API calls.
 	RoleArn terra.StringValue `hcl:"role_arn,attr"`
-	/*
-	   An identifier for the assumed role session.
-
-	   SessionName is optional.
-	*/
+	// SessionName is optional. An identifier for the assumed role session.
 	SessionName terra.StringValue `hcl:"session_name,attr"`
 	// WebIdentityToken is optional.
 	WebIdentityToken terra.StringValue `hcl:"web_identity_token,attr"`
@@ -328,1685 +176,569 @@ type AssumeRoleWithWebIdentity struct {
 }
 
 type DefaultTags struct {
-	/*
-	   Resource tags to default across all resources
-
-	   Tags is optional.
-	*/
+	// Tags is optional. Resource tags to default across all resources
 	Tags terra.MapValue[terra.StringValue] `hcl:"tags,attr"`
 }
 
 type Endpoints struct {
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Accessanalyzer is optional.
-	*/
+	// Accessanalyzer is optional. Use this to override the default service endpoint URL
 	Accessanalyzer terra.StringValue `hcl:"accessanalyzer,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Account is optional.
-	*/
+	// Account is optional. Use this to override the default service endpoint URL
 	Account terra.StringValue `hcl:"account,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Acm is optional.
-	*/
+	// Acm is optional. Use this to override the default service endpoint URL
 	Acm terra.StringValue `hcl:"acm,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Acmpca is optional.
-	*/
+	// Acmpca is optional. Use this to override the default service endpoint URL
 	Acmpca terra.StringValue `hcl:"acmpca,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Amg is optional.
-	*/
+	// Amg is optional. Use this to override the default service endpoint URL
 	Amg terra.StringValue `hcl:"amg,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Amp is optional.
-	*/
+	// Amp is optional. Use this to override the default service endpoint URL
 	Amp terra.StringValue `hcl:"amp,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Amplify is optional.
-	*/
+	// Amplify is optional. Use this to override the default service endpoint URL
 	Amplify terra.StringValue `hcl:"amplify,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Apigateway is optional.
-	*/
+	// Apigateway is optional. Use this to override the default service endpoint URL
 	Apigateway terra.StringValue `hcl:"apigateway,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Apigatewayv2 is optional.
-	*/
+	// Apigatewayv2 is optional. Use this to override the default service endpoint URL
 	Apigatewayv2 terra.StringValue `hcl:"apigatewayv2,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Appautoscaling is optional.
-	*/
+	// Appautoscaling is optional. Use this to override the default service endpoint URL
 	Appautoscaling terra.StringValue `hcl:"appautoscaling,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Appconfig is optional.
-	*/
+	// Appconfig is optional. Use this to override the default service endpoint URL
 	Appconfig terra.StringValue `hcl:"appconfig,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Appfabric is optional.
-	*/
+	// Appfabric is optional. Use this to override the default service endpoint URL
 	Appfabric terra.StringValue `hcl:"appfabric,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Appflow is optional.
-	*/
+	// Appflow is optional. Use this to override the default service endpoint URL
 	Appflow terra.StringValue `hcl:"appflow,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Appintegrations is optional.
-	*/
+	// Appintegrations is optional. Use this to override the default service endpoint URL
 	Appintegrations terra.StringValue `hcl:"appintegrations,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Appintegrationsservice is optional.
-	*/
+	// Appintegrationsservice is optional. Use this to override the default service endpoint URL
 	Appintegrationsservice terra.StringValue `hcl:"appintegrationsservice,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Applicationautoscaling is optional.
-	*/
+	// Applicationautoscaling is optional. Use this to override the default service endpoint URL
 	Applicationautoscaling terra.StringValue `hcl:"applicationautoscaling,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Applicationinsights is optional.
-	*/
+	// Applicationinsights is optional. Use this to override the default service endpoint URL
 	Applicationinsights terra.StringValue `hcl:"applicationinsights,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Appmesh is optional.
-	*/
+	// Appmesh is optional. Use this to override the default service endpoint URL
 	Appmesh terra.StringValue `hcl:"appmesh,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Appregistry is optional.
-	*/
+	// Appregistry is optional. Use this to override the default service endpoint URL
 	Appregistry terra.StringValue `hcl:"appregistry,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Apprunner is optional.
-	*/
+	// Apprunner is optional. Use this to override the default service endpoint URL
 	Apprunner terra.StringValue `hcl:"apprunner,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Appstream is optional.
-	*/
+	// Appstream is optional. Use this to override the default service endpoint URL
 	Appstream terra.StringValue `hcl:"appstream,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Appsync is optional.
-	*/
+	// Appsync is optional. Use this to override the default service endpoint URL
 	Appsync terra.StringValue `hcl:"appsync,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Athena is optional.
-	*/
+	// Athena is optional. Use this to override the default service endpoint URL
 	Athena terra.StringValue `hcl:"athena,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Auditmanager is optional.
-	*/
+	// Auditmanager is optional. Use this to override the default service endpoint URL
 	Auditmanager terra.StringValue `hcl:"auditmanager,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Autoscaling is optional.
-	*/
+	// Autoscaling is optional. Use this to override the default service endpoint URL
 	Autoscaling terra.StringValue `hcl:"autoscaling,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Autoscalingplans is optional.
-	*/
+	// Autoscalingplans is optional. Use this to override the default service endpoint URL
 	Autoscalingplans terra.StringValue `hcl:"autoscalingplans,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Backup is optional.
-	*/
+	// Backup is optional. Use this to override the default service endpoint URL
 	Backup terra.StringValue `hcl:"backup,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Batch is optional.
-	*/
+	// Batch is optional. Use this to override the default service endpoint URL
 	Batch terra.StringValue `hcl:"batch,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Beanstalk is optional.
-	*/
+	// Beanstalk is optional. Use this to override the default service endpoint URL
 	Beanstalk terra.StringValue `hcl:"beanstalk,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Bedrock is optional.
-	*/
+	// Bedrock is optional. Use this to override the default service endpoint URL
 	Bedrock terra.StringValue `hcl:"bedrock,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Bedrockagent is optional.
-	*/
+	// Bedrockagent is optional. Use this to override the default service endpoint URL
 	Bedrockagent terra.StringValue `hcl:"bedrockagent,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Budgets is optional.
-	*/
+	// Budgets is optional. Use this to override the default service endpoint URL
 	Budgets terra.StringValue `hcl:"budgets,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Ce is optional.
-	*/
+	// Ce is optional. Use this to override the default service endpoint URL
 	Ce terra.StringValue `hcl:"ce,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Chime is optional.
-	*/
+	// Chime is optional. Use this to override the default service endpoint URL
 	Chime terra.StringValue `hcl:"chime,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Chimesdkmediapipelines is optional.
-	*/
+	// Chimesdkmediapipelines is optional. Use this to override the default service endpoint URL
 	Chimesdkmediapipelines terra.StringValue `hcl:"chimesdkmediapipelines,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Chimesdkvoice is optional.
-	*/
+	// Chimesdkvoice is optional. Use this to override the default service endpoint URL
 	Chimesdkvoice terra.StringValue `hcl:"chimesdkvoice,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Cleanrooms is optional.
-	*/
+	// Cleanrooms is optional. Use this to override the default service endpoint URL
 	Cleanrooms terra.StringValue `hcl:"cleanrooms,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Cloud9 is optional.
-	*/
+	// Cloud9 is optional. Use this to override the default service endpoint URL
 	Cloud9 terra.StringValue `hcl:"cloud9,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Cloudcontrol is optional.
-	*/
+	// Cloudcontrol is optional. Use this to override the default service endpoint URL
 	Cloudcontrol terra.StringValue `hcl:"cloudcontrol,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Cloudcontrolapi is optional.
-	*/
+	// Cloudcontrolapi is optional. Use this to override the default service endpoint URL
 	Cloudcontrolapi terra.StringValue `hcl:"cloudcontrolapi,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Cloudformation is optional.
-	*/
+	// Cloudformation is optional. Use this to override the default service endpoint URL
 	Cloudformation terra.StringValue `hcl:"cloudformation,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Cloudfront is optional.
-	*/
+	// Cloudfront is optional. Use this to override the default service endpoint URL
 	Cloudfront terra.StringValue `hcl:"cloudfront,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Cloudfrontkeyvaluestore is optional.
-	*/
+	// Cloudfrontkeyvaluestore is optional. Use this to override the default service endpoint URL
 	Cloudfrontkeyvaluestore terra.StringValue `hcl:"cloudfrontkeyvaluestore,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Cloudhsm is optional.
-	*/
+	// Cloudhsm is optional. Use this to override the default service endpoint URL
 	Cloudhsm terra.StringValue `hcl:"cloudhsm,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Cloudhsmv2 is optional.
-	*/
+	// Cloudhsmv2 is optional. Use this to override the default service endpoint URL
 	Cloudhsmv2 terra.StringValue `hcl:"cloudhsmv2,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Cloudsearch is optional.
-	*/
+	// Cloudsearch is optional. Use this to override the default service endpoint URL
 	Cloudsearch terra.StringValue `hcl:"cloudsearch,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Cloudtrail is optional.
-	*/
+	// Cloudtrail is optional. Use this to override the default service endpoint URL
 	Cloudtrail terra.StringValue `hcl:"cloudtrail,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Cloudwatch is optional.
-	*/
+	// Cloudwatch is optional. Use this to override the default service endpoint URL
 	Cloudwatch terra.StringValue `hcl:"cloudwatch,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Cloudwatchevents is optional.
-	*/
+	// Cloudwatchevents is optional. Use this to override the default service endpoint URL
 	Cloudwatchevents terra.StringValue `hcl:"cloudwatchevents,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Cloudwatchevidently is optional.
-	*/
+	// Cloudwatchevidently is optional. Use this to override the default service endpoint URL
 	Cloudwatchevidently terra.StringValue `hcl:"cloudwatchevidently,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Cloudwatchlog is optional.
-	*/
+	// Cloudwatchlog is optional. Use this to override the default service endpoint URL
 	Cloudwatchlog terra.StringValue `hcl:"cloudwatchlog,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Cloudwatchlogs is optional.
-	*/
+	// Cloudwatchlogs is optional. Use this to override the default service endpoint URL
 	Cloudwatchlogs terra.StringValue `hcl:"cloudwatchlogs,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Cloudwatchobservabilityaccessmanager is optional.
-	*/
+	// Cloudwatchobservabilityaccessmanager is optional. Use this to override the default service endpoint URL
 	Cloudwatchobservabilityaccessmanager terra.StringValue `hcl:"cloudwatchobservabilityaccessmanager,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Cloudwatchrum is optional.
-	*/
+	// Cloudwatchrum is optional. Use this to override the default service endpoint URL
 	Cloudwatchrum terra.StringValue `hcl:"cloudwatchrum,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Codeartifact is optional.
-	*/
+	// Codeartifact is optional. Use this to override the default service endpoint URL
 	Codeartifact terra.StringValue `hcl:"codeartifact,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Codebuild is optional.
-	*/
+	// Codebuild is optional. Use this to override the default service endpoint URL
 	Codebuild terra.StringValue `hcl:"codebuild,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Codecatalyst is optional.
-	*/
+	// Codecatalyst is optional. Use this to override the default service endpoint URL
 	Codecatalyst terra.StringValue `hcl:"codecatalyst,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Codecommit is optional.
-	*/
+	// Codecommit is optional. Use this to override the default service endpoint URL
 	Codecommit terra.StringValue `hcl:"codecommit,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Codedeploy is optional.
-	*/
+	// Codedeploy is optional. Use this to override the default service endpoint URL
 	Codedeploy terra.StringValue `hcl:"codedeploy,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Codeguruprofiler is optional.
-	*/
+	// Codeguruprofiler is optional. Use this to override the default service endpoint URL
 	Codeguruprofiler terra.StringValue `hcl:"codeguruprofiler,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Codegurureviewer is optional.
-	*/
+	// Codegurureviewer is optional. Use this to override the default service endpoint URL
 	Codegurureviewer terra.StringValue `hcl:"codegurureviewer,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Codepipeline is optional.
-	*/
+	// Codepipeline is optional. Use this to override the default service endpoint URL
 	Codepipeline terra.StringValue `hcl:"codepipeline,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Codestarconnections is optional.
-	*/
+	// Codestarconnections is optional. Use this to override the default service endpoint URL
 	Codestarconnections terra.StringValue `hcl:"codestarconnections,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Codestarnotifications is optional.
-	*/
+	// Codestarnotifications is optional. Use this to override the default service endpoint URL
 	Codestarnotifications terra.StringValue `hcl:"codestarnotifications,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Cognitoidentity is optional.
-	*/
+	// Cognitoidentity is optional. Use this to override the default service endpoint URL
 	Cognitoidentity terra.StringValue `hcl:"cognitoidentity,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Cognitoidentityprovider is optional.
-	*/
+	// Cognitoidentityprovider is optional. Use this to override the default service endpoint URL
 	Cognitoidentityprovider terra.StringValue `hcl:"cognitoidentityprovider,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Cognitoidp is optional.
-	*/
+	// Cognitoidp is optional. Use this to override the default service endpoint URL
 	Cognitoidp terra.StringValue `hcl:"cognitoidp,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Comprehend is optional.
-	*/
+	// Comprehend is optional. Use this to override the default service endpoint URL
 	Comprehend terra.StringValue `hcl:"comprehend,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Computeoptimizer is optional.
-	*/
+	// Computeoptimizer is optional. Use this to override the default service endpoint URL
 	Computeoptimizer terra.StringValue `hcl:"computeoptimizer,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Config is optional.
-	*/
+	// Config is optional. Use this to override the default service endpoint URL
 	Config terra.StringValue `hcl:"config,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Configservice is optional.
-	*/
+	// Configservice is optional. Use this to override the default service endpoint URL
 	Configservice terra.StringValue `hcl:"configservice,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Connect is optional.
-	*/
+	// Connect is optional. Use this to override the default service endpoint URL
 	Connect terra.StringValue `hcl:"connect,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Connectcases is optional.
-	*/
+	// Connectcases is optional. Use this to override the default service endpoint URL
 	Connectcases terra.StringValue `hcl:"connectcases,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Controltower is optional.
-	*/
+	// Controltower is optional. Use this to override the default service endpoint URL
 	Controltower terra.StringValue `hcl:"controltower,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Costandusagereportservice is optional.
-	*/
+	// Costandusagereportservice is optional. Use this to override the default service endpoint URL
 	Costandusagereportservice terra.StringValue `hcl:"costandusagereportservice,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Costexplorer is optional.
-	*/
+	// Costexplorer is optional. Use this to override the default service endpoint URL
 	Costexplorer terra.StringValue `hcl:"costexplorer,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Costoptimizationhub is optional.
-	*/
+	// Costoptimizationhub is optional. Use this to override the default service endpoint URL
 	Costoptimizationhub terra.StringValue `hcl:"costoptimizationhub,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Cur is optional.
-	*/
+	// Cur is optional. Use this to override the default service endpoint URL
 	Cur terra.StringValue `hcl:"cur,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Customerprofiles is optional.
-	*/
+	// Customerprofiles is optional. Use this to override the default service endpoint URL
 	Customerprofiles terra.StringValue `hcl:"customerprofiles,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Databasemigration is optional.
-	*/
+	// Databasemigration is optional. Use this to override the default service endpoint URL
 	Databasemigration terra.StringValue `hcl:"databasemigration,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Databasemigrationservice is optional.
-	*/
+	// Databasemigrationservice is optional. Use this to override the default service endpoint URL
 	Databasemigrationservice terra.StringValue `hcl:"databasemigrationservice,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Dataexchange is optional.
-	*/
+	// Dataexchange is optional. Use this to override the default service endpoint URL
 	Dataexchange terra.StringValue `hcl:"dataexchange,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Datapipeline is optional.
-	*/
+	// Datapipeline is optional. Use this to override the default service endpoint URL
 	Datapipeline terra.StringValue `hcl:"datapipeline,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Datasync is optional.
-	*/
+	// Datasync is optional. Use this to override the default service endpoint URL
 	Datasync terra.StringValue `hcl:"datasync,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Datazone is optional.
-	*/
+	// Datazone is optional. Use this to override the default service endpoint URL
 	Datazone terra.StringValue `hcl:"datazone,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Dax is optional.
-	*/
+	// Dax is optional. Use this to override the default service endpoint URL
 	Dax terra.StringValue `hcl:"dax,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Deploy is optional.
-	*/
+	// Deploy is optional. Use this to override the default service endpoint URL
 	Deploy terra.StringValue `hcl:"deploy,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Detective is optional.
-	*/
+	// Detective is optional. Use this to override the default service endpoint URL
 	Detective terra.StringValue `hcl:"detective,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Devicefarm is optional.
-	*/
+	// Devicefarm is optional. Use this to override the default service endpoint URL
 	Devicefarm terra.StringValue `hcl:"devicefarm,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Devopsguru is optional.
-	*/
+	// Devopsguru is optional. Use this to override the default service endpoint URL
 	Devopsguru terra.StringValue `hcl:"devopsguru,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Directconnect is optional.
-	*/
+	// Directconnect is optional. Use this to override the default service endpoint URL
 	Directconnect terra.StringValue `hcl:"directconnect,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Directoryservice is optional.
-	*/
+	// Directoryservice is optional. Use this to override the default service endpoint URL
 	Directoryservice terra.StringValue `hcl:"directoryservice,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Dlm is optional.
-	*/
+	// Dlm is optional. Use this to override the default service endpoint URL
 	Dlm terra.StringValue `hcl:"dlm,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Dms is optional.
-	*/
+	// Dms is optional. Use this to override the default service endpoint URL
 	Dms terra.StringValue `hcl:"dms,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Docdb is optional.
-	*/
+	// Docdb is optional. Use this to override the default service endpoint URL
 	Docdb terra.StringValue `hcl:"docdb,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Docdbelastic is optional.
-	*/
+	// Docdbelastic is optional. Use this to override the default service endpoint URL
 	Docdbelastic terra.StringValue `hcl:"docdbelastic,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Ds is optional.
-	*/
+	// Ds is optional. Use this to override the default service endpoint URL
 	Ds terra.StringValue `hcl:"ds,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Dynamodb is optional.
-	*/
+	// Dynamodb is optional. Use this to override the default service endpoint URL
 	Dynamodb terra.StringValue `hcl:"dynamodb,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Ec2 is optional.
-	*/
+	// Ec2 is optional. Use this to override the default service endpoint URL
 	Ec2 terra.StringValue `hcl:"ec2,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Ecr is optional.
-	*/
+	// Ecr is optional. Use this to override the default service endpoint URL
 	Ecr terra.StringValue `hcl:"ecr,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Ecrpublic is optional.
-	*/
+	// Ecrpublic is optional. Use this to override the default service endpoint URL
 	Ecrpublic terra.StringValue `hcl:"ecrpublic,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Ecs is optional.
-	*/
+	// Ecs is optional. Use this to override the default service endpoint URL
 	Ecs terra.StringValue `hcl:"ecs,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Efs is optional.
-	*/
+	// Efs is optional. Use this to override the default service endpoint URL
 	Efs terra.StringValue `hcl:"efs,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Eks is optional.
-	*/
+	// Eks is optional. Use this to override the default service endpoint URL
 	Eks terra.StringValue `hcl:"eks,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Elasticache is optional.
-	*/
+	// Elasticache is optional. Use this to override the default service endpoint URL
 	Elasticache terra.StringValue `hcl:"elasticache,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Elasticbeanstalk is optional.
-	*/
+	// Elasticbeanstalk is optional. Use this to override the default service endpoint URL
 	Elasticbeanstalk terra.StringValue `hcl:"elasticbeanstalk,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Elasticloadbalancing is optional.
-	*/
+	// Elasticloadbalancing is optional. Use this to override the default service endpoint URL
 	Elasticloadbalancing terra.StringValue `hcl:"elasticloadbalancing,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Elasticloadbalancingv2 is optional.
-	*/
+	// Elasticloadbalancingv2 is optional. Use this to override the default service endpoint URL
 	Elasticloadbalancingv2 terra.StringValue `hcl:"elasticloadbalancingv2,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Elasticsearch is optional.
-	*/
+	// Elasticsearch is optional. Use this to override the default service endpoint URL
 	Elasticsearch terra.StringValue `hcl:"elasticsearch,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Elasticsearchservice is optional.
-	*/
+	// Elasticsearchservice is optional. Use this to override the default service endpoint URL
 	Elasticsearchservice terra.StringValue `hcl:"elasticsearchservice,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Elastictranscoder is optional.
-	*/
+	// Elastictranscoder is optional. Use this to override the default service endpoint URL
 	Elastictranscoder terra.StringValue `hcl:"elastictranscoder,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Elb is optional.
-	*/
+	// Elb is optional. Use this to override the default service endpoint URL
 	Elb terra.StringValue `hcl:"elb,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Elbv2 is optional.
-	*/
+	// Elbv2 is optional. Use this to override the default service endpoint URL
 	Elbv2 terra.StringValue `hcl:"elbv2,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Emr is optional.
-	*/
+	// Emr is optional. Use this to override the default service endpoint URL
 	Emr terra.StringValue `hcl:"emr,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Emrcontainers is optional.
-	*/
+	// Emrcontainers is optional. Use this to override the default service endpoint URL
 	Emrcontainers terra.StringValue `hcl:"emrcontainers,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Emrserverless is optional.
-	*/
+	// Emrserverless is optional. Use this to override the default service endpoint URL
 	Emrserverless terra.StringValue `hcl:"emrserverless,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Es is optional.
-	*/
+	// Es is optional. Use this to override the default service endpoint URL
 	Es terra.StringValue `hcl:"es,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Eventbridge is optional.
-	*/
+	// Eventbridge is optional. Use this to override the default service endpoint URL
 	Eventbridge terra.StringValue `hcl:"eventbridge,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Events is optional.
-	*/
+	// Events is optional. Use this to override the default service endpoint URL
 	Events terra.StringValue `hcl:"events,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Evidently is optional.
-	*/
+	// Evidently is optional. Use this to override the default service endpoint URL
 	Evidently terra.StringValue `hcl:"evidently,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Finspace is optional.
-	*/
+	// Finspace is optional. Use this to override the default service endpoint URL
 	Finspace terra.StringValue `hcl:"finspace,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Firehose is optional.
-	*/
+	// Firehose is optional. Use this to override the default service endpoint URL
 	Firehose terra.StringValue `hcl:"firehose,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Fis is optional.
-	*/
+	// Fis is optional. Use this to override the default service endpoint URL
 	Fis terra.StringValue `hcl:"fis,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Fms is optional.
-	*/
+	// Fms is optional. Use this to override the default service endpoint URL
 	Fms terra.StringValue `hcl:"fms,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Fsx is optional.
-	*/
+	// Fsx is optional. Use this to override the default service endpoint URL
 	Fsx terra.StringValue `hcl:"fsx,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Gamelift is optional.
-	*/
+	// Gamelift is optional. Use this to override the default service endpoint URL
 	Gamelift terra.StringValue `hcl:"gamelift,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Glacier is optional.
-	*/
+	// Glacier is optional. Use this to override the default service endpoint URL
 	Glacier terra.StringValue `hcl:"glacier,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Globalaccelerator is optional.
-	*/
+	// Globalaccelerator is optional. Use this to override the default service endpoint URL
 	Globalaccelerator terra.StringValue `hcl:"globalaccelerator,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Glue is optional.
-	*/
+	// Glue is optional. Use this to override the default service endpoint URL
 	Glue terra.StringValue `hcl:"glue,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Grafana is optional.
-	*/
+	// Grafana is optional. Use this to override the default service endpoint URL
 	Grafana terra.StringValue `hcl:"grafana,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Greengrass is optional.
-	*/
+	// Greengrass is optional. Use this to override the default service endpoint URL
 	Greengrass terra.StringValue `hcl:"greengrass,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Groundstation is optional.
-	*/
+	// Groundstation is optional. Use this to override the default service endpoint URL
 	Groundstation terra.StringValue `hcl:"groundstation,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Guardduty is optional.
-	*/
+	// Guardduty is optional. Use this to override the default service endpoint URL
 	Guardduty terra.StringValue `hcl:"guardduty,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Healthlake is optional.
-	*/
+	// Healthlake is optional. Use this to override the default service endpoint URL
 	Healthlake terra.StringValue `hcl:"healthlake,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Iam is optional.
-	*/
+	// Iam is optional. Use this to override the default service endpoint URL
 	Iam terra.StringValue `hcl:"iam,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Identitystore is optional.
-	*/
+	// Identitystore is optional. Use this to override the default service endpoint URL
 	Identitystore terra.StringValue `hcl:"identitystore,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Imagebuilder is optional.
-	*/
+	// Imagebuilder is optional. Use this to override the default service endpoint URL
 	Imagebuilder terra.StringValue `hcl:"imagebuilder,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Inspector is optional.
-	*/
+	// Inspector is optional. Use this to override the default service endpoint URL
 	Inspector terra.StringValue `hcl:"inspector,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Inspector2 is optional.
-	*/
+	// Inspector2 is optional. Use this to override the default service endpoint URL
 	Inspector2 terra.StringValue `hcl:"inspector2,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Inspectorv2 is optional.
-	*/
+	// Inspectorv2 is optional. Use this to override the default service endpoint URL
 	Inspectorv2 terra.StringValue `hcl:"inspectorv2,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Internetmonitor is optional.
-	*/
+	// Internetmonitor is optional. Use this to override the default service endpoint URL
 	Internetmonitor terra.StringValue `hcl:"internetmonitor,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Iot is optional.
-	*/
+	// Iot is optional. Use this to override the default service endpoint URL
 	Iot terra.StringValue `hcl:"iot,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Iotanalytics is optional.
-	*/
+	// Iotanalytics is optional. Use this to override the default service endpoint URL
 	Iotanalytics terra.StringValue `hcl:"iotanalytics,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Iotevents is optional.
-	*/
+	// Iotevents is optional. Use this to override the default service endpoint URL
 	Iotevents terra.StringValue `hcl:"iotevents,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Ivs is optional.
-	*/
+	// Ivs is optional. Use this to override the default service endpoint URL
 	Ivs terra.StringValue `hcl:"ivs,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Ivschat is optional.
-	*/
+	// Ivschat is optional. Use this to override the default service endpoint URL
 	Ivschat terra.StringValue `hcl:"ivschat,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Kafka is optional.
-	*/
+	// Kafka is optional. Use this to override the default service endpoint URL
 	Kafka terra.StringValue `hcl:"kafka,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Kafkaconnect is optional.
-	*/
+	// Kafkaconnect is optional. Use this to override the default service endpoint URL
 	Kafkaconnect terra.StringValue `hcl:"kafkaconnect,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Kendra is optional.
-	*/
+	// Kendra is optional. Use this to override the default service endpoint URL
 	Kendra terra.StringValue `hcl:"kendra,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Keyspaces is optional.
-	*/
+	// Keyspaces is optional. Use this to override the default service endpoint URL
 	Keyspaces terra.StringValue `hcl:"keyspaces,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Kinesis is optional.
-	*/
+	// Kinesis is optional. Use this to override the default service endpoint URL
 	Kinesis terra.StringValue `hcl:"kinesis,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Kinesisanalytics is optional.
-	*/
+	// Kinesisanalytics is optional. Use this to override the default service endpoint URL
 	Kinesisanalytics terra.StringValue `hcl:"kinesisanalytics,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Kinesisanalyticsv2 is optional.
-	*/
+	// Kinesisanalyticsv2 is optional. Use this to override the default service endpoint URL
 	Kinesisanalyticsv2 terra.StringValue `hcl:"kinesisanalyticsv2,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Kinesisvideo is optional.
-	*/
+	// Kinesisvideo is optional. Use this to override the default service endpoint URL
 	Kinesisvideo terra.StringValue `hcl:"kinesisvideo,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Kms is optional.
-	*/
+	// Kms is optional. Use this to override the default service endpoint URL
 	Kms terra.StringValue `hcl:"kms,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Lakeformation is optional.
-	*/
+	// Lakeformation is optional. Use this to override the default service endpoint URL
 	Lakeformation terra.StringValue `hcl:"lakeformation,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Lambda is optional.
-	*/
+	// Lambda is optional. Use this to override the default service endpoint URL
 	Lambda terra.StringValue `hcl:"lambda,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Launchwizard is optional.
-	*/
+	// Launchwizard is optional. Use this to override the default service endpoint URL
 	Launchwizard terra.StringValue `hcl:"launchwizard,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Lex is optional.
-	*/
+	// Lex is optional. Use this to override the default service endpoint URL
 	Lex terra.StringValue `hcl:"lex,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Lexmodelbuilding is optional.
-	*/
+	// Lexmodelbuilding is optional. Use this to override the default service endpoint URL
 	Lexmodelbuilding terra.StringValue `hcl:"lexmodelbuilding,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Lexmodelbuildingservice is optional.
-	*/
+	// Lexmodelbuildingservice is optional. Use this to override the default service endpoint URL
 	Lexmodelbuildingservice terra.StringValue `hcl:"lexmodelbuildingservice,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Lexmodels is optional.
-	*/
+	// Lexmodels is optional. Use this to override the default service endpoint URL
 	Lexmodels terra.StringValue `hcl:"lexmodels,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Lexmodelsv2 is optional.
-	*/
+	// Lexmodelsv2 is optional. Use this to override the default service endpoint URL
 	Lexmodelsv2 terra.StringValue `hcl:"lexmodelsv2,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Lexv2Models is optional.
-	*/
+	// Lexv2Models is optional. Use this to override the default service endpoint URL
 	Lexv2Models terra.StringValue `hcl:"lexv2models,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Licensemanager is optional.
-	*/
+	// Licensemanager is optional. Use this to override the default service endpoint URL
 	Licensemanager terra.StringValue `hcl:"licensemanager,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Lightsail is optional.
-	*/
+	// Lightsail is optional. Use this to override the default service endpoint URL
 	Lightsail terra.StringValue `hcl:"lightsail,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Location is optional.
-	*/
+	// Location is optional. Use this to override the default service endpoint URL
 	Location terra.StringValue `hcl:"location,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Locationservice is optional.
-	*/
+	// Locationservice is optional. Use this to override the default service endpoint URL
 	Locationservice terra.StringValue `hcl:"locationservice,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Logs is optional.
-	*/
+	// Logs is optional. Use this to override the default service endpoint URL
 	Logs terra.StringValue `hcl:"logs,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Lookoutmetrics is optional.
-	*/
+	// Lookoutmetrics is optional. Use this to override the default service endpoint URL
 	Lookoutmetrics terra.StringValue `hcl:"lookoutmetrics,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   M2 is optional.
-	*/
+	// M2 is optional. Use this to override the default service endpoint URL
 	M2 terra.StringValue `hcl:"m2,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Macie2 is optional.
-	*/
+	// Macie2 is optional. Use this to override the default service endpoint URL
 	Macie2 terra.StringValue `hcl:"macie2,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Managedgrafana is optional.
-	*/
+	// Managedgrafana is optional. Use this to override the default service endpoint URL
 	Managedgrafana terra.StringValue `hcl:"managedgrafana,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Mediaconnect is optional.
-	*/
+	// Mediaconnect is optional. Use this to override the default service endpoint URL
 	Mediaconnect terra.StringValue `hcl:"mediaconnect,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Mediaconvert is optional.
-	*/
+	// Mediaconvert is optional. Use this to override the default service endpoint URL
 	Mediaconvert terra.StringValue `hcl:"mediaconvert,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Medialive is optional.
-	*/
+	// Medialive is optional. Use this to override the default service endpoint URL
 	Medialive terra.StringValue `hcl:"medialive,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Mediapackage is optional.
-	*/
+	// Mediapackage is optional. Use this to override the default service endpoint URL
 	Mediapackage terra.StringValue `hcl:"mediapackage,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Mediapackagev2 is optional.
-	*/
+	// Mediapackagev2 is optional. Use this to override the default service endpoint URL
 	Mediapackagev2 terra.StringValue `hcl:"mediapackagev2,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Mediastore is optional.
-	*/
+	// Mediastore is optional. Use this to override the default service endpoint URL
 	Mediastore terra.StringValue `hcl:"mediastore,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Memorydb is optional.
-	*/
+	// Memorydb is optional. Use this to override the default service endpoint URL
 	Memorydb terra.StringValue `hcl:"memorydb,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Mq is optional.
-	*/
+	// Mq is optional. Use this to override the default service endpoint URL
 	Mq terra.StringValue `hcl:"mq,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Msk is optional.
-	*/
+	// Msk is optional. Use this to override the default service endpoint URL
 	Msk terra.StringValue `hcl:"msk,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Mwaa is optional.
-	*/
+	// Mwaa is optional. Use this to override the default service endpoint URL
 	Mwaa terra.StringValue `hcl:"mwaa,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Neptune is optional.
-	*/
+	// Neptune is optional. Use this to override the default service endpoint URL
 	Neptune terra.StringValue `hcl:"neptune,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Networkfirewall is optional.
-	*/
+	// Networkfirewall is optional. Use this to override the default service endpoint URL
 	Networkfirewall terra.StringValue `hcl:"networkfirewall,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Networkmanager is optional.
-	*/
+	// Networkmanager is optional. Use this to override the default service endpoint URL
 	Networkmanager terra.StringValue `hcl:"networkmanager,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Oam is optional.
-	*/
+	// Oam is optional. Use this to override the default service endpoint URL
 	Oam terra.StringValue `hcl:"oam,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Opensearch is optional.
-	*/
+	// Opensearch is optional. Use this to override the default service endpoint URL
 	Opensearch terra.StringValue `hcl:"opensearch,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Opensearchingestion is optional.
-	*/
+	// Opensearchingestion is optional. Use this to override the default service endpoint URL
 	Opensearchingestion terra.StringValue `hcl:"opensearchingestion,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Opensearchserverless is optional.
-	*/
+	// Opensearchserverless is optional. Use this to override the default service endpoint URL
 	Opensearchserverless terra.StringValue `hcl:"opensearchserverless,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Opensearchservice is optional.
-	*/
+	// Opensearchservice is optional. Use this to override the default service endpoint URL
 	Opensearchservice terra.StringValue `hcl:"opensearchservice,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Opsworks is optional.
-	*/
+	// Opsworks is optional. Use this to override the default service endpoint URL
 	Opsworks terra.StringValue `hcl:"opsworks,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Organizations is optional.
-	*/
+	// Organizations is optional. Use this to override the default service endpoint URL
 	Organizations terra.StringValue `hcl:"organizations,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Osis is optional.
-	*/
+	// Osis is optional. Use this to override the default service endpoint URL
 	Osis terra.StringValue `hcl:"osis,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Outposts is optional.
-	*/
+	// Outposts is optional. Use this to override the default service endpoint URL
 	Outposts terra.StringValue `hcl:"outposts,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Paymentcryptography is optional.
-	*/
+	// Paymentcryptography is optional. Use this to override the default service endpoint URL
 	Paymentcryptography terra.StringValue `hcl:"paymentcryptography,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Pcaconnectorad is optional.
-	*/
+	// Pcaconnectorad is optional. Use this to override the default service endpoint URL
 	Pcaconnectorad terra.StringValue `hcl:"pcaconnectorad,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Pinpoint is optional.
-	*/
+	// Pinpoint is optional. Use this to override the default service endpoint URL
 	Pinpoint terra.StringValue `hcl:"pinpoint,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Pipes is optional.
-	*/
+	// Pipes is optional. Use this to override the default service endpoint URL
 	Pipes terra.StringValue `hcl:"pipes,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Polly is optional.
-	*/
+	// Polly is optional. Use this to override the default service endpoint URL
 	Polly terra.StringValue `hcl:"polly,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Pricing is optional.
-	*/
+	// Pricing is optional. Use this to override the default service endpoint URL
 	Pricing terra.StringValue `hcl:"pricing,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Prometheus is optional.
-	*/
+	// Prometheus is optional. Use this to override the default service endpoint URL
 	Prometheus terra.StringValue `hcl:"prometheus,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Prometheusservice is optional.
-	*/
+	// Prometheusservice is optional. Use this to override the default service endpoint URL
 	Prometheusservice terra.StringValue `hcl:"prometheusservice,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Qbusiness is optional.
-	*/
+	// Qbusiness is optional. Use this to override the default service endpoint URL
 	Qbusiness terra.StringValue `hcl:"qbusiness,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Qldb is optional.
-	*/
+	// Qldb is optional. Use this to override the default service endpoint URL
 	Qldb terra.StringValue `hcl:"qldb,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Quicksight is optional.
-	*/
+	// Quicksight is optional. Use this to override the default service endpoint URL
 	Quicksight terra.StringValue `hcl:"quicksight,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Ram is optional.
-	*/
+	// Ram is optional. Use this to override the default service endpoint URL
 	Ram terra.StringValue `hcl:"ram,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Rbin is optional.
-	*/
+	// Rbin is optional. Use this to override the default service endpoint URL
 	Rbin terra.StringValue `hcl:"rbin,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Rds is optional.
-	*/
+	// Rds is optional. Use this to override the default service endpoint URL
 	Rds terra.StringValue `hcl:"rds,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Recyclebin is optional.
-	*/
+	// Recyclebin is optional. Use this to override the default service endpoint URL
 	Recyclebin terra.StringValue `hcl:"recyclebin,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Redshift is optional.
-	*/
+	// Redshift is optional. Use this to override the default service endpoint URL
 	Redshift terra.StringValue `hcl:"redshift,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Redshiftdata is optional.
-	*/
+	// Redshiftdata is optional. Use this to override the default service endpoint URL
 	Redshiftdata terra.StringValue `hcl:"redshiftdata,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Redshiftdataapiservice is optional.
-	*/
+	// Redshiftdataapiservice is optional. Use this to override the default service endpoint URL
 	Redshiftdataapiservice terra.StringValue `hcl:"redshiftdataapiservice,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Redshiftserverless is optional.
-	*/
+	// Redshiftserverless is optional. Use this to override the default service endpoint URL
 	Redshiftserverless terra.StringValue `hcl:"redshiftserverless,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Rekognition is optional.
-	*/
+	// Rekognition is optional. Use this to override the default service endpoint URL
 	Rekognition terra.StringValue `hcl:"rekognition,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Resourceexplorer2 is optional.
-	*/
+	// Resourceexplorer2 is optional. Use this to override the default service endpoint URL
 	Resourceexplorer2 terra.StringValue `hcl:"resourceexplorer2,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Resourcegroups is optional.
-	*/
+	// Resourcegroups is optional. Use this to override the default service endpoint URL
 	Resourcegroups terra.StringValue `hcl:"resourcegroups,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Resourcegroupstagging is optional.
-	*/
+	// Resourcegroupstagging is optional. Use this to override the default service endpoint URL
 	Resourcegroupstagging terra.StringValue `hcl:"resourcegroupstagging,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Resourcegroupstaggingapi is optional.
-	*/
+	// Resourcegroupstaggingapi is optional. Use this to override the default service endpoint URL
 	Resourcegroupstaggingapi terra.StringValue `hcl:"resourcegroupstaggingapi,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Rolesanywhere is optional.
-	*/
+	// Rolesanywhere is optional. Use this to override the default service endpoint URL
 	Rolesanywhere terra.StringValue `hcl:"rolesanywhere,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Route53 is optional.
-	*/
+	// Route53 is optional. Use this to override the default service endpoint URL
 	Route53 terra.StringValue `hcl:"route53,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Route53Domains is optional.
-	*/
+	// Route53Domains is optional. Use this to override the default service endpoint URL
 	Route53Domains terra.StringValue `hcl:"route53domains,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Route53Recoverycontrolconfig is optional.
-	*/
+	// Route53Recoverycontrolconfig is optional. Use this to override the default service endpoint URL
 	Route53Recoverycontrolconfig terra.StringValue `hcl:"route53recoverycontrolconfig,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Route53Recoveryreadiness is optional.
-	*/
+	// Route53Recoveryreadiness is optional. Use this to override the default service endpoint URL
 	Route53Recoveryreadiness terra.StringValue `hcl:"route53recoveryreadiness,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Route53Resolver is optional.
-	*/
+	// Route53Resolver is optional. Use this to override the default service endpoint URL
 	Route53Resolver terra.StringValue `hcl:"route53resolver,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Rum is optional.
-	*/
+	// Rum is optional. Use this to override the default service endpoint URL
 	Rum terra.StringValue `hcl:"rum,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   S3 is optional.
-	*/
+	// S3 is optional. Use this to override the default service endpoint URL
 	S3 terra.StringValue `hcl:"s3,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   S3Api is optional.
-	*/
+	// S3Api is optional. Use this to override the default service endpoint URL
 	S3Api terra.StringValue `hcl:"s3api,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   S3Control is optional.
-	*/
+	// S3Control is optional. Use this to override the default service endpoint URL
 	S3Control terra.StringValue `hcl:"s3control,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   S3Outposts is optional.
-	*/
+	// S3Outposts is optional. Use this to override the default service endpoint URL
 	S3Outposts terra.StringValue `hcl:"s3outposts,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Sagemaker is optional.
-	*/
+	// Sagemaker is optional. Use this to override the default service endpoint URL
 	Sagemaker terra.StringValue `hcl:"sagemaker,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Scheduler is optional.
-	*/
+	// Scheduler is optional. Use this to override the default service endpoint URL
 	Scheduler terra.StringValue `hcl:"scheduler,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Schemas is optional.
-	*/
+	// Schemas is optional. Use this to override the default service endpoint URL
 	Schemas terra.StringValue `hcl:"schemas,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Sdb is optional.
-	*/
+	// Sdb is optional. Use this to override the default service endpoint URL
 	Sdb terra.StringValue `hcl:"sdb,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Secretsmanager is optional.
-	*/
+	// Secretsmanager is optional. Use this to override the default service endpoint URL
 	Secretsmanager terra.StringValue `hcl:"secretsmanager,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Securityhub is optional.
-	*/
+	// Securityhub is optional. Use this to override the default service endpoint URL
 	Securityhub terra.StringValue `hcl:"securityhub,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Securitylake is optional.
-	*/
+	// Securitylake is optional. Use this to override the default service endpoint URL
 	Securitylake terra.StringValue `hcl:"securitylake,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Serverlessapplicationrepository is optional.
-	*/
+	// Serverlessapplicationrepository is optional. Use this to override the default service endpoint URL
 	Serverlessapplicationrepository terra.StringValue `hcl:"serverlessapplicationrepository,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Serverlessapprepo is optional.
-	*/
+	// Serverlessapprepo is optional. Use this to override the default service endpoint URL
 	Serverlessapprepo terra.StringValue `hcl:"serverlessapprepo,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Serverlessrepo is optional.
-	*/
+	// Serverlessrepo is optional. Use this to override the default service endpoint URL
 	Serverlessrepo terra.StringValue `hcl:"serverlessrepo,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Servicecatalog is optional.
-	*/
+	// Servicecatalog is optional. Use this to override the default service endpoint URL
 	Servicecatalog terra.StringValue `hcl:"servicecatalog,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Servicecatalogappregistry is optional.
-	*/
+	// Servicecatalogappregistry is optional. Use this to override the default service endpoint URL
 	Servicecatalogappregistry terra.StringValue `hcl:"servicecatalogappregistry,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Servicediscovery is optional.
-	*/
+	// Servicediscovery is optional. Use this to override the default service endpoint URL
 	Servicediscovery terra.StringValue `hcl:"servicediscovery,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Servicequotas is optional.
-	*/
+	// Servicequotas is optional. Use this to override the default service endpoint URL
 	Servicequotas terra.StringValue `hcl:"servicequotas,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Ses is optional.
-	*/
+	// Ses is optional. Use this to override the default service endpoint URL
 	Ses terra.StringValue `hcl:"ses,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Sesv2 is optional.
-	*/
+	// Sesv2 is optional. Use this to override the default service endpoint URL
 	Sesv2 terra.StringValue `hcl:"sesv2,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Sfn is optional.
-	*/
+	// Sfn is optional. Use this to override the default service endpoint URL
 	Sfn terra.StringValue `hcl:"sfn,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Shield is optional.
-	*/
+	// Shield is optional. Use this to override the default service endpoint URL
 	Shield terra.StringValue `hcl:"shield,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Signer is optional.
-	*/
+	// Signer is optional. Use this to override the default service endpoint URL
 	Signer terra.StringValue `hcl:"signer,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Simpledb is optional.
-	*/
+	// Simpledb is optional. Use this to override the default service endpoint URL
 	Simpledb terra.StringValue `hcl:"simpledb,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Sns is optional.
-	*/
+	// Sns is optional. Use this to override the default service endpoint URL
 	Sns terra.StringValue `hcl:"sns,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Sqs is optional.
-	*/
+	// Sqs is optional. Use this to override the default service endpoint URL
 	Sqs terra.StringValue `hcl:"sqs,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Ssm is optional.
-	*/
+	// Ssm is optional. Use this to override the default service endpoint URL
 	Ssm terra.StringValue `hcl:"ssm,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Ssmcontacts is optional.
-	*/
+	// Ssmcontacts is optional. Use this to override the default service endpoint URL
 	Ssmcontacts terra.StringValue `hcl:"ssmcontacts,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Ssmincidents is optional.
-	*/
+	// Ssmincidents is optional. Use this to override the default service endpoint URL
 	Ssmincidents terra.StringValue `hcl:"ssmincidents,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Ssmsap is optional.
-	*/
+	// Ssmsap is optional. Use this to override the default service endpoint URL
 	Ssmsap terra.StringValue `hcl:"ssmsap,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Sso is optional.
-	*/
+	// Sso is optional. Use this to override the default service endpoint URL
 	Sso terra.StringValue `hcl:"sso,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Ssoadmin is optional.
-	*/
+	// Ssoadmin is optional. Use this to override the default service endpoint URL
 	Ssoadmin terra.StringValue `hcl:"ssoadmin,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Stepfunctions is optional.
-	*/
+	// Stepfunctions is optional. Use this to override the default service endpoint URL
 	Stepfunctions terra.StringValue `hcl:"stepfunctions,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Storagegateway is optional.
-	*/
+	// Storagegateway is optional. Use this to override the default service endpoint URL
 	Storagegateway terra.StringValue `hcl:"storagegateway,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Sts is optional.
-	*/
+	// Sts is optional. Use this to override the default service endpoint URL
 	Sts terra.StringValue `hcl:"sts,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Swf is optional.
-	*/
+	// Swf is optional. Use this to override the default service endpoint URL
 	Swf terra.StringValue `hcl:"swf,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Synthetics is optional.
-	*/
+	// Synthetics is optional. Use this to override the default service endpoint URL
 	Synthetics terra.StringValue `hcl:"synthetics,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Timestreamwrite is optional.
-	*/
+	// Timestreamwrite is optional. Use this to override the default service endpoint URL
 	Timestreamwrite terra.StringValue `hcl:"timestreamwrite,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Transcribe is optional.
-	*/
+	// Transcribe is optional. Use this to override the default service endpoint URL
 	Transcribe terra.StringValue `hcl:"transcribe,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Transcribeservice is optional.
-	*/
+	// Transcribeservice is optional. Use this to override the default service endpoint URL
 	Transcribeservice terra.StringValue `hcl:"transcribeservice,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Transfer is optional.
-	*/
+	// Transfer is optional. Use this to override the default service endpoint URL
 	Transfer terra.StringValue `hcl:"transfer,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Verifiedpermissions is optional.
-	*/
+	// Verifiedpermissions is optional. Use this to override the default service endpoint URL
 	Verifiedpermissions terra.StringValue `hcl:"verifiedpermissions,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Vpclattice is optional.
-	*/
+	// Vpclattice is optional. Use this to override the default service endpoint URL
 	Vpclattice terra.StringValue `hcl:"vpclattice,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Waf is optional.
-	*/
+	// Waf is optional. Use this to override the default service endpoint URL
 	Waf terra.StringValue `hcl:"waf,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Wafregional is optional.
-	*/
+	// Wafregional is optional. Use this to override the default service endpoint URL
 	Wafregional terra.StringValue `hcl:"wafregional,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Wafv2 is optional.
-	*/
+	// Wafv2 is optional. Use this to override the default service endpoint URL
 	Wafv2 terra.StringValue `hcl:"wafv2,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Wellarchitected is optional.
-	*/
+	// Wellarchitected is optional. Use this to override the default service endpoint URL
 	Wellarchitected terra.StringValue `hcl:"wellarchitected,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Worklink is optional.
-	*/
+	// Worklink is optional. Use this to override the default service endpoint URL
 	Worklink terra.StringValue `hcl:"worklink,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Workspaces is optional.
-	*/
+	// Workspaces is optional. Use this to override the default service endpoint URL
 	Workspaces terra.StringValue `hcl:"workspaces,attr"`
-	/*
-	   Use this to override the default service endpoint URL
-
-	   Xray is optional.
-	*/
+	// Xray is optional. Use this to override the default service endpoint URL
 	Xray terra.StringValue `hcl:"xray,attr"`
 }
 
 type IgnoreTags struct {
-	/*
-	   Resource tag key prefixes to ignore across all resources.
-
-	   KeyPrefixes is optional.
-	*/
+	// KeyPrefixes is optional. Resource tag key prefixes to ignore across all resources.
 	KeyPrefixes terra.SetValue[terra.StringValue] `hcl:"key_prefixes,attr"`
-	/*
-	   Resource tag keys to ignore across all resources.
-
-	   Keys is optional.
-	*/
+	// Keys is optional. Resource tag keys to ignore across all resources.
 	Keys terra.SetValue[terra.StringValue] `hcl:"keys,attr"`
 }
 
@@ -3689,15 +2421,15 @@ type Args struct {
 	LogEncryptionKmsKeyId terra.StringValue `hcl:"log_encryption_kms_key_id,attr"`
 	// LogUri is optional.
 	LogUri terra.StringValue `hcl:"log_uri,attr"`
-	// Name is requred.
+	// Name is required.
 	Name terra.StringValue `hcl:"name,attr" validate:"required"`
-	// ReleaseLabel is requred.
+	// ReleaseLabel is required.
 	ReleaseLabel terra.StringValue `hcl:"release_label,attr" validate:"required"`
 	// ScaleDownBehavior is optional.
 	ScaleDownBehavior terra.StringValue `hcl:"scale_down_behavior,attr"`
 	// SecurityConfiguration is optional.
 	SecurityConfiguration terra.StringValue `hcl:"security_configuration,attr"`
-	// ServiceRole is requred.
+	// ServiceRole is required.
 	ServiceRole terra.StringValue `hcl:"service_role,attr" validate:"required"`
 	// StepConcurrencyLevel is optional.
 	StepConcurrencyLevel terra.NumberValue `hcl:"step_concurrency_level,attr"`
@@ -3711,25 +2443,25 @@ type Args struct {
 	UnhealthyNodeReplacement terra.BoolValue `hcl:"unhealthy_node_replacement,attr"`
 	// VisibleToAllUsers is optional.
 	VisibleToAllUsers terra.BoolValue `hcl:"visible_to_all_users,attr"`
-	// PlacementGroupConfig is min=0
+	// PlacementGroupConfig is min=0.
 	PlacementGroupConfig []PlacementGroupConfig `hcl:"placement_group_config,attr" validate:"min=0"`
-	// Step is min=0
+	// Step is min=0.
 	Step []Step `hcl:"step,attr" validate:"min=0"`
-	// AutoTerminationPolicy is optional
+	// AutoTerminationPolicy is optional.
 	AutoTerminationPolicy *AutoTerminationPolicy `hcl:"auto_termination_policy,block"`
-	// BootstrapAction is min=0
+	// BootstrapAction is min=0.
 	BootstrapAction []BootstrapAction `hcl:"bootstrap_action,block" validate:"min=0"`
-	// CoreInstanceFleet is optional
+	// CoreInstanceFleet is optional.
 	CoreInstanceFleet *CoreInstanceFleet `hcl:"core_instance_fleet,block"`
-	// CoreInstanceGroup is optional
+	// CoreInstanceGroup is optional.
 	CoreInstanceGroup *CoreInstanceGroup `hcl:"core_instance_group,block"`
-	// Ec2Attributes is optional
+	// Ec2Attributes is optional.
 	Ec2Attributes *Ec2Attributes `hcl:"ec2_attributes,block"`
-	// KerberosAttributes is optional
+	// KerberosAttributes is optional.
 	KerberosAttributes *KerberosAttributes `hcl:"kerberos_attributes,block"`
-	// MasterInstanceFleet is optional
+	// MasterInstanceFleet is optional.
 	MasterInstanceFleet *MasterInstanceFleet `hcl:"master_instance_fleet,block"`
-	// MasterInstanceGroup is optional
+	// MasterInstanceGroup is optional.
 	MasterInstanceGroup *MasterInstanceGroup `hcl:"master_instance_group,block"`
 }
 
@@ -3967,7 +2699,7 @@ type Step struct {
 	ActionOnFailure terra.StringValue `hcl:"action_on_failure,attr"`
 	// Name is optional.
 	Name terra.StringValue `hcl:"name,attr"`
-	// StepHadoopJarStep is min=0
+	// StepHadoopJarStep is min=0.
 	HadoopJarStep []StepHadoopJarStep `hcl:"hadoop_jar_step,attr" validate:"min=0"`
 }
 
@@ -3990,9 +2722,9 @@ type AutoTerminationPolicy struct {
 type BootstrapAction struct {
 	// Args is optional.
 	Args terra.ListValue[terra.StringValue] `hcl:"args,attr"`
-	// Name is requred.
+	// Name is required.
 	Name terra.StringValue `hcl:"name,attr" validate:"required"`
-	// Path is requred.
+	// Path is required.
 	Path terra.StringValue `hcl:"path,attr" validate:"required"`
 }
 
@@ -4003,9 +2735,9 @@ type CoreInstanceFleet struct {
 	TargetOnDemandCapacity terra.NumberValue `hcl:"target_on_demand_capacity,attr"`
 	// TargetSpotCapacity is optional.
 	TargetSpotCapacity terra.NumberValue `hcl:"target_spot_capacity,attr"`
-	// CoreInstanceFleetInstanceTypeConfigs is min=0
+	// CoreInstanceFleetInstanceTypeConfigs is min=0.
 	InstanceTypeConfigs []CoreInstanceFleetInstanceTypeConfigs `hcl:"instance_type_configs,block" validate:"min=0"`
-	// CoreInstanceFleetLaunchSpecifications is optional
+	// CoreInstanceFleetLaunchSpecifications is optional.
 	LaunchSpecifications *CoreInstanceFleetLaunchSpecifications `hcl:"launch_specifications,block"`
 }
 
@@ -4014,13 +2746,13 @@ type CoreInstanceFleetInstanceTypeConfigs struct {
 	BidPrice terra.StringValue `hcl:"bid_price,attr"`
 	// BidPriceAsPercentageOfOnDemandPrice is optional.
 	BidPriceAsPercentageOfOnDemandPrice terra.NumberValue `hcl:"bid_price_as_percentage_of_on_demand_price,attr"`
-	// InstanceType is requred.
+	// InstanceType is required.
 	InstanceType terra.StringValue `hcl:"instance_type,attr" validate:"required"`
 	// WeightedCapacity is optional.
 	WeightedCapacity terra.NumberValue `hcl:"weighted_capacity,attr"`
-	// CoreInstanceFleetInstanceTypeConfigsConfigurations is min=0
+	// CoreInstanceFleetInstanceTypeConfigsConfigurations is min=0.
 	Configurations []CoreInstanceFleetInstanceTypeConfigsConfigurations `hcl:"configurations,block" validate:"min=0"`
-	// CoreInstanceFleetInstanceTypeConfigsEbsConfig is min=0
+	// CoreInstanceFleetInstanceTypeConfigsEbsConfig is min=0.
 	EbsConfig []CoreInstanceFleetInstanceTypeConfigsEbsConfig `hcl:"ebs_config,block" validate:"min=0"`
 }
 
@@ -4034,34 +2766,34 @@ type CoreInstanceFleetInstanceTypeConfigsConfigurations struct {
 type CoreInstanceFleetInstanceTypeConfigsEbsConfig struct {
 	// Iops is optional.
 	Iops terra.NumberValue `hcl:"iops,attr"`
-	// Size is requred.
+	// Size is required.
 	Size terra.NumberValue `hcl:"size,attr" validate:"required"`
-	// Type is requred.
+	// Type is required.
 	Type terra.StringValue `hcl:"type,attr" validate:"required"`
 	// VolumesPerInstance is optional.
 	VolumesPerInstance terra.NumberValue `hcl:"volumes_per_instance,attr"`
 }
 
 type CoreInstanceFleetLaunchSpecifications struct {
-	// CoreInstanceFleetLaunchSpecificationsOnDemandSpecification is min=0
+	// CoreInstanceFleetLaunchSpecificationsOnDemandSpecification is min=0.
 	OnDemandSpecification []CoreInstanceFleetLaunchSpecificationsOnDemandSpecification `hcl:"on_demand_specification,block" validate:"min=0"`
-	// CoreInstanceFleetLaunchSpecificationsSpotSpecification is min=0
+	// CoreInstanceFleetLaunchSpecificationsSpotSpecification is min=0.
 	SpotSpecification []CoreInstanceFleetLaunchSpecificationsSpotSpecification `hcl:"spot_specification,block" validate:"min=0"`
 }
 
 type CoreInstanceFleetLaunchSpecificationsOnDemandSpecification struct {
-	// AllocationStrategy is requred.
+	// AllocationStrategy is required.
 	AllocationStrategy terra.StringValue `hcl:"allocation_strategy,attr" validate:"required"`
 }
 
 type CoreInstanceFleetLaunchSpecificationsSpotSpecification struct {
-	// AllocationStrategy is requred.
+	// AllocationStrategy is required.
 	AllocationStrategy terra.StringValue `hcl:"allocation_strategy,attr" validate:"required"`
 	// BlockDurationMinutes is optional.
 	BlockDurationMinutes terra.NumberValue `hcl:"block_duration_minutes,attr"`
-	// TimeoutAction is requred.
+	// TimeoutAction is required.
 	TimeoutAction terra.StringValue `hcl:"timeout_action,attr" validate:"required"`
-	// TimeoutDurationMinutes is requred.
+	// TimeoutDurationMinutes is required.
 	TimeoutDurationMinutes terra.NumberValue `hcl:"timeout_duration_minutes,attr" validate:"required"`
 }
 
@@ -4072,22 +2804,22 @@ type CoreInstanceGroup struct {
 	BidPrice terra.StringValue `hcl:"bid_price,attr"`
 	// InstanceCount is optional.
 	InstanceCount terra.NumberValue `hcl:"instance_count,attr"`
-	// InstanceType is requred.
+	// InstanceType is required.
 	InstanceType terra.StringValue `hcl:"instance_type,attr" validate:"required"`
 	// Name is optional.
 	Name terra.StringValue `hcl:"name,attr"`
-	// CoreInstanceGroupEbsConfig is min=0
+	// CoreInstanceGroupEbsConfig is min=0.
 	EbsConfig []CoreInstanceGroupEbsConfig `hcl:"ebs_config,block" validate:"min=0"`
 }
 
 type CoreInstanceGroupEbsConfig struct {
 	// Iops is optional.
 	Iops terra.NumberValue `hcl:"iops,attr"`
-	// Size is requred.
+	// Size is required.
 	Size terra.NumberValue `hcl:"size,attr" validate:"required"`
 	// Throughput is optional.
 	Throughput terra.NumberValue `hcl:"throughput,attr"`
-	// Type is requred.
+	// Type is required.
 	Type terra.StringValue `hcl:"type,attr" validate:"required"`
 	// VolumesPerInstance is optional.
 	VolumesPerInstance terra.NumberValue `hcl:"volumes_per_instance,attr"`
@@ -4102,7 +2834,7 @@ type Ec2Attributes struct {
 	EmrManagedMasterSecurityGroup terra.StringValue `hcl:"emr_managed_master_security_group,attr"`
 	// EmrManagedSlaveSecurityGroup is optional.
 	EmrManagedSlaveSecurityGroup terra.StringValue `hcl:"emr_managed_slave_security_group,attr"`
-	// InstanceProfile is requred.
+	// InstanceProfile is required.
 	InstanceProfile terra.StringValue `hcl:"instance_profile,attr" validate:"required"`
 	// KeyName is optional.
 	KeyName terra.StringValue `hcl:"key_name,attr"`
@@ -4121,9 +2853,9 @@ type KerberosAttributes struct {
 	AdDomainJoinUser terra.StringValue `hcl:"ad_domain_join_user,attr"`
 	// CrossRealmTrustPrincipalPassword is optional.
 	CrossRealmTrustPrincipalPassword terra.StringValue `hcl:"cross_realm_trust_principal_password,attr"`
-	// KdcAdminPassword is requred.
+	// KdcAdminPassword is required.
 	KdcAdminPassword terra.StringValue `hcl:"kdc_admin_password,attr" validate:"required"`
-	// Realm is requred.
+	// Realm is required.
 	Realm terra.StringValue `hcl:"realm,attr" validate:"required"`
 }
 
@@ -4134,9 +2866,9 @@ type MasterInstanceFleet struct {
 	TargetOnDemandCapacity terra.NumberValue `hcl:"target_on_demand_capacity,attr"`
 	// TargetSpotCapacity is optional.
 	TargetSpotCapacity terra.NumberValue `hcl:"target_spot_capacity,attr"`
-	// MasterInstanceFleetInstanceTypeConfigs is min=0
+	// MasterInstanceFleetInstanceTypeConfigs is min=0.
 	InstanceTypeConfigs []MasterInstanceFleetInstanceTypeConfigs `hcl:"instance_type_configs,block" validate:"min=0"`
-	// MasterInstanceFleetLaunchSpecifications is optional
+	// MasterInstanceFleetLaunchSpecifications is optional.
 	LaunchSpecifications *MasterInstanceFleetLaunchSpecifications `hcl:"launch_specifications,block"`
 }
 
@@ -4145,13 +2877,13 @@ type MasterInstanceFleetInstanceTypeConfigs struct {
 	BidPrice terra.StringValue `hcl:"bid_price,attr"`
 	// BidPriceAsPercentageOfOnDemandPrice is optional.
 	BidPriceAsPercentageOfOnDemandPrice terra.NumberValue `hcl:"bid_price_as_percentage_of_on_demand_price,attr"`
-	// InstanceType is requred.
+	// InstanceType is required.
 	InstanceType terra.StringValue `hcl:"instance_type,attr" validate:"required"`
 	// WeightedCapacity is optional.
 	WeightedCapacity terra.NumberValue `hcl:"weighted_capacity,attr"`
-	// MasterInstanceFleetInstanceTypeConfigsConfigurations is min=0
+	// MasterInstanceFleetInstanceTypeConfigsConfigurations is min=0.
 	Configurations []MasterInstanceFleetInstanceTypeConfigsConfigurations `hcl:"configurations,block" validate:"min=0"`
-	// MasterInstanceFleetInstanceTypeConfigsEbsConfig is min=0
+	// MasterInstanceFleetInstanceTypeConfigsEbsConfig is min=0.
 	EbsConfig []MasterInstanceFleetInstanceTypeConfigsEbsConfig `hcl:"ebs_config,block" validate:"min=0"`
 }
 
@@ -4165,34 +2897,34 @@ type MasterInstanceFleetInstanceTypeConfigsConfigurations struct {
 type MasterInstanceFleetInstanceTypeConfigsEbsConfig struct {
 	// Iops is optional.
 	Iops terra.NumberValue `hcl:"iops,attr"`
-	// Size is requred.
+	// Size is required.
 	Size terra.NumberValue `hcl:"size,attr" validate:"required"`
-	// Type is requred.
+	// Type is required.
 	Type terra.StringValue `hcl:"type,attr" validate:"required"`
 	// VolumesPerInstance is optional.
 	VolumesPerInstance terra.NumberValue `hcl:"volumes_per_instance,attr"`
 }
 
 type MasterInstanceFleetLaunchSpecifications struct {
-	// MasterInstanceFleetLaunchSpecificationsOnDemandSpecification is min=0
+	// MasterInstanceFleetLaunchSpecificationsOnDemandSpecification is min=0.
 	OnDemandSpecification []MasterInstanceFleetLaunchSpecificationsOnDemandSpecification `hcl:"on_demand_specification,block" validate:"min=0"`
-	// MasterInstanceFleetLaunchSpecificationsSpotSpecification is min=0
+	// MasterInstanceFleetLaunchSpecificationsSpotSpecification is min=0.
 	SpotSpecification []MasterInstanceFleetLaunchSpecificationsSpotSpecification `hcl:"spot_specification,block" validate:"min=0"`
 }
 
 type MasterInstanceFleetLaunchSpecificationsOnDemandSpecification struct {
-	// AllocationStrategy is requred.
+	// AllocationStrategy is required.
 	AllocationStrategy terra.StringValue `hcl:"allocation_strategy,attr" validate:"required"`
 }
 
 type MasterInstanceFleetLaunchSpecificationsSpotSpecification struct {
-	// AllocationStrategy is requred.
+	// AllocationStrategy is required.
 	AllocationStrategy terra.StringValue `hcl:"allocation_strategy,attr" validate:"required"`
 	// BlockDurationMinutes is optional.
 	BlockDurationMinutes terra.NumberValue `hcl:"block_duration_minutes,attr"`
-	// TimeoutAction is requred.
+	// TimeoutAction is required.
 	TimeoutAction terra.StringValue `hcl:"timeout_action,attr" validate:"required"`
-	// TimeoutDurationMinutes is requred.
+	// TimeoutDurationMinutes is required.
 	TimeoutDurationMinutes terra.NumberValue `hcl:"timeout_duration_minutes,attr" validate:"required"`
 }
 
@@ -4201,22 +2933,22 @@ type MasterInstanceGroup struct {
 	BidPrice terra.StringValue `hcl:"bid_price,attr"`
 	// InstanceCount is optional.
 	InstanceCount terra.NumberValue `hcl:"instance_count,attr"`
-	// InstanceType is requred.
+	// InstanceType is required.
 	InstanceType terra.StringValue `hcl:"instance_type,attr" validate:"required"`
 	// Name is optional.
 	Name terra.StringValue `hcl:"name,attr"`
-	// MasterInstanceGroupEbsConfig is min=0
+	// MasterInstanceGroupEbsConfig is min=0.
 	EbsConfig []MasterInstanceGroupEbsConfig `hcl:"ebs_config,block" validate:"min=0"`
 }
 
 type MasterInstanceGroupEbsConfig struct {
 	// Iops is optional.
 	Iops terra.NumberValue `hcl:"iops,attr"`
-	// Size is requred.
+	// Size is required.
 	Size terra.NumberValue `hcl:"size,attr" validate:"required"`
 	// Throughput is optional.
 	Throughput terra.NumberValue `hcl:"throughput,attr"`
-	// Type is requred.
+	// Type is required.
 	Type terra.StringValue `hcl:"type,attr" validate:"required"`
 	// VolumesPerInstance is optional.
 	VolumesPerInstance terra.NumberValue `hcl:"volumes_per_instance,attr"`

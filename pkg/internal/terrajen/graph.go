@@ -115,23 +115,23 @@ func (n *node) isSingularState() bool {
 
 func (n *node) comment() string {
 	str := strings.Builder{}
-	if n.description != "" {
-		str.WriteString(n.description + "\n\n")
-	}
 
 	str.WriteString(strcase.Pascal(n.uniqueName))
 
 	if n.isSingularArg() {
 		if n.isRequired {
-			str.WriteString(" is requred")
+			str.WriteString(" is required. ")
 		} else {
-			str.WriteString(" is optional")
+			str.WriteString(" is optional. ")
 		}
 	} else {
-		str.WriteString(" is " + nodeBlockListValidateTags(n))
+		str.WriteString(" is " + nodeBlockListValidateTags(n) + ". ")
+	}
+	if n.description != "" {
+		str.WriteString(strings.ReplaceAll(n.description, "*/", "\\*\\/"))
 	}
 	if n.deprecated {
-		str.WriteString("\n\nDeprecated.")
+		str.WriteString("\n\nDeprecated: see description.\n")
 	}
 	return str.String()
 }
@@ -159,20 +159,18 @@ type attribute struct {
 
 func (a *attribute) comment() string {
 	str := strings.Builder{}
-	if a.description != "" {
-		str.WriteString(a.description + "\n\n")
-	}
-
 	str.WriteString(strcase.Pascal(a.name))
 
 	if a.isRequired {
-		str.WriteString(" is requred.")
+		str.WriteString(" is required. ")
 	} else {
-		str.WriteString(" is optional.")
+		str.WriteString(" is optional. ")
 	}
-
+	if a.description != "" {
+		str.WriteString(strings.ReplaceAll(a.description, "*/", "\\*\\/"))
+	}
 	if a.deprecated {
-		str.WriteString("\n\nDeprecated.")
+		str.WriteString("\n\nDeprecated: see description.\n")
 	}
 	return str.String()
 }
