@@ -5,6 +5,7 @@ package terrajen
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/dave/jennifer/jen"
 )
@@ -12,7 +13,7 @@ import (
 // ProviderFile generates a Go file for a Terraform provider configuration based
 // on the given Schema
 func ProviderFile(s *Schema) *jen.File {
-	f := jen.NewFile(s.ProviderName)
+	f := jen.NewFile(strings.ReplaceAll(s.ProviderName, "-", "_"))
 	f.ImportName(pkgTerra, pkgTerraAlias)
 	f.HeaderComment(HeaderComment)
 	f.Add(providerStructCompileCheck(s))
