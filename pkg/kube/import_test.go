@@ -412,7 +412,7 @@ func TestImport_MissingCRDs(t *testing.T) {
 	)
 	errmsg := "generate go: stdin: " +
 		"no kind \"EnvoyFilter\" is registered for version " +
-		"\"networking.istio.io/v1alpha3\" in scheme \"pkg/runtime/scheme.go:100\""
+		"\"networking.istio.io/v1alpha3\" in scheme \"pkg/runtime/scheme.go:110\""
 	tu.AssertErrorMsg(t, err, errmsg)
 }
 
