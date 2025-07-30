@@ -4,7 +4,7 @@
 package vmk8s
 
 import (
-	"github.com/VictoriaMetrics/operator/api/victoriametrics/v1beta1"
+	vmo "github.com/VictoriaMetrics/operator/api/operator/v1"
 	"github.com/golingon/lingon/pkg/kube"
 	ku "github.com/golingon/lingon/pkg/kubeutil"
 	"github.com/golingon/lingoneks/meta"
@@ -31,9 +31,9 @@ var ET = &meta.Metadata{
 type MonETCD struct {
 	kube.App
 
-	ETCDRules  *v1beta1.VMRule
+	ETCDRules  *vmo.VMRule
 	ETCDSvc    *corev1.Service
-	ETCDScrape *v1beta1.VMServiceScrape
+	ETCDScrape *vmo.VMServiceScrape
 }
 
 func NewMonETCD() *MonETCD {
@@ -44,13 +44,13 @@ func NewMonETCD() *MonETCD {
 	}
 }
 
-var ETCDRules = &v1beta1.VMRule{
+var ETCDRules = &vmo.VMRule{
 	ObjectMeta: ET.ObjectMeta(),
-	Spec: v1beta1.VMRuleSpec{
-		Groups: []v1beta1.RuleGroup{
+	Spec: vmo.VMRuleSpec{
+		Groups: []vmo.RuleGroup{
 			{
 				Name: "etcd",
-				Rules: []v1beta1.Rule{
+				Rules: []vmo.Rule{
 					{
 						Alert: "etcdInsufficientMembers",
 						Annotations: map[string]string{
@@ -185,7 +185,7 @@ sum(rate(etcd_http_received_total{job=~".*etcd.*"}[5m])) BY (method)
 			},
 		},
 	},
-	TypeMeta: TypeVMRuleV1Beta1,
+	TypeMeta: TypeVMRulevmo,
 }
 
 var ETCDSvc = &corev1.Service{
@@ -210,24 +210,24 @@ var ETCDSvc = &corev1.Service{
 	TypeMeta: ku.TypeServiceV1,
 }
 
-var ETCDScrape = &v1beta1.VMServiceScrape{
+var ETCDScrape = &vmo.VMServiceScrape{
 	ObjectMeta: ET.ObjectMeta(),
-	Spec: v1beta1.VMServiceScrapeSpec{
-		Endpoints: []v1beta1.Endpoint{
+	Spec: vmo.VMServiceScrapeSpec{
+		Endpoints: []vmo.Endpoint{
 			{
 				BearerTokenFile: PathSA + "/token",
 				Port:            ETPortName,
 				Scheme:          "https",
-				TLSConfig:       &v1beta1.TLSConfig{CAFile: PathSA + "/ca.crt"},
+				TLSConfig:       &vmo.TLSConfig{CAFile: PathSA + "/ca.crt"},
 			},
 		},
 		JobLabel: "component",
-		NamespaceSelector: v1beta1.NamespaceSelector{
+		NamespaceSelector: vmo.NamespaceSelector{
 			MatchNames: []string{ku.NSKubeSystem}, // kube-system
 		},
 		Selector: metav1.LabelSelector{
 			MatchLabels: map[string]string{"component": "etcd"},
 		},
 	},
-	TypeMeta: TypeVMServiceScrapeV1Beta1,
+	TypeMeta: TypeVMServiceScrapevmo,
 }

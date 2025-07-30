@@ -4,7 +4,7 @@
 package vmk8s
 
 import (
-	"github.com/VictoriaMetrics/operator/api/victoriametrics/v1beta1"
+	vmo "github.com/VictoriaMetrics/operator/api/operator/v1"
 	"github.com/golingon/lingon/pkg/kube"
 	ku "github.com/golingon/lingon/pkg/kubeutil"
 	"github.com/golingon/lingoneks/meta"
@@ -24,12 +24,12 @@ var AS = &meta.Metadata{
 type MonAPIServer struct {
 	kube.App
 
-	APIServerAvailabilityRules *v1beta1.VMRule
-	APIServerBurnRateRules     *v1beta1.VMRule
-	APIServerHistogramRules    *v1beta1.VMRule
-	APIServerSLOsRules         *v1beta1.VMRule
-	APIServerRules             *v1beta1.VMRule
-	APIServerScrape            *v1beta1.VMServiceScrape
+	APIServerAvailabilityRules *vmo.VMRule
+	APIServerBurnRateRules     *vmo.VMRule
+	APIServerHistogramRules    *vmo.VMRule
+	APIServerSLOsRules         *vmo.VMRule
+	APIServerRules             *vmo.VMRule
+	APIServerScrape            *vmo.VMServiceScrape
 }
 
 func NewMonAPIServer() *MonAPIServer {
@@ -43,22 +43,22 @@ func NewMonAPIServer() *MonAPIServer {
 	}
 }
 
-var APIServerScrape = &v1beta1.VMServiceScrape{
+var APIServerScrape = &vmo.VMServiceScrape{
 	ObjectMeta: AS.ObjectMeta(),
-	Spec: v1beta1.VMServiceScrapeSpec{
-		Endpoints: []v1beta1.Endpoint{
+	Spec: vmo.VMServiceScrapeSpec{
+		Endpoints: []vmo.Endpoint{
 			{
 				BearerTokenFile: PathSA + "/token",
 				Port:            "https",
 				Scheme:          "https",
-				TLSConfig: &v1beta1.TLSConfig{
+				TLSConfig: &vmo.TLSConfig{
 					CAFile:     PathSA + "/ca.crt",
 					ServerName: "kubernetes",
 				},
 			},
 		},
 		JobLabel: "component",
-		NamespaceSelector: v1beta1.NamespaceSelector{
+		NamespaceSelector: vmo.NamespaceSelector{
 			MatchNames: []string{ku.NSKubeSystem},
 		},
 		Selector: metav1.LabelSelector{
@@ -67,17 +67,17 @@ var APIServerScrape = &v1beta1.VMServiceScrape{
 			},
 		},
 	},
-	TypeMeta: TypeVMServiceScrapeV1Beta1,
+	TypeMeta: TypeVMServiceScrapevmo,
 }
 
-var APIServerAvailabilityRules = &v1beta1.VMRule{
+var APIServerAvailabilityRules = &vmo.VMRule{
 	ObjectMeta: AS.ObjectMetaNameSuffix("rules"),
-	Spec: v1beta1.VMRuleSpec{
-		Groups: []v1beta1.RuleGroup{
+	Spec: vmo.VMRuleSpec{
+		Groups: []vmo.RuleGroup{
 			{
 				Interval: "3m",
 				Name:     "kube-apiserver-availability.rules",
-				Rules: []v1beta1.Rule{
+				Rules: []vmo.Rule{
 					{
 						Expr:   "avg_over_time(code_verb:apiserver_request_total:increase1h[30d]) * 24 * 30",
 						Record: "code_verb:apiserver_request_total:increase30d",
@@ -203,7 +203,7 @@ sum by (cluster) (code:apiserver_request_total:increase30d{verb="write"})
 			},
 		},
 	},
-	TypeMeta: TypeVMRuleV1Beta1,
+	TypeMeta: TypeVMRulevmo,
 }
 
 func burnrateRead(name, dur string) string {
@@ -251,16 +251,16 @@ sum by (cluster) (rate(apiserver_request_total{job="` + name + `",verb=~"POST|PU
 `
 }
 
-func burnRateRules(name string, windows []string) []v1beta1.Rule {
+func burnRateRules(name string, windows []string) []vmo.Rule {
 	size := len(windows)
-	res := make([]v1beta1.Rule, 2*size)
+	res := make([]vmo.Rule, 2*size)
 	for i, w := range windows {
-		res[i] = v1beta1.Rule{
+		res[i] = vmo.Rule{
 			Expr:   burnrateRead(name, w),
 			Labels: map[string]string{"verb": "read"},
 			Record: "apiserver_request:burnrate" + w,
 		}
-		res[i+size] = v1beta1.Rule{
+		res[i+size] = vmo.Rule{
 			Expr:   burnrateWrite(name, w),
 			Labels: map[string]string{"verb": "write"},
 			Record: "apiserver_request:burnrate" + w,
@@ -269,10 +269,10 @@ func burnRateRules(name string, windows []string) []v1beta1.Rule {
 	return res
 }
 
-var APIServerBurnRateRules = &v1beta1.VMRule{
+var APIServerBurnRateRules = &vmo.VMRule{
 	ObjectMeta: AS.ObjectMetaNameSuffix("burnrate"),
-	Spec: v1beta1.VMRuleSpec{
-		Groups: []v1beta1.RuleGroup{
+	Spec: vmo.VMRuleSpec{
+		Groups: []vmo.RuleGroup{
 			{
 				Name: "kube-apiserver-burnrate.rules",
 				Rules: burnRateRules(
@@ -282,16 +282,16 @@ var APIServerBurnRateRules = &v1beta1.VMRule{
 			},
 		},
 	},
-	TypeMeta: TypeVMRuleV1Beta1,
+	TypeMeta: TypeVMRulevmo,
 }
 
-var APIServerHistogramRules = &v1beta1.VMRule{
+var APIServerHistogramRules = &vmo.VMRule{
 	ObjectMeta: AS.ObjectMetaNameSuffix("histogram"),
-	Spec: v1beta1.VMRuleSpec{
-		Groups: []v1beta1.RuleGroup{
+	Spec: vmo.VMRuleSpec{
+		Groups: []vmo.RuleGroup{
 			{
 				Name: "kube-apiserver-histogram.rules",
-				Rules: []v1beta1.Rule{
+				Rules: []vmo.Rule{
 					{
 						Expr: `histogram_quantile(0.99, sum by (cluster, le, resource) (rate(apiserver_request_slo_duration_seconds_bucket{job="` + AS.Name + `",verb=~"LIST|GET",subresource!~"proxy|attach|log|exec|portforward"}[5m]))) > 0`,
 						Labels: map[string]string{
@@ -311,16 +311,16 @@ var APIServerHistogramRules = &v1beta1.VMRule{
 			},
 		},
 	},
-	TypeMeta: TypeVMRuleV1Beta1,
+	TypeMeta: TypeVMRulevmo,
 }
 
-var APIServerSLOsRules = &v1beta1.VMRule{
+var APIServerSLOsRules = &vmo.VMRule{
 	ObjectMeta: AS.ObjectMetaNameSuffix("slos"),
-	Spec: v1beta1.VMRuleSpec{
-		Groups: []v1beta1.RuleGroup{
+	Spec: vmo.VMRuleSpec{
+		Groups: []vmo.RuleGroup{
 			{
 				Name: "kube-apiserver-slos",
-				Rules: []v1beta1.Rule{
+				Rules: []vmo.Rule{
 					{
 						Alert: "KubeAPIErrorBudgetBurn",
 						Annotations: map[string]string{
@@ -398,16 +398,16 @@ sum(apiserver_request:burnrate6h) > (1.00 * 0.01000)
 			},
 		},
 	},
-	TypeMeta: TypeVMRuleV1Beta1,
+	TypeMeta: TypeVMRulevmo,
 }
 
-var APIServerRules = &v1beta1.VMRule{
+var APIServerRules = &vmo.VMRule{
 	ObjectMeta: AS.ObjectMetaNameSuffix("system"),
-	Spec: v1beta1.VMRuleSpec{
-		Groups: []v1beta1.RuleGroup{
+	Spec: vmo.VMRuleSpec{
+		Groups: []vmo.RuleGroup{
 			{
 				Name: "kubernetes-system-apiserver",
-				Rules: []v1beta1.Rule{
+				Rules: []vmo.Rule{
 					{
 						Alert: "KubeClientCertificateExpiration",
 						Annotations: map[string]string{
@@ -472,5 +472,5 @@ var APIServerRules = &v1beta1.VMRule{
 			},
 		},
 	},
-	TypeMeta: TypeVMRuleV1Beta1,
+	TypeMeta: TypeVMRulevmo,
 }

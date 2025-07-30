@@ -6,7 +6,7 @@ package vmk8s
 import (
 	_ "embed"
 
-	"github.com/VictoriaMetrics/operator/api/victoriametrics/v1beta1"
+	vmo "github.com/VictoriaMetrics/operator/api/operator/v1"
 	"github.com/golingon/lingon/pkg/kube"
 	ku "github.com/golingon/lingon/pkg/kubeutil"
 	"github.com/golingon/lingoneks/meta"
@@ -34,7 +34,7 @@ type MonCoreDNS struct {
 	kube.App
 
 	SVC         *corev1.Service
-	Scrape      *v1beta1.VMServiceScrape
+	Scrape      *vmo.VMServiceScrape
 	DashboardCM *corev1.ConfigMap
 }
 
@@ -67,17 +67,17 @@ var CoreDNSSVC = &corev1.Service{
 	TypeMeta: ku.TypeServiceV1,
 }
 
-var CoreDNSScrape = &v1beta1.VMServiceScrape{
-	TypeMeta:   TypeVMServiceScrapeV1Beta1,
+var CoreDNSScrape = &vmo.VMServiceScrape{
+	TypeMeta:   TypeVMServiceScrapevmo,
 	ObjectMeta: CDNS.ObjectMeta(),
-	Spec: v1beta1.VMServiceScrapeSpec{
-		Endpoints: []v1beta1.Endpoint{
+	Spec: vmo.VMServiceScrapeSpec{
+		Endpoints: []vmo.Endpoint{
 			{
 				BearerTokenFile: PathSA + "/token",
 				Port:            CDNSPortName,
 			},
 		},
-		NamespaceSelector: v1beta1.NamespaceSelector{
+		NamespaceSelector: vmo.NamespaceSelector{
 			MatchNames: []string{ku.NSKubeSystem}, // kube-system
 		},
 		// JobLabel: "k8s-app",

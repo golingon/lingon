@@ -7,14 +7,14 @@ import (
 	"testing"
 
 	"github.com/VictoriaMetrics/metricsql"
-	"github.com/VictoriaMetrics/operator/api/victoriametrics/v1beta1"
+	vmo "github.com/VictoriaMetrics/operator/api/operator/v1"
 	tu "github.com/golingon/lingon/pkg/testutil"
 )
 
 func TestRules(t *testing.T) {
 	tests := []struct {
 		name  string
-		rules *v1beta1.VMRule
+		rules *vmo.VMRule
 	}{
 		// node-exporter
 		{

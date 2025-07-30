@@ -6,17 +6,17 @@
 package vmk8s
 
 import (
-	"github.com/VictoriaMetrics/operator/api/victoriametrics/v1beta1"
+	vmo "github.com/VictoriaMetrics/operator/api/operator/v1"
 )
 
-var CadvisorNodeScrape = &v1beta1.VMNodeScrape{
+var CadvisorNodeScrape = &v1.VMNodeScrape{
 	TypeMeta:   TypeVMNodeScrape,
 	ObjectMeta: Single.ObjectMetaNameSuffix("cadvisor-nodescrape"),
-	Spec: v1beta1.VMNodeScrapeSpec{
+	Spec: vmo.VMNodeScrapeSpec{
 		BearerTokenFile: "/var/run/secrets/kubernetes.io/serviceaccount/token",
 		HonorLabels:     true,
 		Interval:        "30s",
-		MetricRelabelConfigs: []*v1beta1.RelabelConfig{
+		MetricRelabelConfigs: []*vmo.RelabelConfig{
 			{
 				Action: "labeldrop",
 				Regex:  "(uid)",
@@ -31,7 +31,7 @@ var CadvisorNodeScrape = &v1beta1.VMNodeScrape{
 			},
 		},
 		Path: "/metrics/cadvisor",
-		RelabelConfigs: []*v1beta1.RelabelConfig{
+		RelabelConfigs: []*vmo.RelabelConfig{
 			{
 				Action: "labelmap",
 				Regex:  "__meta_kubernetes_node_label_(.+)",
@@ -48,21 +48,21 @@ var CadvisorNodeScrape = &v1beta1.VMNodeScrape{
 		},
 		Scheme:        "https",
 		ScrapeTimeout: "5s",
-		TLSConfig: &v1beta1.TLSConfig{
+		TLSConfig: &vmo.TLSConfig{
 			CAFile:             "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt",
 			InsecureSkipVerify: true,
 		},
 	},
 }
 
-var KubeletNodeScrape = &v1beta1.VMNodeScrape{
+var KubeletNodeScrape = &vmo.VMNodeScrape{
 	TypeMeta:   TypeVMNodeScrape,
 	ObjectMeta: Single.ObjectMetaNameSuffix("kubelet-nodescrape"),
-	Spec: v1beta1.VMNodeScrapeSpec{
+	Spec: vmo.VMNodeScrapeSpec{
 		BearerTokenFile: "/var/run/secrets/kubernetes.io/serviceaccount/token",
 		HonorLabels:     true,
 		Interval:        "30s",
-		MetricRelabelConfigs: []*v1beta1.RelabelConfig{
+		MetricRelabelConfigs: []*vmo.RelabelConfig{
 			{
 				Action: "labeldrop",
 				Regex:  "(uid)",
@@ -76,7 +76,7 @@ var KubeletNodeScrape = &v1beta1.VMNodeScrape{
 				UnderScoreSourceLabels: []string{"__name__"},
 			},
 		},
-		RelabelConfigs: []*v1beta1.RelabelConfig{
+		RelabelConfigs: []*vmo.RelabelConfig{
 			{
 				Action: "labelmap",
 				Regex:  "__meta_kubernetes_node_label_(.+)",
@@ -93,21 +93,21 @@ var KubeletNodeScrape = &v1beta1.VMNodeScrape{
 		},
 		Scheme:        "https",
 		ScrapeTimeout: "5s",
-		TLSConfig: &v1beta1.TLSConfig{
+		TLSConfig: &vmo.TLSConfig{
 			CAFile:             "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt",
 			InsecureSkipVerify: true,
 		},
 	},
 }
 
-var ProbesNodeScrape = &v1beta1.VMNodeScrape{
+var ProbesNodeScrape = &vmo.VMNodeScrape{
 	TypeMeta:   TypeVMNodeScrape,
 	ObjectMeta: Single.ObjectMetaNameSuffix("probes"),
-	Spec: v1beta1.VMNodeScrapeSpec{
+	Spec: vmo.VMNodeScrapeSpec{
 		BearerTokenFile: "/var/run/secrets/kubernetes.io/serviceaccount/token",
 		HonorLabels:     true,
 		Interval:        "30s",
-		MetricRelabelConfigs: []*v1beta1.RelabelConfig{
+		MetricRelabelConfigs: []*vmo.RelabelConfig{
 			{
 				Action: "labeldrop",
 				Regex:  "(uid)",
@@ -122,7 +122,7 @@ var ProbesNodeScrape = &v1beta1.VMNodeScrape{
 			},
 		},
 		Path: "/metrics/probes",
-		RelabelConfigs: []*v1beta1.RelabelConfig{
+		RelabelConfigs: []*vmo.RelabelConfig{
 			{
 				Action: "labelmap",
 				Regex:  "__meta_kubernetes_node_label_(.+)",
@@ -139,7 +139,7 @@ var ProbesNodeScrape = &v1beta1.VMNodeScrape{
 		},
 		Scheme:        "https",
 		ScrapeTimeout: "5s",
-		TLSConfig: &v1beta1.TLSConfig{
+		TLSConfig: &vmo.TLSConfig{
 			CAFile:             "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt",
 			InsecureSkipVerify: true,
 		},

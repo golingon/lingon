@@ -4,7 +4,7 @@
 package vmk8s
 
 import (
-	"github.com/VictoriaMetrics/operator/api/victoriametrics/v1beta1"
+	vmo "github.com/VictoriaMetrics/operator/api/operator/v1"
 	"github.com/golingon/lingon/pkg/kube"
 	ku "github.com/golingon/lingon/pkg/kubeutil"
 	"github.com/golingon/lingoneks/meta"
@@ -32,9 +32,9 @@ var KSC = &meta.Metadata{
 type MonKubeScheduler struct {
 	kube.App
 
-	KubeSchedulerScrape     *v1beta1.VMServiceScrape
-	KubeSchedulerRules      *v1beta1.VMRule
-	KubeSchedulerAlertRules *v1beta1.VMRule
+	KubeSchedulerScrape     *vmo.VMServiceScrape
+	KubeSchedulerRules      *vmo.VMRule
+	KubeSchedulerAlertRules *vmo.VMRule
 	KubeSchedulerSVC        *corev1.Service
 }
 
@@ -47,20 +47,20 @@ func NewMonKubeScheduler() *MonKubeScheduler {
 	}
 }
 
-var KubeSchedulerScrape = &v1beta1.VMServiceScrape{
-	TypeMeta:   TypeVMServiceScrapeV1Beta1,
+var KubeSchedulerScrape = &vmo.VMServiceScrape{
+	TypeMeta:   TypeVMServiceScrapevmo,
 	ObjectMeta: KSC.ObjectMeta(),
-	Spec: v1beta1.VMServiceScrapeSpec{
-		Endpoints: []v1beta1.Endpoint{
+	Spec: vmo.VMServiceScrapeSpec{
+		Endpoints: []vmo.Endpoint{
 			{
 				BearerTokenFile: PathSA + "/token",
 				Port:            KSCPortName,
 				Scheme:          "https",
-				TLSConfig:       &v1beta1.TLSConfig{CAFile: PathSA + "/ca.crt"},
+				TLSConfig:       &vmo.TLSConfig{CAFile: PathSA + "/ca.crt"},
 			},
 		},
 		JobLabel: "component",
-		NamespaceSelector: v1beta1.NamespaceSelector{
+		NamespaceSelector: vmo.NamespaceSelector{
 			MatchNames: []string{ku.NSKubeSystem}, // kube-system
 		},
 		Selector: metav1.LabelSelector{
@@ -69,14 +69,14 @@ var KubeSchedulerScrape = &v1beta1.VMServiceScrape{
 	},
 }
 
-var KubeSchedulerAlertRules = &v1beta1.VMRule{
-	TypeMeta:   TypeVMRuleV1Beta1,
+var KubeSchedulerAlertRules = &vmo.VMRule{
+	TypeMeta:   TypeVMRulevmo,
 	ObjectMeta: KSC.ObjectMeta(),
-	Spec: v1beta1.VMRuleSpec{
-		Groups: []v1beta1.RuleGroup{
+	Spec: vmo.VMRuleSpec{
+		Groups: []vmo.RuleGroup{
 			{
 				Name: "kubernetes-system-scheduler",
-				Rules: []v1beta1.Rule{
+				Rules: []vmo.Rule{
 					{
 						Alert: "KubeSchedulerDown",
 						Annotations: map[string]string{
@@ -94,14 +94,14 @@ var KubeSchedulerAlertRules = &v1beta1.VMRule{
 	},
 }
 
-var KubeSchedulerRecordingRules = &v1beta1.VMRule{
-	TypeMeta:   TypeVMRuleV1Beta1,
+var KubeSchedulerRecordingRules = &vmo.VMRule{
+	TypeMeta:   TypeVMRulevmo,
 	ObjectMeta: KSC.ObjectMetaNameSuffix("rules"),
-	Spec: v1beta1.VMRuleSpec{
-		Groups: []v1beta1.RuleGroup{
+	Spec: vmo.VMRuleSpec{
+		Groups: []vmo.RuleGroup{
 			{
 				Name: "kube-scheduler.rules",
-				Rules: []v1beta1.Rule{
+				Rules: []vmo.Rule{
 					{
 						Expr:   `histogram_quantile(0.99, sum(rate(scheduler_e2e_scheduling_duration_seconds_bucket{job="` + KSC.Name + `"}[5m])) without(instance, pod))`,
 						Labels: map[string]string{"quantile": "0.99"},
