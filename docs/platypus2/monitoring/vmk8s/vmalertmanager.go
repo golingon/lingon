@@ -9,7 +9,7 @@ import (
 	_ "embed"
 	"fmt"
 
-	"github.com/VictoriaMetrics/operator/api/victoriametrics/v1beta1"
+	vmo "github.com/VictoriaMetrics/operator/api/operator/v1"
 	"github.com/golingon/lingon/pkg/kube"
 	ku "github.com/golingon/lingon/pkg/kubeutil"
 	"github.com/golingon/lingoneks/meta"

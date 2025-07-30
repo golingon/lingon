@@ -11,7 +11,7 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/VictoriaMetrics/operator/api/victoriametrics/v1beta1"
+	vmo "github.com/VictoriaMetrics/operator/api/operator/v1"
 	"github.com/golingon/lingon/pkg/kube"
 	ku "github.com/golingon/lingon/pkg/kubeutil"
 	"github.com/golingon/lingoneks/meta"
@@ -108,7 +108,7 @@ type VMOperator struct {
 	Role      *rbacv1.Role
 	SA        *corev1.ServiceAccount
 	SVC       *corev1.Service
-	SvcScrape *v1beta1.VMServiceScrape
+	SvcScrape *vmo.VMServiceScrape
 
 	// WHValidation *admissionregistrationv1.ValidatingWebhookConfiguration
 }
@@ -145,15 +145,15 @@ func New() *VMOperator {
 				Type:     corev1.ServiceTypeClusterIP,
 			},
 		},
-		SvcScrape: &v1beta1.VMServiceScrape{
+		SvcScrape: &vmo.VMServiceScrape{
 			TypeMeta: metav1.TypeMeta{
-				APIVersion: "operator.victoriametrics.com/v1beta1",
+				APIVersion: "operator.victoriametrics.com/vmo",
 				Kind:       "VMServiceScrape",
 			},
 			ObjectMeta: O.ObjectMeta(),
-			Spec: v1beta1.VMServiceScrapeSpec{
-				Endpoints: []v1beta1.Endpoint{{Port: O.Main.Service.Name}},
-				NamespaceSelector: v1beta1.NamespaceSelector{
+			Spec: vmo.VMServiceScrapeSpec{
+				Endpoints: []vmo.Endpoint{{Port: O.Main.Service.Name}},
+				NamespaceSelector: vmo.NamespaceSelector{
 					MatchNames: []string{O.Namespace},
 				},
 				Selector: metav1.LabelSelector{MatchLabels: O.MatchLabels()},

@@ -6,7 +6,7 @@
 package vmk8s
 
 import (
-	"github.com/VictoriaMetrics/operator/api/victoriametrics/v1beta1"
+	vmo "github.com/VictoriaMetrics/operator/api/operator/v1"
 	"github.com/golingon/lingon/pkg/kube"
 	ku "github.com/golingon/lingon/pkg/kubeutil"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -15,18 +15,18 @@ import (
 type K8SRules struct {
 	kube.App
 
-	K8SRecordingRules             *v1beta1.VMRule
-	K8SGeneralAlertRules          *v1beta1.VMRule
-	PromGeneralRules              *v1beta1.VMRule
-	NodeRecordingRules            *v1beta1.VMRule
-	KubeletRecordingRules         *v1beta1.VMRule
-	KubernetesAppsAlertRules      *v1beta1.VMRule
-	KubernetesResourcesAlertRules *v1beta1.VMRule
-	KubernetesStorageAlertRules   *v1beta1.VMRule
-	KubeletAlertRules             *v1beta1.VMRule
-	KubernetesSystemAlertRules    *v1beta1.VMRule
-	NodeNetworkAlertRules         *v1beta1.VMRule
-	K8SNodeRules                  *v1beta1.VMRule
+	K8SRecordingRules             *vmo.VMRule
+	K8SGeneralAlertRules          *vmo.VMRule
+	PromGeneralRules              *vmo.VMRule
+	NodeRecordingRules            *vmo.VMRule
+	KubeletRecordingRules         *vmo.VMRule
+	KubernetesAppsAlertRules      *vmo.VMRule
+	KubernetesResourcesAlertRules *vmo.VMRule
+	KubernetesStorageAlertRules   *vmo.VMRule
+	KubeletAlertRules             *vmo.VMRule
+	KubernetesSystemAlertRules    *vmo.VMRule
+	NodeNetworkAlertRules         *vmo.VMRule
+	K8SNodeRules                  *vmo.VMRule
 }
 
 func NewK8SRules() *K8SRules {
@@ -56,17 +56,17 @@ var RulesLabels = map[string]string{
 	ku.AppLabelManagedBy: "lingon",
 }
 
-var K8SGeneralAlertRules = &v1beta1.VMRule{
+var K8SGeneralAlertRules = &vmo.VMRule{
 	ObjectMeta: metav1.ObjectMeta{
 		Labels:    RulesLabels,
 		Name:      "victoria-metrics-general.rules",
 		Namespace: Single.Namespace,
 	},
-	Spec: v1beta1.VMRuleSpec{
-		Groups: []v1beta1.RuleGroup{
+	Spec: vmo.VMRuleSpec{
+		Groups: []vmo.RuleGroup{
 			{
 				Name: "general.rules",
-				Rules: []v1beta1.Rule{
+				Rules: []vmo.Rule{
 					{
 						Alert: "TargetDown",
 						Annotations: map[string]string{
@@ -101,22 +101,22 @@ var K8SGeneralAlertRules = &v1beta1.VMRule{
 		},
 	},
 	TypeMeta: metav1.TypeMeta{
-		APIVersion: "operator.victoriametrics.com/v1beta1",
+		APIVersion: "operator.victoriametrics.com/vmo",
 		Kind:       "VMRule",
 	},
 }
 
-var K8SRecordingRules = &v1beta1.VMRule{
+var K8SRecordingRules = &vmo.VMRule{
 	ObjectMeta: metav1.ObjectMeta{
 		Labels:    RulesLabels,
 		Name:      "victoria-metrics-k8s.rules",
 		Namespace: Single.Namespace,
 	},
-	Spec: v1beta1.VMRuleSpec{
-		Groups: []v1beta1.RuleGroup{
+	Spec: vmo.VMRuleSpec{
+		Groups: []vmo.RuleGroup{
 			{
 				Name: "k8s.rules",
-				Rules: []v1beta1.Rule{
+				Rules: []vmo.Rule{
 					{
 						Expr: `
 sum by (cluster, namespace, pod, container) (
@@ -299,22 +299,22 @@ max by (cluster, namespace, workload, pod) (
 		},
 	},
 	TypeMeta: metav1.TypeMeta{
-		APIVersion: "operator.victoriametrics.com/v1beta1",
+		APIVersion: "operator.victoriametrics.com/vmo",
 		Kind:       "VMRule",
 	},
 }
 
-var PromGeneralRules = &v1beta1.VMRule{
+var PromGeneralRules = &vmo.VMRule{
 	ObjectMeta: metav1.ObjectMeta{
 		Labels:    RulesLabels,
 		Name:      "victoria-metrics-kube-prometheus-general.rules",
 		Namespace: Single.Namespace,
 	},
-	Spec: v1beta1.VMRuleSpec{
-		Groups: []v1beta1.RuleGroup{
+	Spec: vmo.VMRuleSpec{
+		Groups: []vmo.RuleGroup{
 			{
 				Name: "kube-prometheus-general.rules",
-				Rules: []v1beta1.Rule{
+				Rules: []vmo.Rule{
 					{
 						Expr:   "count without(instance, pod, node) (up == 1)",
 						Record: "count:up1",
@@ -327,22 +327,22 @@ var PromGeneralRules = &v1beta1.VMRule{
 		},
 	},
 	TypeMeta: metav1.TypeMeta{
-		APIVersion: "operator.victoriametrics.com/v1beta1",
+		APIVersion: "operator.victoriametrics.com/vmo",
 		Kind:       "VMRule",
 	},
 }
 
-var NodeRecordingRules = &v1beta1.VMRule{
+var NodeRecordingRules = &vmo.VMRule{
 	ObjectMeta: metav1.ObjectMeta{
 		Labels:    RulesLabels,
 		Name:      "victoria-metrics-kube-prometheus-node-recording",
 		Namespace: Single.Namespace,
 	},
-	Spec: v1beta1.VMRuleSpec{
-		Groups: []v1beta1.RuleGroup{
+	Spec: vmo.VMRuleSpec{
+		Groups: []vmo.RuleGroup{
 			{
 				Name: "kube-prometheus-node-recording.rules",
-				Rules: []v1beta1.Rule{
+				Rules: []vmo.Rule{
 					{
 						Expr:   `sum(rate(node_cpu_seconds_total{mode!="idle",mode!="iowait",mode!="steal"}[3m])) BY (instance)`,
 						Record: "instance:node_cpu:rate:sum",
@@ -367,22 +367,22 @@ var NodeRecordingRules = &v1beta1.VMRule{
 		},
 	},
 	TypeMeta: metav1.TypeMeta{
-		APIVersion: "operator.victoriametrics.com/v1beta1",
+		APIVersion: "operator.victoriametrics.com/vmo",
 		Kind:       "VMRule",
 	},
 }
 
-var KubeletRecordingRules = &v1beta1.VMRule{
+var KubeletRecordingRules = &vmo.VMRule{
 	ObjectMeta: metav1.ObjectMeta{
 		Labels:    RulesLabels,
 		Name:      "victoria-metrics-kubelet.rules",
 		Namespace: Single.Namespace,
 	},
-	Spec: v1beta1.VMRuleSpec{
-		Groups: []v1beta1.RuleGroup{
+	Spec: vmo.VMRuleSpec{
+		Groups: []vmo.RuleGroup{
 			{
 				Name: "kubelet.rules",
-				Rules: []v1beta1.Rule{
+				Rules: []vmo.Rule{
 					{
 						Expr:   `histogram_quantile(0.99, sum(rate(kubelet_pleg_relist_duration_seconds_bucket[5m])) by (cluster, instance, le) * on(cluster, instance) group_left(node) kubelet_node_name{job="kubelet", metrics_path="/metrics"})`,
 						Labels: map[string]string{"quantile": "0.99"},
@@ -401,22 +401,22 @@ var KubeletRecordingRules = &v1beta1.VMRule{
 		},
 	},
 	TypeMeta: metav1.TypeMeta{
-		APIVersion: "operator.victoriametrics.com/v1beta1",
+		APIVersion: "operator.victoriametrics.com/vmo",
 		Kind:       "VMRule",
 	},
 }
 
-var KubernetesAppsAlertRules = &v1beta1.VMRule{
+var KubernetesAppsAlertRules = &vmo.VMRule{
 	ObjectMeta: metav1.ObjectMeta{
 		Labels:    RulesLabels,
 		Name:      "victoria-metrics-kubernetes-apps",
 		Namespace: Single.Namespace,
 	},
-	Spec: v1beta1.VMRuleSpec{
-		Groups: []v1beta1.RuleGroup{
+	Spec: vmo.VMRuleSpec{
+		Groups: []vmo.RuleGroup{
 			{
 				Name: "kubernetes-apps",
-				Rules: []v1beta1.Rule{
+				Rules: []vmo.Rule{
 					{
 						Alert: "KubePodCrashLooping",
 						Annotations: map[string]string{
@@ -676,22 +676,22 @@ kube_horizontalpodautoscaler_spec_max_replicas{job="kube-state-metrics", namespa
 		},
 	},
 	TypeMeta: metav1.TypeMeta{
-		APIVersion: "operator.victoriametrics.com/v1beta1",
+		APIVersion: "operator.victoriametrics.com/vmo",
 		Kind:       "VMRule",
 	},
 }
 
-var KubernetesResourcesAlertRules = &v1beta1.VMRule{
+var KubernetesResourcesAlertRules = &vmo.VMRule{
 	ObjectMeta: metav1.ObjectMeta{
 		Labels:    RulesLabels,
 		Name:      "victoria-metrics-kubernetes-resources",
 		Namespace: Single.Namespace,
 	},
-	Spec: v1beta1.VMRuleSpec{
-		Groups: []v1beta1.RuleGroup{
+	Spec: vmo.VMRuleSpec{
+		Groups: []vmo.RuleGroup{
 			{
 				Name: "kubernetes-resources",
-				Rules: []v1beta1.Rule{
+				Rules: []vmo.Rule{
 					{
 						Alert: "KubeCPUOvercommit",
 						Annotations: map[string]string{
@@ -816,22 +816,22 @@ sum(increase(container_cpu_cfs_periods_total{}[5m])) by (container, pod, namespa
 		},
 	},
 	TypeMeta: metav1.TypeMeta{
-		APIVersion: "operator.victoriametrics.com/v1beta1",
+		APIVersion: "operator.victoriametrics.com/vmo",
 		Kind:       "VMRule",
 	},
 }
 
-var KubernetesStorageAlertRules = &v1beta1.VMRule{
+var KubernetesStorageAlertRules = &vmo.VMRule{
 	ObjectMeta: metav1.ObjectMeta{
 		Labels:    RulesLabels,
 		Name:      "victoria-metrics-kubernetes-storage",
 		Namespace: Single.Namespace,
 	},
-	Spec: v1beta1.VMRuleSpec{
-		Groups: []v1beta1.RuleGroup{
+	Spec: vmo.VMRuleSpec{
+		Groups: []vmo.RuleGroup{
 			{
 				Name: "kubernetes-storage",
-				Rules: []v1beta1.Rule{
+				Rules: []vmo.Rule{
 					{
 						Alert: "KubePersistentVolumeFillingUp",
 						Annotations: map[string]string{
@@ -940,22 +940,22 @@ kube_persistentvolumeclaim_labels{label_excluded_from_alerts="true"} == 1
 		},
 	},
 	TypeMeta: metav1.TypeMeta{
-		APIVersion: "operator.victoriametrics.com/v1beta1",
+		APIVersion: "operator.victoriametrics.com/vmo",
 		Kind:       "VMRule",
 	},
 }
 
-var KubeletAlertRules = &v1beta1.VMRule{
+var KubeletAlertRules = &vmo.VMRule{
 	ObjectMeta: metav1.ObjectMeta{
 		Labels:    RulesLabels,
 		Name:      "victoria-metrics-kubelet",
 		Namespace: Single.Namespace,
 	},
-	Spec: v1beta1.VMRuleSpec{
-		Groups: []v1beta1.RuleGroup{
+	Spec: vmo.VMRuleSpec{
+		Groups: []vmo.RuleGroup{
 			{
 				Name: "kubernetes-system-kubelet",
-				Rules: []v1beta1.Rule{
+				Rules: []vmo.Rule{
 					{
 						Alert: "KubeNodeNotReady",
 						Annotations: map[string]string{
@@ -1096,22 +1096,22 @@ max by(cluster, node) (
 		},
 	},
 	TypeMeta: metav1.TypeMeta{
-		APIVersion: "operator.victoriametrics.com/v1beta1",
+		APIVersion: "operator.victoriametrics.com/vmo",
 		Kind:       "VMRule",
 	},
 }
 
-var KubernetesSystemAlertRules = &v1beta1.VMRule{
+var KubernetesSystemAlertRules = &vmo.VMRule{
 	ObjectMeta: metav1.ObjectMeta{
 		Labels:    RulesLabels,
 		Name:      "victoria-metrics-kubernetes-system",
 		Namespace: Single.Namespace,
 	},
-	Spec: v1beta1.VMRuleSpec{
-		Groups: []v1beta1.RuleGroup{
+	Spec: vmo.VMRuleSpec{
+		Groups: []vmo.RuleGroup{
 			{
 				Name: "kubernetes-system",
-				Rules: []v1beta1.Rule{
+				Rules: []vmo.Rule{
 					{
 						Alert: "KubeVersionMismatch",
 						Annotations: map[string]string{
@@ -1143,22 +1143,22 @@ sum(rate(rest_client_requests_total[5m])) by (cluster, instance, job, namespace)
 		},
 	},
 	TypeMeta: metav1.TypeMeta{
-		APIVersion: "operator.victoriametrics.com/v1beta1",
+		APIVersion: "operator.victoriametrics.com/vmo",
 		Kind:       "VMRule",
 	},
 }
 
-var NodeNetworkAlertRules = &v1beta1.VMRule{
+var NodeNetworkAlertRules = &vmo.VMRule{
 	ObjectMeta: metav1.ObjectMeta{
 		Labels:    RulesLabels,
 		Name:      "victoria-metrics-node-network",
 		Namespace: Single.Namespace,
 	},
-	Spec: v1beta1.VMRuleSpec{
-		Groups: []v1beta1.RuleGroup{
+	Spec: vmo.VMRuleSpec{
+		Groups: []vmo.RuleGroup{
 			{
 				Name: "node-network",
-				Rules: []v1beta1.Rule{
+				Rules: []vmo.Rule{
 					{
 						Alert: "NodeNetworkInterfaceFlapping",
 						Annotations: map[string]string{
@@ -1175,22 +1175,22 @@ var NodeNetworkAlertRules = &v1beta1.VMRule{
 		},
 	},
 	TypeMeta: metav1.TypeMeta{
-		APIVersion: "operator.victoriametrics.com/v1beta1",
+		APIVersion: "operator.victoriametrics.com/vmo",
 		Kind:       "VMRule",
 	},
 }
 
-var K8SNodeRules = &v1beta1.VMRule{
+var K8SNodeRules = &vmo.VMRule{
 	ObjectMeta: metav1.ObjectMeta{
 		Labels:    RulesLabels,
 		Name:      "victoria-metrics-node.rules",
 		Namespace: Single.Namespace,
 	},
-	Spec: v1beta1.VMRuleSpec{
-		Groups: []v1beta1.RuleGroup{
+	Spec: vmo.VMRuleSpec{
+		Groups: []vmo.RuleGroup{
 			{
 				Name: "node.rules",
-				Rules: []v1beta1.Rule{
+				Rules: []vmo.Rule{
 					{
 						Expr: `
 topk by(cluster, namespace, pod) (1,
@@ -1243,7 +1243,7 @@ avg by (cluster) (
 		},
 	},
 	TypeMeta: metav1.TypeMeta{
-		APIVersion: "operator.victoriametrics.com/v1beta1",
+		APIVersion: "operator.victoriametrics.com/vmo",
 		Kind:       "VMRule",
 	},
 }

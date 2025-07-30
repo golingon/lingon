@@ -8,18 +8,18 @@ package vmk8s
 import (
 	"fmt"
 
-	"github.com/VictoriaMetrics/operator/api/victoriametrics/v1beta1"
+	vmo "github.com/VictoriaMetrics/operator/api/operator/v1"
 	ku "github.com/golingon/lingon/pkg/kubeutil"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-var VMAgent = &v1beta1.VMAgent{
+var VMAgent = &vmo.VMAgent{
 	ObjectMeta: Single.ObjectMetaNameSuffix("vmagent"),
-	Spec: v1beta1.VMAgentSpec{
+	Spec: vmo.VMAgentSpec{
 		ExternalLabels: map[string]string{"cluster": "cluster-name"},
 		ExtraArgs:      map[string]string{"promscrape.streamParse": "true"},
-		Image:          v1beta1.Image{Tag: "v" + version},
-		RemoteWrite: []v1beta1.VMAgentRemoteWriteSpec{
+		Image:          vmo.Image{Tag: "v" + version},
+		RemoteWrite: []vmo.VMAgentRemoteWriteSpec{
 			{
 				URL: fmt.Sprintf(
 					"http://%s.%s.svc:%s/api/v1/write",
@@ -32,20 +32,20 @@ var VMAgent = &v1beta1.VMAgent{
 		Resources:          ku.Resources("200m", "128Mi", "200m", "128Mi"),
 	},
 	TypeMeta: metav1.TypeMeta{
-		APIVersion: "operator.victoriametrics.com/v1beta1",
+		APIVersion: "operator.victoriametrics.com/vmo",
 		Kind:       "VMAgent",
 	},
 }
 
-var VMAgentAlertRules = &v1beta1.VMRule{
+var VMAgentAlertRules = &vmo.VMRule{
 	ObjectMeta: Single.ObjectMetaNameSuffix("vmagent-alert-rules"),
-	Spec: v1beta1.VMRuleSpec{
-		Groups: []v1beta1.RuleGroup{
+	Spec: vmo.VMRuleSpec{
+		Groups: []vmo.RuleGroup{
 			{
 				Concurrency: 2,
 				Interval:    "30s",
 				Name:        "vmagent",
-				Rules: []v1beta1.Rule{
+				Rules: []vmo.Rule{
 					{
 						Alert: "PersistentQueueIsDroppingData",
 						Annotations: map[string]string{
@@ -168,5 +168,5 @@ vmagent_relabel_config_last_reload_successful != 1
 			},
 		},
 	},
-	TypeMeta: TypeVMRuleV1Beta1,
+	TypeMeta: TypeVMRulevmo,
 }

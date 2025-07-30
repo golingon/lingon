@@ -7,7 +7,7 @@ import (
 	_ "embed"
 	"fmt"
 
-	"github.com/VictoriaMetrics/operator/api/victoriametrics/v1beta1"
+	vmo "github.com/VictoriaMetrics/operator/api/operator/v1"
 	"github.com/golingon/lingon/pkg/kube"
 	ku "github.com/golingon/lingon/pkg/kubeutil"
 	"github.com/golingon/lingoneks/meta"
@@ -79,7 +79,7 @@ type Grafana struct {
 	Role *rbacv1.Role
 	RB   *rbacv1.RoleBinding
 
-	GrafanaScrape *v1beta1.VMServiceScrape
+	GrafanaScrape *vmo.VMServiceScrape
 
 	CM                  *corev1.ConfigMap
 	ProviderCM          *corev1.ConfigMap
@@ -345,10 +345,10 @@ var GrafanaSVC = &corev1.Service{
 	},
 }
 
-var GrafanaScrape = &v1beta1.VMServiceScrape{
+var GrafanaScrape = &vmo.VMServiceScrape{
 	ObjectMeta: Graf.ObjectMeta(),
-	Spec: v1beta1.VMServiceScrapeSpec{
-		Endpoints: []v1beta1.Endpoint{{Port: GrafanaPortName}},
+	Spec: vmo.VMServiceScrapeSpec{
+		Endpoints: []vmo.Endpoint{{Port: GrafanaPortName}},
 		Selector:  metav1.LabelSelector{MatchLabels: Graf.MatchLabels()},
 	},
 	TypeMeta: TypeVMServiceScrapeV1Beta1,

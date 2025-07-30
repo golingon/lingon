@@ -9,7 +9,7 @@ import (
 	_ "embed"
 	"fmt"
 
-	"github.com/VictoriaMetrics/operator/api/victoriametrics/v1beta1"
+	vmo "github.com/VictoriaMetrics/operator/api/operator/v1"
 	"github.com/golingon/lingon/pkg/kube"
 	ku "github.com/golingon/lingon/pkg/kubeutil"
 	"github.com/golingon/lingoneks/meta"
@@ -31,12 +31,12 @@ var Single = &meta.Metadata{
 type VicMet struct {
 	kube.App
 
-	DB              *v1beta1.VMSingle
-	Agent           *v1beta1.VMAgent
+	DB              *vmo.VMSingle
+	Agent           *vmo.VMAgent
 	SA              *corev1.ServiceAccount
-	SingleAlerts    *v1beta1.VMRule
-	HealthAlerts    *v1beta1.VMRule
-	AgentAlertRules *v1beta1.VMRule
+	SingleAlerts    *vmo.VMRule
+	HealthAlerts    *vmo.VMRule
+	AgentAlertRules *vmo.VMRule
 }
 
 type VicMetOption func(server *VicMet) *VicMet
@@ -59,12 +59,12 @@ func NewVicMet(opts ...VicMetOption) *VicMet {
 
 // VMDB is a single instance of Victoria Metrics DB.
 // Note that a "vmsingle-" prefix is added to the name.
-// See https://github.com/VictoriaMetrics/operator/blob/4c97f70c9a775d2bfff401862acabd5452ef0cf8/api/v1beta1/vmsingle_types.go#L326
-var VMDB = &v1beta1.VMSingle{
-	TypeMeta:   TypeVMSingleV1Beta1,
+// See https://github.com/VictoriaMetrics/operator/blob/4c97f70c9a775d2bfff401862acabd5452ef0cf8/api/vmo/vmsingle_types.go#L326
+var VMDB = &vmo.VMSingle{
+	TypeMeta:   TypeVMSinglevmo,
 	ObjectMeta: Single.ObjectMeta(),
-	Spec: v1beta1.VMSingleSpec{
-		Image:        v1beta1.Image{Tag: "v" + Single.Version},
+	Spec: vmo.VMSingleSpec{
+		Image:        vmo.Image{Tag: "v" + Single.Version},
 		ReplicaCount: P(int32(1)),
 		ExtraArgs: map[string]string{
 			"vmalert.proxyURL": fmt.Sprintf(
@@ -89,20 +89,20 @@ var VMDB = &v1beta1.VMSingle{
 	},
 }
 
-var VMSingleAlertRules = &v1beta1.VMRule{
+var VMSingleAlertRules = &vmo.VMRule{
 	ObjectMeta: metav1.ObjectMeta{
 		Labels:    Single.Labels(),
 		Name:      Single.Name + "-alerting-rules",
 		Namespace: namespace,
 	},
-	Spec: v1beta1.VMRuleSpec{
-		Groups: []v1beta1.RuleGroup{
+	Spec: vmo.VMRuleSpec{
+		Groups: []vmo.RuleGroup{
 			{
 				Concurrency: 2,
 				Interval:    "30s",
 				// Name:        "vmsingle",
 				Name: Single.Name,
-				Rules: []v1beta1.Rule{
+				Rules: []vmo.Rule{
 					{
 						Alert: "DiskRunsOutOfSpaceIn3Days",
 						Annotations: map[string]string{
@@ -252,22 +252,22 @@ sum(increase(vm_new_timeseries_created_total[24h])) by(instance)
 			},
 		},
 	},
-	TypeMeta: TypeVMRuleV1Beta1,
+	TypeMeta: TypeVMRulevmo,
 }
 
-var VMHealthAlertRules = &v1beta1.VMRule{
+var VMHealthAlertRules = &vmo.VMRule{
 	ObjectMeta: metav1.ObjectMeta{
 		Labels: Single.Labels(),
 		// Name:      "vmk8s-victoria-metrics-k8s-stack-vm-health",
 		Name:      Single.Name + "-health",
 		Namespace: namespace,
 	},
-	Spec: v1beta1.VMRuleSpec{
-		Groups: []v1beta1.RuleGroup{
+	Spec: vmo.VMRuleSpec{
+		Groups: []vmo.RuleGroup{
 			{
 				// Name: "vm-health",
 				Name: Single.Name + "-health",
-				Rules: []v1beta1.Rule{
+				Rules: []vmo.Rule{
 					{
 						Alert: "TooManyRestarts",
 						Annotations: map[string]string{
@@ -329,5 +329,5 @@ Logging rate for job "{{ $labels.job }}" ({{ $labels.instance }}) is {{ $value }
 			},
 		},
 	},
-	TypeMeta: TypeVMRuleV1Beta1,
+	TypeMeta: TypeVMRulevmo,
 }

@@ -4,7 +4,7 @@
 package vmk8s
 
 import (
-	"github.com/VictoriaMetrics/operator/api/victoriametrics/v1beta1"
+	vmo "github.com/VictoriaMetrics/operator/api/operator/v1"
 	"github.com/golingon/lingon/pkg/kube"
 	ku "github.com/golingon/lingon/pkg/kubeutil"
 	"github.com/golingon/lingoneks/meta"
@@ -32,7 +32,7 @@ type MonKubeProxy struct {
 	kube.App
 
 	KubeProxySVC    *corev1.Service
-	KubeProxyScrape *v1beta1.VMServiceScrape
+	KubeProxyScrape *vmo.VMServiceScrape
 }
 
 func NewMonKubeProxy() *MonKubeProxy {
@@ -64,24 +64,24 @@ var KubeProxySVC = &corev1.Service{
 	TypeMeta: ku.TypeServiceV1,
 }
 
-var KubeProxyScrape = &v1beta1.VMServiceScrape{
+var KubeProxyScrape = &vmo.VMServiceScrape{
 	ObjectMeta: KP.ObjectMeta(),
-	Spec: v1beta1.VMServiceScrapeSpec{
-		Endpoints: []v1beta1.Endpoint{
+	Spec: vmo.VMServiceScrapeSpec{
+		Endpoints: []vmo.Endpoint{
 			{
 				BearerTokenFile: PathSA + "/token",
 				Port:            KPPortName,
 				Scheme:          "https",
-				TLSConfig:       &v1beta1.TLSConfig{CAFile: PathSA + "/ca.crt"},
+				TLSConfig:       &vmo.TLSConfig{CAFile: PathSA + "/ca.crt"},
 			},
 		},
 		JobLabel: "k8s-app",
-		NamespaceSelector: v1beta1.NamespaceSelector{
+		NamespaceSelector: vmo.NamespaceSelector{
 			MatchNames: []string{ku.NSKubeSystem}, // kube-system
 		},
 		Selector: metav1.LabelSelector{
 			MatchLabels: map[string]string{"k8s-app": "kube-proxy"},
 		},
 	},
-	TypeMeta: TypeVMServiceScrapeV1Beta1,
+	TypeMeta: TypeVMServiceScrapevmo,
 }

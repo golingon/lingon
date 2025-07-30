@@ -6,7 +6,7 @@
 package vmk8s
 
 import (
-	"github.com/VictoriaMetrics/operator/api/victoriametrics/v1beta1"
+	vmo "github.com/VictoriaMetrics/operator/api/operator/v1"
 	"github.com/golingon/lingon/pkg/kube"
 	ku "github.com/golingon/lingon/pkg/kubeutil"
 	"github.com/golingon/lingoneks/meta"
@@ -43,9 +43,9 @@ type NodeExporter struct {
 	DS         *appsv1.DaemonSet
 	SA         *corev1.ServiceAccount
 	SVC        *corev1.Service
-	Rules      *v1beta1.VMRule
-	AlertRules *v1beta1.VMRule
-	Scrape     *v1beta1.VMServiceScrape
+	Rules      *vmo.VMRule
+	AlertRules *vmo.VMRule
+	Scrape     *vmo.VMServiceScrape
 }
 
 func NewNodeExporter() *NodeExporter {
@@ -181,13 +181,13 @@ var NodeExporterDS = &appsv1.DaemonSet{
 	},
 }
 
-var NodeExporterScrape = &v1beta1.VMServiceScrape{
-	TypeMeta:   TypeVMServiceScrapeV1Beta1,
+var NodeExporterScrape = &vmo.VMServiceScrape{
+	TypeMeta:   TypeVMServiceScrapevmo,
 	ObjectMeta: NE.ObjectMeta(),
-	Spec: v1beta1.VMServiceScrapeSpec{
-		Endpoints: []v1beta1.Endpoint{
+	Spec: vmo.VMServiceScrapeSpec{
+		Endpoints: []vmo.Endpoint{
 			{
-				MetricRelabelConfigs: []*v1beta1.RelabelConfig{
+				MetricRelabelConfigs: []*vmo.RelabelConfig{
 					{
 						Action:                 "drop",
 						Regex:                  "/var/lib/kubelet/pods.+",
@@ -204,14 +204,14 @@ var NodeExporterScrape = &v1beta1.VMServiceScrape{
 	},
 }
 
-var NodeExporterRules = &v1beta1.VMRule{
-	TypeMeta:   TypeVMRuleV1Beta1,
+var NodeExporterRules = &vmo.VMRule{
+	TypeMeta:   TypeVMRulevmo,
 	ObjectMeta: NE.ObjectMetaNameSuffix("rules"),
-	Spec: v1beta1.VMRuleSpec{
-		Groups: []v1beta1.RuleGroup{
+	Spec: vmo.VMRuleSpec{
+		Groups: []vmo.RuleGroup{
 			{
 				Name: "node-exporter.rules",
-				Rules: []v1beta1.Rule{
+				Rules: []vmo.Rule{
 					{
 						Expr: `
 count without (cpu, mode) (
@@ -300,14 +300,14 @@ sum without (device) (
 	},
 }
 
-var NodeExporterAlertRules = &v1beta1.VMRule{
-	TypeMeta:   TypeVMRuleV1Beta1,
+var NodeExporterAlertRules = &vmo.VMRule{
+	TypeMeta:   TypeVMRulevmo,
 	ObjectMeta: NE.ObjectMeta(),
-	Spec: v1beta1.VMRuleSpec{
-		Groups: []v1beta1.RuleGroup{
+	Spec: vmo.VMRuleSpec{
+		Groups: []vmo.RuleGroup{
 			{
 				Name: "node-exporter",
-				Rules: []v1beta1.Rule{
+				Rules: []vmo.Rule{
 					{
 						Alert: "NodeFilesystemSpaceFillingUp",
 						Annotations: map[string]string{

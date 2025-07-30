@@ -4,7 +4,7 @@
 package vmk8s
 
 import (
-	"github.com/VictoriaMetrics/operator/api/victoriametrics/v1beta1"
+	vmo "github.com/VictoriaMetrics/operator/api/operator/v1"
 	"github.com/golingon/lingon/pkg/kube"
 	ku "github.com/golingon/lingon/pkg/kubeutil"
 	"github.com/golingon/lingoneks/meta"
@@ -32,8 +32,8 @@ type MonKubeController struct {
 	kube.App
 
 	SVC        *corev1.Service
-	Scrape     *v1beta1.VMServiceScrape
-	AlertRules *v1beta1.VMRule
+	Scrape     *vmo.VMServiceScrape
+	AlertRules *vmo.VMRule
 }
 
 func NewMonKubeController() *MonKubeController {
@@ -44,23 +44,23 @@ func NewMonKubeController() *MonKubeController {
 	}
 }
 
-var KubeControllerScrape = &v1beta1.VMServiceScrape{
-	TypeMeta:   TypeVMServiceScrapeV1Beta1,
+var KubeControllerScrape = &vmo.VMServiceScrape{
+	TypeMeta:   TypeVMServiceScrapevmo,
 	ObjectMeta: KCM.ObjectMeta(),
-	Spec: v1beta1.VMServiceScrapeSpec{
-		Endpoints: []v1beta1.Endpoint{
+	Spec: vmo.VMServiceScrapeSpec{
+		Endpoints: []vmo.Endpoint{
 			{
 				BearerTokenFile: PathSA + "/token",
 				Port:            KCMPortName,
 				Scheme:          "https",
-				TLSConfig: &v1beta1.TLSConfig{
+				TLSConfig: &vmo.TLSConfig{
 					CAFile:     PathSA + "/ca.crt",
 					ServerName: "kubernetes",
 				},
 			},
 		},
 		JobLabel: "component",
-		NamespaceSelector: v1beta1.NamespaceSelector{
+		NamespaceSelector: vmo.NamespaceSelector{
 			MatchNames: []string{ku.NSKubeSystem}, // kube-system
 		},
 		Selector: metav1.LabelSelector{
@@ -93,13 +93,13 @@ var KubeControllerSVC = &corev1.Service{
 	TypeMeta: ku.TypeServiceV1,
 }
 
-var KubeControllerAlertRules = &v1beta1.VMRule{
+var KubeControllerAlertRules = &vmo.VMRule{
 	ObjectMeta: KCM.ObjectMeta(),
-	Spec: v1beta1.VMRuleSpec{
-		Groups: []v1beta1.RuleGroup{
+	Spec: vmo.VMRuleSpec{
+		Groups: []vmo.RuleGroup{
 			{
 				Name: "kubernetes-system-controller-manager",
-				Rules: []v1beta1.Rule{
+				Rules: []vmo.Rule{
 					{
 						Alert: "KubeControllerManagerDown",
 						Annotations: map[string]string{
@@ -115,5 +115,5 @@ var KubeControllerAlertRules = &v1beta1.VMRule{
 			},
 		},
 	},
-	TypeMeta: TypeVMRuleV1Beta1,
+	TypeMeta: TypeVMRulevmo,
 }

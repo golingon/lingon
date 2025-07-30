@@ -12,7 +12,7 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/VictoriaMetrics/operator/api/victoriametrics/v1beta1"
+	vmo "github.com/VictoriaMetrics/operator/api/operator/v1"
 	"github.com/golingon/lingon/pkg/kube"
 	ku "github.com/golingon/lingon/pkg/kubeutil"
 	corev1 "k8s.io/api/core/v1"
@@ -52,9 +52,9 @@ type Vmk8S struct {
 	MonKubeProxy      *MonKubeProxy
 	VicMet            *VicMet
 
-	CadvisorNodeScrape *v1beta1.VMNodeScrape
-	ProbesNodeScrape   *v1beta1.VMNodeScrape
-	KubeletNodeScrape  *v1beta1.VMNodeScrape
+	CadvisorNodeScrape *vmo.VMNodeScrape
+	ProbesNodeScrape   *vmo.VMNodeScrape
+	KubeletNodeScrape  *vmo.VMNodeScrape
 
 	K8SRules *K8SRules
 

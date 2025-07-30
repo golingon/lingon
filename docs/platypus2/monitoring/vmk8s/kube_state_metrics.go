@@ -4,7 +4,7 @@
 package vmk8s
 
 import (
-	"github.com/VictoriaMetrics/operator/api/victoriametrics/v1beta1"
+	vmo "github.com/VictoriaMetrics/operator/api/operator/v1"
 	"github.com/golingon/lingon/pkg/kube"
 	ku "github.com/golingon/lingon/pkg/kubeutil"
 	"github.com/golingon/lingoneks/meta"
@@ -44,8 +44,8 @@ type KubeStateMetrics struct {
 	Deploy *appsv1.Deployment
 	SA     *corev1.ServiceAccount
 	SVC    *corev1.Service
-	Rules  *v1beta1.VMRule
-	Scrape *v1beta1.VMServiceScrape
+	Rules  *vmo.VMRule
+	Scrape *vmo.VMServiceScrape
 }
 
 func NewKubeStateMetrics() *KubeStateMetrics {
@@ -285,14 +285,14 @@ var KubeStateMetricsCR = &rbacv1.ClusterRole{
 	},
 }
 
-var KubeStateMetricsRules = &v1beta1.VMRule{
-	TypeMeta:   TypeVMRuleV1Beta1,
+var KubeStateMetricsRules = &vmo.VMRule{
+	TypeMeta:   TypeVMRulevmo,
 	ObjectMeta: KSM.ObjectMeta(),
-	Spec: v1beta1.VMRuleSpec{
-		Groups: []v1beta1.RuleGroup{
+	Spec: vmo.VMRuleSpec{
+		Groups: []vmo.RuleGroup{
 			{
 				Name: KSM.Name,
-				Rules: []v1beta1.Rule{
+				Rules: []vmo.Rule{
 					{
 						Alert: "KubeStateMetricsListErrors",
 						Annotations: map[string]string{
@@ -355,14 +355,14 @@ sum( 2 ^ max by (shard_ordinal) (kube_state_metrics_shard_ordinal{job="kube-stat
 	},
 }
 
-var KubeStateMetricsScrape = &v1beta1.VMServiceScrape{
-	TypeMeta:   TypeVMServiceScrapeV1Beta1,
+var KubeStateMetricsScrape = &vmo.VMServiceScrape{
+	TypeMeta:   TypeVMServiceScrapevmo,
 	ObjectMeta: KSM.ObjectMeta(),
-	Spec: v1beta1.VMServiceScrapeSpec{
-		Endpoints: []v1beta1.Endpoint{
+	Spec: vmo.VMServiceScrapeSpec{
+		Endpoints: []vmo.Endpoint{
 			{
 				HonorLabels: true,
-				MetricRelabelConfigs: []*v1beta1.RelabelConfig{
+				MetricRelabelConfigs: []*vmo.RelabelConfig{
 					{
 						Action: "labeldrop",
 						Regex:  "(uid|container_id|image_id)",
