@@ -5,9 +5,8 @@ go 1.24.5
 require (
 	github.com/golingon/lingon v0.0.0-20250722171120-dec6dae87466
 	github.com/rogpeppe/go-internal v1.14.1
-	istio.io/api v1.26.2
-	istio.io/client-go v1.26.2
-	k8s.io/api v0.33.3
+	istio.io/api v1.26.3
+	istio.io/client-go v1.26.3
 	k8s.io/apiextensions-apiserver v0.33.3
 	k8s.io/apimachinery v0.33.3
 	k8s.io/client-go v0.33.3
@@ -40,6 +39,7 @@ require (
 	google.golang.org/protobuf v1.36.6 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
+	k8s.io/api v0.33.3 // indirect
 	k8s.io/klog/v2 v2.130.1 // indirect
 	k8s.io/utils v0.0.0-20250604170112-4c0f3b243397 // indirect
 	mvdan.cc/gofumpt v0.8.0 // indirect

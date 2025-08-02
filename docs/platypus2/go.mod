@@ -18,7 +18,7 @@ require (
 	github.com/hashicorp/terraform-json v0.25.0
 	github.com/nats-io/nats.go v1.44.0
 	github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.84.0
-	github.com/prometheus/client_golang v1.22.0
+	github.com/prometheus/client_golang v1.23.0
 	github.com/rogpeppe/go-internal v1.14.1
 	github.com/tidwall/gjson v1.18.0
 	github.com/zeitlinger/conflate v0.0.0-20230622100834-279724abda8c
@@ -134,7 +134,6 @@ require (
 	github.com/prometheus/alertmanager v0.28.1 // indirect
 	github.com/prometheus/client_model v0.6.2 // indirect
 	github.com/prometheus/common v0.65.0 // indirect
-	github.com/prometheus/common/sigv4 v0.1.0 // indirect
 	github.com/prometheus/procfs v0.17.0 // indirect
 	github.com/prometheus/prometheus v0.303.1 // indirect
 	github.com/prometheus/sigv4 v0.2.1 // indirect
